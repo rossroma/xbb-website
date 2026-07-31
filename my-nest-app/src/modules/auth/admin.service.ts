@@ -1,0 +1,327 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Like } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
+import { Admin } from './entities/admin.entity';
+import { AdminGroup } from './entities/admin-group.entity';
+import { AdminAction } from './entities/admin-action.entity';
+import { CreateAdminDto } from './dto/create-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
+import { CreateAdminGroupDto } from './dto/create-admin-group.dto';
+import { UpdateAdminGroupDto } from './dto/update-admin-group.dto';
+import { QueryAdminDto } from './dto/query-admin.dto';
+import { AdminResponseDto, AdminGroupResponseDto, AdminActionResponseDto } from './dto/admin-response.dto';
+
+@Injectable()
+export class AdminService {
+  constructor(
+    @InjectRepository(Admin)
+    private adminRepository: Repository<Admin>,
+    @InjectRepository(AdminGroup)
+    private adminGroupRepository: Repository<AdminGroup>,
+    @InjectRepository(AdminAction)
+    private adminActionRepository: Repository<AdminAction>,
+  ) { }
+
+  // ==================== 管理员管理 ====================
+
+  async createAdmin(createAdminDto: CreateAdminDto): Promise<AdminResponseDto> {
+    // 检查用户名是否已存在
+    const existingAdmin = await this.adminRepository.findOne({
+      where: { username: createAdminDto.username },
+    });
+
+    if (existingAdmin) {
+      throw new NotFoundException('用户名已存在');
+    }
+
+    // 生成盐值和加密密码
+    const { hash, salt } = await this.hashPassword(createAdminDto.password);
+
+    const admin = this.adminRepository.create({
+      ...createAdminDto,
+      userpwd: hash,
+      salt,
+      status: createAdminDto.status ?? 1,
+    });
+
+    const saved = await this.adminRepository.save(admin);
+    return this.formatAdminResponse(saved);
+  }
+
+  async findAllAdmins(query: QueryAdminDto): Promise<{
+    items: AdminResponseDto[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const { page = 1, limit = 10, username, status, type, sortBy = 'id_desc' } = query;
+    const skip = (page - 1) * limit;
+
+    const where: any = {};
+    if (username) where.username = Like(`%${username}%`);
+    if (status !== undefined) where.status = status;
+    if (type !== undefined) where.type = type;
+
+    const orderMap: Record<string, object> = {
+      id_desc: { id: 'DESC' },
+      id_asc: { id: 'ASC' },
+      addtime_desc: { id: 'DESC' },
+      addtime_asc: { id: 'ASC' },
+    };
+    const order = orderMap[sortBy] ?? { id: 'DESC' };
+
+    const [items, total] = await this.adminRepository.findAndCount({
+      where,
+      order,
+      skip,
+      take: limit,
+      relations: ['adminGroup'],
+    });
+
+    return {
+      items: items.map((item) => this.formatAdminResponse(item)),
+      total,
+      page,
+      limit,
+    };
+  }
+
+  async findOneAdmin(id: number): Promise<AdminResponseDto> {
+    const admin = await this.adminRepository.findOne({
+      where: { id },
+      relations: ['adminGroup'],
+    });
+
+    if (!admin) {
+      throw new NotFoundException(`管理员 #${id} 不存在`);
+    }
+
+    return this.formatAdminResponse(admin);
+  }
+
+  async updateAdmin(id: number, updateAdminDto: UpdateAdminDto): Promise<AdminResponseDto> {
+    const admin = await this.adminRepository.findOne({ where: { id } });
+    if (!admin) {
+      throw new NotFoundException(`管理员 #${id} 不存在`);
+    }
+
+    // 如果更新密码，重新加密
+    if (updateAdminDto.password) {
+      const { hash, salt } = await this.hashPassword(updateAdminDto.password);
+      updateAdminDto.password = hash;
+      (updateAdminDto as any).salt = salt;
+    }
+
+    Object.assign(admin, updateAdminDto);
+    const updated = await this.adminRepository.save(admin);
+    return this.formatAdminResponse(updated);
+  }
+
+  async removeAdmin(id: number): Promise<void> {
+    const admin = await this.adminRepository.findOne({ where: { id } });
+    if (!admin) {
+      throw new NotFoundException(`管理员 #${id} 不存在`);
+    }
+
+    // 不能删除超级管理员
+    if (admin.type === 1) {
+      throw new NotFoundException('不能删除超级管理员');
+    }
+
+    await this.adminRepository.remove(admin);
+  }
+
+  // ==================== 用户组管理 ====================
+
+  async createAdminGroup(createAdminGroupDto: CreateAdminGroupDto): Promise<AdminGroupResponseDto> {
+    const adminGroup = this.adminGroupRepository.create(createAdminGroupDto);
+    const saved = await this.adminGroupRepository.save(adminGroup);
+    return this.formatAdminGroupResponse(saved);
+  }
+
+  async findAllAdminGroups(page = 1, limit = 10, sortBy = 'id_asc'): Promise<{ items: AdminGroupResponseDto[]; total: number; page: number; limit: number }> {
+    const orderMap: Record<string, object> = {
+      id_desc: { id: 'DESC' },
+      id_asc: { id: 'ASC' },
+    };
+    const order = orderMap[sortBy] ?? { id: 'ASC' };
+    const skip = (page - 1) * limit;
+    const [groups, total] = await this.adminGroupRepository.findAndCount({
+      order,
+      skip,
+      take: limit,
+    });
+    return { items: groups.map((item) => this.formatAdminGroupResponse(item)), total, page, limit };
+  }
+
+  async findOneAdminGroup(id: number): Promise<AdminGroupResponseDto> {
+    const adminGroup = await this.adminGroupRepository.findOne({ where: { id } });
+    if (!adminGroup) {
+      throw new NotFoundException(`用户组 #${id} 不存在`);
+    }
+    return this.formatAdminGroupResponse(adminGroup);
+  }
+
+  async updateAdminGroup(id: number, updateAdminGroupDto: UpdateAdminGroupDto): Promise<AdminGroupResponseDto> {
+    const adminGroup = await this.adminGroupRepository.findOne({ where: { id } });
+    if (!adminGroup) {
+      throw new NotFoundException(`用户组 #${id} 不存在`);
+    }
+
+    Object.assign(adminGroup, updateAdminGroupDto);
+    const updated = await this.adminGroupRepository.save(adminGroup);
+    return this.formatAdminGroupResponse(updated);
+  }
+
+  async removeAdminGroup(id: number): Promise<void> {
+    const adminGroup = await this.adminGroupRepository.findOne({ where: { id } });
+    if (!adminGroup) {
+      throw new NotFoundException(`用户组 #${id} 不存在`);
+    }
+
+    // 检查是否有管理员使用此用户组
+    const adminCount = await this.adminRepository.count({ where: { group_id: id } });
+    if (adminCount > 0) {
+      throw new NotFoundException('该用户组下还有管理员，不能删除');
+    }
+
+    await this.adminGroupRepository.remove(adminGroup);
+  }
+
+  // ==================== 权限管理 ====================
+
+  async findAllAdminActions(): Promise<AdminActionResponseDto[]> {
+    const actions = await this.adminActionRepository.find({
+      where: { status: 1 },
+      order: { ord: 'ASC', id: 'ASC' },
+    });
+
+    const existingIds = new Set(actions.map(a => a.id));
+    const missingParentIds = [...new Set(actions.map(a => a.parent_id))]
+      .filter(pid => pid !== 0 && !existingIds.has(pid));
+
+    if (missingParentIds.length > 0) {
+      const parents = await this.adminActionRepository.findByIds(missingParentIds);
+      actions.push(...parents);
+      actions.sort((a, b) => a.ord - b.ord || a.id - b.id);
+    }
+
+    return this.buildActionTree(actions);
+  }
+
+  async findAdminPermissions(adminId: number): Promise<AdminActionResponseDto[]> {
+    const admin = await this.adminRepository.findOne({
+      where: { id: adminId },
+      relations: ['adminGroup'],
+    });
+
+    if (!admin) {
+      throw new NotFoundException(`管理员 #${adminId} 不存在`);
+    }
+
+    // 超级管理员拥有所有权限
+    if (admin.type === 1) {
+      return this.findAllAdminActions();
+    }
+
+    // 根据用户组权限获取
+    if (admin.adminGroup && admin.adminGroup.rules) {
+      const ruleIds = admin.adminGroup.rules.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+      if (ruleIds.length > 0) {
+        const actions = await this.adminActionRepository.findByIds(ruleIds);
+        const filteredActions = actions.filter(action => action.status === 1);
+
+        const existingIds = new Set(filteredActions.map(a => a.id));
+        const missingParentIds = [...new Set(filteredActions.map(a => a.parent_id))]
+          .filter(pid => pid !== 0 && !existingIds.has(pid));
+        if (missingParentIds.length > 0) {
+          const parents = await this.adminActionRepository.findByIds(missingParentIds);
+          filteredActions.push(...parents);
+          filteredActions.sort((a, b) => a.ord - b.ord || a.id - b.id);
+        }
+
+        return this.buildActionTree(filteredActions);
+      }
+    }
+
+    return [];
+  }
+
+  // ==================== 辅助方法 ====================
+
+  private generateSalt(): string {
+    return crypto.randomBytes(16).toString('hex');
+  }
+
+  private async hashPassword(password: string): Promise<{ hash: string; salt: string }> {
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    return { hash, salt };
+  }
+
+  private formatAdminResponse(admin: Admin): AdminResponseDto {
+    return {
+      id: admin.id,
+      username: admin.username,
+      status: admin.status,
+      type: admin.type,
+      group_id: admin.group_id,
+      group_name: admin.adminGroup?.title || undefined,
+    };
+  }
+
+  private formatAdminGroupResponse(adminGroup: AdminGroup): AdminGroupResponseDto {
+    return {
+      id: adminGroup.id,
+      title: adminGroup.title,
+      rules: adminGroup.rules,
+      rules_category: adminGroup.rules_category,
+      status: adminGroup.status,
+    };
+  }
+
+  private formatAdminActionResponse(action: AdminAction): AdminActionResponseDto {
+    return {
+      id: action.id,
+      parent_id: action.parent_id,
+      action_code: action.action_code,
+      action_name: action.action_name,
+      ord: action.ord,
+      url: action.url,
+      status: action.status,
+      children: [],
+    };
+  }
+
+  private buildActionTree(actions: AdminAction[]): AdminActionResponseDto[] {
+    // parent_id 对应旧系统分类编号（非本表ID），需映射到根节点 action_code
+    const categoryMap: Record<number, string> = {
+      1: 'baseinfo', 2: 'types', 4: 'adstypes',
+      7: 'system', 8: 'message', 10: 'templates',
+    }
+
+    const rootMap = new Map<string, AdminActionResponseDto>()
+    const rootActions: AdminActionResponseDto[] = []
+
+    actions.filter(a => a.parent_id === 0).forEach(action => {
+      const node = this.formatAdminActionResponse(action)
+      rootMap.set(action.action_code, node)
+      rootActions.push(node)
+    })
+
+    actions.filter(a => a.parent_id !== 0).forEach(action => {
+      const parentCode = categoryMap[action.parent_id]
+      const parent = parentCode ? rootMap.get(parentCode) : undefined
+      const node = this.formatAdminActionResponse(action)
+      if (parent) {
+        parent.children.push(node)
+      } else {
+        rootActions.push(node)
+      }
+    })
+
+    return rootActions
+  }
+}

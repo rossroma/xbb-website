@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180" fill="none">
+  <defs>
+    <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6ee7a8"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="greenLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4f7e5"/>
+      <stop offset="100%" stop-color="#b8f0d0"/>
+    </linearGradient>
+    <linearGradient id="accentOrange" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff9a4d"/>
+      <stop offset="100%" stop-color="#ff6400"/>
+    </linearGradient>
+  </defs>
+  <!-- 图表背景 -->
+  <rect x="24" y="20" width="232" height="140" rx="12" fill="#f1faf4" stroke="#d4f7e5" stroke-width="1"/>
+  <!-- 网格线 -->
+  <line x1="48" y1="40" x2="48" y2="140" stroke="#10b981" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
+  <line x1="48" y1="140" x2="240" y2="140" stroke="#10b981" stroke-width="1" stroke-dasharray="3 3" opacity="0.1"/>
+  <!-- 柱状图 - 渐变绿色 -->
+  <rect x="60" y="100" width="28" height="40" rx="4" fill="url(#greenLight)"/>
+  <rect x="60" y="105" width="28" height="35" rx="4" fill="url(#greenGrad)" opacity="0.5"/>
+  <rect x="100" y="80" width="28" height="60" rx="4" fill="url(#greenLight)"/>
+  <rect x="100" y="85" width="28" height="55" rx="4" fill="url(#greenGrad)" opacity="0.6"/>
+  <rect x="140" y="60" width="28" height="80" rx="4" fill="url(#greenGrad)"/>
+  <rect x="180" y="90" width="28" height="50" rx="4" fill="url(#greenLight)"/>
+  <rect x="180" y="95" width="28" height="45" rx="4" fill="url(#greenGrad)" opacity="0.4"/>
+  <!-- 折线图 - 橙色对比 -->
+  <polyline points="220,130 244,110 268,85" stroke="#ff6400" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="220" cy="130" r="3.5" fill="white" stroke="#ff6400" stroke-width="2"/>
+  <circle cx="244" cy="110" r="3.5" fill="white" stroke="#ff6400" stroke-width="2"/>
+  <circle cx="268" cy="85" r="3.5" fill="#ff6400" stroke="white" stroke-width="2"/>
+  <!-- 折线区域填充 -->
+  <polygon points="220,140 220,130 244,110 268,85 268,140" fill="#ff6400" opacity="0.06"/>
+  <!-- 顶部标题 -->
+  <rect x="60" y="36" width="60" height="6" rx="3" fill="#10b981" opacity="0.5"/>
+  <rect x="60" y="46" width="40" height="5" rx="2.5" fill="#10b981" opacity="0.2"/>
+  <!-- 图标 -->
+  <circle cx="46" cy="42" r="8" fill="url(#greenGrad)"/>
+  <text x="46" y="45" text-anchor="middle" fill="white" font-size="8">↑</text>
+</svg>

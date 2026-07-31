@@ -1,0 +1,303 @@
+<template>
+  <div class="settings-container">
+    <el-card class="box-card">
+      <template #header>
+        <span>系统设置</span>
+      </template>
+
+      <el-tabs v-model="activeTab" type="border-card">
+        <!-- 基本信息 -->
+        <el-tab-pane label="基本信息" name="base">
+          <el-form :model="baseForm" label-width="120px">
+            <el-form-item label="公司名称">
+              <el-input v-model="baseForm.company" placeholder="请输入公司名称" />
+            </el-form-item>
+            <el-form-item label="PC LOGO">
+              <ImageUploader v-model="baseForm.logo" />
+              <div class="field-hint">建议尺寸：212×50 像素</div>
+            </el-form-item>
+            <el-form-item label="手机站 LOGO">
+              <ImageUploader v-model="baseForm.wap_logo" />
+              <div class="field-hint">建议尺寸：212×50 像素</div>
+            </el-form-item>
+            <el-form-item label="ICO 图标">
+              <ImageUploader v-model="baseForm.ico_logo" />
+              <div class="field-hint">建议尺寸：16×16 或 32×32 像素，.ico 格式</div>
+            </el-form-item>
+            <el-form-item label="联系电话">
+              <el-input v-model="baseForm.tel" placeholder="请输入联系电话" />
+            </el-form-item>
+            <el-form-item label="手机号码">
+              <el-input v-model="baseForm.phone" placeholder="请输入手机号码" />
+            </el-form-item>
+            <el-form-item label="电子邮箱">
+              <el-input v-model="baseForm.email" placeholder="请输入电子邮箱" />
+            </el-form-item>
+            <el-form-item label="公司地址">
+              <el-input v-model="baseForm.address" placeholder="请输入公司地址" />
+            </el-form-item>
+            <el-form-item label="传真">
+              <el-input v-model="baseForm.fax" placeholder="请输入传真" />
+            </el-form-item>
+            <el-form-item label="邮编">
+              <el-input v-model="baseForm.postcode" placeholder="请输入邮编" />
+            </el-form-item>
+            <el-form-item label="底部版权信息">
+              <div class="wang-editor-wrap">
+                <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple" />
+                <Editor
+                  v-model="baseForm.content2"
+                  :defaultConfig="editorConfig"
+                  mode="simple"
+                  style="height: 200px"
+                  @onCreated="handleEditorCreated"
+                />
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+
+        <!-- SEO 设置 -->
+        <el-tab-pane label="SEO 设置" name="seo">
+          <el-form :model="baseForm" label-width="120px">
+            <el-form-item label="网站标题">
+              <el-input v-model="baseForm.title" placeholder="请输入网站标题" />
+            </el-form-item>
+            <el-form-item label="关键词">
+              <el-input
+                v-model="baseForm.keyword"
+                type="textarea"
+                :rows="4"
+                placeholder="请输入关键词，多个用逗号分隔"
+              />
+            </el-form-item>
+            <el-form-item label="网站描述">
+              <el-input
+                v-model="baseForm.descs"
+                type="textarea"
+                :rows="4"
+                placeholder="请输入网站描述"
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+
+        <!-- 统计代码 -->
+        <el-tab-pane label="统计代码" name="analytics">
+          <el-form :model="baseForm" label-width="150px">
+            <el-form-item label="头部代码 [head]">
+              <el-input
+                v-model="baseForm.toolscode_top"
+                type="textarea"
+                :rows="8"
+                placeholder="粘贴统计代码到此处，将插入到 <head> 标签内"
+                style="font-family: monospace; font-size: 13px"
+              />
+              <div class="field-hint">适用于百度统计、Google Analytics 等头部脚本</div>
+            </el-form-item>
+            <el-form-item label="底部代码 [body]">
+              <el-input
+                v-model="baseForm.toolscode_bottom"
+                type="textarea"
+                :rows="8"
+                placeholder="粘贴统计代码到此处，将插入到 </body> 标签前"
+                style="font-family: monospace; font-size: 13px"
+              />
+              <div class="field-hint">适用于需要放在页面底部的统计脚本</div>
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+
+        <!-- 系统设置 -->
+        <el-tab-pane label="系统设置" name="setting">
+          <el-form :model="settingForm" label-width="150px">
+            <el-form-item label="开启Banner">
+              <el-switch v-model="settingForm.is_banner" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+            <el-form-item label="开启英文版">
+              <el-switch
+                v-model="settingForm.is_english_open"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+            <el-form-item label="开启手机版">
+              <el-switch v-model="settingForm.is_wap_open" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+            <el-form-item label="开启关键词替换">
+              <el-switch
+                v-model="settingForm.is_keyreplace"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+            <el-form-item label="开启标签">
+              <el-switch v-model="settingForm.is_tags" :active-value="1" :inactive-value="0" />
+            </el-form-item>
+            <el-form-item label="开启缓存">
+              <el-switch
+                v-model="settingForm.is_open_cache"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+            <el-form-item label="网站关闭">
+              <el-switch
+                v-model="settingForm.is_open_close"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+      </el-tabs>
+
+      <div class="button-group">
+        <el-button type="primary" @click="handleSave" :loading="loading">保存设置</el-button>
+        <el-button @click="handleReset">重置</el-button>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, shallowRef, onBeforeUnmount, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css'
+import { getAllSettings, updateAllSettings } from '@/shared/api/settings'
+import ImageUploader from '@/admin/components/ImageUploader.vue'
+
+defineOptions({ name: 'SettingsPage' })
+
+const activeTab = ref('base')
+const loading = ref(false)
+const editorRef = shallowRef()
+
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入底部版权信息...' }
+
+const handleEditorCreated = (editor: any) => {
+  editorRef.value = editor
+}
+
+onBeforeUnmount(() => editorRef.value?.destroy())
+
+const baseForm = ref({
+  title: '',
+  keyword: '',
+  descs: '',
+  company: '',
+  logo: '',
+  wap_logo: '',
+  ico_logo: '',
+  tel: '',
+  phone: '',
+  email: '',
+  address: '',
+  fax: '',
+  postcode: '',
+  content2: '',
+  toolscode_top: '',
+  toolscode_bottom: '',
+})
+
+const settingForm = ref({
+  is_banner: 0,
+  is_english_open: 0,
+  is_wap_open: 0,
+  is_keyreplace: 0,
+  is_tags: 0,
+  is_open_cache: 0,
+  is_open_close: 0,
+})
+
+const loadSettings = async () => {
+  try {
+    const data = await getAllSettings()
+    if (data?.base) {
+      const b = data.base as Record<string, string>
+      baseForm.value = {
+        title: b.title || '',
+        keyword: b.keyword || '',
+        descs: b.descs || '',
+        company: b.company || '',
+        logo: b.logo || '',
+        wap_logo: b.wap_logo || '',
+        ico_logo: b.ico_logo || '',
+        tel: b.tel || '',
+        phone: b.phone || '',
+        email: b.email || '',
+        address: b.address || '',
+        fax: b.fax || '',
+        postcode: b.postcode || '',
+        content2: b.content2 || '',
+        toolscode_top: b.toolscode_top || '',
+        toolscode_bottom: b.toolscode_bottom || '',
+      }
+    }
+    if (data?.setting) {
+      const s = data.setting as Record<string, number>
+      settingForm.value = {
+        is_banner: s.is_banner || 0,
+        is_english_open: s.is_english_open || 0,
+        is_wap_open: s.is_wap_open || 0,
+        is_keyreplace: s.is_keyreplace || 0,
+        is_tags: s.is_tags || 0,
+        is_open_cache: s.is_open_cache || 0,
+        is_open_close: s.is_open_close || 0,
+      }
+    }
+  } catch {
+    ElMessage.error('加载配置失败')
+  }
+}
+
+const handleSave = async () => {
+  loading.value = true
+  try {
+    await updateAllSettings({ base: baseForm.value, setting: settingForm.value })
+    ElMessage.success('保存成功')
+    await loadSettings()
+  } catch {
+    ElMessage.error('保存失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleReset = () => {
+  loadSettings()
+  ElMessage.info('已重置')
+}
+
+onMounted(loadSettings)
+</script>
+
+<style scoped>
+.settings-container {
+  padding: 20px;
+}
+
+.button-group {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 4px;
+}
+
+.wang-editor-wrap {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  width: 100%;
+}
+
+.wang-editor-wrap :deep(.w-e-toolbar) {
+  background: #fafafa;
+  border-bottom: 1px solid #dcdfe6;
+}
+</style>

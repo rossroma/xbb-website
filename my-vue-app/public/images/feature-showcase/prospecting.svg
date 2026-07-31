@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180" fill="none">
+  <defs>
+    <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6da9f2"/>
+      <stop offset="100%" stop-color="#4a7fd9"/>
+    </linearGradient>
+    <linearGradient id="blueLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#dce8fc"/>
+      <stop offset="100%" stop-color="#c5d8f7"/>
+    </linearGradient>
+  </defs>
+  <!-- 背景板 -->
+  <rect x="24" y="20" width="232" height="140" rx="12" fill="#f2f6ff" stroke="#dce8fc" stroke-width="1"/>
+  <!-- 顶部搜索栏 -->
+  <rect x="40" y="36" width="200" height="24" rx="6" fill="#e6edff"/>
+  <circle cx="52" cy="48" r="5" fill="#4a7fd9" opacity="0.5"/>
+  <rect x="62" y="44" width="80" height="8" rx="4" fill="#4a7fd9" opacity="0.2"/>
+  <!-- 用户卡片 1 -->
+  <rect x="40" y="72" width="200" height="28" rx="8" fill="white" stroke="#dce8fc" stroke-width="1"/>
+  <circle cx="56" cy="86" r="9" fill="url(#blueGrad)"/>
+  <rect x="72" y="80" width="60" height="6" rx="3" fill="#4a7fd9" opacity="0.6"/>
+  <rect x="72" y="90" width="90" height="5" rx="2.5" fill="#4a7fd9" opacity="0.25"/>
+  <rect x="180" y="80" width="50" height="20" rx="10" fill="url(#blueGrad)"/>
+  <text x="205" y="94" text-anchor="middle" fill="white" font-size="10" font-weight="700">触达</text>
+  <!-- 用户卡片 2 -->
+  <rect x="40" y="108" width="200" height="28" rx="8" fill="white" stroke="#dce8fc" stroke-width="0.5"/>
+  <circle cx="56" cy="122" r="9" fill="url(#blueGrad)" opacity="0.7"/>
+  <rect x="72" y="116" width="55" height="6" rx="3" fill="#4a7fd9" opacity="0.5"/>
+  <rect x="72" y="126" width="85" height="5" rx="2.5" fill="#4a7fd9" opacity="0.2"/>
+  <rect x="180" y="116" width="50" height="20" rx="10" fill="#4a7fd9" opacity="0.15"/>
+  <text x="205" y="130" text-anchor="middle" fill="#4a7fd9" font-size="10" font-weight="600">待跟进</text>
+  <!-- 底部浮动标签 -->
+  <rect x="60" y="148" width="76" height="22" rx="11" fill="url(#blueGrad)"/>
+  <text x="98" y="163" text-anchor="middle" fill="white" font-size="10" font-weight="600">高意向</text>
+  <rect x="144" y="148" width="76" height="22" rx="11" fill="#c5d8f7"/>
+  <text x="182" y="163" text-anchor="middle" fill="#4a7fd9" font-size="10" font-weight="600">新线索</text>
+</svg>

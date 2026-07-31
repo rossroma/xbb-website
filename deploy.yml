@@ -1,0 +1,225 @@
+name: Deploy to Server
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g. 0.1.0)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m pytest tests/unit/ -v --tb=short
+        env:
+          PYTHONPATH: .
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        working-directory: frontend
+        run: npx vue-tsc --noEmit
+
+      - name: Run tests
+        working-directory: frontend
+        run: pnpm test
+
+  deploy:
+    needs: [backend-unit, frontend]
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_TAG: ${{ github.ref_type == 'tag' && github.ref_name || 'latest' }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME || vars.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD || vars.REGISTRY_PASSWORD }}
+      # Alibaba Cloud ACR (domestic mirror, primary for server pull)
+      ACR_REGISTRY: ${{ secrets.ACR_REGISTRY || vars.ACR_REGISTRY || 'registry.cn-shenzhen.aliyuncs.com' }}
+      ACR_NAMESPACE: ${{ secrets.ACR_NAMESPACE || vars.ACR_NAMESPACE || 'xbb-fe' }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+      DEPLOY_PORT: ${{ secrets.SERVER_PORT != '' && secrets.SERVER_PORT || '22' }}
+      DEPLOY_KEY_PATH: /home/runner/.ssh/deploy_key
+      # LLM config — 统一模型配置（意图路由 + 内容生成共用）
+      MAIN_LLM_API_KEY: ${{ secrets.MAIN_LLM_API_KEY || '' }}
+      MAIN_LLM_BASE_URL: ${{ secrets.MAIN_LLM_BASE_URL || vars.MAIN_LLM_BASE_URL || 'https://api.deepseek.com/v1' }}
+      MAIN_LLM_MODEL: ${{ secrets.MAIN_LLM_MODEL || vars.MAIN_LLM_MODEL || 'deepseek-v4-flash' }}
+      # 宿主端口默认 3020（nginx 反代 deployxbb.xbongbong.com.cn → 127.0.0.1:3020）
+      # 容器内部仍是 8000（uvicorn 监听），由 docker-compose 做 3020:8000 映射
+      # 留 vars.APP_PORT 兜底以便临时调试
+      APP_PORT: ${{ secrets.APP_PORT || vars.APP_PORT || '3020' }}
+      # Database
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER || vars.POSTGRES_USER || 'postgres' }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD || '' }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB || vars.POSTGRES_DB || 'ai_agent' }}
+      # JWT & Admin
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY || '' }}
+      ADMIN_SECRET_KEY: ${{ secrets.ADMIN_SECRET_KEY || '' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Build frontend
+        run: |
+          cd frontend
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Prepare image name
+        id: image
+        shell: bash
+        run: |
+          echo "image=${REGISTRY}/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push release image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.image.outputs.image }}:${{ env.IMAGE_TAG }}
+            ${{ steps.image.outputs.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Push to Alibaba Cloud ACR
+        id: acr
+        if: env.ACR_USERNAME != '' && env.ACR_PASSWORD != ''
+        continue-on-error: true
+        shell: bash
+        run: |
+          ACR_IMAGE="${ACR_REGISTRY}/${ACR_NAMESPACE}/auto_deployment"
+          echo "$ACR_PASSWORD" | docker login "$ACR_REGISTRY" -u "$ACR_USERNAME" --password-stdin
+          docker pull "${{ steps.image.outputs.image }}:${{ env.IMAGE_TAG }}"
+          docker tag "${{ steps.image.outputs.image }}:${{ env.IMAGE_TAG }}" "${ACR_IMAGE}:${{ env.IMAGE_TAG }}"
+          docker tag "${{ steps.image.outputs.image }}:${{ env.IMAGE_TAG }}" "${ACR_IMAGE}:latest"
+          docker push "${ACR_IMAGE}:${{ env.IMAGE_TAG }}"
+          docker push "${ACR_IMAGE}:latest"
+          echo "acr_image=${ACR_IMAGE}" >> "$GITHUB_OUTPUT"
+
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Validate deployment settings
+        run: |
+          set -eu
+          [ -n "${{ secrets.SSH_PRIVATE_KEY }}" ] || { echo "Missing secret: SSH_PRIVATE_KEY"; exit 1; }
+          [ -n "${{ secrets.SSH_KNOWN_HOSTS }}" ] || { echo "Missing secret: SSH_KNOWN_HOSTS"; exit 1; }
+          [ -n "${{ secrets.SERVER_USER }}" ] || { echo "Missing secret: SERVER_USER"; exit 1; }
+          [ -n "${{ secrets.SERVER_HOST }}" ] || { echo "Missing secret: SERVER_HOST"; exit 1; }
+          [ -n "${{ secrets.DEPLOY_PATH }}" ] || { echo "Missing secret: DEPLOY_PATH"; exit 1; }
+          case "$DEPLOY_PORT" in
+            ''|*[!0-9]*)
+              echo "Invalid SERVER_PORT (must be numeric): '$DEPLOY_PORT'"
+              exit 1
+              ;;
+          esac
+
+      - name: Write deploy private key
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > "$DEPLOY_KEY_PATH"
+          chmod 600 "$DEPLOY_KEY_PATH"
+
+      - name: Configure known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Ensure deploy directory exists
+        run: |
+          ssh -i "$DEPLOY_KEY_PATH" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -p "$DEPLOY_PORT" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "mkdir -p '${{ secrets.DEPLOY_PATH }}'"
+
+      - name: Upload deployment assets
+        run: |
+          scp -i "$DEPLOY_KEY_PATH" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -P "$DEPLOY_PORT" \
+            deploy.sh docker-compose.yml .release.env.example \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.DEPLOY_PATH }}/"
+
+      - name: Run remote deployment
+        run: |
+          ssh -i "$DEPLOY_KEY_PATH" -o BatchMode=yes -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -p "$DEPLOY_PORT" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "chmod +x '${{ secrets.DEPLOY_PATH }}/deploy.sh' && \
+             APP_IMAGE='${{ steps.image.outputs.image }}' \
+             IMAGE_TAG='${{ env.IMAGE_TAG }}' \
+             REGISTRY_SERVER='${{ env.REGISTRY }}' \
+             REGISTRY_USERNAME='${{ env.REGISTRY_USERNAME }}' \
+             REGISTRY_PASSWORD='${{ env.REGISTRY_PASSWORD }}' \
+             ACR_IMAGE='${{ steps.acr.outputs.acr_image }}' \
+             ACR_REGISTRY='${{ env.ACR_REGISTRY }}' \
+             ACR_USERNAME='${{ env.ACR_USERNAME }}' \
+             ACR_PASSWORD='${{ env.ACR_PASSWORD }}' \
+             DEPLOY_PATH='${{ secrets.DEPLOY_PATH }}' \
+             MAIN_LLM_API_KEY='${{ env.MAIN_LLM_API_KEY }}' \
+             MAIN_LLM_BASE_URL='${{ env.MAIN_LLM_BASE_URL }}' \
+             MAIN_LLM_MODEL='${{ env.MAIN_LLM_MODEL }}' \
+             PORT='${{ env.APP_PORT }}' \
+             POSTGRES_USER='${{ env.POSTGRES_USER }}' \
+             POSTGRES_PASSWORD='${{ env.POSTGRES_PASSWORD }}' \
+             POSTGRES_DB='${{ env.POSTGRES_DB }}' \
+             JWT_SECRET_KEY='${{ env.JWT_SECRET_KEY }}' \
+             ADMIN_SECRET_KEY='${{ env.ADMIN_SECRET_KEY }}' \
+             '${{ secrets.DEPLOY_PATH }}/deploy.sh'"

@@ -1,0 +1,668 @@
+/* ========================================
+   Tailwind CSS v4 — Design Tokens
+   基于 DESIGN.md 的令牌体系
+   最后同步: DESIGN.md (2026-07-27)
+   令牌总数: 170（核心语义: 48, 组件专用: 87, 渐变工具类: 35）
+
+   ⚠️ 令牌治理规则：
+   1. 新增/修改令牌必须同步更新 DESIGN.md 对应章节
+   2. 新增令牌需经用户确认（提案 → 审批 → 实施）
+   3. 删除令牌需检查所有引用（grep 确认 0 引用）
+   4. 核心语义令牌（Section 1）对标 DESIGN.md Section 1.1-1.8
+   5. 组件专用令牌（Section 2）按组件分组，标注使用范围
+   ======================================== */
+
+@import 'tailwindcss';
+
+/* ============================================================
+   SECTION 1: 核心语义令牌（跨组件通用）
+   对标 DESIGN.md Section 1.1-1.8
+   所有新组件必须优先使用此处令牌
+   ============================================================ */
+
+@theme {
+  /* ---- 1.1 品牌色板 ---- */
+  --color-brand-primary: #ff6400;
+  --color-brand-primary-hover: #ff7a24;
+  --color-brand-primary-active: #e55a00;
+  --color-brand-primary-soft: rgba(255, 100, 0, 0.08);
+  --color-brand-primary-glow: rgba(255, 100, 0, 0.18);
+
+  /* 辅助色 — 蓝紫 */
+  --color-brand-accent: #5b61ff;
+  --color-brand-accent-hover: #6670ff;
+  --color-brand-accent-soft: rgba(91, 97, 255, 0.08);
+  --color-brand-accent-glow: rgba(91, 97, 255, 0.18);
+
+  /* ---- 1.2 中性色 ---- */
+  --color-brand-neutral: #1f2329;
+  --color-brand-neutral-soft: #646a73;
+  --color-brand-neutral-muted: #86909c;
+
+  /* ---- 1.3 表面色 ---- */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f6f6fb;
+  --color-surface-tertiary: #fff3eb;
+  --color-surface-elevated: #ffffff;
+
+  /* ---- 1.4 文字色 ---- */
+  --color-text-primary: #1f2329;
+  --color-text-secondary: #646a73;
+  --color-text-tertiary: #86909c;
+
+  /* ---- 1.5 边框色 ---- */
+  --color-border-default: rgba(0, 0, 0, 0.06);
+  --color-border-subtle: rgba(0, 0, 0, 0.04);
+
+  /* ---- 1.6 状态色 ---- */
+  --color-status-success: #16a34a;
+  --color-status-warning: #f59e0b;
+  --color-status-error: #d1242f;
+  --color-status-info: #2563eb;
+
+  /* 状态色软背景 */
+  --color-status-success-soft: rgba(22, 163, 74, 0.08);
+  --color-status-warning-soft: rgba(245, 158, 11, 0.08);
+  --color-status-info-soft: rgba(37, 99, 235, 0.08);
+
+  /* ---- 1.7 排版 — 来自 DESIGN.md Section 1.2 ---- */
+
+  /* 排版简写 — text-* 同时设置 font-size + line-height + font-weight + letter-spacing */
+  --text-display: 38px;
+  --text-display--line-height: 1.18;
+  --text-display--font-weight: 700;
+  --text-display--letter-spacing: -0.025em;
+
+  --text-h1: 30px;
+  --text-h1--line-height: 1.24;
+  --text-h1--font-weight: 700;
+  --text-h1--letter-spacing: -0.015em;
+
+  --text-h2: 24px;
+  --text-h2--line-height: 1.32;
+  --text-h2--font-weight: 700;
+  --text-h2--letter-spacing: -0.005em;
+
+  --text-h3: 20px;
+  --text-h3--line-height: 1.5;
+  --text-h3--font-weight: 700;
+
+  --text-body: 16px;
+  --text-body--line-height: 1.7;
+  --text-body--font-weight: 400;
+
+  --text-small: 14px;
+  --text-small--line-height: 1.6;
+  --text-small--font-weight: 400;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 1.5;
+  --text-caption--font-weight: 500;
+
+  /* 独立行高令牌（用于覆盖 text-* 默认值，对标 DESIGN.md Section 1.2） */
+  --leading-display: 1.18;
+  --leading-heading: 1.24;
+  --leading-title: 1.32;
+  --leading-subtitle: 1.5;
+  --leading-body: 1.7;
+  --leading-small: 1.6;
+  --leading-caption: 1.5;
+
+  /* 独立字间距令牌（用于覆盖 text-* 默认值，对标 DESIGN.md Section 1.2） */
+  --tracking-display: -0.025em;
+  --tracking-h1: -0.015em;
+  --tracking-h2: -0.005em;
+
+  /* ---- 1.8 间距基准 ---- */
+  --spacing: 4px;
+
+  /* ---- 1.9 圆角 — 来自 DESIGN.md Section 1.4 ---- */
+  --radius-large: 32px;
+  --radius-card: 16px;
+  --radius-inner: 12px;
+  --radius-pill: 999px;
+
+  /* ---- 1.10 阴影（核心语义）— 来自 DESIGN.md Section 1.5 ---- */
+  --shadow-subtle: 0 12px 28px rgba(15, 23, 42, 0.06);
+  --shadow-default: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --shadow-prominent: 0 24px 48px rgba(255, 100, 0, 0.12);
+
+  /* ---- 1.11 动效持续时间 — 来自 DESIGN.md Section 1.6 ---- */
+  --transition-duration-fast: 180ms;
+  --transition-duration-normal: 240ms;
+  --transition-duration-slow: 360ms;
+  --transition-duration-glide: 450ms;
+  --transition-duration-carousel: 550ms;
+
+  /* ---- 1.12 断点 — 来自 DESIGN.md Section 1.8 ---- */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* ============================================================
+     SECTION 2: 组件专用令牌
+     非通用令牌，仅特定组件使用。新增组件专用令牌需标注使用范围。
+     ============================================================ */
+
+  /* ---- 2.1 按钮组件 (Button.vue, IconBadge.vue) ---- */
+  --color-brand-primary-ring: rgba(255, 100, 0, 0.24);
+  --color-brand-primary-ring-hover: rgba(255, 100, 0, 0.42);
+  --color-brand-accent-ring: rgba(91, 97, 255, 0.24);
+  --color-brand-accent-ring-hover: rgba(91, 97, 255, 0.42);
+
+  --shadow-button-brand: 0 4px 16px rgba(255, 100, 0, 0.25);
+  --shadow-button-brand-hover: 0 6px 20px rgba(255, 100, 0, 0.35);
+  --shadow-button-accent: 0 4px 16px rgba(91, 97, 255, 0.25);
+  --shadow-button-accent-hover: 0 6px 20px rgba(91, 97, 255, 0.35);
+  --shadow-button-accent-hero: 0 14px 30px rgba(91, 97, 255, 0.22);
+  --shadow-button-pressed: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --shadow-button-hero-hover: 0 18px 36px rgba(0, 0, 0, 0.18);
+
+  /* ---- 2.2 AI 主题 (AiFeatureCards.vue) ---- */
+  --color-ai-primary: #7c5cff;
+  --color-ai-primary-light: #b78bff;
+  --color-ai-primary-ring: rgba(124, 92, 255, 0.38);
+  --color-ai-border: #e2def3;
+  --color-ai-border-light: #ece8f7;
+  --color-ai-border-lighter: #e5e3ee;
+  --color-ai-bg: #eee9ff;
+  --color-ai-bg-light: #f1edff;
+  --color-ai-muted: #a4a0ad;
+  --color-ai-card-title: #111217;
+  --color-ai-card-desc: #555763;
+  --color-ai-title: #272a32;
+  --color-ai-coach-text: #22242b;
+  --color-ai-prompt-text: #343640;
+  --color-ai-process-title: #20222a;
+  --color-ai-process-text: #333641;
+  --color-ai-process-danger: #f05b42;
+  --color-ai-process-danger-soft: #fff0ed;
+  --color-ai-process-success: #20b26b;
+  --color-ai-process-success-text: #20a563;
+  --color-ai-mock-bg: rgba(255, 255, 255, 0.78);
+  --color-ai-mock-bg-solid: rgba(255, 255, 255, 0.86);
+  --color-ai-mock-bg-light: rgba(255, 255, 255, 0.94);
+  --color-ai-mock-bg-analyst: rgba(255, 255, 255, 0.9);
+  --color-ai-float-text-muted: rgba(255, 255, 255, 0.72);
+
+  --radius-ai-card: 24px;
+  --radius-ai-analyst: 26px;
+
+  --shadow-ai-card: 0 24px 48px rgba(124, 92, 255, 0.12);
+  --shadow-ai-logo: 0 10px 26px rgba(124, 92, 255, 0.24);
+  --shadow-ai-mock: 0 -18px 42px rgba(138, 116, 255, 0.16);
+  --shadow-ai-float-pill: 0 16px 34px rgba(137, 103, 255, 0.26);
+  --shadow-ai-coach: 0 20px 48px rgba(138, 116, 255, 0.2);
+  --shadow-ai-process: 0 10px 22px rgba(138, 116, 255, 0.12);
+  --shadow-ai-prompt: 0 8px 18px rgba(42, 35, 88, 0.06);
+
+  /* ---- 2.2b FeatureShowcase 多主题 (FeatureShowcase.vue) ---- */
+  --shadow-fs-purple: 0 24px 48px rgba(124, 92, 255, 0.14);
+  --shadow-fs-blue: 0 24px 48px rgba(74, 127, 217, 0.14);
+  --shadow-fs-teal: 0 24px 48px rgba(14, 165, 169, 0.14);
+  --shadow-fs-green: 0 24px 48px rgba(16, 185, 129, 0.14);
+  --shadow-fs-orange: 0 24px 48px rgba(255, 100, 0, 0.14);
+
+  /* ---- 2.3 Hero Banner (HeroBanner.vue) ---- */
+  --color-hero-eyebrow: #4d5bd4;
+  --color-hero-title: #17203f;
+  --color-hero-subtitle: #5563ef;
+  --color-hero-desc: #4b587c;
+  --color-hero-video-bg: #0b1220;
+  --color-hero-arrow: #334155;
+  --color-hero-arrow-hover: #1e40af;
+  --color-hero-eyebrow-border: rgba(163, 176, 255, 0.42);
+  --color-hero-video-border: rgba(213, 222, 246, 0.8);
+  --color-hero-arrow-border: rgba(226, 232, 240, 0.88);
+  --color-hero-arrow-border-hover: rgba(191, 219, 254, 0.92);
+
+  --radius-hero: 28px;
+
+  --shadow-hero-button: 0 14px 30px rgba(255, 100, 0, 0.22);
+  --shadow-hero-arrow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  --shadow-hero-arrow-hover: 0 16px 30px rgba(37, 99, 235, 0.16);
+  --shadow-hero-eyebrow: 0 10px 24px rgba(91, 97, 255, 0.08);
+  --shadow-hero-video: 0 32px 72px rgba(39, 57, 110, 0.12);
+
+  /* ---- 2.4 浮动工具栏 (FloatingToolbar.vue) ---- */
+  --color-toolbar-icon: #656a8e;
+  --color-toolbar-scroll-top: #ff8e3d;
+
+  --shadow-toolbar: 0 0 25px rgba(101, 106, 142, 0.3);
+  --shadow-toolbar-scroll-top: 0 0 25px rgba(255, 142, 61, 0.4);
+  --shadow-toolbar-service-label: 0 8px 18px rgba(125, 92, 255, 0.28);
+
+  /* ---- 2.5 底部试用栏 (BottomTrialBar.vue) ---- */
+  --color-trial-text: #334155;
+  --color-trial-code-btn: #4857df;
+  --color-trial-feedback-success: #86efac;
+  --color-trial-feedback-error: #fda4af;
+  --color-trial-bar-border: #c4cef3;
+
+  --shadow-trial-bar: 0 -10px 24px rgba(99, 102, 241, 0.08);
+  --shadow-trial-submit: 0 10px 22px rgba(79, 70, 229, 0.14);
+
+  /* ---- 2.6 案例轮播 (CaseCarousel.vue) ---- */
+  --color-case-card-border: rgba(203, 213, 225, 0.96);
+  --color-case-logo-border: rgba(203, 213, 225, 0.92);
+  --color-case-arrow-border: rgba(203, 213, 225, 0.9);
+
+  --shadow-case-arrow: 0 8px 18px rgba(15, 23, 42, 0.06);
+  --shadow-case-arrow-hover: 0 14px 28px rgba(255, 100, 0, 0.08);
+  --shadow-case-edge: 0 8px 24px rgba(37, 99, 235, 0.06);
+  --shadow-case-logo-hover: 0 14px 28px rgba(255, 100, 0, 0.08);
+  --shadow-case-cta-hover: 0 10px 22px rgba(32, 41, 63, 0.08);
+
+  /* ---- 2.7 Footer (SiteFooter.vue) ---- */
+  --color-footer-border-strong: rgba(212, 217, 255, 0.88);
+  --color-footer-border: rgba(212, 217, 255, 0.6);
+  --color-footer-border-light: rgba(212, 217, 255, 0.4);
+  --color-footer-social-border: rgba(164, 175, 255, 0.28);
+  --color-footer-social-border-hover: rgba(92, 105, 244, 0.4);
+  --color-footer-qr-border: rgba(148, 163, 184, 0.18);
+  --color-footer-qr-divider: rgba(148, 163, 184, 0.28);
+
+  --shadow-footer-social-hover: 0 3px 12px rgba(92, 105, 244, 0.12);
+  --shadow-footer-qr: 0 12px 36px rgba(15, 23, 42, 0.18);
+
+  /* ---- 2.8 其他组件 ---- */
+  /* 通用标题 (SiteFooter, Button, SectionHeading) */
+  --color-heading: #101828;
+
+  /* 生态合作伙伴 (EcosystemPartners.vue) */
+  --color-eco-title: #1f2d3d;
+  --color-eco-desc: #5e6d82;
+  --color-eco-1688: #1d2440;
+
+  /* 服务体系 (ServiceCardItem.vue) */
+  --color-service-desc: #2b2f36;
+
+  /* 解决方案卡片 (SolutionCards.vue) */
+  --color-card-title: #1d2129;
+  --color-card-point-bg: #f8f9fb;
+  --color-card-point-border: #f0f0f0;
+
+  /* 骨架屏 (Skeleton.vue) */
+  --color-skeleton-shimmer: #e8e8ed;
+
+  /* 卡片悬停 (SolutionCards, Card) */
+  --shadow-card-hover: 0 32px 64px rgba(255, 100, 0, 0.08);
+
+  /* 图标徽章 (IconBadge.vue) */
+  --shadow-service-icon: 0 10px 24px rgba(148, 163, 184, 0.12);
+
+  /* Header 电话图标 (SiteHeader.vue) */
+  --shadow-header-phone-icon: 0 8px 18px rgba(255, 100, 0, 0.18);
+
+  /* 通用 Badge 圆角 (Badge.vue, HeroBanner) */
+  --radius-badge: 14px;
+
+  /* 增长指标 (MetricItem.vue) — 对标 DESIGN.md Section 2.10 */
+  --text-metrics-value: 65px;
+  --text-metrics-value--line-height: 0.9;
+  --text-metrics-value--font-weight: 700;
+  --text-metrics-unit: 40px;
+  --text-metrics-unit--line-height: 0.9;
+  --text-metrics-unit--font-weight: 700;
+}
+
+/* ============================================================
+   SECTION 2.5: 排版工具类参考
+   Tailwind v4.3 中 --text-* 简写会自动生成 text-* 工具类，
+   每个 text-* 同时设置 font-size + line-height + font-weight + letter-spacing：
+
+   text-display → 38px / 1.18 / 700 / -0.025em
+   text-h1      → 30px / 1.24 / 700 / -0.015em
+   text-h2      → 24px / 1.32 / 700 / -0.005em
+   text-h3      → 20px / 1.5  / 700 / 0
+   text-body    → 16px / 1.7  / 400 / 0
+   text-small   → 14px / 1.6  / 400 / 0
+   text-caption → 12px / 1.5  / 500 / 0
+
+   如需覆盖默认行高/字重/字间距，使用独立的 leading-* / font-* / tracking-* 类
+   ============================================================ */
+
+/* ============================================================
+   SECTION 3: 渐变工具类
+   必须用 @utility 而非 @theme --color-*，
+   因为 bg-* 在 Tailwind v4 中只设置 background-color，
+   而渐变需要 background-image
+   ============================================================ */
+
+@utility bg-brand-primary-gradient {
+  background-image: linear-gradient(135deg, #ff6400 0%, #ff7a24 100%);
+}
+@utility bg-brand-primary-hero-gradient {
+  background-image: linear-gradient(135deg, #ff8d1f 0%, #ff6400 100%);
+}
+@utility bg-brand-accent-button-gradient {
+  background-image: linear-gradient(135deg, #5b61ff 0%, #6670ff 100%);
+}
+@utility bg-brand-accent-hero-gradient {
+  background-image: linear-gradient(135deg, #6b6fff 0%, #5b61ff 100%);
+}
+@utility bg-metrics-gradient {
+  background-image: linear-gradient(90deg, #ff6400 10.12%, #ff9a4d 102.33%);
+}
+@utility bg-ai-primary-gradient {
+  background-image: linear-gradient(135deg, #f5f2ff 0%, #ede6ff 100%);
+}
+@utility bg-ai-float-gradient {
+  background-image: linear-gradient(135deg, #b38dff, #c7a7ff);
+}
+/* ---- FeatureShowcase 多主题渐变 (FeatureShowcase.vue) ---- */
+@utility bg-fs-blue-gradient {
+  background-image: linear-gradient(135deg, #f2f6ff 0%, #e6edff 100%);
+}
+@utility bg-fs-teal-gradient {
+  background-image: linear-gradient(135deg, #f0fbfe 0%, #e2f5fc 100%);
+}
+@utility bg-fs-green-gradient {
+  background-image: linear-gradient(135deg, #f1faf4 0%, #e2f5e8 100%);
+}
+@utility bg-fs-orange-gradient {
+  background-image: linear-gradient(135deg, #fef9f3 0%, #fef2e6 100%);
+}
+/* ---- FeatureShowcase hover 遮罩渐变 (FeatureShowcase.vue) ---- */
+@utility bg-fs-overlay-purple {
+  background-image: linear-gradient(180deg, transparent 0%, rgba(124, 92, 255, 0.12) 100%);
+}
+@utility bg-fs-overlay-blue {
+  background-image: linear-gradient(180deg, transparent 0%, rgba(74, 127, 217, 0.12) 100%);
+}
+@utility bg-fs-overlay-teal {
+  background-image: linear-gradient(180deg, transparent 0%, rgba(14, 165, 169, 0.12) 100%);
+}
+@utility bg-fs-overlay-green {
+  background-image: linear-gradient(180deg, transparent 0%, rgba(16, 185, 129, 0.12) 100%);
+}
+@utility bg-fs-overlay-orange {
+  background-image: linear-gradient(180deg, transparent 0%, rgba(255, 100, 0, 0.12) 100%);
+}
+/* ---- FeatureShowcase 图标徽章渐变（深色，用于 icon badge）---- */
+@utility bg-fs-icon-purple {
+  background-image: linear-gradient(135deg, #b78bff 0%, #7c5cff 100%);
+}
+@utility bg-fs-icon-blue {
+  background-image: linear-gradient(135deg, #6da9f2 0%, #4a7fd9 100%);
+}
+@utility bg-fs-icon-teal {
+  background-image: linear-gradient(135deg, #5ee3c4 0%, #0ea5a9 100%);
+}
+@utility bg-fs-icon-green {
+  background-image: linear-gradient(135deg, #6ee7a8 0%, #10b981 100%);
+}
+@utility bg-fs-icon-orange {
+  background-image: linear-gradient(135deg, #ff9a4d 0%, #ff6400 100%);
+}
+/* ---- 商业官网主题图标徽章渐变（新增）---- */
+@utility bg-fs-icon-plain {
+  background-image: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+@utility bg-fs-icon-slate {
+  background-image: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+}
+@utility bg-fs-icon-indigo {
+  background-image: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+}
+@utility bg-fs-icon-amber {
+  background-image: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+}
+@utility bg-fs-icon-sky {
+  background-image: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
+}
+/* ---- FeatureIntro 径向渐变背景 (FeatureIntro.vue) ---- */
+/* 每个主题使用不同的渐变中心点和方向，切换时呈现不同的视觉氛围 */
+@utility bg-fi-purple {
+  background-image:
+    radial-gradient(ellipse at 22% 28%, rgba(124, 92, 255, 0.15), transparent 62%),
+    radial-gradient(circle at 82% 72%, rgba(124, 92, 255, 0.05), transparent 38%);
+  background-color: #faf9ff;
+}
+@utility bg-fi-blue {
+  background-image:
+    radial-gradient(ellipse at 78% 72%, rgba(74, 127, 217, 0.14), transparent 58%),
+    radial-gradient(circle at 18% 28%, rgba(74, 127, 217, 0.05), transparent 42%);
+  background-color: #f5f8ff;
+}
+@utility bg-fi-teal {
+  background-image:
+    radial-gradient(ellipse at 58% 48%, rgba(14, 165, 169, 0.13), transparent 56%),
+    radial-gradient(circle at 28% 82%, rgba(14, 165, 169, 0.05), transparent 42%);
+  background-color: #f5fcfc;
+}
+@utility bg-fi-green {
+  background-image:
+    radial-gradient(ellipse at 12% 78%, rgba(16, 185, 129, 0.13), transparent 58%),
+    radial-gradient(circle at 72% 22%, rgba(16, 185, 129, 0.05), transparent 42%);
+  background-color: #f5faf7;
+}
+@utility bg-fi-orange {
+  background-image:
+    radial-gradient(ellipse at 82% 22%, rgba(255, 100, 0, 0.12), transparent 58%),
+    radial-gradient(circle at 18% 68%, rgba(255, 100, 0, 0.04), transparent 42%);
+  background-color: #fefaf6;
+}
+/* ---- 商业官网主题（新增）---- */
+@utility bg-fi-plain {
+  background-color: #ffffff;
+}
+@utility bg-fi-slate {
+  background-image:
+    radial-gradient(ellipse at 18% 22%, rgba(100, 116, 139, 0.12), transparent 58%),
+    radial-gradient(circle at 78% 68%, rgba(100, 116, 139, 0.04), transparent 42%);
+  background-color: #f8f9fb;
+}
+@utility bg-fi-indigo {
+  background-image:
+    radial-gradient(ellipse at 72% 18%, rgba(99, 102, 241, 0.13), transparent 56%),
+    radial-gradient(circle at 28% 78%, rgba(99, 102, 241, 0.04), transparent 42%);
+  background-color: #f8f7ff;
+}
+@utility bg-fi-amber {
+  background-image:
+    radial-gradient(ellipse at 28% 82%, rgba(245, 158, 11, 0.11), transparent 58%),
+    radial-gradient(circle at 72% 22%, rgba(245, 158, 11, 0.04), transparent 42%);
+  background-color: #fefbf6;
+}
+@utility bg-fi-sky {
+  background-image:
+    radial-gradient(ellipse at 48% 38%, rgba(14, 165, 233, 0.12), transparent 58%),
+    radial-gradient(circle at 82% 62%, rgba(14, 165, 233, 0.04), transparent 42%);
+  background-color: #f5faff;
+}
+/* ---- FeatureIntro 标题文字渐变 (FeatureIntro.vue) ---- */
+@utility text-fi-title-purple {
+  background-image: linear-gradient(135deg, #7c5cff 0%, #b78bff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-blue {
+  background-image: linear-gradient(135deg, #4a7fd9 0%, #6da9f2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-teal {
+  background-image: linear-gradient(135deg, #0ea5a9 0%, #5ee3c4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-green {
+  background-image: linear-gradient(135deg, #10b981 0%, #6ee7a8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-orange {
+  background-image: linear-gradient(135deg, #ff6400 0%, #ff9a4d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* ---- 商业官网主题标题渐变（新增）---- */
+@utility text-fi-title-plain {
+  /* 纯色文字，无渐变 — 回退到默认 text-text-primary */
+  -webkit-text-fill-color: initial;
+}
+@utility text-fi-title-slate {
+  background-image: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-indigo {
+  background-image: linear-gradient(135deg, #6366f1 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-amber {
+  background-image: linear-gradient(135deg, #f59e0b 0%, #fcd34d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility text-fi-title-sky {
+  background-image: linear-gradient(135deg, #0ea5e9 0%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@utility bg-trial-submit-gradient {
+  background-image: linear-gradient(135deg, #5b5bd6 0%, #2563eb 100%);
+}
+@utility bg-toolbar-scroll-top-gradient {
+  background-image: linear-gradient(180deg, #c57cff 0%, #7d5cff 100%);
+}
+@utility bg-case-gradient-left {
+  background-image: linear-gradient(
+    90deg,
+    rgba(248, 250, 252, 0.98) 0%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+@utility bg-case-gradient-right {
+  background-image: linear-gradient(
+    270deg,
+    rgba(248, 250, 252, 0.98) 0%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+@utility bg-case-card-gradient {
+  background-image: linear-gradient(
+    180deg,
+    rgba(99, 102, 241, 0.05) 0%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
+}
+
+@utility bg-footer-gradient {
+  background-image:
+    radial-gradient(circle at top center, rgba(92, 105, 244, 0.08), transparent 32%),
+    radial-gradient(circle at top right, rgba(255, 100, 0, 0.05), transparent 18%),
+    linear-gradient(180deg, #fbfbff 0%, #f6f4ff 52%, #f4f7ff 100%);
+}
+
+@utility bg-trial-bar-gradient {
+  background-image: linear-gradient(180deg, #f6f8ff 0%, #eff4ff 100%);
+}
+
+/* ---- FinalCTA 渐变背景 (FinalCTA.vue) — 对标 DESIGN.md Section 2.15 ---- */
+@utility bg-cta-warm-gradient {
+  background-image: linear-gradient(
+    135deg,
+    #fefaf6 0%,
+    #fef5eb 25%,
+    #fef8f2 55%,
+    #fdf3e8 80%,
+    #fef7f1 100%
+  );
+}
+@utility bg-cta-cool-gradient {
+  background-image: linear-gradient(
+    135deg,
+    #faf9ff 0%,
+    #f3f1fc 30%,
+    #f8f7fe 55%,
+    #f2effa 80%,
+    #f9f8fe 100%
+  );
+}
+@utility bg-cta-dawn-gradient {
+  background-image: linear-gradient(135deg, #fef9f3 0%, #f8f5fb 40%, #f6f4fd 60%, #fdf8f2 100%);
+}
+@utility bg-cta-mint-gradient {
+  background-image: linear-gradient(
+    135deg,
+    #f9fcfa 0%,
+    #f2f8f5 30%,
+    #f7fbf9 55%,
+    #f0f7f3 80%,
+    #f8fbf9 100%
+  );
+}
+
+/* ---- DataDashboard 卡片渐变背景 (DataDashboard.vue) ---- */
+@utility bg-dashboard-card {
+  background-image: linear-gradient(180deg, #ffffff 0%, #f8f9fc 100%);
+}
+@utility bg-dashboard-card-highlighted {
+  background-image: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%);
+}
+
+/* ---- SplitSection 图片区域渐变背景 (SplitSection.vue) ---- */
+@utility bg-split-image-gradient {
+  background-image: linear-gradient(135deg, #fff8f3 0%, #fff3eb 50%, #fef0e3 100%);
+}
+
+/* ---- 底部试用栏输入框样式（原 BottomTrialBar scoped 样式迁移） ---- */
+@utility trial-input {
+  & :where(div) {
+    border-color: rgba(196, 206, 243, 0.92);
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.92);
+  }
+  & :where(input) {
+    color: var(--color-trial-text, #1f2329);
+    font-size: 14px;
+    line-height: 36px;
+  }
+  & :where(input)::placeholder {
+    color: var(--color-text-tertiary, #86909c);
+  }
+  & :where(div:focus-within) {
+    border-color: rgba(99, 102, 241, 0.58);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+  }
+}
+
+@utility trial-code-input {
+  & :where(div) {
+    border-radius: 0.5rem 0 0 0.5rem;
+  }
+}
+
+/* ---- 骨架屏动画 ---- */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@utility animate-skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-surface-secondary) 25%,
+    var(--color-skeleton-shimmer) 50%,
+    var(--color-surface-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

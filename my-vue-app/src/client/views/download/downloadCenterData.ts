@@ -1,0 +1,58 @@
+// ========== 下载中心页面 SEO 配置 ==========
+import type { PlatformDownloadCard } from '@/client/components/business/PlatformDownload.vue'
+
+export const downloadCenterSeo = {
+  title: '下载中心 - 销帮帮 CRM',
+  description:
+    '销帮帮 CRM 下载中心，支持钉钉版、飞书版、1688版本、企微版、独立版与销帮帮AI CRM 多平台扫码体验，即刻上手。',
+}
+
+// ========== 各平台下载区域（PlatformDownload） ==========
+export const downloadCenterSection = {
+  title: '扫码体验，即刻上手',
+  subtitle: '多端覆盖，随需而选。随时随地，高效销售。',
+  platforms: [
+    {
+      name: '钉钉版',
+      icon: '/images/download/dingup.jpg',
+      qrCode: '/images/download/dingdown.jpg',
+      iconAlt: '钉钉版下载入口',
+      qrCodeAlt: '钉钉版下载二维码',
+    },
+    {
+      name: '飞书版',
+      icon: '/images/download/flyup.jpg',
+      qrCode: '/images/download/flydown.jpg',
+      iconAlt: '飞书版下载入口',
+      qrCodeAlt: '飞书版下载二维码',
+    },
+    {
+      name: '1688版本',
+      icon: '/ecosystem/1688.png',
+      qrCode: '/images/download/placeholder-qr.svg',
+      iconAlt: '1688版本下载入口',
+      qrCodeAlt: '1688版本下载二维码占位图',
+    },
+    {
+      name: '企微版',
+      icon: '/images/download/wxup.jpg',
+      qrCode: '/images/download/wxdown.jpg',
+      iconAlt: '企微版下载入口',
+      qrCodeAlt: '企微版下载二维码',
+    },
+    {
+      name: '独立版',
+      icon: '/images/download/xbbup.jpg',
+      qrCode: '/images/download/xbbdown.jpg',
+      iconAlt: '独立版下载入口',
+      qrCodeAlt: '独立版下载二维码',
+    },
+    {
+      name: '销帮帮AI CRM',
+      icon: '/images/download/aiup.png',
+      qrCode: '/images/download/aidown.png',
+      iconAlt: '销帮帮AI CRM 下载入口',
+      qrCodeAlt: '销帮帮AI CRM 下载二维码',
+    },
+  ] as PlatformDownloadCard[],
+}

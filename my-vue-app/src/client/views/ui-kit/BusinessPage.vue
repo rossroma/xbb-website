@@ -1,0 +1,2140 @@
+<template>
+  <div class="flex flex-col gap-6">
+    <!-- 分类三：Business 组件                                                  -->
+    <!-- ================================================================ -->
+    <div id="cat-business" class="scroll-mt-14 lg:scroll-mt-0 mt-6">
+      <div class="mb-4">
+        <span
+          class="inline-flex items-center px-3 py-1 rounded bg-status-success-soft text-status-success text-caption font-bold uppercase tracking-wider"
+          >Business 组件</span
+        >
+      </div>
+    </div>
+
+    <!-- ===== HeroBanner ===== -->
+    <Card id="hero-banner" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">HeroBanner 轮播</h2>
+      <p class="text-small text-text-secondary mb-6">
+        全宽轮播，自动播放，渐变背景，视频/图片媒体，左右箭头 + 指示点。
+      </p>
+      <HeroBanner :slides="bannerSlides" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: slides: BannerSlide[] — 支持 video/image 两种媒体类型</li>
+          <li>自动播放 5s，hover 暂停，离开恢复</li>
+          <li>支持 prefers-reduced-motion 关闭动画</li>
+          <li>按钮使用 Button 组件 variant="hero" 和 variant="hero-outline"</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== HeroBanner (single) ===== -->
+    <Card id="hero-banner-single" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">HeroBanner 单页 Hero</h2>
+      <p class="text-small text-text-secondary mb-6">
+        mode="single" 模式，子页面 Hero 区域，左文案右插图，支持双操作按钮，无轮播。
+      </p>
+      <div class="border border-border-subtle rounded-card overflow-hidden">
+        <HeroBanner mode="single" :slides="[heroBannerDemoSlide]" />
+      </div>
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: mode="single", slides: BannerSlide[] (取第一个)</li>
+          <li>Emits: action(slide, 'primary' | 'secondary')</li>
+          <li>全宽通栏，grid-cols-[1fr_1fr]，移动端堆叠</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== GradientHero ===== -->
+    <PlaygroundShell
+      section-id="gradient-hero"
+      title="GradientHero 功能介绍"
+      description="全宽通栏径向渐变背景，左文右图。支持 badge 图标、tag 标签、CTA 按钮、标题渐变色，10 种主题。"
+      code-tag="GradientHero"
+      code-self-closing
+      :code-extra-props="featureIntroCodeExtra"
+      :controls="featureIntroControls"
+      :initial-props="featureIntroDefaults"
+      :usage-notes="[
+        'Props: title, description, image（必需）；badgeIcon?, tag?, buttonText?, theme?, reverse?, titleGradient?, linkHref?',
+        'Emits: buttonClick',
+        'theme: purple（默认）| blue | teal | green | orange | plain | slate | indigo | amber | sky',
+        'tag + buttonText 启用案例卡片模式（来自原 CaseCard），badgeIcon 启用功能介绍模式',
+        'titleGradient: 标题是否使用渐变色',
+        'reverse 控制图文左右位置互换',
+      ]"
+      v-slot="fiProps"
+    >
+      <GradientHero
+        v-bind="fiProps as any"
+        :badge-icon="fiProps.mode === 'intro' && fiProps.badgeIcon === 'show' ? Star : undefined"
+        :tag="fiProps.mode === 'case' ? '制造行业' : undefined"
+        :button-text="fiProps.mode === 'case' ? '了解详情' : undefined"
+      />
+    </PlaygroundShell>
+
+    <!-- ===== PromoBanner ===== -->
+    <Card id="promo-banner" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">PromoBanner 媒体横条</h2>
+      <p class="text-small text-text-secondary mb-6">左文右图，客户列表，操作按钮，响应式堆叠。</p>
+      <PromoBanner
+        eyebrow="安恒信息、外研在线、尼普顿、京达生物.."
+        title="AI时代，先进企业为何选择用销帮帮AI CRM 重新定义增长"
+        cta-text="定制企业提效方案"
+        :image="custChoiseImg"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: eyebrow, title, ctaText, image</li>
+          <li>按钮使用 Button variant="outline-neutral"</li>
+          <li>支持 ctaClick 事件</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== PromoBannerCarousel ===== -->
+    <Card id="promo-banner-carousel" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">PromoBannerCarousel 轮播横幅</h2>
+      <p class="text-small text-text-secondary mb-6">
+        结合 Carousel 与 PromoBanner 紧凑布局，支持自动轮播、指示点切换，无左右箭头，适合子页面
+        Banner 区。
+      </p>
+      <PromoBannerCarousel :slides="promoCarouselDemoSlides" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: slides: PromoBannerSlide[]（必需）；autoPlay?, interval?</li>
+          <li>
+            PromoBannerSlide 字段：key, eyebrow, title, ctaText, image（必需）；imageAlt?（可选）
+          </li>
+          <li>默认自动播放 5s，hover 暂停，离开恢复</li>
+          <li>底部指示点用于切换，无左右箭头</li>
+          <li>按钮使用 Button variant="outline-neutral"</li>
+          <li>支持 ctaClick 事件，传递当前 slide 数据</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== FeatureImageCard ===== -->
+    <Card id="feature-image-card" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">FeatureImageCard 图片卡片网格</h2>
+      <p class="text-small text-text-secondary mb-6">
+        4 列可点击卡片，hover 上浮 + 渐变图标，图片 + 标签 + 要点网格。
+      </p>
+      <FeatureImageCard heading="解决方案" :cards="solutionCards" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: heading, subheading, cards: FeatureImageCard[]</li>
+          <li>卡片 hover 上浮 10px + 缩放 1.01 + 阴影提升</li>
+          <li>图标使用 IconBadge variant="gradient"</li>
+          <li>支持 headingClick 和 cardClick 事件</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== ImageShowcase ===== -->
+    <PlaygroundShell
+      section-id="image-showcase"
+      title="ImageShowcase 左右布局展示"
+      description="左侧标题与副标题，右侧完整图片，可选按钮，支持左右位置切换。"
+      code-tag="ImageShowcase"
+      code-self-closing
+      :code-extra-props="imageShowcaseCodeExtra"
+      :controls="imageShowcaseControls"
+      :initial-props="imageShowcaseDefaults"
+      :usage-notes="[
+        'Props: title, subtitle, image（必需）；imageAlt?, layout?, theme?, ctaText?',
+        'layout: text-left（左文右图）| text-right（右文左图）',
+        'theme: purple | blue | teal | green | orange | plain | slate | indigo | amber | sky',
+        '左侧保留标题、副标题和可选按钮，右侧为图片展示，切换时仅变换左右位置',
+        'CTA Button 控件可切换 ctaText 按钮是否显示',
+        '建议图片比例 16:10 或 4:3，推荐宽度 700px 以上',
+      ]"
+      v-slot="imgProps"
+    >
+      <ImageShowcase v-bind="imgProps as any" />
+    </PlaygroundShell>
+
+    <!-- ===== ContentCardGrid ===== -->
+    <PlaygroundShell
+      section-id="content-card-grid"
+      title="ContentCardGrid 图文卡片网格"
+      description="图文卡片网格，支持 4 种形态 × 2 种布局方向。variant 控制展示形态，layout 控制排列方向，rounded 控制圆角开关。"
+      code-tag="ContentCardGrid"
+      code-self-closing
+      :code-extra-props="imageTextCardGridCodeExtra"
+      :controls="imageTextCardGridControls"
+      :initial-props="imageTextCardGridDefaults"
+      :usage-notes="[
+        'Props: title, cards（必需）；subtitle?, variant?, layout?, columns?, rounded?',
+        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）',
+        'layout: vertical（默认）| horizontal（水平排列）',
+        'columns: vertical 3/4/5，horizontal 1/2',
+        'rounded: true（默认，圆角）| false（直角）',
+        'resource 变体：含描述 + 底部链接按钮',
+        'square 变体：卡片 1:1 正方形，图片 4:3，标题 + 2行描述',
+        'horizontal 布局：左图右文，单列模式显示摘要',
+      ]"
+      v-slot="itProps"
+    >
+      <ContentCardGrid
+        v-bind="itProps as any"
+        :cards="
+          itProps.variant === 'square'
+            ? demoSquareCards
+            : itProps.variant === 'resource'
+              ? resourceDemoCards
+              : itProps.layout === 'horizontal'
+                ? itProps.columns === 1
+                  ? demoFeatureSingleCards
+                  : demoFeatureCards
+                : itProps.variant === 'product'
+                  ? demoProductCards
+                  : demoCaseCards
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== IconCardGrid ===== -->
+    <PlaygroundShell
+      section-id="icon-card-grid"
+      title="IconCardGrid 能力卡片网格"
+      description="展示功能/能力卡片，支持 5 种视觉风格 × 3 种色彩方案，2 / 3 / 4 / 5 / 7 列布局。"
+      code-tag="IconCardGrid"
+      :code-extra-props="featureCardGridCodeExtra"
+      code-self-closing
+      :controls="featureCardGridControls"
+      :initial-props="featureCardGridDefaults"
+      :usage-notes="[
+        'Props: title, features（必需）；subtitle?, topImages?, columns?, variant?, colorScheme?',
+        'variant: plain（默认）| icon-badge（图标徽章行内）| icon-badge-protruding（凸出）| accent-strip（顶部强调线）| icon-tile（图标方块 + 标题下置）',
+        'colorScheme: brand（品牌橙）| accent（蓝紫）| neutral（中性灰），所有变体一致生效',
+        'columns: 2 | 3 | 4 | 5 | 7（默认 4），移动端自动 1 列',
+      ]"
+      v-slot="fgProps"
+    >
+      <IconCardGrid
+        v-bind="fgProps as any"
+        :features="
+          fgProps.variant === 'icon-badge-protruding' ? ecoConnectCards : featureCardDemoFeatures
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== GradientCardGrid ===== -->
+    <Card id="gradient-card-grid" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">GradientCardGrid 功能展示</h2>
+      <p class="text-small text-text-secondary mb-6">
+        4 列功能卡片，5 种渐变主题，支持图标前缀、前景图，hover 上浮 + 阴影。
+      </p>
+      <GradientCardGrid
+        title="Hello！我是你的 AI 销售助理！"
+        title-prefix="AI"
+        :cards="assistantCards"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>
+            Props: <code>title</code>, <code>cards</code>（必需）； <code>titleIcon</code> /
+            <code>titlePrefix</code>（可选）
+          </li>
+          <li>
+            Card 字段：<code>title</code>, <code>description</code>（必需）； <code>icon</code>,
+            <code>gradient</code>, <code>image</code>, <code>imageAlt</code>（可选）
+          </li>
+          <li>
+            渐变主题：<code>purple</code> | <code>blue</code> | <code>teal</code> |
+            <code>green</code> | <code>orange</code>
+          </li>
+          <li>Slot <code>#visual</code> 接收 <code>{ card, index }</code>，可覆盖默认前景图</li>
+          <li>支持 titleClick 和 cardClick 事件</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== SplitSection ===== -->
+    <PlaygroundShell
+      section-id="split-section"
+      title="SplitSection 图文分栏"
+      description="左右分栏布局，支持列表项（4 种图标颜色主题）或段落描述，双栏浅色背景，高度自适应。"
+      code-tag="SplitSection"
+      code-self-closing
+      :code-extra-props="splitSectionCodeExtra"
+      :controls="splitSectionControls"
+      :initial-props="splitSectionDefaults"
+      :usage-notes="[
+        'Props: heading, description?, image, imageAlt?, reverse?, items?, iconTheme?',
+        'iconTheme: brand（品牌橙，默认）| accent（蓝紫）| gradient（渐变圆底+白色图标）| neutral（中性灰）',
+        'items: SplitSectionItem[]，每项含 icon?（IconPark 组件，不传默认 CheckSmall）+ text',
+        'items 和 description 互斥：提供 items 时优先渲染列表，否则回退到 description',
+        '建议图片比例 16:10 或 4:3，推荐宽度 600–800px',
+        '文字区域高度以图片区域为准，超出部分将被截断',
+        'reverse 控制图文左右位置互换',
+        'heading 和 description 支持 \\n 换行',
+        '桌面端 grid-cols-2，移动端单列堆叠',
+        '文本区背景: bg-surface-secondary，图片区背景: bg-split-image-gradient 暖色渐变',
+      ]"
+      v-slot="ssProps"
+    >
+      <SplitSection
+        v-bind="ssProps as any"
+        :items="ssProps.contentMode === 'description' ? undefined : ssProps.items"
+        :description="
+          ssProps.contentMode === 'description' ? (ssProps.description as string) : undefined
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== SplitCardLayout ===== -->
+    <Card id="split-card-layout" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">SplitCardLayout 分栏卡片布局</h2>
+      <p class="text-small text-text-secondary mb-6">
+        左右分栏（2 大 + 4 小），图标徽章，背景图，响应式堆叠。
+      </p>
+      <SplitCardLayout heading="服务体系" :cards="serviceSystemCards" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: heading, cards: SplitCard[] — 通过 size 字段区分 tall/standard</li>
+          <li>图标使用 IconBadge variant="white"</li>
+          <li>tall 卡片支持背景图和背景色</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== ContentList ===== -->
+    <PlaygroundShell
+      section-id="content-list"
+      title="ContentList 文章列表"
+      description="文章列表组件，支持 3 种形态：卡片（含描述）、紧凑卡片（无描述）、纯文本列表。"
+      code-tag="ContentList"
+      code-self-closing
+      :code-extra-props="articleListCodeExtra"
+      :controls="articleListControls"
+      :initial-props="articleListDefaults"
+      :usage-notes="[
+        'Props: title, items（必需）；subtitle?, viewAllLink?, variant?, rounded?',
+        'variant: card（默认，含描述）| compact（紧凑，无描述）| list（纯文本列表）',
+        'rounded: true（默认，圆角）| false（直角），仅 card/compact 变体生效',
+        'ContentCard 字段：title, publishDate, tag?（必需）；image?, description?, linkHref?, imageAlt?（可选）',
+        'linkHref 有值时渲染 <a> 链接，空值时触发 cardClick / articleClick 事件',
+      ]"
+      v-slot="alProps"
+    >
+      <ContentList
+        v-bind="alProps as any"
+        :items="
+          alProps.variant === 'compact'
+            ? demoArticleCards
+            : alProps.variant === 'list'
+              ? demoTextArticles
+              : demoArticles
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== FaqList ===== -->
+    <PlaygroundShell
+      section-id="faq-list"
+      title="FaqList 常见问题"
+      description="左侧分类过滤 + 搜索框 + 手风琴/平铺 FAQ 列表，支持分类切换、关键词搜索、序号徽章。"
+      code-tag="FaqList"
+      code-self-closing
+      :code-extra-props="faqListCodeExtra"
+      :controls="faqListControls"
+      :initial-props="faqListDefaults"
+      :usage-notes="[
+        'Props: title?, subtitle?, categories, items（必需）；searchPlaceholder?, defaultCategory?, showCategories?, showSearch?, expandMode?',
+        'FaqCategory 字段：key, label（必需）',
+        'FaqItem 字段：id, question, answer, category（必需）',
+        'expandMode: single（手风琴，默认）| flat（平铺，全部展开，无箭头，不可折叠）',
+        'showCategories / showSearch: 控制分类侧边栏和搜索框显隐',
+        '手风琴模式：同一时间仅展开一项，切换分类/搜索时自动折叠',
+        '搜索同时匹配问题和答案内容',
+        '桌面端左侧垂直分类导航，移动端切换为水平滚动胶囊',
+        'Emits: categoryChange, toggle, search',
+      ]"
+      v-slot="faqProps"
+    >
+      <FaqList
+        v-bind="faqProps as any"
+        title="常见问题"
+        :categories="faqCategories"
+        :items="faqItems"
+        search-placeholder="搜索问题关键词"
+      />
+    </PlaygroundShell>
+
+    <!-- ===== FeatureList ===== -->
+    <PlaygroundShell
+      section-id="feature-list"
+      title="FeatureList 软件功能展示"
+      description="居中标题 + 可选描述 + 4 列灰底功能卡片网格。支持默认标题与浅色主题胶囊标题两种样式。"
+      code-tag="FeatureList"
+      code-self-closing
+      :code-extra-props="softwareShowcaseCodeExtra"
+      :controls="softwareShowcaseControls"
+      :initial-props="softwareShowcaseDefaults"
+      :usage-notes="[
+        'Props: title, cards（必需）；subtitle（可选）',
+        'variant: default（默认）| title-pill（标题图标与标题共用浅色主题胶囊背景）',
+        'Card 字段：title（必需）；features（功能列表）与 description（单段描述）二选一；badgeIcon（可选）；theme（可选）',
+        'features 模式：正文渲染带 CheckSmall 图标的列表，stroke-width=3 加粗',
+        'description 模式：正文渲染为纯文本段落；标题 badgeIcon 仍会保留',
+        '卡片使用 bg-surface-secondary 灰底，无交互（纯展示）',
+        '桌面端 4 列，平板 2 列，手机 1 列',
+      ]"
+      v-slot="ssProps"
+    >
+      <FeatureList
+        v-bind="ssProps as any"
+        title="核心功能"
+        subtitle="全方位覆盖销售管理场景，助力企业高效运营"
+        :cards="
+          ssProps.cardMode === 'description'
+            ? softwareShowcaseDescCards
+            : softwareShowcaseFeatureCards
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== FlowSteps ===== -->
+    <PlaygroundShell
+      section-id="flow-steps"
+      title="FlowSteps 流程步骤"
+      description="多步骤流程展示，支持简约（badge + 标题）和丰富（序号 + 标题 + 大图标/图片 + 描述）两种视觉形态。"
+      code-tag="FlowSteps"
+      code-self-closing
+      :code-extra-props="flowStepsCodeExtra"
+      :controls="flowStepsControls"
+      :initial-props="flowStepsDefaults"
+      :usage-notes="[
+        'Props: title, steps（必需）；description?, variant?',
+        'Step 字段：title（必需）；description?, icon?, image?, imageAlt?（可选）',
+        'variant: simple（默认，简约模式：Badge 图标 + 标题）| rich（丰富模式：序号 + 标题 + 大图标/图片 + 描述）',
+        'icon 和 image 互斥：icon 为 IconPark 组件，image 为图片 URL',
+        'Badge 颜色按索引循环使用 bg-fs-icon-* 渐变类（蓝/绿/橙/紫/青）',
+        '丰富模式序号圆标使用 bg-brand-primary-gradient 品牌色渐变',
+        '步骤间用连接线串联，桌面端横向排列，移动端纵向堆叠',
+        '建议 3-5 个步骤，组件无交互（纯展示）',
+      ]"
+      v-slot="fsProps"
+    >
+      <FlowSteps v-bind="fsProps as any" :steps="flowDemoSteps" />
+    </PlaygroundShell>
+
+    <!-- ===== TabShowcase ===== -->
+    <PlaygroundShell
+      section-id="tab-showcase"
+      title="TabShowcase Tab 展示"
+      description="鼠标悬停即切换 Tab，激活时展开副标题，右侧配图带过渡动画，支持左右布局互换。"
+      code-tag="TabShowcase"
+      code-self-closing
+      :code-extra-props="tabShowcaseCodeExtra"
+      :controls="tabShowcaseControls"
+      :initial-props="tabShowcaseDefaults"
+      :usage-notes="[
+        'Props: title, tabs: TabShowcaseItem[], layout?, theme?, TabShowcaseItem.badgeIcon?',
+        '鼠标悬停（mouseenter）即触发切换，点击和键盘也支持',
+        '描述区 grid 动画展开/收起，固定 min-height 保证高度一致',
+        '图片区域 min-h-[420px] 撑开组件，避免 Tab 切换时高度跳动',
+        '右侧图片切换带 opacity + translateY 过渡动画',
+        'layout 控制 Tab 和图片的左右位置，theme 控制渐变背景色',
+        'TabShowcaseItem.badgeIcon 选填（IconPark 组件），不填则不显示',
+      ]"
+      v-slot="tsProps"
+    >
+      <TabShowcase
+        v-bind="tsProps as any"
+        :tabs="tsProps.showBadgeIcon === 'hide' ? tabFeatureDemoTabsNoBadge : tabFeatureDemoTabs"
+      />
+    </PlaygroundShell>
+
+    <!-- ===== MetricsPanel ===== -->
+    <PlaygroundShell
+      section-id="metrics-panel"
+      title="MetricsPanel 增长指标面板"
+      description="KPI 指标展示，支持 3/4 列、可选副标题、高亮卡片和详情指标卡。"
+      code-tag="MetricsPanel"
+      code-self-closing
+      :code-extra-props="metricsPanelCodeExtra"
+      :controls="metricsPanelControls"
+      :initial-props="metricsPanelDefaults"
+      :usage-notes="[
+        'Props: title, metrics（必需）；subtitle?, columns?, variant?',
+        'Metric 字段：value, label（必需）；unit, highlighted, description（可选）',
+        'columns: 4（默认）| 3（数据驾驶舱模式）',
+        'variant: default（默认紧凑指标）| detail（大数字 + 标题 + 描述）',
+        'highlighted: true 时卡片使用蓝色渐变背景',
+        '数字使用 bg-metrics-gradient bg-clip-text 渐变效果',
+      ]"
+      v-slot="mpProps"
+    >
+      <MetricsPanel
+        v-bind="mpProps as any"
+        :metrics="
+          mpProps.variant === 'detail'
+            ? technologyDetailMetrics
+            : mpProps.columns === 3
+              ? dashboardMetrics
+              : growthMetrics
+        "
+        :subtitle="
+          mpProps.variant === 'detail'
+            ? '研发投入、团队能力与自主知识产权，支撑产品持续迭代。'
+            : mpProps.columns === 3
+              ? '实时数据尽在掌握，帮助企业快速决策'
+              : undefined
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== IndustryCarousel ===== -->
+    <Card id="industry-carousel" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">IndustryCarousel Logo 轮播</h2>
+      <p class="text-small text-text-secondary mb-6">
+        居中聚焦式轮播，Logo 网格，边缘渐变遮罩，左右箭头。
+      </p>
+      <IndustryCarousel heading="行业客户案例" :cards="industryCards" cta-text="查看更多案例" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: heading, cards: IndustryCard[], ctaText?</li>
+          <li>居中聚焦式轮播，边缘卡片半透明 + 缩放</li>
+          <li>左右箭头 + 渐变遮罩</li>
+          <li>按钮使用 Button variant="outline-neutral"</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== PartnerGrid ===== -->
+    <Card id="partner-grid" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">PartnerGrid Logo 网格</h2>
+      <p class="text-small text-text-secondary mb-6">4 列 Logo 卡片，图标 + 标题 + 描述。</p>
+      <PartnerGrid heading="生态合作伙伴" :items="ecosystemAbilityItems" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: heading, items: LogoItem[] — icon 为图片 URL</li>
+          <li>内部使用 CardGrid cols=4 gap=tight</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== PlatformDownload ===== -->
+    <Card id="platform-download" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">PlatformDownload 各平台下载</h2>
+      <p class="text-small text-text-secondary mb-6">
+        横向展示 4-6 个平台下载卡片，上卡片下标题布局，鼠标悬停时卡片 3D 翻转显示二维码。
+      </p>
+      <PlatformDownload
+        title="各平台下载"
+        subtitle="支持多平台、多终端使用，随时随地高效办公"
+        :platforms="platformDownloadCards"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>
+            Props: <code>title</code>, <code>subtitle</code>（可选）；<code>platforms</code>（必需）
+          </li>
+          <li>
+            PlatformDownloadCard 字段：<code>name</code>, <code>icon</code>,
+            <code>qrCode</code>（必需）； <code>iconAlt</code>, <code>qrCodeAlt</code>（可选，默认取
+            name）
+          </li>
+          <li>卡片 hover 时 3D 翻转（rotateY 180deg）显示二维码，过渡时长 450ms</li>
+          <li>正面：浅灰底 + 平台图标；背面：白底 + 二维码 +「扫码下载」提示</li>
+          <li>响应式：4 张卡片 2→4 列，5 张 2→3→5 列，6 张 2→3→6 列</li>
+          <li>支持 <code>motion-reduce</code> 禁用翻转动画</li>
+          <li>支持键盘 focus-visible 触发翻转</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== CTASection ===== -->
+    <PlaygroundShell
+      section-id="cta-section"
+      title="CTASection 底部转化区"
+      description="页面最后的转化区域，居中布局。支持双按钮、5 种渐变背景、可选展示图片。"
+      code-tag="CTASection"
+      code-self-closing
+      :code-extra-props="finalCtaCodeExtra"
+      :controls="finalCtaControls"
+      :initial-props="finalCtaDefaults"
+      :usage-notes="[
+        'Props: title, subtitle, primaryCta, secondaryCta?, variant?, image?, imageAlt?',
+        'Emits: primaryClick, secondaryClick',
+        'variant: light（默认）| warm（暖橙微光）| cool（蓝紫微光）| dawn（晨光交融）| mint（薄荷清风）',
+        'image: 传入后展示图片模式（带产品截图）',
+      ]"
+      v-slot="ctaProps"
+    >
+      <CTASection
+        v-bind="ctaProps as any"
+        :image="ctaProps.mode === 'image' ? '/images/customer/product-intro.svg' : undefined"
+        :image-alt="ctaProps.mode === 'image' ? 'CRM产品截图' : undefined"
+      />
+    </PlaygroundShell>
+
+    <!-- ===== ProcessSteps ===== -->
+    <PlaygroundShell
+      section-id="process-steps"
+      title="ProcessSteps 流程步骤卡片"
+      description="多步骤流程展示，每个步骤由上卡片（序号+标题+描述+特性列表）和下卡片（总结标题）组成，步骤间由 SVG 箭头连接。每个步骤支持独立主题色，箭头方向支持翻转。"
+      code-tag="ProcessSteps"
+      code-self-closing
+      :code-extra-props="processStepsCodeExtra"
+      :controls="processStepsControls"
+      :initial-props="processStepsDefaults"
+      :usage-notes="[
+        'Props: title, steps（必需）；subtitle?, reverse?, arrowStyle?',
+        'ProcessStep 字段：title, description, summary（必需）；theme?, number?, features?（可选）',
+        'theme: purple（默认）| blue | teal | green | orange | plain | slate | indigo | amber | sky（每个步骤独立控制）',
+        'arrowStyle: line（直线，默认）| filled（实心填充）| gradient（渐变渐隐）| chevron（双V形）',
+        '序号徽章与下卡片使用 bg-fs-icon-* 渐变类，特性列表图标颜色跟随步骤主题色',
+        'features: 字符串数组，每项渲染为带 CheckSmall 图标的列表项',
+        'reverse: 翻转箭头方向（水平镜像），默认 false',
+        '桌面端两行布局（上行卡片+箭头、下行卡片），移动端纵向堆叠',
+        '建议 3-5 个步骤，组件无交互（纯展示）',
+      ]"
+      v-slot="psProps"
+    >
+      <ProcessSteps v-bind="psProps as any" :steps="processDemoSteps" />
+    </PlaygroundShell>
+
+    <!-- ===== ContactCard ===== -->
+    <PlaygroundShell
+      section-id="contact-card"
+      title="ContactCard 联系方式卡片"
+      description="三栏联系方式卡片：服务热线、企业邮箱、社交平台。支持图标左右/上下两种布局，社交平台图标 hover 显示二维码。"
+      code-tag="ContactCard"
+      code-self-closing
+      :code-extra-props="contactCardCodeExtra"
+      :controls="contactCardControls"
+      :initial-props="contactCardDefaults"
+      :usage-notes="[
+        'Props: hotline, email, socials（均必需）；layout?（horizontal | vertical，默认 horizontal）',
+        'socials 类型复用 SocialItem[]（与 SiteFooter 共享数据源）',
+        'layout=horizontal: 图标左、文字右，三栏网格 items-center',
+        'layout=vertical: 图标上、文字下，图标自动放大至 w-14 × h-14，三栏 items-start 居中',
+        '社交平台图标 hover 时弹出二维码浮层（含箭头三角），与 Footer 交互一致',
+        '背景使用 bg-cta-warm-gradient 暖色渐变，圆角 rounded-card',
+        '支持 motion-reduce 禁用过渡动画',
+      ]"
+      v-slot="ccProps"
+    >
+      <ContactCard
+        v-bind="ccProps as any"
+        :hotline="contactHotline"
+        :email="contactEmail"
+        :socials="contactSocials"
+      />
+    </PlaygroundShell>
+
+    <!-- ===== ReviewCardGrid ===== -->
+    <PlaygroundShell
+      section-id="review-card-grid"
+      title="ReviewCardGrid 用户评价卡片"
+      description="客户评价卡片网格，展示品牌 logo、行业标签、评价内容、用户名和星级评分。支持单列/双列布局，评价内容支持展开/收起。"
+      code-tag="ReviewCardGrid"
+      code-self-closing
+      :code-extra-props="reviewCardGridCodeExtra"
+      :controls="reviewCardGridControls"
+      :initial-props="reviewCardGridDefaults"
+      :usage-notes="[
+        'Props: title, cards（必需）；subtitle?, columns?',
+        'ReviewCard 字段：logo, industry, content, username, rating（必需）；logoAlt?（可选）',
+        'columns: 1（单列）| 2（双列，默认），移动端自动切换为 1 列',
+        'rating: 1-5 的星级评分，使用 IconPark Star 图标',
+        '评价内容默认截断 3 行，超过 120 字符时显示「展开全部」按钮',
+        '双列布局使用 CSS Grid 自然流式布局，展开卡片不影响同行其他卡片对齐',
+        '卡片 hover 上浮 1px + 阴影增强，支持 motion-reduce 禁用动效',
+      ]"
+      v-slot="rcProps"
+    >
+      <ReviewCardGrid v-bind="rcProps as any" :cards="reviewDemoCards" />
+    </PlaygroundShell>
+
+    <!-- ===== Timeline ===== -->
+    <Card id="timeline" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">Timeline 发展历程</h2>
+      <p class="text-small text-text-secondary mb-6">
+        垂直时间线展示公司/产品发展里程碑，支持 3-4 个阶段，年份交替左右排列，描述文本支持高亮标记。
+      </p>
+      <Timeline
+        title="发展历程"
+        subtitle="从初创到行业领先，每一步都值得铭记"
+        :milestones="timelineMilestones"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>
+            Props: <code>title</code>,
+            <code>milestones</code>（必需）；<code>subtitle</code>（可选）
+          </li>
+          <li>
+            TimelineMilestone 字段：<code>year</code>, <code>title</code>,
+            <code>description</code>（必需）
+          </li>
+          <li>
+            description 支持混合类型数组：纯文本字符串 +
+            <code>{ text, highlight?: true }</code> 高亮段
+          </li>
+          <li>高亮段使用品牌橙色（<code>text-brand-primary</code>）加粗渲染</li>
+          <li>桌面端中央时间线 + 左右交替排列，移动端左侧时间线 + 全部右对齐</li>
+          <li>建议 3-4 个里程碑，组件无交互（纯展示）</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== CaseDetailHeader ===== -->
+    <Card id="case-detail-header" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">CaseDetailHeader 案例详情头部</h2>
+      <p class="text-small text-text-secondary mb-6">
+        案例详情页顶部卡片，左右分栏布局，左图右文，从上到下依次展示
+        logo、描述、分割线、标题和标签。
+      </p>
+      <CaseDetailHeader
+        image="/images/customer/product-intro.png"
+        image-alt="某机械制造企业案例配图"
+        logo="/images/customer/tab-unified.svg"
+        logo-alt="企业 Logo"
+        description="通过销帮帮 CRM 实现从线索管理、客户跟进到订单交付的全流程数字化，销售团队工作效率提升 40%，客户满意度显著提高。"
+        title="某大型机械制造企业 CRM 数字化转型实践"
+        :tags="['制造业', '数字化转型', 'CRM']"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>
+            Props: <code>image</code>, <code>logo</code>, <code>description</code>,
+            <code>title</code>, <code>tags</code>（必需）
+          </li>
+          <li><code>imageAlt</code>、<code>logoAlt</code> 可选，默认取 <code>title</code></li>
+          <li>桌面端 grid-cols-2 左右分栏，移动端单列堆叠</li>
+          <li>标签使用 Badge 组件 variant="brand"</li>
+          <li>建议左侧配图比例 4:3 或 16:10，logo 宽度 120–160px</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ================================================================ -->
+  </div>
+</template>
+<script setup lang="ts">
+import {
+  Check,
+  Shield,
+  SettingConfig,
+  Trend,
+  Star,
+  LinkCloud,
+  Wechat,
+  SendOne,
+  ApiApp,
+  User,
+  FolderPlus,
+  ClickTap,
+  CheckOne,
+  Thunderbolt,
+  Peoples,
+} from '@icon-park/vue-next'
+import Card from '@/client/components/ui/Card.vue'
+import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import FeatureImageCard from '@/client/components/business/FeatureImageCard.vue'
+import GradientCardGrid from '@/client/components/business/GradientCardGrid.vue'
+import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
+import IndustryCarousel from '@/client/components/business/IndustryCarousel.vue'
+import SplitCardLayout from '@/client/components/business/SplitCardLayout.vue'
+import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
+import PromoBanner from '@/client/components/business/PromoBanner.vue'
+import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
+import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
+import TabShowcase from '@/client/components/business/TabShowcase.vue'
+import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
+import CTASection from '@/client/components/business/CTASection.vue'
+import SplitSection from '@/client/components/business/SplitSection.vue'
+import GradientHero from '@/client/components/business/GradientHero.vue'
+import FlowSteps from '@/client/components/business/FlowSteps.vue'
+import FeatureList from '@/client/components/business/FeatureList.vue'
+import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
+import ContentList from '@/client/components/business/ContentList.vue'
+import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
+import FaqList from '@/client/components/business/FaqList.vue'
+import ContactCard from '@/client/components/business/ContactCard.vue'
+import ProcessSteps from '@/client/components/business/ProcessSteps.vue'
+import Timeline from '@/client/components/business/Timeline.vue'
+import ReviewCardGrid from '@/client/components/business/ReviewCardGrid.vue'
+import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
+import PlaygroundShell from './components/PlaygroundShell.vue'
+import {
+  bannerSlides,
+  solutionCards,
+  assistantCards,
+  growthMetrics,
+  industryCards,
+  serviceSystemCards,
+  ecosystemAbilityItems,
+  ecosystemAbility1,
+  ecosystemAbility2,
+  ecosystemAbility3,
+  custChoiseImg,
+} from '@/client/data/homeData'
+import { socials, footerHotline, footerEmail } from '@/client/data/siteFooterData'
+
+// ===== ContactCard 演示数据（与 Footer 底部信息栏共享数据源） =====
+const contactHotline = footerHotline
+const contactEmail = footerEmail
+const contactSocials = socials
+
+// ===== ContactCard 交互式控件 =====
+const contactCardControls = [
+  {
+    label: 'Layout',
+    prop: 'layout',
+    options: [
+      { label: 'horizontal（左右）', value: 'horizontal' },
+      { label: 'vertical（上下）', value: 'vertical' },
+    ],
+  },
+]
+
+const contactCardDefaults = {
+  layout: 'horizontal',
+}
+
+const contactCardCodeExtra = {
+  ':hotline': 'footerHotline',
+  ':email': 'footerEmail',
+  ':socials': 'socials',
+}
+
+// ===== Demo 数据 =====
+const tabFeatureDemoTabs = [
+  {
+    key: 'unified',
+    label: '全部客户统一管理',
+    description: '支持自定义客户表单、批量导入导出、一键移交与分配。',
+    image: '/images/customer/tab-unified.svg',
+    imageAlt: '全部客户统一管理',
+    badgeIcon: Star,
+  },
+  {
+    key: 'tracking',
+    label: '跟进客户过程可追踪',
+    description: '以时间线方式记录每一次客户沟通，自动标记最后跟进时间。',
+    image: '/images/customer/tab-tracking.svg',
+    imageAlt: '跟进客户过程可追踪',
+    badgeIcon: Thunderbolt,
+  },
+  {
+    key: 'retention',
+    label: '成交客户持续经营',
+    description: '集中管理签约客户，支持续约提醒、增购机会识别和成交后跟进。',
+    image: '/images/customer/tab-retention.svg',
+    imageAlt: '成交客户持续经营',
+    badgeIcon: Trend,
+  },
+  {
+    key: 'collaboration',
+    label: '重点客户协同推进',
+    description: '支持一键标记重点客户、多人共享协作和权限控制。',
+    image: '/images/customer/tab-collaboration.svg',
+    imageAlt: '重点客户协同推进',
+    badgeIcon: Peoples,
+  },
+] as const
+
+/** 无 badge 版本（用于 Badge 控件切换） */
+const tabFeatureDemoTabsNoBadge = tabFeatureDemoTabs.map((tab) => {
+  const copy = { ...tab }
+  delete (copy as Record<string, unknown>).badgeIcon
+  return copy
+}) as unknown as typeof tabFeatureDemoTabs
+
+const featureCardDemoFeatures = [
+  {
+    title: '避免撞单，客户归属更清楚',
+    description: '线索、客户、联系人自动交叉校验，识别同一客户的不同记录，避免多个销售重复跟进。',
+    icon: Check,
+  },
+  {
+    title: '源头防重，减少脏数据沉淀',
+    description: '全场场景接入客户时自动校验手机号、邮箱、公司名称等关键信息。',
+    icon: Shield,
+  },
+  {
+    title: '规则灵活，适配不同业务',
+    description: '支持按业务线、客户模板或全局范围设置判重规则。',
+    icon: SettingConfig,
+  },
+  {
+    title: '报表可信，管理决策更准',
+    description: '减少重复客户后，客户数、跟进率、转化率和成交数据更接近真实。',
+    icon: Trend,
+  },
+] as const
+
+const heroBannerDemoSlide = {
+  key: 'demo-hero',
+  mediaType: 'image' as const,
+  eyebrow: '',
+  title: '客户管理',
+  subtitle: '客户全生命周期数字化管理',
+  desc: '',
+  primaryCta: '免费试用',
+  secondaryCta: '立即咨询',
+  bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
+  line: 'rgba(116, 129, 255, 0.16)',
+  accent: '#5b61ff',
+  glow: 'rgba(91, 97, 255, 0.18)',
+  orb: 'rgba(127, 214, 255, 0.22)',
+  showVisual: true,
+  visualImage: '/images/customer/hero.svg',
+  visualImageAlt: '客户管理产品展示',
+}
+
+// ===== PromoBannerCarousel 演示数据 =====
+const promoCarouselDemoSlides = [
+  {
+    key: 'demo-slide-1',
+    eyebrow: '制造业',
+    title: '数字化转型，从客户管理开始',
+    ctaText: '了解详情',
+    image: '/images/customer/tab-unified.svg',
+    imageAlt: '制造业案例',
+  },
+  {
+    key: 'demo-slide-2',
+    eyebrow: '互联网',
+    title: '高速增长，需要高效管理',
+    ctaText: '了解详情',
+    image: '/images/customer/tab-tracking.svg',
+    imageAlt: '互联网案例',
+  },
+  {
+    key: 'demo-slide-3',
+    eyebrow: '金融',
+    title: '合规与增长并行',
+    ctaText: '了解详情',
+    image: '/images/customer/tab-collaboration.svg',
+    imageAlt: '金融案例',
+  },
+]
+
+// ===== IconCardGrid 交互式控件 =====
+const featureCardGridControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'icon-badge', value: 'icon-badge' },
+      { label: 'icon-tile', value: 'icon-tile' },
+      { label: 'icon-badge-protruding', value: 'icon-badge-protruding' },
+      { label: 'accent-strip', value: 'accent-strip' },
+      { label: 'plain', value: 'plain' },
+    ],
+  },
+  {
+    label: 'Color Scheme',
+    prop: 'color-scheme',
+    options: [
+      { label: 'brand', value: 'brand' },
+      { label: 'accent', value: 'accent' },
+      { label: 'neutral', value: 'neutral' },
+    ],
+  },
+  {
+    label: 'Columns',
+    prop: 'columns',
+    options: [
+      { label: '2', value: 2 },
+      { label: '3', value: 3 },
+      { label: '4', value: 4 },
+      { label: '5', value: 5 },
+      { label: '7', value: 7 },
+    ],
+  },
+]
+
+const featureCardGridDefaults = {
+  variant: 'icon-badge',
+  'color-scheme': 'brand',
+  columns: 2,
+  title: '数据干净，销售决策才可靠',
+}
+
+// ===== CTASection 交互式控件 =====
+const finalCtaControls = [
+  {
+    label: 'Mode',
+    prop: 'mode',
+    options: [
+      { label: '纯 CTA', value: 'cta' },
+      { label: '图片模式', value: 'image' },
+    ],
+  },
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'light', value: 'light' },
+      { label: 'warm', value: 'warm' },
+      { label: 'cool', value: 'cool' },
+      { label: 'dawn', value: 'dawn' },
+      { label: 'mint', value: 'mint' },
+    ],
+  },
+]
+
+const finalCtaDefaults = {
+  mode: 'cta',
+  variant: 'light',
+  title: '让增长，从这里开始',
+  subtitle: '免费试用7天，体验AI驱动的新一代CRM平台',
+  'primary-cta': '立即免费试用',
+  'secondary-cta': '预约产品演示',
+}
+
+// ===== ImageShowcase 交互式控件 =====
+const imageShowcaseControls = [
+  {
+    label: 'Layout',
+    prop: 'layout',
+    options: [
+      { label: 'text-left', value: 'text-left' },
+      { label: 'text-right', value: 'text-right' },
+    ],
+  },
+  {
+    label: 'Theme',
+    prop: 'theme',
+    options: [
+      { label: 'purple', value: 'purple' },
+      { label: 'blue', value: 'blue' },
+      { label: 'teal', value: 'teal' },
+      { label: 'green', value: 'green' },
+      { label: 'orange', value: 'orange' },
+      { label: 'plain', value: 'plain' },
+      { label: 'slate', value: 'slate' },
+      { label: 'indigo', value: 'indigo' },
+      { label: 'amber', value: 'amber' },
+      { label: 'sky', value: 'sky' },
+    ],
+  },
+  {
+    label: 'CTA Button',
+    prop: 'ctaText',
+    options: [
+      { label: '显示', value: '点击查看' },
+      { label: '隐藏', value: '' },
+    ],
+  },
+]
+
+const imageShowcaseDefaults = {
+  layout: 'text-left',
+  theme: 'orange',
+  title: '产品能力展示',
+  subtitle: '左侧标题与副标题，右侧展示一张图片，适合纯展示型业务模块。',
+  ctaText: '点击查看',
+  image: '/images/customer/product-intro.png',
+}
+
+const imageShowcaseCodeExtra = {
+  title: '产品能力展示',
+  subtitle: '左侧标题与副标题，右侧展示一张图片，适合纯展示型业务模块。',
+  ctaText: '点击查看',
+  image: '/images/customer/product-intro.png',
+  layout: 'text-left',
+  theme: 'orange',
+}
+
+// ===== TabShowcase 交互式控件 =====
+const tabShowcaseControls = [
+  {
+    label: 'Layout',
+    prop: 'layout',
+    options: [
+      { label: 'tabs-left', value: 'tabs-left' },
+      { label: 'tabs-right', value: 'tabs-right' },
+    ],
+  },
+  {
+    label: 'Theme',
+    prop: 'theme',
+    options: [
+      { label: 'plain', value: 'plain' },
+      { label: 'slate', value: 'slate' },
+      { label: 'indigo', value: 'indigo' },
+      { label: 'amber', value: 'amber' },
+      { label: 'sky', value: 'sky' },
+      { label: 'purple', value: 'purple' },
+      { label: 'blue', value: 'blue' },
+      { label: 'teal', value: 'teal' },
+      { label: 'green', value: 'green' },
+      { label: 'orange', value: 'orange' },
+    ],
+  },
+  {
+    label: 'Badge',
+    prop: 'showBadgeIcon',
+    options: [
+      { label: '显示', value: 'show' },
+      { label: '隐藏', value: 'hide' },
+    ],
+  },
+]
+
+const tabShowcaseDefaults = {
+  layout: 'tabs-left',
+  theme: 'purple',
+  showBadgeIcon: 'show',
+  title: '精细化运营，让增长可复制',
+}
+
+// ===== Code Extra Props =====
+const featureCardGridCodeExtra = { ':features': 'features', title: '"数据干净，销售决策才可靠"' }
+const finalCtaCodeExtra = {
+  title: '"让增长，从这里开始"',
+  subtitle: '"免费试用7天，体验AI驱动的新一代CRM平台"',
+  'primary-cta': '"立即免费试用"',
+  'secondary-cta': '"预约产品演示"',
+}
+const tabShowcaseCodeExtra = {
+  title: '"精细化运营，让增长可复制"',
+  ':tabs': 'tabs',
+  theme: '"purple"',
+}
+
+// ===== SplitSection 交互式控件 =====
+const splitSectionControls = [
+  {
+    label: 'Icon Theme',
+    prop: 'iconTheme',
+    options: [
+      { label: 'brand（品牌橙）', value: 'brand' },
+      { label: 'accent（蓝紫）', value: 'accent' },
+      { label: 'gradient（渐变圆底）', value: 'gradient' },
+      { label: 'neutral（中性灰）', value: 'neutral' },
+    ],
+  },
+  {
+    label: 'Content Mode',
+    prop: 'contentMode',
+    options: [
+      { label: 'items（列表）', value: 'items' },
+      { label: 'description（段落）', value: 'description' },
+    ],
+  },
+  {
+    label: 'Reverse',
+    prop: 'reverse',
+    options: [
+      { label: 'false（文本左）', value: false },
+      { label: 'true（文本右）', value: true },
+    ],
+  },
+]
+
+const splitSectionDefaults = {
+  reverse: false,
+  contentMode: 'items',
+  iconTheme: 'brand',
+  heading: '客户深度运营\n精细化运营，让增长可复制',
+  description:
+    '支持客户多维度查重，有效通过预设自定义字段及标签实现客户分层分类。\n支持客户全生命周期管理，从线索到成交复购，AI 帮你看准每一个商机。',
+  image: '/images/customer/product-intro.png',
+  items: [
+    { text: '支持客户多维度查重，有效通过预设自定义字段及标签实现客户分层分类' },
+    { text: '构建企业潜在客户360°画像，提升企业私域客户池运作效率' },
+    { text: '实现对于客户旅程的精准把控，从线索到成交复购的全生命周期管理' },
+    { text: 'AI 驱动智能推荐，帮你看准每一个商机，提升销售转化率' },
+  ],
+}
+
+const splitSectionCodeExtra = {
+  heading: '"客户深度运营\\n精细化运营，让增长可复制"',
+  image: '"/images/customer/product-intro.png"',
+  ':items': 'items',
+}
+
+// ===== ContentCardGrid 交互式控件 =====
+const imageTextCardGridControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'case（案例）', value: 'case' },
+      { label: 'product（产品）', value: 'product' },
+      { label: 'resource（资源）', value: 'resource' },
+      { label: 'address（地址）', value: 'square' },
+    ],
+  },
+  {
+    label: 'Layout',
+    prop: 'layout',
+    options: [
+      { label: 'vertical（垂直）', value: 'vertical' },
+      { label: 'horizontal（水平）', value: 'horizontal' },
+    ],
+  },
+  {
+    label: 'Columns',
+    prop: 'columns',
+    options: [
+      { label: '3', value: 3 },
+      { label: '4', value: 4 },
+    ],
+  },
+  {
+    label: 'Rounded',
+    prop: 'rounded',
+    options: [
+      { label: '开启', value: true },
+      { label: '关闭', value: false },
+    ],
+  },
+]
+
+const imageTextCardGridDefaults = {
+  variant: 'case',
+  layout: 'vertical',
+  columns: 4,
+  rounded: true,
+  title: '客户案例',
+  subtitle: '来自各行各业的真实客户故事',
+}
+
+const imageTextCardGridCodeExtra = {
+  title: '"客户案例"',
+  subtitle: '"来自各行各业的真实客户故事"',
+  ':cards': 'cards',
+  variant: '"case"',
+  rounded: 'true',
+}
+
+// ===== EcoResourceCardGrid 演示数据 =====
+const resourceDemoCards = [
+  {
+    image: ecosystemAbility1,
+    title: '工业品生态资源',
+    description: '连接工业品行业上下游资源，帮助企业快速对接供应商和客户，实现产业链协同。',
+    linkText: '了解详情',
+  },
+  {
+    image: ecosystemAbility2,
+    title: '企业服务生态',
+    description: '整合企业服务资源，从财税、法务到人力资源，为企业提供一站式服务支持。',
+    linkText: '了解详情',
+  },
+  {
+    image: ecosystemAbility3,
+    title: '技术生态伙伴',
+    description: '与行业领先的技术伙伴深度合作，为企业提供更完善的技术解决方案和集成能力。',
+    linkText: '了解详情',
+  },
+]
+
+// ===== ContentCardGrid square 演示数据 =====
+const demoSquareCards = [
+  {
+    image: ecosystemAbility1,
+    title: '客户管理',
+    description: '全生命周期客户管理，从线索到成交一站式管理',
+  },
+  {
+    image: ecosystemAbility2,
+    title: '销售自动化',
+    description: '智能分配线索，自动跟进提醒，提升转化效率',
+  },
+  {
+    image: ecosystemAbility3,
+    title: '数据分析',
+    description: '多维度数据看板，实时掌握业务动态与趋势',
+  },
+  {
+    image: ecosystemAbility1,
+    title: '移动办公',
+    description: '随时随地处理业务，外勤管理更高效便捷',
+  },
+]
+
+// ===== GradientHero 交互式控件 =====
+const featureIntroControls = [
+  {
+    label: 'Mode',
+    prop: 'mode',
+    options: [
+      { label: '功能介绍（badge + 标题）', value: 'intro' },
+      { label: '案例卡片（tag + 按钮）', value: 'case' },
+    ],
+  },
+  {
+    label: 'Theme',
+    prop: 'theme',
+    options: [
+      { label: 'plain', value: 'plain' },
+      { label: 'slate', value: 'slate' },
+      { label: 'indigo', value: 'indigo' },
+      { label: 'amber', value: 'amber' },
+      { label: 'sky', value: 'sky' },
+      { label: 'purple', value: 'purple' },
+      { label: 'blue', value: 'blue' },
+      { label: 'teal', value: 'teal' },
+      { label: 'green', value: 'green' },
+      { label: 'orange', value: 'orange' },
+    ],
+  },
+  {
+    label: 'Title Gradient',
+    prop: 'titleGradient',
+    options: [
+      { label: 'off（黑色）', value: false },
+      { label: 'on（渐变色）', value: true },
+    ],
+  },
+  {
+    label: 'Reverse',
+    prop: 'reverse',
+    options: [
+      { label: 'false（文左图右）', value: false },
+      { label: 'true（图左文右）', value: true },
+    ],
+  },
+]
+
+const featureIntroDefaults = {
+  mode: 'intro',
+  theme: 'purple',
+  reverse: false,
+  titleGradient: false,
+  badgeIcon: 'show',
+  title: '智能客户分配\nAI 精准匹配最佳线索',
+  description:
+    '基于 AI 算法智能匹配客户与销售，提升线索转化率，让每个销售人员都能获得最适合自己的客户资源。',
+  image: custChoiseImg,
+}
+
+const featureIntroCodeExtra = {
+  title: '"智能客户分配\\nAI 精准匹配最佳线索"',
+  description: '"基于 AI 算法智能匹配客户与销售..."',
+  image: '"/images/cust-choise.png"',
+  ':badge-icon': 'Star',
+  theme: '"purple"',
+}
+
+// ===== MetricsPanel 交互式控件 =====
+const metricsPanelControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'default（紧凑指标）', value: 'default' },
+      { label: 'detail（详情指标）', value: 'detail' },
+    ],
+  },
+  {
+    label: 'Columns',
+    prop: 'columns',
+    options: [
+      { label: '4（增长指标）', value: 4 },
+      { label: '3（详情指标）', value: 3 },
+    ],
+  },
+]
+
+const metricsPanelDefaults = {
+  variant: 'default',
+  columns: 4,
+  title: '让增长，自然发生',
+}
+
+const metricsPanelCodeExtra = {
+  title: '"让增长，自然发生"',
+  ':metrics': 'metrics',
+  variant: '"default"',
+}
+
+// ===== DataDashboard 演示数据 =====
+const dashboardMetrics = [
+  { value: '16,108', label: '付费客户数', highlighted: true },
+  { value: '30', unit: '万+', label: '服务企业' },
+  { value: '12', unit: '亿+', label: '营业收入' },
+  { value: '98.5', unit: '%', label: '用户留存率' },
+  { value: '10', unit: '万+', label: '在线用户' },
+  { value: '160', unit: '%', label: '续费率' },
+]
+
+const technologyDetailMetrics = [
+  {
+    value: '120',
+    unit: '+',
+    label: '研发团队规模',
+    description: '杭州滨江、城西两大研发中心，50%以上来自一线互联网企业，博士及硕士研究生20余名。',
+  },
+  {
+    value: '40',
+    unit: '%',
+    label: '研发人员占比',
+    description: '300+员工中研发人员超过40%，技术基因深入公司骨髓，产品力就是竞争力。',
+  },
+  {
+    value: '39',
+    unit: '项',
+    label: '自主知识产权',
+    description: '6项专利 + 33项软件著作权，持续投入技术创新，用知识产权构建护城河。',
+  },
+]
+
+// ===== BadgeCardGrid 演示数据 =====
+const ecoConnectCards = [
+  {
+    icon: LinkCloud,
+    title: '钉钉深度集成',
+    description:
+      '与钉钉组织架构、审批流、IM 消息全面打通，在熟悉的界面中完成 CRM 操作，降低员工学习成本。',
+  },
+  {
+    icon: Wechat,
+    title: '企业微信互通',
+    description: '支持企业微信客户继承、离职交接、群发消息，打通企业微信通讯录与 CRM 客户库。',
+  },
+  {
+    icon: SendOne,
+    title: '飞书无缝协作',
+    description: '飞书审批单自动同步至 CRM，多维表格与客户数据双向映射，消息卡片直达客户详情。',
+  },
+  {
+    icon: ApiApp,
+    title: 'Open API 开放平台',
+    description:
+      '提供 200+ 标准 API 接口，支持 ERP、财务、电商等第三方系统快速对接，构建企业数据中台。',
+  },
+]
+
+// ===== FeatureList 演示数据 =====
+const softwareShowcaseFeatureCards = [
+  {
+    badgeIcon: User,
+    theme: 'blue' as const,
+    title: '客户管理',
+    features: [
+      '客户信息集中管理，支持自定义字段',
+      '智能查重，防止重复录入',
+      '客户分层分类，精细化运营',
+    ],
+  },
+  {
+    badgeIcon: Trend,
+    theme: 'indigo' as const,
+    title: '销售自动化',
+    features: [
+      'AI 智能分配线索，提升转化率',
+      '跟进提醒，不错过任何商机',
+      '销售漏斗可视化，实时掌握进度',
+    ],
+  },
+  {
+    badgeIcon: Star,
+    theme: 'purple' as const,
+    title: '数据分析',
+    features: ['多维度数据报表，一键生成', '实时数据驾驶舱，掌握全局', '自定义 BI 看板，灵活配置'],
+  },
+  {
+    badgeIcon: LinkCloud,
+    theme: 'sky' as const,
+    title: '生态集成',
+    features: ['钉钉/企微/飞书深度打通', '200+ Open API 开放接口', 'ERP、财务系统无缝对接'],
+  },
+]
+
+const softwareShowcaseDescCards = [
+  {
+    badgeIcon: User,
+    theme: 'blue' as const,
+    title: '客户管理',
+    description: '客户信息集中管理，支持自定义字段与智能查重，通过客户分层分类实现精细化运营。',
+  },
+  {
+    badgeIcon: Trend,
+    theme: 'indigo' as const,
+    title: '销售自动化',
+    description: 'AI 智能分配线索并自动跟进提醒，通过销售漏斗可视化实时掌握转化进度。',
+  },
+  {
+    badgeIcon: Star,
+    theme: 'purple' as const,
+    title: '数据分析',
+    description: '多维度数据报表一键生成，实时数据驾驶舱掌握全局，支持自定义 BI 看板灵活配置。',
+  },
+  {
+    badgeIcon: LinkCloud,
+    theme: 'sky' as const,
+    title: '生态集成',
+    description: '钉钉、企微、飞书深度打通，200+ Open API 开放接口，ERP 与财务系统无缝对接。',
+  },
+]
+
+const softwareShowcaseControls = [
+  {
+    label: '标题样式',
+    prop: 'variant',
+    options: [
+      { label: 'title-pill（浅色胶囊）', value: 'title-pill' },
+      { label: 'default（默认图标）', value: 'default' },
+    ],
+  },
+  {
+    label: '卡片内容模式',
+    prop: 'cardMode',
+    options: [
+      { label: 'features（功能列表 + ✓ 图标）', value: 'features' },
+      { label: 'description（单段描述纯文本）', value: 'description' },
+    ],
+  },
+]
+
+const softwareShowcaseDefaults = {
+  variant: 'title-pill',
+  cardMode: 'features',
+}
+
+const softwareShowcaseCodeExtra = {
+  title: '"核心功能"',
+  subtitle: '"全方位覆盖销售管理场景，助力企业高效运营"',
+  ':cards': 'cards',
+}
+
+// ===== FaqList 演示数据 =====
+const faqCategories = [
+  { key: 'all', label: '全部' },
+  { key: 'product', label: '产品功能' },
+  { key: 'pricing', label: '价格与购买' },
+  { key: 'tutorial', label: '使用教程' },
+  { key: 'account', label: '账号管理' },
+  { key: 'security', label: '数据安全' },
+]
+
+const faqItems = [
+  {
+    id: 1,
+    question: '销帮帮 CRM 支持哪些平台使用？',
+    answer:
+      '销帮帮 CRM 支持多平台使用，包括 Web 网页版、Windows 客户端、Mac 客户端、iOS App、Android App，以及钉钉、企业微信、飞书等第三方平台集成。数据实时同步，随时随地高效办公。',
+    category: 'product',
+  },
+  {
+    id: 2,
+    question: '如何导入已有的客户数据？',
+    answer:
+      '支持多种导入方式：<br>1. <strong>Excel 批量导入</strong>：下载模板，填写客户信息后一键导入；<br>2. <strong>API 接口对接</strong>：通过 Open API 从其他系统同步数据；<br>3. <strong>手动录入</strong>：在系统中逐条添加客户信息。导入过程中系统会自动进行查重校验，避免重复数据。',
+    category: 'tutorial',
+  },
+  {
+    id: 3,
+    question: '免费版和付费版有什么区别？',
+    answer:
+      '免费版支持最多 3 个用户使用，包含基础客户管理、跟进记录、简单报表等核心功能，适合小型团队试用。付费版按用户数计费，提供高级功能如 AI 智能推荐、自定义字段、高级报表、API 接口、多级权限管理等，且支持无限客户数量。具体价格方案请查看官网定价页面或联系销售顾问获取定制报价。',
+    category: 'pricing',
+  },
+  {
+    id: 4,
+    question: '数据安全如何保障？',
+    answer:
+      '我们高度重视数据安全，采取了多重保障措施：<br>1. <strong>数据加密</strong>：传输层使用 TLS 1.3 加密，存储层使用 AES-256 加密；<br>2. <strong>权限控制</strong>：支持角色级、字段级权限设置，确保数据最小可见原则；<br>3. <strong>备份机制</strong>：每日自动全量备份，支持任意时间点数据恢复；<br>4. <strong>合规认证</strong>：通过 ISO 27001 信息安全管理体系认证，符合等保三级要求。',
+    category: 'security',
+  },
+  {
+    id: 5,
+    question: '是否支持与钉钉/企业微信集成？',
+    answer:
+      '支持。销帮帮 CRM 已与钉钉、企业微信、飞书深度集成，包括：组织架构同步、审批流打通、消息通知推送、客户数据互通等。在钉钉或企业微信中即可直接使用 CRM 功能，无需切换应用，降低员工学习成本。',
+    category: 'product',
+  },
+  {
+    id: 6,
+    question: '如何修改账号密码？',
+    answer:
+      '登录后点击右上角头像 →「账号设置」→「安全设置」，即可修改登录密码。如果忘记密码，可以在登录页面点击「忘记密码」，通过注册手机号或邮箱重置密码。企业管理员可以在后台为员工重置密码。',
+    category: 'account',
+  },
+  {
+    id: 7,
+    question: '购买的版本可以升级吗？',
+    answer:
+      '可以。我们支持随时升级套餐，升级后立即生效，差价按剩余天数计算。例如从标准版升级到专业版，只需补缴剩余服务期的差价即可。升级后所有历史数据完整保留，新功能即时可用。如需降级版本，请联系客服处理。',
+    category: 'pricing',
+  },
+  {
+    id: 8,
+    question: '是否支持自定义字段？',
+    answer:
+      '付费版支持自定义字段功能。管理员可以在「系统设置」→「字段管理」中为客户、联系人、商机等模块添加自定义字段，支持文本、数字、日期、下拉选项、多选等多种字段类型。自定义字段会同步到列表、详情页、报表和导出数据中。',
+    category: 'product',
+  },
+  {
+    id: 9,
+    question: '如何给团队成员分配权限？',
+    answer:
+      '企业管理员可在「系统设置」→「角色权限」中创建自定义角色，为每个角色设置模块访问权限（查看/编辑/删除）、数据可见范围（全部/部门/仅自己）、字段级权限（敏感字段脱敏或隐藏）等。支持按部门、按人员灵活分配角色。',
+    category: 'account',
+  },
+  {
+    id: 10,
+    question: '数据可以导出吗？',
+    answer:
+      '支持导出客户、联系人、商机、合同等模块的数据，支持 Excel 和 CSV 格式。导出时可以选择导出字段、时间范围等筛选条件。同时支持通过 Open API 进行数据拉取，方便与第三方系统对接或进行数据分析。',
+    category: 'security',
+  },
+]
+
+// ===== FaqList 交互式控件 =====
+const faqListControls = [
+  {
+    label: 'Expand Mode',
+    prop: 'expandMode',
+    options: [
+      { label: 'single（手风琴）', value: 'single' },
+      { label: 'flat（平铺）', value: 'flat' },
+    ],
+  },
+  {
+    label: 'Show Categories',
+    prop: 'showCategories',
+    options: [
+      { label: 'true（显示）', value: true },
+      { label: 'false（隐藏）', value: false },
+    ],
+  },
+  {
+    label: 'Show Search',
+    prop: 'showSearch',
+    options: [
+      { label: 'true（显示）', value: true },
+      { label: 'false（隐藏）', value: false },
+    ],
+  },
+]
+
+const faqListDefaults = {
+  expandMode: 'single',
+  showCategories: true,
+  showSearch: true,
+}
+
+const faqListCodeExtra = {
+  title: '"常见问题"',
+  ':categories': 'categories',
+  ':items': 'items',
+  'search-placeholder': '"搜索问题关键词"',
+}
+
+// ===== FlowSteps 演示数据 =====
+const flowDemoSteps = [
+  {
+    icon: User,
+    title: '注册账号',
+    description: '填写企业信息，完成账号注册与实名认证，开通企业专属工作台。',
+  },
+  {
+    icon: FolderPlus,
+    title: '导入客户',
+    description: '批量导入客户数据，支持 Excel、API 对接等多种方式。',
+  },
+  {
+    icon: ClickTap,
+    title: '设置规则',
+    description: '自定义客户分配规则、跟进提醒与审批流程，适配业务场景。',
+  },
+  {
+    icon: CheckOne,
+    title: '开始使用',
+    description: '团队上线使用，AI 自动辅助客户跟进与商机识别。',
+  },
+] as const
+
+// ===== FlowSteps 交互式控件 =====
+const flowStepsControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'simple（简约）', value: 'simple' },
+      { label: 'rich（丰富）', value: 'rich' },
+    ],
+  },
+]
+
+const flowStepsDefaults = {
+  variant: 'simple',
+  title: '简单四步，开启智能客户管理',
+  description: '从注册到上线，仅需四个步骤，轻松构建企业数字化客户管理体系',
+}
+
+const flowStepsCodeExtra = {
+  title: '"简单四步，开启智能客户管理"',
+  description: '"从注册到上线，仅需四个步骤..."',
+  ':steps': 'steps',
+  variant: '"simple"',
+}
+
+// ===== ContentCardGrid 演示数据 =====
+const demoCaseCards = [
+  {
+    image: ecosystemAbility1,
+    tag: '制造行业',
+    title: '山东华垦化工 ERP 系统升级',
+    linkHref: '/cases/shandong-huaken',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '零售行业',
+    title: '美特好超市数字化运营',
+    linkHref: '/cases/meitehao',
+  },
+  {
+    image: ecosystemAbility3,
+    tag: '服务行业',
+    title: '中科曙光 IT 服务管理',
+    linkHref: '/cases/zhongke-shuguang',
+  },
+]
+
+const demoProductCards = [
+  {
+    image: ecosystemAbility1,
+    tag: 'CRM',
+    title: '客户关系管理',
+    linkHref: '/products/crm',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: 'ERP',
+    title: '企业资源计划',
+    linkHref: '/products/erp',
+  },
+  {
+    image: ecosystemAbility3,
+    title: '智能数据分析平台',
+    linkHref: '/products/analytics',
+  },
+]
+
+const demoArticleCards = [
+  {
+    image: ecosystemAbility1,
+    tag: '产品动态',
+    title: '销帮帮 CRM 2026 年度产品发布会回顾',
+    publishDate: '2026-07-20',
+    linkHref: '/articles/2026-product-launch',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '行业洞察',
+    title: '制造业数字化转型的六大关键趋势',
+    publishDate: '2026-07-15',
+    linkHref: '/articles/manufacturing-digital-trends',
+  },
+  {
+    image: ecosystemAbility3,
+    title: '从数据到决策：AI 如何重塑客户管理',
+    publishDate: '2026-07-10',
+    linkHref: '/articles/ai-reshaping-crm',
+  },
+]
+
+// ===== ContentList 交互式控件 =====
+const articleListControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'card（含描述）', value: 'card' },
+      { label: 'compact（紧凑）', value: 'compact' },
+      { label: 'list（纯文本）', value: 'list' },
+    ],
+  },
+  {
+    label: 'Rounded',
+    prop: 'rounded',
+    options: [
+      { label: '开启', value: true },
+      { label: '关闭', value: false },
+    ],
+  },
+]
+
+const articleListDefaults = {
+  variant: 'card',
+  rounded: true,
+  title: '最新文章',
+}
+
+const articleListCodeExtra = {
+  title: '"最新文章"',
+  ':items': 'items',
+  variant: '"card"',
+  rounded: 'true',
+}
+
+// ===== ContentList 演示数据 =====
+const demoArticles = [
+  {
+    image: ecosystemAbility1,
+    tag: '客户管理',
+    title: '客户生命周期管理：从线索到成交的全流程优化',
+    description:
+      '深入了解客户生命周期各阶段的管理要点，从线索获取、培育转化到成交复购，构建完整的客户管理闭环。',
+    publishDate: '2024-10-28',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '行业方案',
+    title: '制造业数字化转型实践：CRM 如何赋能传统工厂',
+    description:
+      '探讨制造业企业在数字化转型过程中的痛点与解决方案，看 CRM 系统如何帮助传统工厂实现智能化管理升级。',
+    publishDate: '2024-10-25',
+  },
+  {
+    image: ecosystemAbility3,
+    tag: '产品动态',
+    title: '销帮帮 CRM 2024 年 Q4 产品更新亮点一览',
+    description:
+      '汇集 Q4 季度产品功能更新，包括 AI 智能推荐、客户画像增强、移动端体验优化等多项重要升级。',
+    publishDate: '2024-10-22',
+  },
+  {
+    image: ecosystemAbility1,
+    tag: '签约喜报',
+    title: '喜报：华强集团正式签约销帮帮 CRM 企业版',
+    description:
+      '华强集团经过多轮选型评估，最终选择销帮帮 CRM 作为企业数字化管理平台，覆盖销售、客服全流程。',
+    publishDate: '2024-10-20',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '更新公告',
+    title: '销帮帮 V6.8 版本更新公告：全新 UI 与性能优化',
+    description:
+      'V6.8 版本带来全新界面设计、3 倍性能提升、批量操作优化等多项改进，升级体验全面焕新。',
+    publishDate: '2024-10-18',
+  },
+  {
+    image: ecosystemAbility3,
+    tag: '功能详解',
+    title: 'AI 智能客户评分：让数据告诉你谁是最有价值的客户',
+    description:
+      '深度解析 AI 智能客户评分功能的工作原理与应用场景，帮助企业精准识别高价值客户，提升销售效率。',
+    publishDate: '2024-10-15',
+  },
+  {
+    image: ecosystemAbility1,
+    tag: '干货分享',
+    title: '销售团队管理的 7 个关键指标：从数据看管理效率',
+    description:
+      '分享销售团队管理中最重要的 7 个 KPI 指标，帮助管理者通过数据驱动决策，提升团队整体业绩。',
+    publishDate: '2024-10-12',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '客户案例',
+    title: '从 0 到 1000 万：某初创企业使用 CRM 的增长故事',
+    description:
+      '一家初创企业如何通过销帮帮 CRM 实现客户管理标准化，在 18 个月内实现营收从 0 到 1000 万的跨越式增长。',
+    publishDate: '2024-10-10',
+  },
+]
+
+// ===== TextContentList 演示数据 =====
+const demoTextArticles = [
+  {
+    publishDate: '2024-10-28',
+    tag: '客户管理',
+    title: '客户生命周期管理：从线索到成交的全流程优化',
+  },
+  {
+    publishDate: '2024-10-25',
+    tag: '行业方案',
+    title: '制造业数字化转型实践：CRM 如何赋能传统工厂',
+    linkHref: '#',
+  },
+  {
+    publishDate: '2024-10-22',
+    tag: '产品动态',
+    title: '销帮帮 CRM 2024 年 Q4 产品更新亮点一览',
+  },
+  {
+    publishDate: '2024-10-20',
+    tag: '签约喜报',
+    title: '喜报：华强集团正式签约销帮帮 CRM 企业版',
+  },
+  {
+    publishDate: '2024-10-18',
+    tag: '更新公告',
+    title: '销帮帮 V6.8 版本更新公告：全新 UI 与性能优化',
+    linkHref: '#',
+  },
+  {
+    publishDate: '2024-10-15',
+    tag: '功能详解',
+    title: 'AI 智能客户评分：让数据告诉你谁是最有价值的客户',
+  },
+]
+
+// ===== ImageTextFeatureGrid 演示数据 =====
+const demoFeatureCards = [
+  {
+    image: ecosystemAbility1,
+    tag: '产品动态',
+    title: '进销存管理全新升级，智能补货与库存预警能力大幅提升',
+    publishDate: '2026-07-27',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '行业洞察',
+    title: '财务管理',
+    publishDate: '2026-07-25',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility3,
+    tag: '产品动态',
+    title: '客户全生命周期管理方案：从线索获取到成交复购的完整闭环',
+    publishDate: '2026-07-20',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility1,
+    tag: '行业洞察',
+    title: '数据分析',
+    publishDate: '2026-07-15',
+    linkHref: '#',
+  },
+]
+
+// ===== ImageTextFeatureGrid 单列演示数据（含摘要） =====
+const demoFeatureSingleCards = [
+  {
+    image: ecosystemAbility1,
+    tag: '产品动态',
+    title: '进销存管理',
+    description: '一体化进销存管理，实时掌握库存动态，智能补货提醒，让商品管理更高效。',
+    publishDate: '2026-07-27',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility2,
+    tag: '行业洞察',
+    title: '财务管理',
+    description: '智能财务核算，多维度利润分析，自动生成财务报表，助力企业精细化运营。',
+    publishDate: '2026-07-25',
+    linkHref: '#',
+  },
+]
+
+// ===== PlatformDownload 演示数据 =====
+const platformDownloadCards = [
+  {
+    name: '钉钉',
+    icon: '/images/customer/tab-unified.svg',
+    qrCode: '/images/customer/tab-unified.svg',
+  },
+  {
+    name: '飞书',
+    icon: '/images/customer/tab-tracking.svg',
+    qrCode: '/images/customer/tab-tracking.svg',
+  },
+  {
+    name: '企业微信',
+    icon: '/images/customer/tab-retention.svg',
+    qrCode: '/images/customer/tab-retention.svg',
+  },
+  {
+    name: '独立版',
+    icon: '/images/customer/tab-collaboration.svg',
+    qrCode: '/images/customer/tab-collaboration.svg',
+  },
+  {
+    name: 'AI助手',
+    icon: '/images/customer/hero.svg',
+    qrCode: '/images/customer/hero.svg',
+  },
+]
+
+// ===== Timeline 演示数据 =====
+const timelineMilestones = [
+  {
+    year: '2017',
+    title: '产品正式发布',
+    description: [
+      '销帮帮 CRM 1.0 版本正式上线，主打客户管理与销售跟进功能，',
+      { text: '首年付费客户突破 1000 家', highlight: true },
+      '，获得天使轮融资。',
+    ],
+  },
+  {
+    year: '2018',
+    title: '高速增长期',
+    description: [
+      '完成 A 轮融资，团队规模从 30 人扩张至 150 人，',
+      { text: '服务企业突破 10,000 家', highlight: true },
+      '，产品新增数据分析与智能报表模块。',
+    ],
+  },
+  {
+    year: '2019',
+    title: 'AI 战略升级',
+    description: [
+      '发布 AI 智能客户评分与商机推荐引擎，',
+      { text: '日活用户突破 50 万', highlight: true },
+      '，完成 B 轮融资，与钉钉、企业微信达成深度战略合作。',
+    ],
+  },
+  {
+    year: '2020',
+    title: '行业领先地位',
+    description: [
+      '累计服务企业超 30 万家，',
+      { text: '付费客户数突破 16,000 家', highlight: true },
+      '，营收突破 12 亿，稳居国内 CRM 行业第一梯队。',
+    ],
+  },
+] as const
+
+// ===== FlowSteps 演示数据 =====
+const processDemoSteps = [
+  {
+    theme: 'purple' as const,
+    title: '需求梳理与方案设计',
+    description: '专业顾问团队深入调研企业业务痛点，结合行业最佳实践，为您量身定制数字化解决方案。',
+    features: ['需求调研与诊断', '行业对标分析', '个性化方案设计'],
+    summary: '1-3 个工作日完成方案',
+  },
+  {
+    theme: 'blue' as const,
+    title: '系统部署与数据迁移',
+    description: '快速完成系统环境搭建，安全高效地完成历史数据迁移与接口对接，确保业务无缝衔接。',
+    features: ['系统环境搭建', '数据迁移与清洗', '第三方系统对接'],
+    summary: '3-5 个工作日上线部署',
+  },
+  {
+    theme: 'teal' as const,
+    title: '员工培训与试运行',
+    description: '分层级开展系统操作培训，通过试运行阶段收集反馈，持续优化流程与体验。',
+    features: ['分层级操作培训', '试运行与反馈收集', '流程持续优化'],
+    summary: '1-2 周完成全员培训',
+  },
+  {
+    theme: 'orange' as const,
+    title: '正式上线与持续服务',
+    description: '系统正式上线运行，专属客户成功经理持续跟进，提供7×24小时技术支持与迭代升级服务。',
+    features: ['正式上线切换', '7×24 技术支持', '定期回访与升级'],
+    summary: '长期陪跑，持续赋能',
+  },
+] as const
+
+// ===== FlowSteps 交互式控件 =====
+const processStepsControls = [
+  {
+    label: 'Arrow Style',
+    prop: 'arrowStyle',
+    options: [
+      { label: 'line（直线）', value: 'line' },
+      { label: 'filled（实心）', value: 'filled' },
+      { label: 'gradient（渐变）', value: 'gradient' },
+      { label: 'chevron（双V形）', value: 'chevron' },
+    ],
+  },
+  {
+    label: 'Reverse（箭头翻转）',
+    prop: 'reverse',
+    options: [
+      { label: 'false（默认方向）', value: false },
+      { label: 'true（翻转方向）', value: true },
+    ],
+  },
+]
+
+const processStepsDefaults = {
+  arrowStyle: 'line',
+  reverse: false,
+  title: '如何快速开启数智化',
+  subtitle: '从需求梳理到正式上线，专业团队全程陪跑，助力企业轻松实现数字化转型',
+}
+
+const processStepsCodeExtra = {
+  title: '"如何快速开启数智化"',
+  subtitle: '"从需求梳理到正式上线，专业团队全程陪跑..."',
+  ':steps': 'steps',
+  'arrow-style': '"line"',
+  reverse: 'false',
+}
+
+// ===== ReviewCardGrid 演示数据 =====
+const reviewDemoCards = [
+  {
+    logo: '/images/customer/tab-unified.svg',
+    industry: '制造行业',
+    content:
+      '销帮帮 CRM 帮助我们实现了客户管理的全面数字化，从线索跟进到成交转化，整个流程变得清晰可控。销售团队的工作效率提升了至少 40%，客户满意度也大幅提高。',
+    username: '张总',
+    rating: 5,
+  },
+  {
+    logo: '/images/customer/tab-tracking.svg',
+    industry: '零售行业',
+    content:
+      '作为一家快速成长的零售企业，我们需要一个既能满足当前需求又能支撑未来发展的 CRM 系统。销帮帮不仅功能完善，而且与钉钉的深度集成让我们的员工几乎零学习成本就上手了。从客户分配到售后跟进，全流程数字化管理，真正实现了降本增效。强烈推荐给同样在寻找数字化解决方案的零售同行！',
+    username: '李经理',
+    rating: 4,
+  },
+  {
+    logo: '/images/customer/tab-retention.svg',
+    industry: '服务行业',
+    content: 'AI 智能客户评分功能非常实用，帮我们精准识别高价值客户，销售资源分配更加合理。',
+    username: '王总监',
+    rating: 5,
+  },
+  {
+    logo: '/images/customer/tab-collaboration.svg',
+    industry: '科技行业',
+    content:
+      '从选型到上线，销帮帮团队提供了全程专业支持。系统灵活度高，自定义字段和审批流程完全适配了我们的业务场景。使用半年后，客户跟进效率提升明显，数据报表也让管理层对销售动态一目了然。唯一的小建议是希望移动端的部分功能体验能进一步优化，但整体来说已经非常满意了。',
+    username: '赵工',
+    rating: 3,
+  },
+]
+
+const reviewCardGridControls = [
+  {
+    label: 'Columns',
+    prop: 'columns',
+    options: [
+      { label: '2（双列）', value: 2 },
+      { label: '1（单列）', value: 1 },
+    ],
+  },
+]
+
+const reviewCardGridDefaults = {
+  columns: 2,
+  title: '客户评价',
+  subtitle: '来自各行各业的真实用户反馈',
+}
+
+const reviewCardGridCodeExtra = {
+  title: '"客户评价"',
+  subtitle: '"来自各行各业的真实用户反馈"',
+  ':cards': 'cards',
+}
+</script>

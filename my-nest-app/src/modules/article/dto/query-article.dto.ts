@@ -1,0 +1,40 @@
+import { IsOptional, IsString, IsNumber, Min, IsIn } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class QueryArticleDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: '页码必须是数字' })
+  @Min(1, { message: '页码不能小于1' })
+  page?: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: '每页数量必须是数字' })
+  @Min(1, { message: '每页数量不能小于1' })
+  limit?: number = 10;
+
+  @IsOptional()
+  @IsString({ message: '标题搜索必须是字符串' })
+  title?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: '栏目ID必须是数字' })
+  bid?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: '状态必须是数字' })
+  status?: number;
+
+  @IsOptional()
+  @IsString({ message: '作者搜索必须是字符串' })
+  author?: string;
+
+  @IsOptional()
+  @IsString({ message: '排序方式必须是字符串' })
+  @IsIn(['addtime_desc', 'addtime_asc', 'hit_desc', 'hit_asc', 'ord_asc', 'ord_desc'],
+    { message: '排序方式不正确' })
+  sortBy?: string = 'addtime_desc';
+}

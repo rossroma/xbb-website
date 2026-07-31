@@ -1,0 +1,49 @@
+/* 客户端全局样式 */
+/* Tailwind v4 preflight 已处理 margin/padding/box-sizing 重置 */
+
+html {
+  font-size: 14px;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+body {
+  font-family:
+    'PingFang SC',
+    'Microsoft YaHei',
+    'Noto Sans SC',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100%;
+}
+
+/* ====== 页面过渡动画 ====== */
+.page-fade-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.page-fade-leave-active {
+  transition: opacity 0.15s ease-in;
+}
+
+.page-fade-enter-from {
+  opacity: 0;
+}
+
+.page-fade-leave-to {
+  opacity: 0;
+}
