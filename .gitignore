@@ -1,9 +1,14 @@
 # Dependencies
 node_modules
+**/node_modules
 
 # Build output
 dist
 dist-ssr
+**/dist
+
+# NestJS build output
+my-nest-app/dist/
 
 # Logs
 logs
@@ -49,3 +54,7 @@ pids
 # Temp
 .temp
 .tmp
+
+# Uploads (runtime)
+uploads/
+**/uploads/

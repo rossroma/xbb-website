@@ -39,5 +39,6 @@ __screenshots__/
 .playwright-mcp/
 
 # Vite
+.vite/
 *.timestamp-*-*.mjs
 .claude/screenshots/

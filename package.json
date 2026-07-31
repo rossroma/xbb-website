@@ -1,0 +1,24 @@
+{
+  "name": "xbb-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "销帮帮 CRM 官网 — Vue 3 + NestJS 全栈项目",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "dev:frontend": "pnpm -C my-vue-app dev",
+    "dev:backend": "pnpm -C my-nest-app start:dev",
+    "build": "pnpm -r build",
+    "build:frontend": "pnpm -C my-vue-app build",
+    "build:backend": "pnpm -C my-nest-app build",
+    "test": "pnpm -r test",
+    "test:frontend": "pnpm -C my-vue-app test:unit",
+    "test:backend": "pnpm -C my-nest-app test",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format",
+    "type-check": "pnpm -r type-check"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "packageManager": "pnpm@10.33.0"
+}
