@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>B266FFD1-E2EA-4271-8F93-8678F51DB8F4@0.0x</title>
+    <defs>
+        <polygon id="path-1" points="0 3419 1920 3419 1920 2819 0 2819"></polygon>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-606.000000, -3202.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Fill-1备份-5" fill="#5789EA" xlink:href="#path-1"></use>
+            <g id="编组-5" mask="url(#mask-2)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.878">
+                <g transform="translate(607.589400, 3203.221900)">
+                    <line x1="17.6062" y1="1.1738" x2="1.1732" y2="17.6068" id="Stroke-10"></line>
+                    <path d="M2.934,0 C4.555,0 5.868,1.314 5.868,2.934 C5.868,4.555 4.555,5.869 2.934,5.869 C1.313,5.869 0,4.555 0,2.934 C0,1.314 1.313,0 2.934,0 Z" id="Stroke-12"></path>
+                    <path d="M15.8455,12.9116 C17.4665,12.9116 18.7795,14.2256 18.7795,15.8456 C18.7795,17.4666 17.4665,18.7806 15.8455,18.7806 C14.2245,18.7806 12.9115,17.4666 12.9115,15.8456 C12.9115,14.2256 14.2245,12.9116 15.8455,12.9116 Z" id="Stroke-14"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,765 @@
+@charset "UTF-8";
+.display-none{
+  display: none;
+}
+.text-danger {
+  color: #ff7559;
+}
+/* 第一部分开始 */
+.bdCon1{
+  /* background-color: #045AD6; */
+  background-image: url(/statics/home/images/baidu2021/bgImg.png);
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.bd1Box{
+  display: block;
+}
+.bdCon1 .bd1Mheader{
+  display: none;
+}
+.bdCon1 .bd1Header{
+  padding:70px 0 70px 65px;
+}
+.bdCon1 .bd1Lx{
+  padding: 50px 0;
+}
+.bdCon1 .bd1Rx{
+  padding-bottom: 50px;
+}
+
+
+@media (min-width:768px){
+  .bdCon1 .bd1Lx{
+    width: 100%;
+    padding: 50px 0;
+  }
+  .bdCon1 .bd1Rx{
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 50px;
+  }
+}
+
+@media (min-width:993px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    padding: 90px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 70px;
+  }
+}
+
+@media (max-width:993px){
+  .bdCon1 .bd1Mheader{
+    height:56px;
+    width: 100%;
+    padding:0 15px;
+    display: block;
+  }
+  .bdCon1 .bd1Header{
+    display: none;
+  }
+}
+
+@media (min-width:1200px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    padding: 90px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 90px;
+  }
+}
+
+@media (min-width:1799px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    width: 70%;
+    padding: 110px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 110px;
+    position: relative;
+    left: 150px;
+  }
+}
+
+.bdCon1 .bd1Rx .wrap-form{
+  
+}
+.bdCon1 .bd1Rx .form-container{
+  border-radius: 8px;
+  max-width: 452px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 0 30px;
+}
+.bdCon1 .bd1Rx .form-container h2{
+  padding: 54px 0 36px 0;
+  font-size: 30px;
+  font-weight: 400;
+  color: #E99334;
+  text-align: center;
+  cursor: pointer;
+}
+.bdCon1 .bd1Rx .form-container h3{
+  padding: 0 0 28px 0;
+  font-size: 25px;
+  font-weight: 400;
+  color: #282828;
+  text-align: center;
+  cursor: pointer;
+}
+@media (min-width:649px){
+  .bdCon1 .bd1Rx .form-container h2:hover{
+    font-size: 32px;
+    transition: font-size 0.5s;
+    -moz-transition: font-size 0.5s; /* Firefox 4 */
+    -webkit-transition: font-size 0.5s; /* Safari 和 Chrome */
+    -o-transition: font-size 0.5s; /* Opera */
+  }
+}
+@media (min-width:649px){
+  .bdCon1 .bd1Rx .form-container h3:hover{
+    font-size: 27px;
+    transition: font-size 0.5s;
+    -moz-transition: font-size 0.5s; /* Firefox 4 */
+    -webkit-transition: font-size 0.5s; /* Safari 和 Chrome */
+    -o-transition: font-size 0.5s; /* Opera */
+  }
+}
+
+.bdCon1 .bd1Rx .form-horizontal{
+  padding-bottom: 30px;
+}
+.bdCon1 .bd1Rx .form-horizontal .form-item{
+  display: flex;
+  justify-content: center;
+}
+.bdCon1 .bd1Rx .form-horizontal .form-item .content{
+  width: 100%;
+}
+.form-horizontal .form-item input{
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #979797;
+  font-size: 15px;
+  color: #aaa9a9;
+  padding: 8px 15px;
+  margin-right: 1%;
+  width: 100%;
+  box-sizing: border-box;
+  height: 50px;
+  border-radius: 10px;
+  display: block;
+  line-height: 1.42857143;
+}
+.form-horizontal .form-item input::-webkit-input-placeholder {
+  color: #c3c3c3;
+}
+input::-moz-input-placeholder {
+  color: #c3c3c3;
+}
+input::-ms-input-placeholder {
+  color: #c3c3c3;
+}
+.form-horizontal .notice-text{
+  font-size: 12px;
+  height: 20px;
+  display: block;
+  line-height: 24px;
+}
+.form-container .note-code .content-input{
+  width: 66%;
+}
+.form-container .note-code .content-btn{
+  width: 33.33%;
+  padding-left: 15px;
+}
+.form-container .note-code .content-btn .get-code{
+  background: #ffffff;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 14px;
+  color: #545252;
+  border: 1px solid #979797;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+.form-container .note-code .content-btn .count-down{
+  background: #FF9014;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+.form-container .form-btn{
+  background: linear-gradient(to right,#FF7457,#FF950A);
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+  text-align: center;
+  height: 50px;
+  line-height: 50px;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 10px;
+}
+@media (max-width:649px){
+  .form-horizontal .form-item input{
+    font-size: 12px;
+  }
+  .bdCon1 .bd1Rx .form-container h2{
+    padding: 30px 0 ;
+    font-size: 20px;
+  }
+  .bdCon1 .bd1Rx .form-container h2 em{
+    font-size: 24px;
+  }
+}
+/* 第一部分结束 */
+/* 第二部分开始 */
+.bdCon2 .problem{
+  font-size: 16px;
+  font-weight: 500;
+}
+.bdCon2-content{
+  background: #f6f6f9;
+  padding-top: 2.4vw;
+}
+.bdCon2 .tab-content-padding{
+  padding: 0 10%;
+}
+.bdCon2 .background{
+  height: 360px;
+  position: relative;
+  padding:50px 0;
+}
+.bdCon2 .background img{
+  height: 100%;
+  width: 100%;
+}
+.bdCon2 .content{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 18px;
+}
+.bdCon2 .padding-left_none{
+  padding-left: 0 !important;
+}
+.bdCon2 .padding-right_none{
+  padding-right: 0 !important;
+}
+.bdCon2 .content p{
+  margin:10px 0;
+}
+.bdCon2 .content .content-title{
+  color: #E99334;
+  font-size: 20px;
+}
+.bdCon2 .layui-tab .tab-title{
+  float: left;
+  font-size: 30px;
+  font-weight: 550;
+  line-height: 1px;
+  margin: 0 5% 0 20%;
+}
+.bdCon2 .layui-tab .layui-tab-title li{
+  font-size: 25px;
+  padding:0 20px 10px 20px;
+  line-height: 0;
+}
+.bdCon2 .layui-tab .layui-this:after{
+  border-bottom: 3px solid #E99334 !important;
+}
+.bdCon2 .layui-tab .layui-this{
+  color: #E99334 !important;
+}
+@media (min-width: 1301px) {
+  .bdCon2 .padding-right_none{
+    padding-left: 150px;
+  }
+  .bdCon2 .padding-left_none{
+    padding-right: 50px;
+  }
+}
+@media (max-width: 1400px) {
+  .bdCon2 .layui-tab .tab-title{
+    margin: 0 5% 0 5px;
+  }
+}
+@media (max-width: 1300px) {
+  .bdCon2 .tab-content-padding{
+    padding: 0;
+  }
+  .bdCon2 .layui-tab .tab-title{
+    margin: 0 50px 0 5px;
+  }
+}
+@media (max-width: 1105px) {
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 25px;
+    font-weight: 550;
+    line-height: 1px;
+    margin: 0 5% 0 10px;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 20px;
+    padding:0 20px 10px 20px;
+  }
+}
+@media (max-width: 955px) {
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 20px;
+    font-weight: 550;
+    line-height: 1px;
+    margin: 0 5% 0 10px;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 16px;
+    padding:0 20px 10px 20px;
+  }
+}
+@media (max-width: 816px) {
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 17px;
+    font-weight: 550;
+    line-height: 1px;
+    margin: 0 5% 0 10px;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 14px;
+    padding:0 20px 10px 20px;
+  }
+}
+@media (max-width: 767px){
+  .bdCon2 .background{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .bdCon2 .background{
+    height: 240px;
+    position: relative;
+    padding:15px 0;
+  }
+  .bdCon2 .content p{
+    font-size: 10px;
+  }
+  .bdCon2 .content .content-title{
+    font-size: 14px;
+  }
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 14px;
+    font-weight: 500;
+    margin:0 3% 0 8px;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 14px;
+    padding:0;
+    line-height: 25px;
+  }
+}
+@media (max-width: 375px) {
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 0;
+    margin:0;
+    position: relative;
+    top: -7px;
+    left: 30%;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 14px;
+    padding:0;
+    line-height: 25px;
+    margin-right: -3px;
+  }
+}
+@media (max-width: 565px) {
+  .bdCon2 .layui-tab .tab-title{
+    font-size: 14px;
+    font-weight: 550;
+    line-height: 0;
+    margin:0;
+    position: relative;
+    top: -7px;
+    left: 35%;
+  }
+  .bdCon2 .layui-tab .layui-tab-title li{
+    font-size: 14px;
+    padding:0;
+    line-height: 25px;
+    margin-right: -3px;
+  }
+  .bdCon2 .layui-tab-title{
+    left: 15%;
+  }
+}
+@media (max-width: 450px) {
+  .bdCon2 .layui-tab-title{
+    left: 0;
+  }
+  .bdCon2 .background{
+    height: 200px;
+    position: relative;
+    padding:10px 0;
+  }
+}
+/* 第二部分结束 */
+/* 第三部分开始 */
+.bdCon3{
+padding-bottom: 0;
+}
+.bdCon3 .reason{
+  font-size: 42px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.bdCon3 .problem{
+  font-size: 26px;
+  font-weight: 500;
+}
+.bdCon3 .background:hover{
+  background: rgb(175, 171, 171);
+}
+.bdCon3 .background .img{
+  width: 100%;
+}
+.bdCon3 .background:hover img{
+  opacity:0.15;
+}
+.bdCon3 .background:hover .content{
+  display: block;
+}
+.bdCon3 .content{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: 400;
+  display: none;
+}
+.bdCon3 .content p{
+  text-align: center;
+  line-height: 2;
+}
+@media (max-width: 649px){
+  .bdCon3 .reason{
+    font-size: 32px;
+  }
+  .bdCon3 .problem{
+    font-size: 16px;
+  }
+}
+
+/* 第三部分结束 */
+/* 第四部分开始 */
+.bdCon4 .content{
+  text-align: center;
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+.bdCon4 .content p{
+  margin: 20px 0 0 0;
+}
+.bdCon4 .problem_3{
+  position: relative;
+  bottom: 44px;
+}
+.bdCon4 .content .price{
+  color: rgba(190, 16, 2, 100);
+  font-size: 40px;
+  font-weight: 500;
+  position: relative;
+  bottom: 40px;
+}
+.bdCon4 .content .hot-price{
+  color: rgba(190, 16, 2, 100);
+  font-size: 40px;
+  font-weight: 500;
+  position: relative;
+  bottom: 30px;
+}
+.bdCon4 .content .explain{
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  top: 100px;
+  left: 10px;
+}
+.bdCon4 .content .hot-explain{
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 600;
+  position: absolute;
+  top: 157px;
+  left: 40px;
+}
+.bdCon4 .reason{
+  font-size: 42px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+.bdCon4 .select-text{
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 20px 0;
+}
+.bdCon4 .meal-margin{
+  margin:0 5% 0 15% ;
+}
+@media (max-width:1300px) {
+  .bdCon4 .problem_3{
+    position: relative;
+    bottom: 33px;
+  }
+  .bdCon4 .content .explain{
+    top: 95px;
+    left: 10px;
+  }
+  .bdCon4 .content .hot-explain{
+    top: 150px;
+    left: 40px;
+  }
+}
+@media (min-width:1799px) {
+  .bdCon4 .content .explain{
+    top: 110px;
+    left: 0px;
+  }
+  .bdCon4 .content .hot-explain{
+    top: 170px;
+    left: 35px;
+  }
+}
+@media (max-width:992px) {
+  .bdCon4 .meal-margin{
+    margin:0;
+  }
+  .bdCon4 .meal-content{
+    margin-right: 1px;
+  }
+  .bdCon4 .content .explain{
+    top: 110px;
+    left: 0px;
+  }
+  .bdCon4 .content .hot-explain{
+    top: 170px;
+    left: 35px;
+  }
+}
+@media (max-width: 649px){
+  .bdCon4 .reason{
+    font-size: 32px;
+  }
+  .bdCon4 .problem_3{
+    position: relative;
+    bottom: 30px;
+  }
+  .bdCon4 .select-text{
+    font-size: 13px;
+    font-weight: 400;
+  }
+  .bdCon4 .content .price{
+    font-size: 30px;
+    font-weight: 500;
+    bottom: 20px;
+  }
+  .bdCon4 .content .hot-price{
+    font-size: 30px;
+    font-weight: 500;
+    bottom: 10px;
+  }
+  .bdCon4 .content .explain{
+    font-size: 19px;
+    font-weight: 400;
+    position: absolute;
+    top: 70px;
+    left: 17px;
+  }
+  .bdCon4 .content .hot-explain{
+    font-size: 19px;
+    font-weight: 400;
+    position: absolute;
+    top: 105px;
+    left: 30px;
+  }
+  .bdCon4 .content p{
+    margin: 0;
+  }
+}
+@media (max-width: 400px) {
+  .bdCon4 .problem_3{
+    bottom: 20px;
+  }
+  .bdCon4 .content .price{
+    font-size: 20px;
+    font-weight: 500;
+    bottom: 15px;
+  }
+  .bdCon4 .content .hot-price{
+    font-size: 20px;
+    font-weight: 500;
+    bottom: 10px;
+  }
+  .bdCon4 .content .explain{
+    font-size: 12px;
+    font-weight: 550;
+    position: absolute;
+    top: 50px;
+    left: 11px;
+  }
+  .bdCon4 .content .hot-explain{
+    font-size: 12px;
+    font-weight: 550;
+    position: absolute;
+    top: 73px;
+    left: 25px;
+  }
+  .bdCon4 .content p{
+    margin: 0;
+  }
+}
+/* 第四部分结束 */
+/* 第五部分下面给个padding */
+.bdCon5-padding{
+  padding-bottom: 5vw;
+}
+/* 下面的浮窗 */
+.floating-window{
+  width: 100%;
+}
+.floating-window .floating-window__box{
+  background-color:  rgba(4, 89, 213, 0.9);;
+  width: 100%;
+  height: 73px;
+}
+.floating-window .fixed{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  z-index: 99;
+}
+.floating-window__box .floating-window__content{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.floating-window__content p{
+  font-size: 30px;
+}
+.floating-window__content p em{
+  font-style: normal;
+  font-size: 34px;
+  color: #F68F44;
+}
+.floating-window__content div{
+  font-size: 20px;
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+  margin-left: 90px;
+  background-color: #F68F44;
+  cursor: pointer;
+}
+@media (max-width: 960px){
+  .floating-window .floating-window__box{
+    height: 65px;
+  }
+  .floating-window__content p{
+    font-size: 16px;
+  }
+  .floating-window__content p em{
+    font-size: 18px;
+  }
+  .floating-window__content div{
+    font-size: 13px;
+    width: 86px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 12px;
+    margin-left: 40px;
+  }
+}
+/* 操作按钮 */
+.operation-btn{
+  height: 65px;
+  width: 400px;
+  background-color: #E99334;
+  color: #ffffff;
+  border-radius: 37px;
+  text-align: center;
+  line-height: 65px;
+  font-size: 30px;
+  display: block;
+  margin:0 auto;
+  cursor: pointer;
+}
+.learn-more{
+  margin-top: 3vh;
+}
+@media (max-width: 649px){
+  .operation-btn{
+    height: 30px;
+    width: 200px;
+    line-height: 30px;
+    font-size: 15px;
+  }
+}
+/* 备份页第四部分 */
+.bdCon4_2 .content{
+  text-align: center;
+}
+.bdCon4_2 .content img{
+  
+}
+.bdCon4_2 .content p{
+  font-size: 16px;
+  margin: 20px 0;
+}
+.bdCon4_2 .content span{
+  font-size: 38px;
+  color: #ff8e3d;
+}

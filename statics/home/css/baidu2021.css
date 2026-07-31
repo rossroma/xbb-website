@@ -1,0 +1,337 @@
+@charset "UTF-8";
+.display-none{
+  display: none;
+}
+.text-danger {
+  color: #ff7559;
+}
+/* 第一部分开始 */
+.bdCon1{
+  /* background-color: #045AD6; */
+  background-image: url(../images/baidu2021/bgImg.png);
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.bd1Box{
+  display: block;
+}
+.bdCon1 .bd1Lx{
+  padding: 50px 0;
+}
+.bdCon1 .bd1Rx{
+  padding-bottom: 50px;
+}
+
+
+@media (min-width:768px){
+  .bdCon1 .bd1Lx{
+    width: 100%;
+    padding: 50px 0;
+  }
+  .bdCon1 .bd1Rx{
+    width: 100%;
+    padding-top: 0;
+    padding-bottom: 50px;
+  }
+}
+
+@media (min-width:993px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    padding: 90px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 70px;
+  }
+}
+
+@media (min-width:1200px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    padding: 90px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 90px;
+  }
+}
+
+@media (min-width:1799px){
+  .bd1Box{
+    display: flex;
+  }
+  .bdCon1 .bd1Lx{
+    width: 50%;
+    padding: 110px 0;
+  }
+  .bdCon1 .bd1Rx{
+    padding-top: 110px;
+  }
+}
+
+.bdCon1 .bd1Rx .wrap-form{
+  
+}
+.bdCon1 .bd1Rx .form-container{
+  border-radius: 8px;
+  max-width: 452px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 0 30px;
+}
+.bdCon1 .bd1Rx .form-container h2{
+  padding: 58px 0 ;
+  font-size: 30px;
+  font-weight: 400;
+  color: #323232;
+  text-align: center;
+  cursor: pointer;
+}
+.bdCon1 .bd1Rx .form-container h2 em{
+  font-style: normal;
+  font-size: 34px;
+  color: #ff8e3d;
+}
+@media (min-width:649px){
+  .bdCon1 .bd1Rx .form-container h2:hover{
+    font-size: 32px;
+    transition: font-size 0.5s;
+    -moz-transition: font-size 0.5s; /* Firefox 4 */
+    -webkit-transition: font-size 0.5s; /* Safari 和 Chrome */
+    -o-transition: font-size 0.5s; /* Opera */
+  }
+  .bdCon1 .bd1Rx .form-container h2:hover em{
+    font-size: 36px;
+  }
+}
+
+.bdCon1 .bd1Rx .form-horizontal{
+  padding-bottom: 30px;
+}
+.bdCon1 .bd1Rx .form-horizontal .form-item{
+  display: flex;
+}
+.bdCon1 .bd1Rx .form-horizontal .form-item .label{
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 300;
+  flex: 1;
+}
+.bdCon1 .bd1Rx .form-horizontal .form-item .content{
+  width: 66.66666667%;
+}
+.form-horizontal .form-item input{
+  width: 66.66666667%;
+  background: #edf5fa;
+  border: 1px solid #edf5fa;
+  font-size: 15px;
+  color: #aaa9a9;
+  padding: 8px 15px;
+  margin-right: 1%;
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  border-radius: 3px;
+  display: block;
+  line-height: 1.42857143;
+}
+.form-horizontal .notice-text{
+  font-size: 12px;
+  height: 24px;
+  display: block;
+  line-height: 24px;
+}
+.form-container .note-code .content-input{
+  width: 33.33%;
+}
+.form-container .note-code .content-btn{
+  width: 33.33%;
+  padding-left: 15px;
+}
+.form-container .note-code .content-btn .get-code{
+  background: #FF9014;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+.form-container .note-code .content-btn .count-down{
+  background: #FF9014;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  text-align: center;
+}
+.form-container .form-btn{
+  background: linear-gradient(to right,#FF7457,#FF950A);
+  border-radius: 8px;
+  width: 100%;
+  font-size: 16px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  cursor: pointer;
+}
+@media (max-width:649px){
+  .form-horizontal .form-item input{
+    font-size: 12px;
+  }
+  .bdCon1 .bd1Rx .form-container h2{
+    padding: 30px 0 ;
+    font-size: 20px;
+  }
+  .bdCon1 .bd1Rx .form-container h2 em{
+    font-size: 24px;
+  }
+}
+/* 第一部分结束 */
+/* 第二部分开始 */
+.bdCon2 .problem{
+  font-size: 16px;
+  font-weight: 500;
+}
+.bdCon2 .background{
+  height: 105px;
+  position: relative;
+}
+.bdCon2 .background img{
+  height: 100%;
+  width: 100%;
+}
+.bdCon2 .content{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  /* padding: 28px 0 0 107px; */
+  font-size: 28px;
+}
+@media (max-width: 767px){
+  .bdCon2 .background{
+    width: 80%;
+    margin: 0 auto;
+  }
+}
+@media (max-width: 649px){
+  .bdCon2 .problem{
+    font-size: 13px;
+  }
+  .bdCon2 .content{
+    font-size: 20px;
+  }
+}
+/* 第二部分结束 */
+/* 第三部分开始 */
+.bdCon3{
+padding-bottom: 0;
+}
+.bdCon3 .hmc3Rx .content p{
+  font-size: 24px;
+  line-height: 37px;
+}
+@media (max-width: 649px){
+  .bdCon3 .hmc3Rx .content p{
+    font-size: 15px;
+    line-height: 32px;
+    padding-left: 10%;
+  }
+}
+
+/* 第三部分结束 */
+/* 第四部分开始 */
+.bdCon4 .content{
+  text-align: center;
+}
+.bdCon4 .content img{
+  
+}
+.bdCon4 .content p{
+  font-size: 16px;
+  margin: 20px 0;
+}
+.bdCon4 .content span{
+  font-size: 38px;
+  color: #ff8e3d;
+}
+/* 第四部分结束 */
+/* 下面的浮窗 */
+.floating-window{
+  width: 100%;
+}
+.floating-window .floating-window__box{
+  background-color:  rgba(4, 89, 213, 0.9);;
+  width: 100%;
+  height: 73px;
+}
+.floating-window .fixed{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  z-index: 99;
+}
+.floating-window__box .floating-window__content{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.floating-window__content p{
+  font-size: 30px;
+}
+.floating-window__content p em{
+  font-style: normal;
+  font-size: 34px;
+  color: #F68F44;
+}
+.floating-window__content div{
+  font-size: 20px;
+  width: 150px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 20px;
+  margin-left: 90px;
+  background-color: #F68F44;
+  cursor: pointer;
+}
+@media (max-width: 960px){
+  .floating-window .floating-window__box{
+    height: 65px;
+  }
+  .floating-window__content p{
+    font-size: 16px;
+  }
+  .floating-window__content p em{
+    font-size: 18px;
+  }
+  .floating-window__content div{
+    font-size: 13px;
+    width: 86px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 12px;
+    margin-left: 40px;
+  }
+}

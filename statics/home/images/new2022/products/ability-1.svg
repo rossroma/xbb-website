@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="77px" height="64px" viewBox="0 0 77 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>BC3CF9A6-0FCF-48A6-9268-DD2E86217573@0.0x</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="220" height="220"></rect>
+        <filter x="-5.9%" y="-6.8%" width="115.5%" height="115.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.921431005   0 0 0 0 0.921452641   0 0 0 0 0.921441019  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="产品功能入口" transform="translate(-441.000000, -738.000000)">
+            <g id="编组-2" transform="translate(369.000000, 660.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <rect id="矩形备份" fill="#E9F8FF" x="10" y="10" width="200" height="200"></rect>
+            </g>
+            <g id="编组" transform="translate(444.000000, 741.000000)" stroke="#1F2D3D" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">
+                <path d="M48.333,58 L48.333,51.556 C48.333,44.437 42.562,38.667 35.444,38.667 L12.889,38.667 C5.77,38.667 0,44.437 0,51.556 L0,58" id="Stroke-1"></path>
+                <path d="M24.1664,0 C31.2844,0 37.0554,5.771 37.0554,12.889 C37.0554,20.007 31.2844,25.778 24.1664,25.778 C17.0484,25.778 11.2774,20.007 11.2774,12.889 C11.2774,5.771 17.0484,0 24.1664,0 Z" id="Stroke-3"></path>
+                <line x1="61.2219" y1="16.1111" x2="61.2219" y2="35.4441" id="Stroke-5"></line>
+                <line x1="70.8886" y1="25.7778" x2="51.5556" y2="25.7778" id="Stroke-7"></line>
+            </g>
+        </g>
+    </g>
+</svg>
