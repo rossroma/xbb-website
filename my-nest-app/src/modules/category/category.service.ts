@@ -125,6 +125,15 @@ export class CategoryService {
     return this.findEnabledCategoryBySlug(english);
   }
 
+  /** 获取指定父类目下所有已启用子类目的 ID 列表 */
+  async findChildBidIds(parentId: number): Promise<number[]> {
+    const children = await this.categoryRepository.find({
+      where: { pid: parentId, status: 1 },
+      select: ['id'],
+    });
+    return children.map((c) => c.id);
+  }
+
   /** 供内部模块调用 — 查找第一个启用的栏目 */
   async findFirstEnabledCategory(): Promise<Category | null> {
     return this.categoryRepository

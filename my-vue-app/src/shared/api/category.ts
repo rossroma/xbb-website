@@ -10,6 +10,8 @@ export interface Category {
   descs: string // 后端返回的是 descs 字段作为描述
   sort_order?: number
   ord: number // 后端返回的是 ord 字段作为排序
+  /** 父级栏目 ID */
+  pid: number
   status: number
   is_nav: number
   created_at?: string

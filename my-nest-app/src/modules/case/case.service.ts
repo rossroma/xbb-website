@@ -5,27 +5,44 @@ import { CaseResponseDto, CaseDetailWithNavDto, CaseNavInfo, CaseListResponseDto
 import { BusinessException } from '../../common/exceptions/business.exception';
 import { RESPONSE_CODE } from '../../common/constants/response-code';
 import { Case } from './entities/case.entity';
+import { CategoryService } from '../category/category.service';
 
-/** 行业案例栏目 ID（web_category_type 中 id=18） */
-const CASE_BID = 18;
+/** 行业案例根类目 ID */
+const CASE_ROOT_BID = 18;
 
 @Injectable()
 export class CaseService {
   constructor(
     @InjectRepository(Case)
     private caseRepository: Repository<Case>,
+    private categoryService: CategoryService,
   ) {}
 
   /** 查询案例列表（客户端） */
   async findAllForClient(
     page: number = 1,
     limit: number = 20,
+    bid?: number,
     tag?: string,
+    rootBid: number = CASE_ROOT_BID,
   ): Promise<CaseListResponseDto> {
     const queryBuilder = this.caseRepository
       .createQueryBuilder('case')
-      .where('case.bid = :bid', { bid: CASE_BID })
-      .andWhere('case.status = :status', { status: 1 });
+      .where('case.status = :status', { status: 1 });
+
+    // 按子类目过滤
+    if (bid !== undefined && bid !== null) {
+      queryBuilder.andWhere('case.bid = :bid', { bid });
+    } else {
+      // 全部：查询根类目下所有已启用子类目
+      const childBids = await this.categoryService.findChildBidIds(rootBid);
+      if (childBids.length > 0) {
+        queryBuilder.andWhere('case.bid IN (:...bids)', { bids: childBids });
+      } else {
+        // 无子类目时返回空结果
+        queryBuilder.andWhere('1 = 0');
+      }
+    }
 
     // 按标签过滤
     if (tag) {
@@ -48,8 +65,11 @@ export class CaseService {
 
   /** 查询案例详情并附带上一篇/下一篇导航 + 3 个相关案例（客户端） */
   async findOneForClientWithNavigation(id: number): Promise<CaseDetailWithNavDto> {
+    // 获取根类目下所有子类目 ID
+    const childBids = await this.categoryService.findChildBidIds(CASE_ROOT_BID);
+
     const caseEntity = await this.caseRepository.findOne({
-      where: { id, bid: CASE_BID, status: 1 },
+      where: { id, status: 1 },
     });
 
     if (!caseEntity) {
@@ -69,10 +89,15 @@ export class CaseService {
       where: { id },
     });
 
+    // 构建子类目过滤条件
+    const bidCondition = childBids.length > 0
+      ? { bids: childBids, condition: 'case.bid IN (:...bids)' }
+      : { bids: [], condition: '1 = 0' };
+
     // 查询上一篇：同栏目下 addtime 更早（或同时但 id 更小）的最新一篇
     const prevCase = await this.caseRepository
       .createQueryBuilder('case')
-      .where('case.bid = :bid', { bid: CASE_BID })
+      .where(bidCondition.condition, bidCondition.bids.length > 0 ? { bids: bidCondition.bids } : {})
       .andWhere('case.status = :status', { status: 1 })
       .andWhere(
         '(case.addtime < :addtime OR (case.addtime = :addtime AND case.id < :id))',
@@ -85,7 +110,7 @@ export class CaseService {
     // 查询下一篇：同栏目下 addtime 更晚（或同时但 id 更大）的最早一篇
     const nextCase = await this.caseRepository
       .createQueryBuilder('case')
-      .where('case.bid = :bid', { bid: CASE_BID })
+      .where(bidCondition.condition, bidCondition.bids.length > 0 ? { bids: bidCondition.bids } : {})
       .andWhere('case.status = :status', { status: 1 })
       .andWhere(
         '(case.addtime > :addtime OR (case.addtime = :addtime AND case.id > :id))',
@@ -104,7 +129,7 @@ export class CaseService {
     if (tags.length > 0) {
       const queryBuilder = this.caseRepository
         .createQueryBuilder('case')
-        .where('case.bid = :bid', { bid: CASE_BID })
+        .where(bidCondition.condition, bidCondition.bids.length > 0 ? { bids: bidCondition.bids } : {})
         .andWhere('case.status = :status', { status: 1 })
         .andWhere('case.id != :id', { id: caseEntity.id });
 
@@ -125,7 +150,7 @@ export class CaseService {
       const existingIds = [caseEntity.id, ...relatedCases.map((c) => c.id)];
       const fillCases = await this.caseRepository
         .createQueryBuilder('case')
-        .where('case.bid = :bid', { bid: CASE_BID })
+        .where(bidCondition.condition, bidCondition.bids.length > 0 ? { bids: bidCondition.bids } : {})
         .andWhere('case.status = :status', { status: 1 })
         .andWhere('case.id NOT IN (:...ids)', { ids: existingIds })
         .orderBy('RAND()')

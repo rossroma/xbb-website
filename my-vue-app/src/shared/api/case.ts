@@ -66,6 +66,10 @@ export interface CaseListResponse {
 export const getClientCases = (params?: {
   page?: number
   limit?: number
+  /** 子类目 ID（按行业筛选） */
+  bid?: number
+  /** 根类目 ID（用于「全部」时确定查询范围，行业案例=18，用户心声=19） */
+  rootBid?: number
   tag?: string
 }): Promise<CaseListResponse> => {
   return request.get('/v1/client/cases', { params })
