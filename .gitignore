@@ -11,7 +11,7 @@ dist-ssr
 my-nest-app/dist/
 
 # Logs
-logs
+/logs/
 *.log
 npm-debug.log*
 pnpm-debug.log*

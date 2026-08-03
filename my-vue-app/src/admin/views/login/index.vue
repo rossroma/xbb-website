@@ -95,11 +95,7 @@
             登录
           </el-button>
 
-          <div class="tips">
-            <span>测试账号: admin</span>
-            <span>测试密码: 123456</span>
-          </div>
-        </el-form>
+          </el-form>
       </div>
     </div>
   </div>
@@ -122,8 +118,8 @@ const usernameRef = ref()
 const passwordRef = ref()
 
 const loginForm = reactive({
-  username: 'admin',
-  password: '123456',
+  username: '',
+  password: '',
   captchaId: '',
   captchaCode: '',
 })
@@ -351,14 +347,6 @@ onMounted(() => {
   border-radius: 12px;
   font-size: 16px;
   font-weight: 700;
-}
-
-.tips {
-  font-size: 13px;
-  color: #94a3b8;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 :deep(.el-form-item) {

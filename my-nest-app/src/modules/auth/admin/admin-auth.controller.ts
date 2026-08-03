@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Req, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { AuthService } from '../auth.service';
 import { LoginDto } from '../dto/login.dto';
@@ -24,8 +24,10 @@ export class AdminAuthController {
   @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
   @Post('login')
-  async login(@Body() loginDto: LoginDto): Promise<ResponseResult<LoginResponseDto>> {
-    const result = await this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Req() req: any): Promise<ResponseResult<LoginResponseDto>> {
+    const ip = req.ip || req.headers['x-forwarded-for'] || '127.0.0.1';
+    const userAgent = req.headers['user-agent'] || '';
+    const result = await this.authService.login(loginDto, ip, userAgent);
     return ResponseResult.success(result, '登录成功');
   }
 

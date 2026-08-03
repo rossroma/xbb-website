@@ -436,6 +436,7 @@ CREATE TABLE `web_logins` (
   `id` mediumint NOT NULL AUTO_INCREMENT,
   `username` varchar(30) DEFAULT '' COMMENT '登录用户名',
   `login_ip` varchar(30) DEFAULT NULL COMMENT '登录IP',
+  `user_agent` varchar(500) DEFAULT '' COMMENT '浏览器 User-Agent',
   `type` mediumint DEFAULT '0' COMMENT '0普通1管理员',
   `addtime` int DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)

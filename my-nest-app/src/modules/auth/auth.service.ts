@@ -63,7 +63,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDto, ip: string = '127.0.0.1'): Promise<LoginResponseDto> {
+  async login(loginDto: LoginDto, ip: string = '127.0.0.1', userAgent?: string): Promise<LoginResponseDto> {
     const { username, password, captchaId, captchaCode } = loginDto;
 
     this.validateCaptcha(captchaId, captchaCode);
@@ -91,7 +91,7 @@ export class AuthService {
     }
 
     // 记录登录日志
-    await this.logsService.recordLogin(username, ip, 1);
+    await this.logsService.recordLogin(username, ip, 1, userAgent);
 
     // 生成 JWT token
     const payload: JwtPayload = {
