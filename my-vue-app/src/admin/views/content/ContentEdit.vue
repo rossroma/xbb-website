@@ -197,7 +197,7 @@ const formRef = ref()
 const editorRef = shallowRef()
 const allCategories = ref<any[]>([])
 
-const currentBid = computed(() => parseInt(route.params.bid as string))
+const currentBid = ref<number | undefined>(undefined)
 const articleId = computed(() =>
   route.params.id ? parseInt(route.params.id as string) : undefined,
 )
@@ -233,14 +233,16 @@ const flattenTree = (nodes: any[], level: number): any[] => {
 }
 
 const flatCategoryOptions = computed(() => {
-  const rootCat = allCategories.value.find((c) => c.id === currentBid.value)
-  if (!rootCat) return []
-  const children = buildCategoryTree(allCategories.value, currentBid.value)
-  return [
-    { id: -currentBid.value, label: `--- ${rootCat.title}`, disabled: true },
-    { id: currentBid.value, label: rootCat.title, disabled: false },
-    ...flattenTree(children, 2),
-  ]
+  if (!allCategories.value.length) return []
+  const rootNodes = buildCategoryTree(allCategories.value, 0)
+  const result: { id: number; label: string; disabled: boolean }[] = []
+  for (const node of rootNodes) {
+    result.push({ id: node.id, label: node.title, disabled: node.status === 0 })
+    if (node.children?.length) {
+      result.push(...flattenTree(node.children, 2))
+    }
+  }
+  return result
 })
 
 const form = reactive({
@@ -342,6 +344,7 @@ const loadArticle = async () => {
       string,
       unknown
     >
+    currentBid.value = data.bid as number | undefined
     Object.assign(form, {
       title: data.title || '',
       bid: data.bid,
@@ -399,14 +402,16 @@ const handleReset = async () => {
   }
 }
 
-const goBack = () => router.push(`/admin/content/${currentBid.value}`)
+const goBack = () => router.push('/admin/content')
 
 onMounted(async () => {
   await loadCategories()
   if (isEdit.value) {
     await loadArticle()
   } else {
-    form.bid = currentBid.value
+    const bidFromQuery = route.query.bid ? parseInt(route.query.bid as string) : undefined
+    currentBid.value = bidFromQuery
+    form.bid = bidFromQuery
     form.addtime = Math.floor(Date.now() / 1000)
   }
 })

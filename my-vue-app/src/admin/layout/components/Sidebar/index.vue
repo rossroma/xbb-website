@@ -28,30 +28,18 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getAdminCategories } from '@/shared/api/category'
 import { getAllSettings } from '@/shared/api/settings'
 import { useAuthStore } from '@/admin/stores/auth'
-import { hasMenuPermission, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
+import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
 import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
 
 const SidebarItem = defineAsyncComponent(() => import('./SidebarItem.vue'))
 
 const route = useRoute()
 const authStore = useAuthStore()
-const topCategories = ref<{ id: number; title: string }[]>([])
 const companyName = ref('销帮帮CRM')
 
 const activeMenu = computed(() => route.path)
-
-const loadTopCategories = async () => {
-  try {
-    const result = (await getAdminCategories({ limit: 999 })) as any
-    const items = result?.items || []
-    topCategories.value = items
-      .filter((c: any) => c.pid === 0 && c.status === 1)
-      .map((c: any) => ({ id: c.id, title: c.title }))
-  } catch {}
-}
 
 const loadCompanyName = async () => {
   try {
@@ -62,15 +50,16 @@ const loadCompanyName = async () => {
   }
 }
 
-const contentChildren = computed(() =>
-  topCategories.value
-    .filter((cat) => hasMenuPermission(authStore.admin, { categoryIds: [cat.id] }))
-    .map((cat) => ({
-      path: `/admin/content/${cat.id}`,
-      meta: { title: cat.title, icon: 'Document' },
-      permission: { categoryIds: [cat.id] },
-    })),
-)
+const contentChildren = computed(() => {
+  const { isSuperAdmin, categorySet } = getPermissionContext(authStore.admin)
+  if (!isSuperAdmin && categorySet.size === 0) return []
+  return [
+    {
+      path: '/admin/content',
+      meta: { title: '内容管理', icon: 'Document' },
+    },
+  ]
+})
 
 const messageChildren = [
   {
@@ -257,7 +246,6 @@ const routes = computed(() =>
 )
 
 onMounted(() => {
-  loadTopCategories()
   loadCompanyName()
 })
 </script>

@@ -301,4 +301,20 @@ export class ArticleService {
       where: { status: 1, bid },
     });
   }
+
+  /** 获取所有分类的文章数量统计（按 bid 分组） */
+  async getArticleCounts(): Promise<Record<number, number>> {
+    const result = await this.articleRepository
+      .createQueryBuilder('article')
+      .select('article.bid', 'bid')
+      .addSelect('COUNT(article.id)', 'count')
+      .groupBy('article.bid')
+      .getRawMany<{ bid: number; count: string }>()
+
+    const counts: Record<number, number> = {}
+    for (const row of result) {
+      counts[row.bid] = parseInt(row.count, 10)
+    }
+    return counts
+  }
 }

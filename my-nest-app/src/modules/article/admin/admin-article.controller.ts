@@ -28,6 +28,12 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 export class AdminArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
+  @Get('counts')
+  async getCounts(): Promise<ResponseResult<Record<number, number>>> {
+    const result = await this.articleService.getArticleCounts();
+    return ResponseResult.success(result, '获取文章统计成功');
+  }
+
   @Post()
   @OperationLog({ title: '文章', type: 1, targetFields: ['title'], titlePrefix: '文章：' })
   async create(

@@ -37,6 +37,11 @@ export const getAdminArticle = (id: number): Promise<Article> => {
   return request.get(`/v1/admin/articles/${id}`)
 }
 
+/** 获取各分类文章数量统计 */
+export const getArticleCounts = (): Promise<Record<number, number>> => {
+  return request.get('/v1/admin/articles/counts')
+}
+
 // ==================== 客户端文章接口 ====================
 
 /** 客户端文章查询参数 */

@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Layout from '@/admin/layout/index.vue'
 import { useAuthStore } from '@/admin/stores/auth'
 import { getToken } from '@/shared/utils/token'
-import { hasMenuPermission, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
+import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
 import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
 
 const router = createRouter({
@@ -103,23 +103,22 @@ const router = createRouter({
     {
       path: '/admin/content',
       component: Layout,
-      redirect: '/admin/dashboard',
       meta: { title: '内容管理', icon: 'Files', requiresAuth: true },
       children: [
         {
-          path: ':bid',
+          path: '',
           name: 'ContentList',
           component: () => import('@/admin/views/content/ContentList.vue'),
-          meta: { title: '内容管理', icon: 'Document', requiresAuth: true },
+          meta: { title: '内容管理', requiresAuth: true },
         },
         {
-          path: ':bid/edit/:id',
+          path: 'edit/:id',
           name: 'ContentEdit',
           component: () => import('@/admin/views/content/ContentEdit.vue'),
           meta: { title: '编辑文章', requiresAuth: true },
         },
         {
-          path: ':bid/create',
+          path: 'create',
           name: 'ContentCreate',
           component: () => import('@/admin/views/content/ContentEdit.vue'),
           meta: { title: '新增文章', requiresAuth: true },
@@ -337,8 +336,15 @@ const canAccessAdminRoute = (path: string, admin: any) => {
 
   if (path.startsWith('/admin/content')) {
     const parts = path.split('/').filter(Boolean)
-    const bid = Number(parts[2])
-    return Number.isNaN(bid) ? false : hasMenuPermission(admin, { categoryIds: [bid] })
+    // /admin/content 或 /admin/content/edit/:id 或 /admin/content/create
+    if (parts.length === 2) {
+      // /admin/content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
+      const { isSuperAdmin, categorySet } = getPermissionContext(admin)
+      if (isSuperAdmin) return true
+      return categorySet.size > 0
+    }
+    // /admin/content/edit/:id 或 /admin/content/create — 允许访问（后端校验）
+    return true
   }
 
   return false
