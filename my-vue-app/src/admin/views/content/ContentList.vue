@@ -48,6 +48,16 @@
             <el-option label="显示" :value="1" />
             <el-option label="隐藏" :value="0" />
           </el-select>
+          <el-select
+            v-model="searchForm.isRecommended"
+            placeholder="推荐"
+            clearable
+            style="width: 120px; margin-left: 10px"
+            @change="handleSearch"
+          >
+            <el-option label="已推荐" :value="1" />
+            <el-option label="未推荐" :value="0" />
+          </el-select>
           <el-button type="primary" style="margin-left: 10px" @click="handleSearch">
             查询
           </el-button>
@@ -62,8 +72,9 @@
       <!-- 文章表格 -->
       <el-table :data="articles" v-loading="loading" border>
         <el-table-column prop="id" label="ID" width="70" />
-        <el-table-column prop="title" label="标题" min-width="200">
+        <el-table-column label="标题" min-width="200">
           <template #default="{ row }">
+            <el-tag v-if="(row.flag || '').includes('1')" type="warning" size="small" class="rec-badge">推荐</el-tag>
             <span class="article-title">{{ row.title || '(无标题)' }}</span>
           </template>
         </el-table-column>
@@ -80,7 +91,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="发布时间" width="160">
+                <el-table-column label="发布时间" width="160">
           <template #default="{ row }">
             {{ formatTime(row.addtime) }}
           </template>
@@ -165,6 +176,7 @@ const pagination = reactive({ page: 1, limit: 20, total: 0 })
 const searchForm = reactive({
   title: '',
   status: undefined as number | undefined,
+  isRecommended: undefined as number | undefined,
 })
 
 const formatTime = (ts: number) => {
@@ -203,6 +215,9 @@ const loadArticles = async () => {
     if (searchForm.status !== undefined) {
       params.status = searchForm.status
     }
+    if (searchForm.isRecommended !== undefined) {
+      params.isRecommended = searchForm.isRecommended
+    }
     if (selectedBid.value) {
       params.bid = selectedBid.value
     }
@@ -222,7 +237,7 @@ const handleSearch = () => {
 }
 
 const handleReset = () => {
-  Object.assign(searchForm, { title: '', status: undefined })
+  Object.assign(searchForm, { title: '', status: undefined, isRecommended: undefined })
   pagination.page = 1
   loadArticles()
 }
@@ -353,5 +368,9 @@ onMounted(async () => {
 
 .article-title {
   color: #303133;
+}
+
+.rec-badge {
+  margin-right: 6px;
 }
 </style>

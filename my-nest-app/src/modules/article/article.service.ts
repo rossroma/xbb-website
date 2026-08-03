@@ -29,7 +29,7 @@ export class ArticleService {
   }
 
   async findAll(queryDto: QueryArticleDto): Promise<ArticleListResponseDto> {
-    const { page = 1, limit = 10, title, bid, status, author, sortBy = 'addtime_desc' } = queryDto;
+    const { page = 1, limit = 10, title, bid, status, author, isRecommended, sortBy = 'addtime_desc' } = queryDto;
 
     const queryBuilder = this.articleRepository.createQueryBuilder('article');
 
@@ -45,6 +45,13 @@ export class ArticleService {
     }
     if (author) {
       queryBuilder.andWhere('article.author LIKE :author', { author: `%${author}%` });
+    }
+    if (isRecommended !== undefined) {
+      if (isRecommended === 1) {
+        queryBuilder.andWhere('article.flag LIKE :flag', { flag: '%1%' });
+      } else {
+        queryBuilder.andWhere('(article.flag IS NULL OR article.flag NOT LIKE :flag)', { flag: '%1%' });
+      }
     }
 
     // 动态排序

@@ -33,6 +33,12 @@ export class QueryArticleDto {
   author?: string;
 
   @IsOptional()
+  @Type(() => Number)
+  @IsNumber({}, { message: '推荐筛选必须是数字' })
+  @IsIn([0, 1], { message: '推荐筛选只能是0或1' })
+  isRecommended?: number;
+
+  @IsOptional()
   @IsString({ message: '排序方式必须是字符串' })
   @IsIn(['addtime_desc', 'addtime_asc', 'hit_desc', 'hit_asc', 'ord_asc', 'ord_desc'],
     { message: '排序方式不正确' })

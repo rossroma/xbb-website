@@ -450,6 +450,10 @@ onMounted(async () => {
   border-radius: 4px;
 }
 
+.edit-tabs :deep(.el-tabs__header) {
+  padding: 0 20px;
+}
+
 .tab-content {
   padding: 20px 0;
   max-width: 900px;
