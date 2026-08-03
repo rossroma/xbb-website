@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="76px" height="62px" viewBox="0 0 76 62" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>04B2E91C-6A9A-44CE-A7C4-A7664A3E16AB@0.0x</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="220" height="220"></rect>
+        <filter x="-5.9%" y="-6.8%" width="115.5%" height="115.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.921431005   0 0 0 0 0.921452641   0 0 0 0 0.921441019  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="飞书" transform="translate(-1161.000000, -958.000000)">
+            <g id="编组-2备份-3" transform="translate(1089.000000, 874.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <rect id="矩形备份" fill="#FAF2FF" x="10" y="10" width="200" height="200"></rect>
+            </g>
+            <path d="M1219.067,974.057907 C1222.489,970.643907 1228.031,970.650907 1231.444,974.073907 C1234.858,977.495907 1234.851,983.036907 1231.428,986.450907 C1229.792,988.082907 1227.575,989.001907 1225.263,989.005907 L1164,989.005907 M1201.073,1014.94691 C1203.799,1017.68991 1208.232,1017.70291 1210.975,1014.97591 C1213.717,1012.24991 1213.73,1007.81691 1211.004,1005.07491 C1209.683,1003.74591 1207.883,1003.00191 1206.009,1003.00886 L1164,1003.00886 M1190.571,963.065907 C1193.297,960.322907 1197.73,960.309907 1200.472,963.035907 C1203.215,965.761907 1203.228,970.194907 1200.502,972.937907 C1199.18,974.266907 1197.381,975.010907 1195.507,975.002971 L1164,975.002971" id="Stroke-1" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </g>
+    </g>
+</svg>

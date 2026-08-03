@@ -1,7 +1,7 @@
 import type { Component } from 'vue'
 import { Wechat, Phone, Rocket, Up, User } from '@icon-park/vue-next'
-import floatingServiceIcon from '../../../../../statics/home/images/cservice.png'
-import floatingQrCode from '../../../../../statics/home/images/sdr_contact_me_qr.png'
+import floatingServiceIcon from '../../../../statics/home/images/cservice.png'
+import floatingQrCode from '../../../../statics/home/images/sdr_contact_me_qr.png'
 
 /** 工具栏项类型 */
 export interface ToolbarItem {

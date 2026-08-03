@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>6172D9D4-80E0-4167-8A91-6CB7B1FB0D42@0.0x</title>
+    <defs>
+        <polygon id="path-1" points="0 3419 1920 3419 1920 2819 0 2819"></polygon>
+        <path d="M2.347,0 C1.051,0 0,1.052 0,2.348 L0,2.348 L0,29.21 C0,30.506 1.051,31.557 2.347,31.557 L2.347,31.557 C3.644,31.557 4.695,30.506 4.695,29.21 L4.695,29.21 L4.695,2.348 C4.695,1.052 3.644,0 2.347,0 Z" id="path-3"></path>
+        <linearGradient x1="49.9928413%" y1="76.418832%" x2="49.9928413%" y2="-24.7672732%" id="linearGradient-5">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+        <path d="M27.548,0.688 L15.778,12.459 L4.008,0.688 C3.092,-0.229 1.604,-0.229 0.688,0.688 L0.688,0.688 C0.237,1.138 0.008,1.726 0,2.316 L0,2.316 L0,2.379 C0.008,2.969 0.237,3.557 0.688,4.008 L0.688,4.008 L14.118,17.438 C14.999,18.319 16.557,18.319 17.438,17.438 L17.438,17.438 L30.868,4.008 C31.319,3.557 31.548,2.969 31.556,2.379 L31.556,2.379 L31.556,2.316 C31.548,1.726 31.319,1.138 30.868,0.688 L30.868,0.688 C30.41,0.23 29.809,0 29.209,0 L29.209,0 C28.607,0 28.006,0.23 27.548,0.688" id="path-6"></path>
+        <linearGradient x1="49.999794%" y1="64.159164%" x2="49.999794%" y2="-36.3011556%" id="linearGradient-8">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-1188.000000, -3103.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Fill-1备份-5" fill="#5789EA" xlink:href="#path-1"></use>
+            <g id="编组" mask="url(#mask-2)">
+                <g transform="translate(1188.000000, 3103.000000)">
+                    <g transform="translate(13.431000, 0.000000)">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <g id="Clip-2"></g>
+                        <path d="M2.347,0 C1.051,0 0,1.052 0,2.348 L0,2.348 L0,29.21 C0,30.506 1.051,31.557 2.347,31.557 L2.347,31.557 C3.644,31.557 4.695,30.506 4.695,29.21 L4.695,29.21 L4.695,2.348 C4.695,1.052 3.644,0 2.347,0 Z" id="Fill-1" fill="url(#linearGradient-5)" mask="url(#mask-4)"></path>
+                    </g>
+                    <g transform="translate(0.000000, 13.431000)">
+                        <mask id="mask-7" fill="white">
+                            <use xlink:href="#path-6"></use>
+                        </mask>
+                        <g id="Clip-4"></g>
+                        <path d="M27.548,0.688 L15.778,12.459 L4.008,0.688 C3.092,-0.229 1.604,-0.229 0.688,0.688 L0.688,0.688 C0.237,1.138 0.008,1.726 0,2.316 L0,2.316 L0,2.379 C0.008,2.969 0.237,3.557 0.688,4.008 L0.688,4.008 L14.118,17.438 C14.999,18.319 16.557,18.319 17.438,17.438 L17.438,17.438 L30.868,4.008 C31.319,3.557 31.548,2.969 31.556,2.379 L31.556,2.379 L31.556,2.316 C31.548,1.726 31.319,1.138 30.868,0.688 L30.868,0.688 C30.41,0.23 29.809,0 29.209,0 L29.209,0 C28.607,0 28.006,0.23 27.548,0.688" id="Fill-3" fill="url(#linearGradient-8)" mask="url(#mask-7)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

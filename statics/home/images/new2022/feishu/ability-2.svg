@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="66px" height="66px" viewBox="0 0 66 66" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>7D055935-97EF-4F6A-A02A-8E60C8366583@0.0x</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="220" height="220"></rect>
+        <filter x="-5.9%" y="-6.8%" width="115.5%" height="115.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.921431005   0 0 0 0 0.921452641   0 0 0 0 0.921441019  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="飞书" transform="translate(-686.000000, -957.000000)">
+            <g id="编组-2备份" transform="translate(609.000000, 874.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <rect id="矩形备份" fill="#EFF6FF" x="10" y="10" width="200" height="200"></rect>
+            </g>
+            <g id="编组" transform="translate(689.000000, 960.000000)" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="5">
+                <path d="M57.6449689,41.6742 C51.1909689,56.9362 33.5879689,64.0762 18.3259689,57.6232 C3.06396887,51.1692 -4.07703113,33.5652 2.37696887,18.3042 C5.36996887,11.2242 10.9659689,5.5642 18.0109689,2.4902" id="Stroke-1"></path>
+                <path d="M60.0151689,30.003 C60.0151689,13.433 46.5821689,0 30.0121689,0 L30.0121689,30.003 L60.0151689,30.003 Z" id="Stroke-3"></path>
+            </g>
+        </g>
+    </g>
+</svg>

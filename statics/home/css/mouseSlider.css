@@ -1,0 +1,10 @@
+﻿.y91-jovi { position: relative; background-color: #fafafa }
+.y91-jovi .jovi { background-color: #fafafa; opacity: 0 }
+.y91-jovi .jovi.show-start { -webkit-transition: opacity .5s ease; transition: opacity .5s ease; opacity: 1 }
+.y91-jovi .jovi-1 { z-index: 9 }
+.y91-jovi .jovi-1 .section { position: absolute }
+.y91-jovi .right-box { width: 16px; height: auto; position: fixed; top: 50%; right: 7.8vw; margin-top: -50px; text-align: center; padding: 15px 0; z-index: 999 }
+.y91-jovi .right-box ul li {  }
+.y91-jovi .right-box ul li i { cursor: pointer; width: 16px; height: 16px; border-radius: 50%; display:block; margin:16px 0; border:1px solid #fff; }
+.y91-jovi .right-box ul li .i-active { background: #fff  }
+.hide{display:none;}

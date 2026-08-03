@@ -1,0 +1,104 @@
+:root {
+  --main-color: #FF6400;
+  --main-color-light: #ffa866;
+  --white: #ffffff;
+  --blue-0: #f5fafe;
+  --blue-1: #5789ea;
+  --blue-2: #f3f8fc;
+  --text-color-1: #323232;
+  --text-color-2: #1f2d3d;
+  --text-color-3: #012067;
+  --text-color-4: #1e2d3e;
+  --text-color-light-1: #8c8d9f;
+  --text-color-light-2: #5e6d82;
+  --title-color-1: var(--text-color-2);
+  --desc-color-1: var(--text-color-light-2);
+  --title-color-2: var(--text-color-3);
+  --placeholder-color: #c0c0c0;
+  --banner-color: var(--text-color-4);
+  --card-shadow: 0 2px 4px 0 rgb(68 68 68 / 10%);
+  --card-hover-shadow: 0 20px 40px 0 rgb(16 20 40 / 7%);
+  --border-color: #6a6c6c;
+  --home-footer-color: var(--text-color-2);
+  --hover-transform-move-up: translateY(-15px);
+  --hover-transform-scale: scale(1.1);
+  --transition: all 0.3s;
+}
+
+.font-weight-600 {
+  font-weight: 600;
+}
+
+.font-weight-400 {
+  font-weight: 400;
+}
+
+.font-size-160 {
+  font-size: 160px;
+}
+
+.font-size-36 {
+  font-size: 36px;
+}
+
+.font-size-28 {
+  font-size: 28px;
+}
+
+.font-size-24 {
+  font-size: 24px;
+}
+
+.font-size-22 {
+  font-size: 22px;
+}
+
+.font-size-18 {
+  font-size: 18px;
+}
+
+.font-size-15 {
+  font-size: 15px;
+}
+
+.font-size-14 {
+  font-size: 14px;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.my-8 {
+  margin: 8px 0;
+}
+
+.mt-8 {
+  margin-top: 8px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mb-40 {
+  margin-bottom: 40px;
+}
+
+.m-0 {
+  margin: 0 !important;
+}

@@ -2,7 +2,7 @@
 import type { BannerSlide } from '@/client/data/homeData'
 import type { ContentCard } from '@/client/components/business/ContentCardGrid.vue'
 import { footerEmail, footerHotline, socials as footerSocials } from '@/client/data/siteFooterData'
-import addressMapImage from '../../../../../../statics/home/images/nnlx_mimg.jpg'
+import addressMapImage from '../../../../../statics/home/images/nnlx_mimg.jpg'
 
 export const contactUsSeo = {
   title: '联系我们 - 销帮帮AI CRM',

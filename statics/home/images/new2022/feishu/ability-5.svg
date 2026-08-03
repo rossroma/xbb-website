@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>9374900E-A7DA-4574-A7B2-606B2A689B44@0.0x</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="220" height="220"></rect>
+        <filter x="-5.9%" y="-6.8%" width="115.5%" height="115.5%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="4" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.921431005   0 0 0 0 0.921452641   0 0 0 0 0.921441019  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="飞书" transform="translate(-1407.000000, -957.000000)">
+            <g id="编组-2备份-4" transform="translate(1329.000000, 874.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <rect id="矩形备份" fill="#FDF9ED" x="10" y="10" width="200" height="200"></rect>
+            </g>
+            <g id="编组" transform="translate(1409.000000, 959.000000)" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                <path d="M37.5,24 C35.01,24 33,21.99 33,19.5 L33,4.5 C33,2.01 35.01,0 37.5,0 C39.99,0 42,2.01 42,4.5 L42,19.5 C42,21.99 39.99,24 37.5,24 Z" id="Stroke-1"></path>
+                <path d="M55.5,24 L51,24 L51,19.5 C51,17.01 53.01,15 55.5,15 C57.99,15 60,17.01 60,19.5 C60,21.99 57.99,24 55.5,24 Z" id="Stroke-3"></path>
+                <path d="M22.5,36 C24.99,36 27,38.01 27,40.5 L27,55.5 C27,57.99 24.99,60 22.5,60 C20.01,60 18,57.99 18,55.5 L18,40.5 C18,38.01 20.01,36 22.5,36 Z" id="Stroke-5"></path>
+                <path d="M4.5,36 L9,36 L9,40.5 C9,42.99 6.99,45 4.5,45 C2.01,45 0,42.99 0,40.5 C0,38.01 2.01,36 4.5,36 Z" id="Stroke-7"></path>
+                <path d="M36,37.5 C36,35.01 38.01,33 40.5,33 L55.5,33 C57.99,33 60,35.01 60,37.5 C60,39.99 57.99,42 55.5,42 L40.5,42 C38.01,42 36,39.99 36,37.5 Z" id="Stroke-9"></path>
+                <path d="M40.5,51 L36,51 L36,55.5 C36,57.99 38.01,60 40.5,60 C42.99,60 45,57.99 45,55.5 C45,53.01 42.99,51 40.5,51 Z" id="Stroke-11"></path>
+                <path d="M24,22.5 C24,20.01 21.99,18 19.5,18 L4.5,18 C2.01,18 0,20.01 0,22.5 C0,24.99 2.01,27 4.5,27 L19.5,27 C21.99,27 24,24.99 24,22.5 Z" id="Stroke-13"></path>
+                <path d="M19.5,9 L24,9 L24,4.5 C24,2.01 21.99,0 19.5,0 C17.01,0 15,2.01 15,4.5 C15,6.99 17.01,9 19.5,9 Z" id="Stroke-15"></path>
+            </g>
+        </g>
+    </g>
+</svg>
