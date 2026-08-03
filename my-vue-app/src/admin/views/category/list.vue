@@ -109,9 +109,6 @@
               <el-form-item label="栏目副标题">
                 <el-input v-model="form.subtitle" placeholder="请输入栏目副标题" />
               </el-form-item>
-              <el-form-item label="英文标题">
-                <el-input v-model="form.title_en" placeholder="请输入英文标题" />
-              </el-form-item>
             </div>
             <el-form-item label="详细内容">
               <div class="editor-wrap">
@@ -163,32 +160,17 @@
               <el-form-item label="分页数量">
                 <el-input-number v-model="form.pagesize" :min="1" :max="999" style="width: 100%" />
               </el-form-item>
-              <el-form-item label="栏目类型">
-                <el-radio-group v-model="form.type">
-                  <el-radio value="list">列表类型</el-radio>
-                  <el-radio value="page">单页类型</el-radio>
-                </el-radio-group>
-              </el-form-item>
               <el-form-item label="栏目状态">
                 <el-select v-model.number="form.status" style="width: 100%">
                   <el-option label="启用" :value="1" />
                   <el-option label="禁用" :value="0" />
                 </el-select>
               </el-form-item>
-              <el-form-item label="导航显示">
-                <el-switch v-model="form.is_nav" :active-value="1" :inactive-value="0" />
-              </el-form-item>
               <el-form-item label="允许添加下级">
                 <el-switch v-model="form.is_lower" :active-value="1" :inactive-value="0" />
               </el-form-item>
               <el-form-item label="允许删除">
                 <el-switch v-model="form.is_delete" :active-value="1" :inactive-value="0" />
-              </el-form-item>
-              <el-form-item label="导航地址">
-                <el-input v-model="form.link" placeholder="内部导航地址，可留空" />
-              </el-form-item>
-              <el-form-item label="外链地址">
-                <el-input v-model="form.link_out" placeholder="外部跳转地址，可留空" />
               </el-form-item>
             </div>
             <div class="image-grid">
@@ -289,13 +271,9 @@ const form = reactive({
   pid: 0,
   title: '',
   english: '',
-  title_en: '',
   subtitle: '',
   ord: 10,
-  type: 'list',
   pagesize: 10,
-  link: '',
-  link_out: '',
   seoTitle: '',
   seoKeyword: '',
   setDescription: '',
@@ -306,7 +284,6 @@ const form = reactive({
   content: '',
   content2: '',
   status: 1,
-  is_nav: 1,
   is_lower: 0,
   is_delete: 1,
 })
@@ -387,13 +364,9 @@ const resetForm = () => {
   form.pid = 0
   form.title = ''
   form.english = ''
-  form.title_en = ''
   form.subtitle = ''
   form.ord = 10
-  form.type = 'list'
   form.pagesize = 10
-  form.link = ''
-  form.link_out = ''
   form.seoTitle = ''
   form.seoKeyword = ''
   form.setDescription = ''
@@ -404,7 +377,6 @@ const resetForm = () => {
   form.content = ''
   form.content2 = ''
   form.status = 1
-  form.is_nav = 1
   form.is_lower = 0
   form.is_delete = 1
   activeEditTab.value = 'basic'
@@ -424,13 +396,9 @@ const handleEdit = (row: CategoryItem) => {
     pid: row.pid,
     title: row.title || '',
     english: row.english || '',
-    title_en: row.title_en || '',
     subtitle: row.subtitle || '',
     ord: row.ord ?? 10,
-    type: row.type || 'list',
     pagesize: row.pagesize ?? 10,
-    link: row.link || '',
-    link_out: row.link_out || '',
     seoTitle: row.seoTitle || '',
     seoKeyword: row.seoKeyword || '',
     setDescription: row.setDescription || '',
@@ -441,7 +409,6 @@ const handleEdit = (row: CategoryItem) => {
     content: row.content || '',
     content2: row.content2 || '',
     status: row.status ?? 1,
-    is_nav: row.is_nav ?? 1,
     is_lower: row.is_lower ?? 0,
     is_delete: row.is_delete ?? 1,
   })

@@ -107,9 +107,6 @@
         <!-- 高级信息 -->
         <el-tab-pane label="高级信息" name="advanced">
           <div class="tab-content">
-            <el-form-item label="英文标题">
-              <el-input v-model="form.title_en" placeholder="请输入英文标题" style="width: 400px" />
-            </el-form-item>
             <el-form-item label="副标题">
               <el-input v-model="form.subtitle" placeholder="请输入副标题" style="width: 400px" />
             </el-form-item>
@@ -254,7 +251,6 @@ const form = reactive({
   seoTitle: '',
   seoKeyword: '',
   setDescription: '',
-  title_en: '',
   subtitle: '',
   descs: '',
   author: '',
@@ -354,7 +350,6 @@ const loadArticle = async () => {
       seoTitle: data.seoTitle || '',
       seoKeyword: data.seoKeyword || '',
       setDescription: data.setDescription || '',
-      title_en: data.title_en || '',
       subtitle: data.subtitle || '',
       descs: data.descs || '',
       author: data.author || '',
