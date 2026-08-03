@@ -29,9 +29,9 @@
 import { computed, defineAsyncComponent, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAllSettings } from '@/shared/api/settings'
-import { useAuthStore } from '@/stores/auth'
-import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/utils/admin-permissions'
-import { PERMISSION_TOKENS } from '@/config/menuConfig'
+import { useAuthStore } from '@/admin/stores/auth'
+import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
+import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
 
 const SidebarItem = defineAsyncComponent(() => import('./SidebarItem.vue'))
 
