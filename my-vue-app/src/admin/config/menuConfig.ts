@@ -19,8 +19,6 @@ export const PERMISSION_TOKENS = {
   operationLogs: { ruleTokens: ['logs', '60'] },
   /** 登录日志 */
   loginLogs: { ruleTokens: ['logins', '59'] },
-  /** 模板管理 */
-  template: { ruleTokens: ['templates', '43', 'template', '58'] },
   /** 图片集管理 */
   gallery: { ruleTokens: ['gallery', 'images'] },
   /** 留言管理（按 cateid 映射） */

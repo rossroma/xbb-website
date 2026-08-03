@@ -230,19 +230,7 @@ const routes = computed(() =>
         },
       ],
     },
-    {
-      path: '/templates',
-      meta: { title: '模板管理', icon: 'Files' },
-      permission: PERMISSION_TOKENS.template,
-      children: [
-        {
-          path: '/templates/index',
-          meta: { title: '模板管理', icon: 'Document' },
-          permission: PERMISSION_TOKENS.template,
-        },
-      ],
-    },
-  ]),
+    ]),
 )
 
 onMounted(() => {

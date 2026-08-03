@@ -101,24 +101,6 @@ export interface SiteSettingEntity {
   setting?: Record<string, unknown>
 }
 
-/** 模板实体 */
-export interface TemplateEntity {
-  id: number
-  title: string
-  template_name: string
-  type: string
-  type_text?: string
-  status: number
-  status_text?: string
-  simg?: string
-  descs?: string
-  link?: string
-  remarks?: string
-  category_remarks?: string
-  attribute_type?: string
-  attribute?: string
-}
-
 /** 管理员实体 */
 export interface AdminEntity {
   id: number

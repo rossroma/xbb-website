@@ -163,6 +163,12 @@
               <el-form-item label="分页数量">
                 <el-input-number v-model="form.pagesize" :min="1" :max="999" style="width: 100%" />
               </el-form-item>
+              <el-form-item label="栏目类型">
+                <el-radio-group v-model="form.type">
+                  <el-radio value="list">列表类型</el-radio>
+                  <el-radio value="page">单页类型</el-radio>
+                </el-radio-group>
+              </el-form-item>
               <el-form-item label="栏目状态">
                 <el-select v-model.number="form.status" style="width: 100%">
                   <el-option label="启用" :value="1" />
@@ -214,53 +220,7 @@
             </el-form-item>
           </el-tab-pane>
 
-          <el-tab-pane label="模板设置" name="template">
-            <div class="tab-grid two-col">
-              <el-form-item label="栏目类型">
-                <el-radio-group v-model="form.type">
-                  <el-radio value="page">单页类型</el-radio>
-                  <el-radio value="list">列表类型</el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <div></div>
-              <el-form-item label="列表页模板">
-                <el-select
-                  v-model="form.template_list"
-                  placeholder="请选择列表模板"
-                  filterable
-                  clearable
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in listTemplateOptions"
-                    :key="item.id"
-                    :label="item.title"
-                    :value="item.template_name || item.title"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item label="详情页模板">
-                <el-select
-                  v-model="form.template_view"
-                  placeholder="请选择详情模板"
-                  filterable
-                  clearable
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="item in pageTemplateOptions"
-                    :key="item.id"
-                    :label="item.title"
-                    :value="item.template_name || item.title"
-                  />
-                </el-select>
-              </el-form-item>
-            </div>
-            <div class="field-hint block-hint">
-              列表类型建议同时选择列表模板与详情模板；单页类型建议只保留详情模板。
-            </div>
-          </el-tab-pane>
-        </el-tabs>
+          </el-tabs>
       </el-form>
 
       <template #footer>
@@ -280,7 +240,6 @@ import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import ImageUploader from '@/admin/components/ImageUploader.vue'
 import { createCategory, deleteCategory, getCategories, updateCategory } from '@/shared/api/admin'
-import { getTemplates } from '@/shared/api/template'
 
 interface CategoryItem {
   id: number
@@ -294,8 +253,6 @@ interface CategoryItem {
   pagesize?: number
   link?: string
   link_out?: string
-  template_list?: string
-  template_view?: string
   seoTitle?: string
   seoKeyword?: string
   setDescription?: string
@@ -313,13 +270,6 @@ interface CategoryItem {
   _level?: number
 }
 
-interface TemplateItem {
-  id: number
-  title: string
-  type: string
-  template_name?: string
-  status?: number
-}
 
 const loading = ref(false)
 const submitLoading = ref(false)
@@ -328,7 +278,6 @@ const dialogTitle = ref('')
 const searchKeyword = ref('')
 const activeEditTab = ref('basic')
 const allCategories = ref<CategoryItem[]>([])
-const templates = ref<TemplateItem[]>([])
 const formRef = ref<FormInstance>()
 const editorRef = shallowRef()
 
@@ -347,8 +296,6 @@ const form = reactive({
   pagesize: 10,
   link: '',
   link_out: '',
-  template_list: '',
-  template_view: '',
   seoTitle: '',
   seoKeyword: '',
   setDescription: '',
@@ -399,13 +346,6 @@ const parentOptions = computed(() =>
   buildFlatTree(allCategories.value).filter((item) => item.id !== form.id),
 )
 
-const listTemplateOptions = computed(() =>
-  templates.value.filter((item) => item.status !== 0 && item.type === 'list'),
-)
-const pageTemplateOptions = computed(() =>
-  templates.value.filter((item) => item.status !== 0 && item.type === 'page'),
-)
-
 const generateSlug = () => {
   form.english =
     form.title
@@ -434,15 +374,6 @@ const fetchList = async () => {
   }
 }
 
-const fetchTemplates = async () => {
-  try {
-    const result = await getTemplates({ limit: 9999 })
-    templates.value = (result.items as unknown as TemplateItem[]) || []
-  } catch {
-    ElMessage.error('获取模板列表失败')
-  }
-}
-
 const handleSearch = () => {
   searchKeyword.value = searchKeyword.value.trim()
 }
@@ -463,8 +394,6 @@ const resetForm = () => {
   form.pagesize = 10
   form.link = ''
   form.link_out = ''
-  form.template_list = ''
-  form.template_view = ''
   form.seoTitle = ''
   form.seoKeyword = ''
   form.setDescription = ''
@@ -502,8 +431,6 @@ const handleEdit = (row: CategoryItem) => {
     pagesize: row.pagesize ?? 10,
     link: row.link || '',
     link_out: row.link_out || '',
-    template_list: row.template_list || '',
-    template_view: row.template_view || '',
     seoTitle: row.seoTitle || '',
     seoKeyword: row.seoKeyword || '',
     setDescription: row.setDescription || '',
@@ -572,7 +499,6 @@ onBeforeUnmount(() => {
 
 onMounted(() => {
   fetchList()
-  fetchTemplates()
 })
 </script>
 

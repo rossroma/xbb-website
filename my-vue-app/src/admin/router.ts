@@ -238,22 +238,6 @@ const router = createRouter({
       ],
     },
 
-    // 模板管理
-    {
-      path: '/templates',
-      component: Layout,
-      redirect: '/templates/index',
-      meta: { title: '模板管理', icon: 'Files', requiresAuth: true },
-      children: [
-        {
-          path: 'index',
-          name: 'TemplateManagement',
-          component: () => import('@/admin/views/template/TemplateManagement.vue'),
-          meta: { title: '模板管理', icon: 'Document', requiresAuth: true },
-        },
-      ],
-    },
-
     // 后台 404 兜底 — 嵌套在 Layout 内以保留侧边栏和顶栏
     {
       path: '/:pathMatch(.*)*',
@@ -310,10 +294,6 @@ const canAccessAdminRoute = (path: string, admin: any) => {
     [
       path.startsWith('/logs/statistics'),
       hasMenuPermission(admin, PERMISSION_TOKENS.operationLogs as MenuPermissionMeta),
-    ],
-    [
-      path.startsWith('/templates'),
-      hasMenuPermission(admin, PERMISSION_TOKENS.template as MenuPermissionMeta),
     ],
     [
       path.startsWith('/gallery'),

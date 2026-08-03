@@ -14,7 +14,6 @@ import { MessageModule } from './modules/message/message.module';
 import { SmsModule } from './modules/sms/sms.module';
 import { LogsModule } from './modules/logs/logs.module';
 import { GalleryModule } from './modules/gallery/gallery.module';
-import { TemplateModule } from './modules/template/template.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CaseModule } from './modules/case/case.module';
 import { PartnerModule } from './modules/partner/partner.module';
@@ -59,7 +58,6 @@ import { PartnerModule } from './modules/partner/partner.module';
     SmsModule,
     LogsModule,
     GalleryModule,
-    TemplateModule,
     UploadModule,
     CaseModule,
     PartnerModule,
