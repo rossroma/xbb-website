@@ -23,10 +23,6 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="handleProfile">
-              <el-icon><User /></el-icon>
-              个人中心
-            </el-dropdown-item>
             <el-dropdown-item divided @click="handleLogout">
               <el-icon><SwitchButton /></el-icon>
               退出登录
@@ -64,10 +60,6 @@ const loadSystemTitle = async () => {
   } catch {
     companyName.value = '销帮帮CRM'
   }
-}
-
-const handleProfile = () => {
-  ElMessage.info('个人中心功能开发中')
 }
 
 const handleLogout = async () => {
