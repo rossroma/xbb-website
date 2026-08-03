@@ -15,6 +15,7 @@ import { ArticleService } from '../article.service';
 import { CreateArticleDto } from '../dto/create-article.dto';
 import { UpdateArticleDto } from '../dto/update-article.dto';
 import { QueryArticleDto } from '../dto/query-article.dto';
+import { BatchArticleDto } from '../dto/batch-article.dto';
 import { ArticleResponseDto, ArticleListResponseDto } from '../dto/article-response.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
@@ -28,11 +29,31 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 export class AdminArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
+  // ==================== 批量操作（静态路径，必须在 :id 之前） ====================
+
+  @Patch('batch/restore')
+  @OperationLog({ title: '文章', type: 2, titlePrefix: '文章：' })
+  async batchRestore(@Body() dto: BatchArticleDto): Promise<ResponseResult<number>> {
+    const count = await this.articleService.batchRestore(dto.ids);
+    return ResponseResult.success(count, `成功恢复 ${count} 篇文章`);
+  }
+
+  @Delete('batch/permanent')
+  @OperationLog({ title: '文章', type: 3, titlePrefix: '文章：' })
+  async batchPermanentDelete(@Body() dto: BatchArticleDto): Promise<ResponseResult<number>> {
+    const count = await this.articleService.batchPermanentDelete(dto.ids);
+    return ResponseResult.success(count, `成功彻底删除 ${count} 篇文章`);
+  }
+
+  // ==================== 辅助接口 ====================
+
   @Get('counts')
   async getCounts(): Promise<ResponseResult<Record<number, number>>> {
     const result = await this.articleService.getArticleCounts();
     return ResponseResult.success(result, '获取文章统计成功');
   }
+
+  // ==================== CRUD ====================
 
   @Post()
   @OperationLog({ title: '文章', type: 1, targetFields: ['title'], titlePrefix: '文章：' })
@@ -71,6 +92,23 @@ export class AdminArticleController {
   async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<ArticleResponseDto>> {
     const target = await this.articleService.findOne(id);
     await this.articleService.remove(id);
-    return ResponseResult.success(target, '文章删除成功');
+    return ResponseResult.success(target, '文章已移入回收站');
+  }
+
+  @Patch(':id/restore')
+  @OperationLog({ title: '文章', type: 2, targetFields: ['title'], titlePrefix: '文章：' })
+  async restore(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<null>> {
+    await this.articleService.restore(id);
+    return ResponseResult.success(null, '文章已恢复');
+  }
+
+  @Delete(':id/permanent')
+  @OperationLog({ title: '文章', type: 3, targetFields: ['title'], titlePrefix: '文章：' })
+  async permanentDelete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ResponseResult<ArticleResponseDto>> {
+    const target = await this.articleService.findOne(id);
+    await this.articleService.permanentDelete(id);
+    return ResponseResult.success(target, '文章已彻底删除');
   }
 }

@@ -123,6 +123,12 @@ const router = createRouter({
           component: () => import('@/admin/views/content/ContentEdit.vue'),
           meta: { title: '新增文章', requiresAuth: true },
         },
+        {
+          path: 'trash',
+          name: 'ContentTrash',
+          component: () => import('@/admin/views/content/ContentTrash.vue'),
+          meta: { title: '回收站', requiresAuth: true },
+        },
       ],
     },
 

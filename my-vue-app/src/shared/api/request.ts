@@ -40,7 +40,7 @@ interface RequestInstance {
   post<T = unknown>(url: string, data?: unknown): Promise<T>
   put<T = unknown>(url: string, data?: unknown): Promise<T>
   patch<T = unknown>(url: string, data?: unknown): Promise<T>
-  delete<T = unknown>(url: string): Promise<T>
+  delete<T = unknown>(url: string, config?: { params?: Record<string, unknown>; data?: unknown }): Promise<T>
 }
 
 const request = instance as unknown as RequestInstance

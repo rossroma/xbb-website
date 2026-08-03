@@ -228,6 +228,7 @@ export class ArticleService {
     return new ArticleResponseDto(updatedArticle);
   }
 
+  /** 软删除：移入回收站（status = -1） */
   async remove(id: number): Promise<void> {
     const article = await this.articleRepository.findOne({
       where: { id },
@@ -248,7 +249,80 @@ export class ArticleService {
       );
     }
 
+    await this.articleRepository.update(id, {
+      status: -1,
+      updatetime: Math.floor(Date.now() / 1000),
+    });
+  }
+
+  /** 从回收站恢复（status = 1） */
+  async restore(id: number): Promise<void> {
+    const article = await this.articleRepository.findOne({
+      where: { id, status: -1 },
+    });
+
+    if (!article) {
+      throw new BusinessException(
+        RESPONSE_CODE.RESOURCE_NOT_FOUND,
+        '回收站中未找到该文章',
+      );
+    }
+
+    await this.articleRepository.update(id, {
+      status: 1,
+      updatetime: Math.floor(Date.now() / 1000),
+    });
+  }
+
+  /** 物理删除 */
+  async permanentDelete(id: number): Promise<void> {
+    const article = await this.articleRepository.findOne({
+      where: { id },
+    });
+
+    if (!article) {
+      throw new BusinessException(
+        RESPONSE_CODE.RESOURCE_NOT_FOUND,
+        '文章不存在',
+      );
+    }
+
+    if (article.is_delete === 1) {
+      throw new BusinessException(
+        RESPONSE_CODE.FORBIDDEN,
+        '该文章不允许删除',
+      );
+    }
+
     await this.articleRepository.delete(id);
+  }
+
+  /** 批量恢复 */
+  async batchRestore(ids: number[]): Promise<number> {
+    if (!ids.length) return 0;
+
+    const result = await this.articleRepository
+      .createQueryBuilder()
+      .update()
+      .set({ status: 1, updatetime: Math.floor(Date.now() / 1000) })
+      .where('id IN (:...ids)', { ids })
+      .andWhere('status = :status', { status: -1 })
+      .execute();
+
+    return result.affected || 0;
+  }
+
+  /** 批量物理删除 */
+  async batchPermanentDelete(ids: number[]): Promise<number> {
+    if (!ids.length) return 0;
+
+    const result = await this.articleRepository
+      .createQueryBuilder()
+      .delete()
+      .where('id IN (:...ids)', { ids })
+      .execute();
+
+    return result.affected || 0;
   }
 
   // ==================== 供内部模块调用 ====================
@@ -302,12 +376,13 @@ export class ArticleService {
     });
   }
 
-  /** 获取所有分类的文章数量统计（按 bid 分组） */
+  /** 获取所有分类的文章数量统计（按 bid 分组，排除回收站） */
   async getArticleCounts(): Promise<Record<number, number>> {
     const result = await this.articleRepository
       .createQueryBuilder('article')
       .select('article.bid', 'bid')
       .addSelect('COUNT(article.id)', 'count')
+      .where('article.status != :trashStatus', { trashStatus: -1 })
       .groupBy('article.bid')
       .getRawMany<{ bid: number; count: string }>()
 

@@ -114,3 +114,25 @@ export interface ArticleDetailResponse {
 export const getClientArticleDetail = (id: number): Promise<ArticleDetailResponse> => {
   return request.get(`/v1/client/articles/${id}/detail`)
 }
+
+// ==================== 回收站接口 ====================
+
+/** 从回收站恢复文章 */
+export const restoreArticle = (id: number): Promise<void> => {
+  return request.patch(`/v1/admin/articles/${id}/restore`)
+}
+
+/** 彻底删除文章（物理删除） */
+export const permanentDeleteArticle = (id: number): Promise<void> => {
+  return request.delete(`/v1/admin/articles/${id}/permanent`)
+}
+
+/** 批量恢复文章 */
+export const batchRestoreArticles = (ids: number[]): Promise<number> => {
+  return request.patch('/v1/admin/articles/batch/restore', { ids })
+}
+
+/** 批量彻底删除文章 */
+export const batchPermanentDeleteArticles = (ids: number[]): Promise<number> => {
+  return request.delete('/v1/admin/articles/batch/permanent', { data: { ids } })
+}

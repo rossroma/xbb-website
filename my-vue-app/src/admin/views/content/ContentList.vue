@@ -55,6 +55,7 @@
         </div>
         <div class="toolbar-right">
           <el-button type="primary" @click="handleCreate">新增</el-button>
+          <el-button @click="goToTrash">回收站</el-button>
         </div>
       </div>
 
@@ -236,15 +237,19 @@ const handleEdit = (row: any) => {
   router.push(`/admin/content/edit/${row.id}`)
 }
 
+const goToTrash = () => {
+  router.push('/admin/content/trash')
+}
+
 const handleDelete = async (row: any) => {
   try {
-    await ElMessageBox.confirm(`确定要删除「${row.title}」吗？`, '提示', {
+    await ElMessageBox.confirm(`确定要将「${row.title}」移入回收站吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     })
     await request.delete(`/v1/admin/articles/${row.id}`)
-    ElMessage.success('删除成功')
+    ElMessage.success('已移入回收站')
     loadArticleCounts()
     loadArticles()
   } catch (err) {
