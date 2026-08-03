@@ -108,49 +108,7 @@
           </el-form>
         </el-tab-pane>
 
-        <!-- 系统设置 -->
-        <el-tab-pane label="系统设置" name="setting">
-          <el-form :model="settingForm" label-width="150px">
-            <el-form-item label="开启Banner">
-              <el-switch v-model="settingForm.is_banner" :active-value="1" :inactive-value="0" />
-            </el-form-item>
-            <el-form-item label="开启英文版">
-              <el-switch
-                v-model="settingForm.is_english_open"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="开启手机版">
-              <el-switch v-model="settingForm.is_wap_open" :active-value="1" :inactive-value="0" />
-            </el-form-item>
-            <el-form-item label="开启关键词替换">
-              <el-switch
-                v-model="settingForm.is_keyreplace"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="开启标签">
-              <el-switch v-model="settingForm.is_tags" :active-value="1" :inactive-value="0" />
-            </el-form-item>
-            <el-form-item label="开启缓存">
-              <el-switch
-                v-model="settingForm.is_open_cache"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-            <el-form-item label="网站关闭">
-              <el-switch
-                v-model="settingForm.is_open_close"
-                :active-value="1"
-                :inactive-value="0"
-              />
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-      </el-tabs>
+              </el-tabs>
 
       <div class="button-group">
         <el-button type="primary" @click="handleSave" :loading="loading">保存设置</el-button>
@@ -165,7 +123,7 @@ import { ref, shallowRef, onBeforeUnmount, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
-import { getAllSettings, updateAllSettings } from '@/shared/api/settings'
+import { getBase, updateBase } from '@/shared/api/settings'
 import ImageUploader from '@/admin/components/ImageUploader.vue'
 
 defineOptions({ name: 'SettingsPage' })
@@ -202,21 +160,11 @@ const baseForm = ref({
   toolscode_bottom: '',
 })
 
-const settingForm = ref({
-  is_banner: 0,
-  is_english_open: 0,
-  is_wap_open: 0,
-  is_keyreplace: 0,
-  is_tags: 0,
-  is_open_cache: 0,
-  is_open_close: 0,
-})
-
 const loadSettings = async () => {
   try {
-    const data = await getAllSettings()
-    if (data?.base) {
-      const b = data.base as Record<string, string>
+    const data = await getBase()
+    if (data) {
+      const b = data as Record<string, string>
       baseForm.value = {
         title: b.title || '',
         keyword: b.keyword || '',
@@ -236,18 +184,6 @@ const loadSettings = async () => {
         toolscode_bottom: b.toolscode_bottom || '',
       }
     }
-    if (data?.setting) {
-      const s = data.setting as Record<string, number>
-      settingForm.value = {
-        is_banner: s.is_banner || 0,
-        is_english_open: s.is_english_open || 0,
-        is_wap_open: s.is_wap_open || 0,
-        is_keyreplace: s.is_keyreplace || 0,
-        is_tags: s.is_tags || 0,
-        is_open_cache: s.is_open_cache || 0,
-        is_open_close: s.is_open_close || 0,
-      }
-    }
   } catch {
     ElMessage.error('加载配置失败')
   }
@@ -256,7 +192,7 @@ const loadSettings = async () => {
 const handleSave = async () => {
   loading.value = true
   try {
-    await updateAllSettings({ base: baseForm.value, setting: settingForm.value })
+    await updateBase(baseForm.value)
     ElMessage.success('保存成功')
     await loadSettings()
   } catch {
