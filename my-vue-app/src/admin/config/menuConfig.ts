@@ -21,11 +21,8 @@ export const PERMISSION_TOKENS = {
   loginLogs: { ruleTokens: ['logins', '59'] },
   /** 图片集管理 */
   gallery: { ruleTokens: ['gallery', 'images'] },
-  /** 留言管理（按 cateid 映射） */
+  /** 留言管理（免费注册） */
   message: {
-    1: { ruleTokens: ['message_1', '62'] },
-    2: { ruleTokens: ['message_2', '65'] },
-    3: { ruleTokens: ['message_3', '66'] },
     4: { ruleTokens: ['message_4', '67'] },
   },
   /** 文章管理 */

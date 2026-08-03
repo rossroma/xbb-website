@@ -63,21 +63,6 @@ const contentChildren = computed(() => {
 
 const messageChildren = [
   {
-    path: '/message/1',
-    meta: { title: '在线留言', icon: 'List' },
-    permission: { ruleTokens: ['message_1', '62'] },
-  },
-  {
-    path: '/message/2',
-    meta: { title: '加入我们', icon: 'List' },
-    permission: { ruleTokens: ['message_2', '65'] },
-  },
-  {
-    path: '/message/3',
-    meta: { title: '在线申请', icon: 'List' },
-    permission: { ruleTokens: ['message_3', '66'] },
-  },
-  {
     path: '/message/4',
     meta: { title: '免费注册', icon: 'List' },
     permission: { ruleTokens: ['message_4', '67'] },

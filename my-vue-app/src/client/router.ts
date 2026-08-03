@@ -66,11 +66,6 @@ const router = createRouter({
           component: () => import('@/client/views/product/ProductOverview.vue'),
         },
         {
-          path: 'message',
-          name: 'ClientMessage',
-          component: () => import('@/client/views/contact/MessageForm.vue'),
-        },
-        {
           path: 'lianxiwomen',
           name: 'ClientContact',
           component: () => import('@/client/views/contact/ContactUs.vue'),

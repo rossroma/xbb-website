@@ -65,7 +65,7 @@ export const floatingToolbarData = {
       icon: Rocket,
       label: '立即体验',
       type: 'route',
-      routeTo: '/message',
+      routeTo: '/mianfeishiyong',
     },
   ] as readonly ToolbarItem[],
 }

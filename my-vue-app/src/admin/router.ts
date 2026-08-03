@@ -158,20 +158,14 @@ const router = createRouter({
     {
       path: '/message',
       component: Layout,
-      redirect: '/message/list',
+      redirect: '/message/4',
       meta: { title: '留言管理', icon: 'ChatDotRound', requiresAuth: true },
       children: [
-        {
-          path: 'list',
-          name: 'MessageManagement',
-          component: () => import('@/admin/views/message/MessageManagement.vue'),
-          meta: { title: '留言管理', icon: 'List', requiresAuth: true },
-        },
         {
           path: ':cateid',
           name: 'MessageManagementCategory',
           component: () => import('@/admin/views/message/MessageManagement.vue'),
-          meta: { title: '留言分类', icon: 'List', requiresAuth: true },
+          meta: { title: '免费注册', icon: 'List', requiresAuth: true },
         },
       ],
     },
@@ -306,12 +300,8 @@ const canAccessAdminRoute = (path: string, admin: any) => {
   }
 
   if (path.startsWith('/message')) {
-    const cateid = Number(path.split('/').pop())
     const msgTokens = PERMISSION_TOKENS.message as Record<number, MenuPermissionMeta>
-    if (cateid in msgTokens) {
-      return hasMenuPermission(admin, msgTokens[cateid])
-    }
-    return Object.values(msgTokens).some((tokens) => hasMenuPermission(admin, tokens))
+    return hasMenuPermission(admin, msgTokens[4])
   }
 
   if (path.startsWith('/content')) {
