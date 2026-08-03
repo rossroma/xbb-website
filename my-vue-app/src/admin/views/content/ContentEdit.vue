@@ -402,7 +402,7 @@ const handleReset = async () => {
   }
 }
 
-const goBack = () => router.push('/admin/content')
+const goBack = () => router.push('/content')
 
 onMounted(async () => {
   await loadCategories()

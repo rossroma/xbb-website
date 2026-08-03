@@ -169,7 +169,7 @@ const handleEdit = async (row: AdsType) => {
 }
 
 const handleManage = (row: AdsType) => {
-  router.push(`/admin/ads/types/${row.id}/items`)
+  router.push(`/ads/types/${row.id}/items`)
 }
 
 const handleSubmit = async () => {

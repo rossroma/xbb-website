@@ -230,15 +230,15 @@ const handleReset = () => {
 const handleCreate = () => {
   const bid = selectedBid.value
   const query = bid ? `?bid=${bid}` : ''
-  router.push(`/admin/content/create${query}`)
+  router.push(`/content/create${query}`)
 }
 
 const handleEdit = (row: any) => {
-  router.push(`/admin/content/edit/${row.id}`)
+  router.push(`/content/edit/${row.id}`)
 }
 
 const goToTrash = () => {
-  router.push('/admin/content/trash')
+  router.push('/content/trash')
 }
 
 const handleDelete = async (row: any) => {

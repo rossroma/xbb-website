@@ -17,7 +17,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const goDashboard = () => {
-  router.push('/admin/dashboard')
+  router.push('/dashboard')
 }
 
 const goBack = () => {

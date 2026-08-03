@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '@/admin/layout/index.vue'
 import { useAuthStore } from '@/admin/stores/auth'
 import { getToken } from '@/shared/utils/token'
@@ -6,7 +6,7 @@ import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from
 import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     // 登录页
     {
@@ -16,9 +16,9 @@ const router = createRouter({
 
     // 管理端主布局
     {
-      path: '/admin',
+      path: '/',
       component: Layout,
-      redirect: '/admin/dashboard',
+      redirect: '/dashboard',
       children: [
         {
           path: 'dashboard',
@@ -31,9 +31,9 @@ const router = createRouter({
 
     // 文章管理
     {
-      path: '/admin/article',
+      path: '/article',
       component: Layout,
-      redirect: '/admin/article/list',
+      redirect: '/article/list',
       meta: { title: '文章管理', icon: 'Document', requiresAuth: true },
       children: [
         {
@@ -47,9 +47,9 @@ const router = createRouter({
 
     // 栏目管理
     {
-      path: '/admin/category',
+      path: '/category',
       component: Layout,
-      redirect: '/admin/category/list',
+      redirect: '/category/list',
       meta: { title: '栏目管理', icon: 'Folder', requiresAuth: true },
       children: [
         {
@@ -63,9 +63,9 @@ const router = createRouter({
 
     // 广告管理
     {
-      path: '/admin/ads',
+      path: '/ads',
       component: Layout,
-      redirect: '/admin/ads/types',
+      redirect: '/ads/types',
       meta: { title: '广告管理', icon: 'Picture', requiresAuth: true },
       children: [
         {
@@ -85,9 +85,9 @@ const router = createRouter({
 
     // 系统设置
     {
-      path: '/admin/settings',
+      path: '/settings',
       component: Layout,
-      redirect: '/admin/settings/index',
+      redirect: '/settings/index',
       meta: { title: '系统设置', icon: 'Setting', requiresAuth: true },
       children: [
         {
@@ -101,7 +101,7 @@ const router = createRouter({
 
     // 内容管理
     {
-      path: '/admin/content',
+      path: '/content',
       component: Layout,
       meta: { title: '内容管理', icon: 'Files', requiresAuth: true },
       children: [
@@ -134,9 +134,9 @@ const router = createRouter({
 
     // 系统管理
     {
-      path: '/admin/system',
+      path: '/system',
       component: Layout,
-      redirect: '/admin/system/admins',
+      redirect: '/system/admins',
       meta: { title: '系统管理', icon: 'User', requiresAuth: true },
       children: [
         {
@@ -156,9 +156,9 @@ const router = createRouter({
 
     // 留言管理
     {
-      path: '/admin/message',
+      path: '/message',
       component: Layout,
-      redirect: '/admin/message/list',
+      redirect: '/message/list',
       meta: { title: '留言管理', icon: 'ChatDotRound', requiresAuth: true },
       children: [
         {
@@ -178,9 +178,9 @@ const router = createRouter({
 
     // 日志管理
     {
-      path: '/admin/logs',
+      path: '/logs',
       component: Layout,
-      redirect: '/admin/logs/operations',
+      redirect: '/logs/operations',
       meta: { title: '日志管理', icon: 'Document', requiresAuth: true },
       children: [
         {
@@ -206,9 +206,9 @@ const router = createRouter({
 
     // 图片集管理
     {
-      path: '/admin/gallery',
+      path: '/gallery',
       component: Layout,
-      redirect: '/admin/gallery/images',
+      redirect: '/gallery/images',
       meta: { title: '图片集管理', icon: 'Picture', requiresAuth: true },
       children: [
         {
@@ -240,9 +240,9 @@ const router = createRouter({
 
     // 模板管理
     {
-      path: '/admin/templates',
+      path: '/templates',
       component: Layout,
-      redirect: '/admin/templates/index',
+      redirect: '/templates/index',
       meta: { title: '模板管理', icon: 'Files', requiresAuth: true },
       children: [
         {
@@ -256,7 +256,7 @@ const router = createRouter({
 
     // 后台 404 兜底 — 嵌套在 Layout 内以保留侧边栏和顶栏
     {
-      path: '/admin/:pathMatch(.*)*',
+      path: '/:pathMatch(.*)*',
       component: Layout,
       children: [
         {
@@ -266,63 +266,57 @@ const router = createRouter({
         },
       ],
     },
-
-    // 顶层兜底：非 /admin 路径也展示 404 页面
-    {
-      path: '/:pathMatch(.*)*',
-      component: () => import('@/admin/views/NotFound.vue'),
-    },
   ],
 })
 
 const canAccessAdminRoute = (path: string, admin: any) => {
   if (!admin) return false
   if (admin.type === 1) return true
-  if (path === '/admin/dashboard') return true
+  if (path === '/dashboard') return true
 
   const checks: Array<[boolean, boolean]> = [
     [
-      path.startsWith('/admin/article'),
+      path.startsWith('/article'),
       hasMenuPermission(admin, PERMISSION_TOKENS.article as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/category'),
+      path.startsWith('/category'),
       hasMenuPermission(admin, PERMISSION_TOKENS.category as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/ads'),
+      path.startsWith('/ads'),
       hasMenuPermission(admin, PERMISSION_TOKENS.ads as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/settings'),
+      path.startsWith('/settings'),
       hasMenuPermission(admin, PERMISSION_TOKENS.settings as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/system/admins'),
+      path.startsWith('/system/admins'),
       hasMenuPermission(admin, PERMISSION_TOKENS.adminManagement as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/system/groups'),
+      path.startsWith('/system/groups'),
       hasMenuPermission(admin, PERMISSION_TOKENS.groupManagement as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/logs/operations'),
+      path.startsWith('/logs/operations'),
       hasMenuPermission(admin, PERMISSION_TOKENS.operationLogs as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/logs/logins'),
+      path.startsWith('/logs/logins'),
       hasMenuPermission(admin, PERMISSION_TOKENS.loginLogs as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/logs/statistics'),
+      path.startsWith('/logs/statistics'),
       hasMenuPermission(admin, PERMISSION_TOKENS.operationLogs as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/templates'),
+      path.startsWith('/templates'),
       hasMenuPermission(admin, PERMISSION_TOKENS.template as MenuPermissionMeta),
     ],
     [
-      path.startsWith('/admin/gallery'),
+      path.startsWith('/gallery'),
       hasMenuPermission(admin, PERMISSION_TOKENS.gallery as MenuPermissionMeta),
     ],
   ]
@@ -331,7 +325,7 @@ const canAccessAdminRoute = (path: string, admin: any) => {
     if (match) return allowed
   }
 
-  if (path.startsWith('/admin/message')) {
+  if (path.startsWith('/message')) {
     const cateid = Number(path.split('/').pop())
     const msgTokens = PERMISSION_TOKENS.message as Record<number, MenuPermissionMeta>
     if (cateid in msgTokens) {
@@ -340,16 +334,16 @@ const canAccessAdminRoute = (path: string, admin: any) => {
     return Object.values(msgTokens).some((tokens) => hasMenuPermission(admin, tokens))
   }
 
-  if (path.startsWith('/admin/content')) {
+  if (path.startsWith('/content')) {
     const parts = path.split('/').filter(Boolean)
-    // /admin/content 或 /admin/content/edit/:id 或 /admin/content/create
-    if (parts.length === 2) {
-      // /admin/content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
+    // /content 或 /content/edit/:id 或 /content/create
+    if (parts.length === 1) {
+      // /content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
       const { isSuperAdmin, categorySet } = getPermissionContext(admin)
       if (isSuperAdmin) return true
       return categorySet.size > 0
     }
-    // /admin/content/edit/:id 或 /admin/content/create — 允许访问（后端校验）
+    // /content/edit/:id 或 /content/create — 允许访问（后端校验）
     return true
   }
 
@@ -364,7 +358,7 @@ router.beforeEach(async (to) => {
   // 登录页
   if (to.path === '/login') {
     if (token) {
-      return '/admin/dashboard'
+      return '/dashboard'
     }
     return
   }
@@ -381,7 +375,7 @@ router.beforeEach(async (to) => {
       }
 
       if (!canAccessAdminRoute(to.path, authStore.admin)) {
-        return '/admin/dashboard'
+        return '/dashboard'
       }
 
       return

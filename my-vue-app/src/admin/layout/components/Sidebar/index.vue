@@ -29,9 +29,9 @@
 import { computed, defineAsyncComponent, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getAllSettings } from '@/shared/api/settings'
-import { useAuthStore } from '@/admin/stores/auth'
-import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
-import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
+import { useAuthStore } from '@/stores/auth'
+import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/utils/admin-permissions'
+import { PERMISSION_TOKENS } from '@/config/menuConfig'
 
 const SidebarItem = defineAsyncComponent(() => import('./SidebarItem.vue'))
 
@@ -55,7 +55,7 @@ const contentChildren = computed(() => {
   if (!isSuperAdmin && categorySet.size === 0) return []
   return [
     {
-      path: '/admin/content',
+      path: '/content',
       meta: { title: '内容管理', icon: 'Document' },
     },
   ]
@@ -63,22 +63,22 @@ const contentChildren = computed(() => {
 
 const messageChildren = [
   {
-    path: '/admin/message/1',
+    path: '/message/1',
     meta: { title: '在线留言', icon: 'List' },
     permission: { ruleTokens: ['message_1', '62'] },
   },
   {
-    path: '/admin/message/2',
+    path: '/message/2',
     meta: { title: '加入我们', icon: 'List' },
     permission: { ruleTokens: ['message_2', '65'] },
   },
   {
-    path: '/admin/message/3',
+    path: '/message/3',
     meta: { title: '在线申请', icon: 'List' },
     permission: { ruleTokens: ['message_3', '66'] },
   },
   {
-    path: '/admin/message/4',
+    path: '/message/4',
     meta: { title: '免费注册', icon: 'List' },
     permission: { ruleTokens: ['message_4', '67'] },
   },
@@ -108,53 +108,53 @@ const filterMenus = (items: any[]): any[] => {
 const routes = computed(() =>
   filterMenus([
     {
-      path: '/admin/dashboard',
+      path: '/dashboard',
       meta: { title: '首页', icon: 'House' },
       hidden: false,
     },
     {
-      path: '/admin/content',
+      path: '/content',
       meta: { title: '内容管理', icon: 'Files' },
       children: contentChildren.value,
     },
     {
-      path: '/admin/category',
+      path: '/category',
       meta: { title: '栏目管理', icon: 'Folder' },
       permission: PERMISSION_TOKENS.category,
       children: [
         {
-          path: '/admin/category/list',
+          path: '/category/list',
           meta: { title: '栏目列表', icon: 'List' },
           permission: PERMISSION_TOKENS.category,
         },
       ],
     },
     {
-      path: '/admin/ads',
+      path: '/ads',
       meta: { title: '广告管理', icon: 'Picture' },
       permission: PERMISSION_TOKENS.ads,
       children: [
         {
-          path: '/admin/ads/types',
+          path: '/ads/types',
           meta: { title: '广告位管理', icon: 'Setting' },
           permission: PERMISSION_TOKENS.ads,
         },
       ],
     },
     {
-      path: '/admin/settings',
+      path: '/settings',
       meta: { title: '系统设置', icon: 'Setting' },
       permission: PERMISSION_TOKENS.settings,
       children: [
         {
-          path: '/admin/settings/index',
+          path: '/settings/index',
           meta: { title: '系统设置', icon: 'Setting' },
           permission: PERMISSION_TOKENS.settings,
         },
       ],
     },
     {
-      path: '/admin/system',
+      path: '/system',
       meta: { title: '系统管理', icon: 'User' },
       permission: {
         ruleTokens: [
@@ -166,27 +166,27 @@ const routes = computed(() =>
       },
       children: [
         {
-          path: '/admin/system/admins',
+          path: '/system/admins',
           meta: { title: '管理员管理', icon: 'UserFilled' },
           permission: PERMISSION_TOKENS.adminManagement,
         },
         {
-          path: '/admin/system/groups',
+          path: '/system/groups',
           meta: { title: '用户组管理', icon: 'Avatar' },
           permission: PERMISSION_TOKENS.groupManagement,
         },
         {
-          path: '/admin/logs/operations',
+          path: '/logs/operations',
           meta: { title: '操作日志', icon: 'List' },
           permission: PERMISSION_TOKENS.operationLogs,
         },
         {
-          path: '/admin/logs/logins',
+          path: '/logs/logins',
           meta: { title: '登录日志', icon: 'User' },
           permission: PERMISSION_TOKENS.loginLogs,
         },
         {
-          path: '/admin/logs/statistics',
+          path: '/logs/statistics',
           meta: { title: '日志统计', icon: 'DataAnalysis' },
           permission: {
             ruleTokens: [
@@ -198,7 +198,7 @@ const routes = computed(() =>
       ],
     },
     {
-      path: '/admin/message',
+      path: '/message',
       meta: { title: '留言管理', icon: 'ChatDotRound' },
       permission: {
         ruleTokens: Array.from(Object.values(PERMISSION_TOKENS.message)).flatMap(
@@ -208,35 +208,35 @@ const routes = computed(() =>
       children: messageChildren,
     },
     {
-      path: '/admin/gallery',
+      path: '/gallery',
       meta: { title: '图片集管理', icon: 'Picture' },
       hidden: true,
       children: [
         {
-          path: '/admin/gallery/images',
+          path: '/gallery/images',
           meta: { title: '图片集管理', icon: 'PictureRounded' },
         },
         {
-          path: '/admin/gallery/images2',
+          path: '/gallery/images2',
           meta: { title: '图片组2管理', icon: 'PictureRounded' },
         },
         {
-          path: '/admin/gallery/images3',
+          path: '/gallery/images3',
           meta: { title: '图片组3管理', icon: 'PictureRounded' },
         },
         {
-          path: '/admin/gallery/show-info',
+          path: '/gallery/show-info',
           meta: { title: '展示信息管理', icon: 'InfoFilled' },
         },
       ],
     },
     {
-      path: '/admin/templates',
+      path: '/templates',
       meta: { title: '模板管理', icon: 'Files' },
       permission: PERMISSION_TOKENS.template,
       children: [
         {
-          path: '/admin/templates/index',
+          path: '/templates/index',
           meta: { title: '模板管理', icon: 'Document' },
           permission: PERMISSION_TOKENS.template,
         },
