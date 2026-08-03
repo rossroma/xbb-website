@@ -7,7 +7,7 @@
     >
       <!-- Logo -->
       <RouterLink to="/" class="shrink-0">
-        <img src="/logo_blank.png" alt="销帮帮" class="h-8 lg:h-9 w-auto object-contain" />
+        <img :src="store.logo" alt="销帮帮" class="h-8 lg:h-9 w-auto object-contain" />
       </RouterLink>
 
       <!-- Desktop Nav -->
@@ -189,7 +189,7 @@
           免费试用
         </RouterLink>
         <a
-          :href="`tel:${hotline}`"
+          :href="`tel:${displayHotline}`"
           class="hidden lg:inline-flex items-center gap-2.5 text-small font-semibold text-text-primary no-underline"
         >
           <span
@@ -197,7 +197,7 @@
           >
             <img src="/nnn_tel_ico.png" alt="电话图标" class="w-4 h-4 object-contain" />
           </span>
-          {{ hotline }}
+          {{ displayHotline }}
         </a>
         <button
           type="button"
@@ -296,12 +296,14 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { HeaderNavItem, HeaderNavNode } from '@/client/data/siteNavData'
+import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 const activeMenu = ref('')
+const store = useSiteSettingsStore()
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     navItems?: readonly HeaderNavItem[]
     trialRoute?: string
@@ -313,6 +315,8 @@ withDefaults(
     hotline: '',
   },
 )
+
+const displayHotline = computed(() => store.tel || props.hotline)
 
 const currentHash = computed(() => route.hash)
 const hasSubmenu = (item: HeaderNavItem) => Boolean(item.children?.length || item.mega)

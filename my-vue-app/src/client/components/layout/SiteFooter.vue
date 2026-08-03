@@ -35,10 +35,6 @@
         class="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-footer-border max-md:flex-col max-md:items-start"
       >
         <div class="flex flex-wrap items-center gap-6">
-          <p v-if="siteInfo.email" class="flex items-center gap-2 text-small text-text-secondary">
-            <Mail class="w-4 h-4" />
-            市场商务合作 {{ siteInfo.email }}
-          </p>
           <div class="flex gap-3">
             <!-- 社交图标 — group 模式实现 QR hover -->
             <div
@@ -72,13 +68,13 @@
           </div>
         </div>
         <div class="flex items-center gap-6">
-          <a :href="`tel:${hotline}`" class="flex flex-col gap-1 no-underline">
+          <a :href="`tel:${displayHotline}`" class="flex flex-col gap-1 no-underline">
             <span class="text-caption text-text-tertiary">服务热线</span>
-            <span class="text-body text-heading">{{ hotline }}</span>
+            <span class="text-body text-heading">{{ displayHotline }}</span>
           </a>
-          <a :href="`mailto:${email}`" class="flex flex-col gap-1 no-underline">
+          <a :href="`mailto:${displayEmail}`" class="flex flex-col gap-1 no-underline">
             <span class="text-caption text-text-tertiary">企业邮箱</span>
-            <span class="text-body text-heading">{{ email }}</span>
+            <span class="text-body text-heading">{{ displayEmail }}</span>
           </a>
         </div>
       </div>
@@ -87,7 +83,7 @@
       <div class="mt-4 pt-3 border-t border-footer-border-light text-center">
         <p class="text-small text-text-tertiary leading-relaxed">
           <span class="text-small">COPYRIGHT</span> ©<span class="text-small">
-            {{ copyright }}&nbsp;&nbsp;&nbsp;<a
+            {{ displayCopyright }}&nbsp;&nbsp;&nbsp;<a
               href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802003191"
               target="_blank"
               rel="nofollow"
@@ -108,14 +104,15 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { getSiteInfo } from '@/shared/api/settings'
+import { computed } from 'vue'
 import Button from '@/client/components/ui/Button.vue'
 import { Mail } from '@icon-park/vue-next'
-import type { FooterColumn, SocialItem, SiteInfo } from '@/client/data/siteFooterData'
-import { defaultSiteInfo } from '@/client/data/siteFooterData'
+import type { FooterColumn, SocialItem } from '@/client/data/siteFooterData'
+import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
-withDefaults(
+const store = useSiteSettingsStore()
+
+const props = withDefaults(
   defineProps<{
     footerColumns?: readonly FooterColumn[]
     socials?: readonly SocialItem[]
@@ -132,21 +129,8 @@ withDefaults(
   },
 )
 
-const siteInfo = ref<SiteInfo>({ ...defaultSiteInfo })
-
-const loadSiteInfo = async () => {
-  try {
-    const res = await getSiteInfo()
-    const data = res.data as Partial<SiteInfo> | undefined
-    if (data) {
-      siteInfo.value = { ...siteInfo.value, ...data }
-    }
-  } catch (error) {
-    console.error('加载网站信息失败:', error)
-  }
-}
-
-onMounted(() => {
-  loadSiteInfo()
-})
+/** 优先使用 Store 中的值，未配置时回退到 props */
+const displayHotline = computed(() => store.tel || props.hotline)
+const displayEmail = computed(() => store.email || props.email)
+const displayCopyright = computed(() => store.copyright || props.copyright)
 </script>

@@ -135,11 +135,17 @@ export class SettingsService {
       descs: base.descs,
       company: base.company,
       logo: base.logo,
+      wap_logo: base.wap_logo,
+      ico_logo: base.ico_logo,
       tel: base.tel,
       phone: base.phone,
       email: base.email,
       address: base.address,
+      fax: base.fax,
+      postcode: base.postcode,
       content2: base.content2,
+      toolscode_top: base.toolscode_top,
+      toolscode_bottom: base.toolscode_bottom,
     };
   }
 

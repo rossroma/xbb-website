@@ -36,17 +36,22 @@ export function updateSetting(data: Record<string, unknown>): Promise<Record<str
 
 /** 客户端获取网站信息 */
 export function getSiteInfo(): Promise<{
-  readonly data: {
-    readonly title?: string
-    readonly keyword?: string
-    readonly descs?: string
-    readonly company?: string
-    readonly address?: string
-    readonly tel?: string
-    readonly phone?: string
-    readonly email?: string
-    readonly content2?: string
-  }
+  readonly title?: string
+  readonly keyword?: string
+  readonly descs?: string
+  readonly company?: string
+  readonly logo?: string
+  readonly wap_logo?: string
+  readonly ico_logo?: string
+  readonly tel?: string
+  readonly phone?: string
+  readonly email?: string
+  readonly address?: string
+  readonly fax?: string
+  readonly postcode?: string
+  readonly content2?: string
+  readonly toolscode_top?: string
+  readonly toolscode_bottom?: string
 }> {
   return request.get('/v1/client/site-info')
 }

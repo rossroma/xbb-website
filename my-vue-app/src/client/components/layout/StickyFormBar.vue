@@ -11,7 +11,7 @@
           class="shrink-0 mt-1 max-[1199px]:hidden"
           aria-label="返回首页"
           @click.prevent="scrollToTop"
-          ><img src="/logo_blank.png" alt="销帮帮" class="h-8 block" /> </a
+          ><img :src="store.logo" alt="销帮帮" class="h-8 block" /> </a
         ><span
           class="shrink-0 ml-5 text-body leading-9 text-trial-text max-[1199px]:ml-0 max-[1199px]:text-small"
           >{{ tagline }}</span
@@ -115,10 +115,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 import Form from '@/client/components/ui/Form.vue'
 import FormInput from '@/client/components/ui/FormInput.vue'
 import CaptchaModal from '@/client/components/business/CaptchaModal.vue'
 import { useStickyFormSubmit } from '@/client/composables/useStickyFormSubmit'
+
+const store = useSiteSettingsStore()
 
 withDefaults(
   defineProps<{

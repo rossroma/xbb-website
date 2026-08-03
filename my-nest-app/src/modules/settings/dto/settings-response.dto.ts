@@ -64,9 +64,15 @@ export class SiteInfoResponseDto {
   descs: string;
   company?: string;
   logo?: string;
+  wap_logo?: string;
+  ico_logo?: string;
   tel?: string;
   phone?: string;
   email?: string;
   address?: string;
+  fax?: string;
+  postcode?: string;
   content2?: string;
+  toolscode_top?: string;
+  toolscode_bottom?: string;
 }
