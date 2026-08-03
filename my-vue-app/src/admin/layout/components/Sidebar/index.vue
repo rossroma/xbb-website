@@ -63,9 +63,13 @@ const contentChildren = computed(() => {
 
 const messageChildren = [
   {
-    path: '/message/4',
-    meta: { title: '免费注册', icon: 'List' },
-    permission: { ruleTokens: ['message_4', '67'] },
+    path: '/message',
+    meta: { title: '留言管理', icon: 'List' },
+    permission: {
+      ruleTokens: Array.from(Object.values(PERMISSION_TOKENS.message)).flatMap(
+        (m) => m.ruleTokens,
+      ),
+    },
   },
 ]
 

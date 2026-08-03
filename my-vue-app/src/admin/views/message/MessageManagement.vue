@@ -41,6 +41,17 @@
             style="width: 200px"
           />
         </el-form-item>
+        <el-form-item label="分类">
+          <el-select v-model="searchForm.bid" placeholder="请选择" clearable style="width: 140px">
+            <el-option label="留言管理" :value="undefined" />
+            <el-option
+              v-for="(label, bid) in MESSAGE_CATEGORIES"
+              :key="bid"
+              :label="label"
+              :value="Number(bid)"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="读取状态">
           <el-select v-model="searchForm.read_status" placeholder="请选择" clearable style="width: 120px">
             <el-option label="未读" :value="0" />
@@ -53,17 +64,6 @@
             <el-option label="已审核" :value="1" />
             <el-option label="已拒绝" :value="2" />
           </el-select>
-        </el-form-item>
-        <el-form-item label="日期范围">
-          <el-date-picker
-            v-model="dateRange"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            format="YYYY-MM-DD"
-            value-format="YYYY-MM-DD"
-          />
         </el-form-item>
         <el-form-item>
           <el-select v-model="searchForm.sortBy" style="width: 150px">
@@ -268,8 +268,9 @@ const activeBid = computed<number | undefined>(() => {
 })
 
 const pageTitle = computed(() => {
-  if (activeBid.value === undefined) return '留言管理'
-  return `留言管理 - ${MESSAGE_CATEGORIES[activeBid.value]}`
+  const bid = searchForm.bid ?? activeBid.value
+  if (bid === undefined) return '留言管理'
+  return `留言管理 - ${MESSAGE_CATEGORIES[bid] || '未知分类'}`
 })
 
 const loading = ref(false)
@@ -277,7 +278,6 @@ const detailDialogVisible = ref(false)
 const messages = ref<MessageItem[]>([])
 const selectedMessages = ref<MessageItem[]>([])
 const currentMessage = ref<MessageItem | null>(null)
-const dateRange = ref<string[]>([])
 
 // 统计数据
 const stats = reactive({
@@ -292,8 +292,7 @@ const searchForm = reactive({
   keyword: '',
   read_status: undefined as number | undefined,
   check_status: undefined as number | undefined,
-  start_date: '',
-  end_date: '',
+  bid: undefined as number | undefined,
   sortBy: 'id_desc'
 })
 
@@ -314,14 +313,11 @@ const loadMessages = async () => {
       ...searchForm
     }
 
-    if (activeBid.value !== undefined) {
+    // 分类筛选：优先使用搜索表单的 bid，其次使用路由参数
+    if (searchForm.bid !== undefined) {
+      params.bid = searchForm.bid
+    } else if (activeBid.value !== undefined) {
       params.bid = activeBid.value
-    }
-
-    // 处理日期范围
-    if (dateRange.value && dateRange.value.length === 2) {
-      params.start_date = dateRange.value[0]
-      params.end_date = dateRange.value[1]
     }
 
     const result = await getMessages(params) as unknown as MessageListResponse
@@ -479,11 +475,9 @@ const resetSearch = () => {
     keyword: '',
     read_status: undefined,
     check_status: undefined,
-    start_date: '',
-    end_date: '',
+    bid: undefined,
     sortBy: 'id_desc'
   })
-  dateRange.value = []
   pagination.page = 1
   loadMessages()
 }
@@ -500,7 +494,9 @@ const getCheckStatusType = (status: number) => {
 
 watch(
   () => route.params.cateid,
-  () => {
+  (newCateid) => {
+    const cateid = Number(newCateid)
+    searchForm.bid = cateid in MESSAGE_CATEGORIES ? cateid : undefined
     pagination.page = 1
     selectedMessages.value = []
     loadMessages()
@@ -509,6 +505,9 @@ watch(
 
 // 组件挂载时加载数据
 onMounted(() => {
+  if (activeBid.value !== undefined) {
+    searchForm.bid = activeBid.value
+  }
   loadMessages()
   loadStats()
 })

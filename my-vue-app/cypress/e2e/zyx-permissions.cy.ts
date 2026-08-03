@@ -22,8 +22,6 @@ describe('zyx login permissions', () => {
     cy.get('.sidebar').should('not.contain.text', '用户组管理')
     cy.get('.sidebar').should('not.contain.text', '模板管理')
 
-    cy.get('.sidebar').should('not.contain.text', '加入我们')
-    cy.get('.sidebar').should('not.contain.text', '在线申请')
-    cy.get('.sidebar').should('not.contain.text', '免费注册')
+    cy.get('.sidebar').should('not.contain.text', '留言管理')
   })
 })
