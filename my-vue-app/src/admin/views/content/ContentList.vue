@@ -97,7 +97,7 @@
       <el-pagination
         v-model:current-page="pagination.page"
         v-model:page-size="pagination.limit"
-        :page-sizes="[10, 20, 50]"
+        :page-sizes="[20, 30, 50, 100]"
         layout="total, sizes, prev, pager, next"
         :total="pagination.total"
         @size-change="loadArticles"
@@ -160,7 +160,7 @@ const handleCategoryClick = (data: any) => {
 const loading = ref(false)
 const articles = ref<any[]>([])
 
-const pagination = reactive({ page: 1, limit: 10, total: 0 })
+const pagination = reactive({ page: 1, limit: 20, total: 0 })
 
 const searchForm = reactive({
   title: '',
