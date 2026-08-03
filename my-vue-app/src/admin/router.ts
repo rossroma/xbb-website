@@ -249,10 +249,23 @@ const router = createRouter({
       ],
     },
 
-    // 兜底：admin.html 入口页及其他未匹配路径重定向到登录页
+    // 后台 404 兜底 — 嵌套在 Layout 内以保留侧边栏和顶栏
+    {
+      path: '/admin/:pathMatch(.*)*',
+      component: Layout,
+      children: [
+        {
+          path: '',
+          name: 'AdminNotFound',
+          component: () => import('@/admin/views/NotFound.vue'),
+        },
+      ],
+    },
+
+    // 顶层兜底：非 /admin 路径也展示 404 页面
     {
       path: '/:pathMatch(.*)*',
-      redirect: '/login',
+      component: () => import('@/admin/views/NotFound.vue'),
     },
   ],
 })
