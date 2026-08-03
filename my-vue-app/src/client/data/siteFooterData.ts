@@ -1,9 +1,10 @@
 import type { Component } from 'vue'
 import { Mail, Wechat, Tiktok } from '@icon-park/vue-next'
 import { toPagePath } from '@/client/data/routePaths'
-import footerWechatQr from '../../../../statics/home/images/wxImg.png'
-import footerDouyinQr from '../../../../statics/home/images/code-douyin.png'
-import footerWechatVideoQr from '../../../../statics/home/images/code-wechatVideo.png'
+
+const footerWechatQr = '/images/wxImg.png'
+const footerDouyinQr = '/images/code-douyin.png'
+const footerWechatVideoQr = '/images/code-wechatVideo.png'
 
 /** 页脚链接 */
 export interface FooterLink {

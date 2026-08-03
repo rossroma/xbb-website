@@ -11,10 +11,11 @@ import {
 } from '@icon-park/vue-next'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'
-import heroImage from '../../../../../statics/home/images/youzhikehubg.png'
-import freeSupportImage from '../../../../../statics/home/images/youzhibg1.png'
-import premiumServiceImage from '../../../../../statics/home/images/youzhibg3.png'
-import vipServiceImage from '../../../../../statics/home/images/youzhibg2.png'
+
+const heroImage = '/images/youzhikehubg.png'
+const freeSupportImage = '/images/youzhibg1.png'
+const premiumServiceImage = '/images/youzhibg3.png'
+const vipServiceImage = '/images/youzhibg2.png'
 
 export const servicePageSeo = {
   title: '优质服务 - 销帮帮 CRM',
