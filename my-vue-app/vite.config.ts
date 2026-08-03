@@ -26,6 +26,14 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       host: '0.0.0.0',
+      // 多页应用 history 模式：/admin* 路径回退到 admin.html，其余回退到 index.html
+      historyApiFallback: {
+        rewrites: [
+          { from: /^\/admin/, to: '/admin.html' },
+          { from: /^\/login/, to: '/admin.html' },
+          { from: /./, to: '/index.html' },
+        ],
+      },
       proxy: {
         '/v1': {
           target: apiTarget,
