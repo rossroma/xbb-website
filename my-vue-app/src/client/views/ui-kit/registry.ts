@@ -63,7 +63,9 @@ export const sections: SectionEntry[] = [
   // 页面顶部 / Hero 区
   { id: 'hero-banner', name: 'HeroBanner', category: 'business' },
   { id: 'hero-banner-single', name: 'HeroBanner (单页)', category: 'business' },
+  { id: 'hero-banner-showcase-carousel', name: 'HeroBanner 展示轮播', category: 'business' },
   { id: 'image-showcase', name: 'ImageShowcase 图文展示', category: 'business' },
+  { id: 'article-sidebar', name: 'ArticleSidebar 文章侧边栏', category: 'business' },
   { id: 'gradient-hero', name: 'GradientHero 渐变 Hero', category: 'business' },
   { id: 'promo-banner', name: 'PromoBanner 图文横幅', category: 'business' },
   { id: 'promo-banner-carousel', name: 'PromoBannerCarousel 轮播', category: 'business' },
@@ -71,6 +73,7 @@ export const sections: SectionEntry[] = [
   // 图文卡片 / 展示类
   { id: 'feature-image-card', name: 'FeatureImageCard 图片卡片', category: 'business' },
   { id: 'content-card-grid', name: 'ContentCardGrid 图文卡片', category: 'business' },
+  { id: 'ai-crm-feature-grid', name: 'AiCrmFeatureGrid AI+CRM 能力卡片', category: 'business' },
   { id: 'icon-card-grid', name: 'IconCardGrid 图标卡片', category: 'business' },
   { id: 'gradient-card-grid', name: 'GradientCardGrid 渐变卡片', category: 'business' },
   { id: 'split-section', name: 'SplitSection 图文分栏', category: 'business' },
