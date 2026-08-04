@@ -67,11 +67,11 @@
             </div>
           </template>
           <div class="quick-actions">
-            <el-button type="primary" :icon="Plus" @click="$router.push('/article/create')">
+            <el-button type="primary" :icon="Plus" @click="$router.push('/content/create')">
               创建文章
             </el-button>
-            <el-button type="success" :icon="List" @click="$router.push('/article/list')">
-              文章列表
+            <el-button type="success" :icon="List" @click="$router.push('/content')">
+              内容管理
             </el-button>
             <el-button type="warning" :icon="Folder" @click="$router.push('/category/list')">
               栏目管理
