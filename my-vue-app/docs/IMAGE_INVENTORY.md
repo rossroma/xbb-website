@@ -74,16 +74,49 @@
 | 64  | 下载中心   | AI CRM - 图标                     | `/images/download/aiup.png`                | 图标/Logo  |  200×200  |           已有           |
 | 65  | 下载中心   | AI CRM - 二维码                   | `/images/download/aidown.png`              |   二维码   |  300×300  |           已有           |
 | 66  | 新闻动态   | 文章列表封面                      | API 动态加载（`article.simg`）             | 业务场景图 |     —     |           动态           |
+| 67  | 推广大使   | Hero - 主视觉图                   | `/images/customer/hero.png`                | 业务场景图 | 1020×840  |    🔴 Mock（复用#19）    |
+| 68  | 推广大使   | 推荐流程 - 奖励费率图             | `/images/ambassador/reward-rate.png`       | 业务场景图 | 1200×auto |           已有           |
+| 69  | 联系我们   | 公司地址 - 地图（4 个地点复用）    | `statics/home/images/nnlx_mimg.jpg`        | 业务场景图 |  642×272  |        🔴 待替换         |
+| 70  | 钉钉版     | Hero - 主视觉图                   | `/images/paas/blank-showcase.svg`          | 业务场景图 |     —     |    🟡 占位（复用#41）    |
+| 71  | 钉钉版     | 专业易用 - 配图（CTASection）     | `/images/dingtalk/dingtalk03.png`          | 业务场景图 | 1840×1150 |           已有           |
+| 72  | 钉钉版     | 阶段推进器 - 配图                 | `/images/dingtalk/dingtalk04.png`          | 业务场景图 | 1360×840  |           已有           |
+| 73  | 钉钉版     | 决策树&组织树 - 配图              | `/images/dingtalk/dingtalk05.png`          | 业务场景图 | 1360×840  |           已有           |
+| 74  | 钉钉版     | 团队成员 - 配图                   | `/images/dingtalk/dingtalk06.png`          | 业务场景图 | 1360×840  |           已有           |
+| 75  | 钉钉版     | 工作通知&审批 - 配图              | `/images/dingtalk/dingtalk07.png`          | 业务场景图 | 1360×840  |           已有           |
+| 76  | 飞书版     | Hero - 主视觉图                   | `/images/paas/blank-showcase.svg`          | 业务场景图 |     —     |    🟡 占位（复用#41）    |
+| 77  | 飞书版     | 协作总览 - 配图（CTASection）     | `/images/feishu/feishu-1@2x.png`           | 业务场景图 | 1840×1150 |           已有           |
+| 78  | 飞书版     | 阶段变更提醒 - 配图               | `/images/feishu/feishu-2@2x.png`           | 业务场景图 | 1360×840  |           已有           |
+| 79  | 飞书版     | 业务信息同步 - 配图               | `/images/feishu/feishu-3@2x.png`           | 业务场景图 | 1360×840  |           已有           |
+| 80  | 飞书版     | 自动化销售运营 - 配图             | `/images/feishu/feishu-4@2x.png`           | 业务场景图 | 1360×840  |           已有           |
+| 81  | 产品总览   | Hero - 主视觉图                   | `statics/home/images/new2022/products/banner-large.jpg` | 业务场景图 | 1020×840  |           已有           |
+| 82  | 产品总览   | CRM 展示 - 配图                   | `statics/home/images/new2022/products/crm@2x.png` | 业务场景图 | 1360×840  |           已有           |
+| 83  | 产品总览   | 工单管理 - 配图                   | `statics/home/images/new2022/products/gongdanguanli@2x.png` | 业务场景图 | 1360×840  |           已有           |
+| 84  | 产品总览   | 资金管理 - 配图                   | `statics/home/images/new2022/products/zijinguanli@2x.png` | 业务场景图 | 1360×840  |           已有           |
+| 85  | 产品总览   | 市场管理 - 配图                   | `statics/home/images/new2022/products/shichangguanli@2x.png` | 业务场景图 | 1360×840  |           已有           |
+| 86  | 产品总览   | 进销存 - 配图                     | `statics/home/images/new2022/products/jxc@2x.png` | 业务场景图 | 1360×840  |           已有           |
+| 87  | 企微版     | Hero - 主视觉图                   | `/images/paas/blank-showcase.svg`          | 业务场景图 |     —     |    🟡 占位（复用#41）    |
+| 88  | 企微版     | 流量运营 - 配图（CTASection）     | `/images/qiwei/qiwei-1@2x.png`             | 业务场景图 | 1840×1150 |           已有           |
+| 89  | 企微版     | 会话存档 - 配图                   | `/images/qiwei/qiwei-2@2x.png`             | 业务场景图 | 1360×840  |           已有           |
+| 90  | 企微版     | 引流活码 - 配图                   | `/images/qiwei/qiwei-3@2x.png`             | 业务场景图 | 1360×840  |           已有           |
+| 91  | 企微版     | 侧边栏 - 配图                     | `/images/qiwei/qiwei-4@2x.png`             | 业务场景图 | 1360×840  |           已有           |
+| 92  | 企微版     | 互动雷达 - 配图                   | `/images/qiwei/qiwei-5@2x.png`             | 业务场景图 | 1360×840  |           已有           |
+| 93  | 优质服务   | Hero - 主视觉图                   | `statics/home/images/youzhikehubg.png`     | 业务场景图 | 1020×840  |           已有           |
+| 94  | 优质服务   | 免费服务支持 - 配图               | `statics/home/images/youzhibg1.png`        | 业务场景图 | 1360×840  |           已有           |
+| 95  | 优质服务   | 至尊服务 - 配图                   | `statics/home/images/youzhibg3.png`        | 业务场景图 | 1360×840  |           已有           |
+| 96  | 优质服务   | 超级VIP服务 - 配图                | `statics/home/images/youzhibg2.png`        | 业务场景图 | 1360×840  |           已有           |
+| 97  | 免费试用   | 左侧产品插图                      | `/images/free-trial/hero.png`              | 业务场景图 |  600×500  |        🔴 待替换         |
+| 98  | 案例详情   | 案例配图 + Logo                   | API 动态加载（`case.image` + `case.logo`） | 业务场景图 |     —     |           动态           |
+| 99  | 文章详情   | 文章封面                          | API 动态加载（`article` 富文本）           | 业务场景图 |     —     |           动态           |
 
 ---
 
 ## 按状态分类
 
-### 🔴 待替换（Mock 图片，共 10 个唯一文件）
+### 🔴 待替换（Mock 图片，共 12 个唯一文件）
 
 | 文件路径                                 | 使用页面                     |
 | ---------------------------------------- | ---------------------------- |
-| `/images/customer/hero.png`              | 客户管理、伙伴合作           |
+| `/images/customer/hero.png`              | 客户管理、伙伴合作、推广大使 |
 | `/images/customer/product-intro.png`     | 客户管理                     |
 | `/images/customer/tab-unified.png`       | 客户管理、行业案例、用户心声 |
 | `/images/customer/tab-tracking.png`      | 客户管理、行业案例、用户心声 |
@@ -93,12 +126,14 @@
 | `/images/customer/dedup-2.png`           | 客户管理                     |
 | `/images/sales/hero.png`                 | 销售管理                     |
 | `/images/sales/tab-*.png`（共 13 个）    | 销售管理                     |
+| `statics/home/images/nnlx_mimg.jpg`      | 联系我们（4 个地点复用）     |
+| `/images/free-trial/hero.png`            | 免费试用                     |
 
-### 🟡 占位图（1 个 SVG，被 4 个页面复用）
+### 🟡 占位图（1 个 SVG，被 7 个页面复用）
 
-| 文件路径                          | 使用页面                           |
-| --------------------------------- | ---------------------------------- |
-| `/images/paas/blank-showcase.svg` | 市场管理、AI销售助理、BI分析、PaaS |
+| 文件路径                          | 使用页面                                             |
+| --------------------------------- | ---------------------------------------------------- |
+| `/images/paas/blank-showcase.svg` | 市场管理、AI销售助理、BI分析、PaaS、钉钉版、飞书版、企微版 |
 
 ### 🟡 Mock 图（首页 4 个 SVG）
 
@@ -122,7 +157,7 @@
 | 类型       | 数量（唯一文件） | 说明                                                |
 | :--------- | :--------------: | --------------------------------------------------- |
 | 背景图     |        2         | 首页 Hero Banner 轮播背景                           |
-| 业务场景图 |        42        | 产品截图、功能演示、Tab 配图、卡片封面              |
+| 业务场景图 |        75        | 产品截图、功能演示、Tab 配图、卡片封面              |
 | 图标/Logo  |        64        | 生态能力图标、行业案例 Logo、下载平台图标、评价头像 |
 | 二维码     |        6         | 各平台下载二维码                                    |
 
@@ -135,8 +170,9 @@
 | 组件                   | 显示尺寸（1x） | 建议 @2x  | 适用图片           |
 | ---------------------- | :------------: | :-------: | ------------------ |
 | HeroBanner（single）   |    510×420     | 1020×840  | 各子页面 Hero 主图 |
-| CTASection             |    920×575     | 1840×1150 | 产品介绍配图       |
+| CTASection             |    920×575     | 1840×1150 | 产品介绍配图、生态版 CTASection 配图 |
 | TabShowcase            |    756×467     | 1440×900  | 所有 Tab 截图      |
+| ImageShowcase          |    680×420     | 1360×840  | 生态版/产品/服务图文展示配图 |
 | FeatureImageCard       |    276×200     |  552×400  | 首页解决方案卡片   |
 | GradientCardGrid       |    276×173     |  552×346  | 首页 AI 助理卡片   |
 | PromoBanner            |    ~500×350    | 1000×700  | 首页企业视频配图   |
@@ -147,3 +183,4 @@
 | PartnerGrid            |     110×60     |  220×120  | 生态能力图标       |
 | PlatformDownload       |    200×200     |  400×400  | 下载平台图标       |
 | PlatformDownload（QR） |    240×240     |  480×480  | 下载二维码         |
+| ContentCardGrid（addr） |    321×136     |  642×272  | 公司地址地图卡片   |
