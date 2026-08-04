@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
 import { Mail, Wechat, Tiktok } from '@icon-park/vue-next'
+import { WechatVideo } from '@/client/components/ui/icons'
 import { toPagePath } from '@/client/data/routePaths'
 
 const footerWechatQr = '/images/wxImg.png'
@@ -109,7 +110,7 @@ export const footerColumns: FooterColumn[] = [
 /** 社交图标数据 */
 export const socials: SocialItem[] = [
   { label: '微信', icon: Wechat, qr: footerWechatQr, qrText: '扫描二维码\n关注微信公众号' },
-  { label: '视频号', icon: Wechat, qr: footerWechatVideoQr, qrText: '扫描二维码\n关注微信视频号' },
+  { label: '视频号', icon: WechatVideo, qr: footerWechatVideoQr, qrText: '扫描二维码\n关注微信视频号' },
   { label: '抖音', icon: Tiktok, qr: footerDouyinQr, qrText: '扫描二维码\n关注抖音官方号' },
 ]
 
