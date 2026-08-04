@@ -209,18 +209,21 @@
     <PlaygroundShell
       section-id="article-sidebar"
       title="ArticleSidebar 文章侧边栏"
-      description="文章页右侧栏，顶部支持推广图片，底部为可展开收起的目录，目录超出宽度自动省略。"
+      description="文章页右侧栏，顶部支持推广图片，底部支持文章目录或场景解决方案标签。"
       code-tag="ArticleSidebar"
       code-self-closing
       :code-extra-props="articleSidebarCodeExtra"
       :controls="articleSidebarControls"
       :initial-props="articleSidebarDefaults"
       :usage-notes="[
-        'Props: banners?, tocItems（必需）, activeTocId?, title?, collapsedCount?, defaultExpanded?, expandText?, collapseText?',
+        'Props: banners?, tocItems（必需）, variant?, activeTocId?, title?, collapsedCount?, defaultExpanded?, expandText?, collapseText?, viewAllText?, viewAllLink?',
         'Banner 字段：title, image（必需）；key?, imageAlt?, to?, href?（可选）',
         'TocItem 字段：id, title（必需）；href?（可选，未传时默认跳转 #id）',
+        'variant: toc（文章目录，默认）| link-tags（场景方案标签）',
         '推广位直接渲染整张图片，不再使用渐变方块和文案覆盖',
         '目录收起态使用底部渐变遮罩，展开/收起为纯文字按钮',
+        'link-tags 模式使用两列轻量标签，并可通过 viewAllText/viewAllLink 添加底部更多入口',
+        'link-tags 模式不渲染 banners，适合文章列表右侧的推荐场景解决方案模块',
       ]"
       v-slot="sidebarProps"
     >
@@ -239,9 +242,19 @@
         <div class="w-full max-w-75 justify-self-end max-lg:justify-self-start">
           <ArticleSidebar
             :banners="articleSidebarDemoBanners"
-            :toc-items="articleSidebarDemoTocItems"
-            :active-toc-id="String(sidebarProps['active-toc-id'])"
+            :toc-items="
+              sidebarProps.variant === 'link-tags'
+                ? articleSidebarSceneItems
+                : articleSidebarDemoTocItems
+            "
+            :variant="sidebarProps.variant as 'toc' | 'link-tags'"
+            :title="sidebarProps.variant === 'link-tags' ? '推荐CRM场景解决方案' : '文章目录'"
+            :active-toc-id="
+              sidebarProps.variant === 'link-tags' ? '' : String(sidebarProps['active-toc-id'])
+            "
             :collapsed-count="Number(sidebarProps['collapsed-count'])"
+            :view-all-text="sidebarProps.variant === 'link-tags' ? '更多场景解决方案 →' : ''"
+            :view-all-link="sidebarProps.variant === 'link-tags' ? '/jiejuefangan' : ''"
           />
         </div>
       </div>
@@ -419,18 +432,19 @@
     <PlaygroundShell
       section-id="content-list"
       title="ContentList 文章列表"
-      description="文章列表组件，支持 3 种形态：卡片（含描述）、紧凑卡片（无描述）、纯文本列表。"
+      description="文章列表组件，支持 4 种形态：卡片（含描述）、紧凑卡片（无描述）、纯文本列表、横向文章列表。"
       code-tag="ContentList"
       code-self-closing
       :code-extra-props="articleListCodeExtra"
       :controls="articleListControls"
       :initial-props="articleListDefaults"
       :usage-notes="[
-        'Props: title, items（必需）；subtitle?, viewAllLink?, variant?, rounded?',
-        'variant: card（默认，含描述）| compact（紧凑，无描述）| list（纯文本列表）',
+        'Props: title, items（必需）；subtitle?, viewAllLink?, variant?, rounded?, showPagination?, currentPage?, totalPages?',
+        'variant: card（默认，含描述）| compact（紧凑，无描述）| list（纯文本列表）| article-row（横向文章列表）',
         'rounded: true（默认，圆角）| false（直角），仅 card/compact 变体生效',
-        'ContentCard 字段：title, publishDate, tag?（必需）；image?, description?, linkHref?, imageAlt?（可选）',
-        'linkHref 有值时渲染 <a> 链接，空值时触发 cardClick / articleClick 事件',
+        'ContentCard 字段：title, publishDate, tag?（必需）；image?, description?, summary?, updatedAt?, author?, linkHref?, imageAlt?（可选）',
+        'article-row 模式下左侧显示图片，右侧显示标题、两行内容梗概、编辑时间和作者，并可内置分页器',
+        'linkHref 有值时渲染 <a> 链接，空值时触发 cardClick / itemClick 事件；article-row 分页触发 pageChange',
       ]"
       v-slot="alProps"
     >
@@ -441,7 +455,9 @@
             ? demoArticleCards
             : alProps.variant === 'list'
               ? demoTextArticles
-              : demoArticles
+              : alProps.variant === 'article-row'
+                ? demoArticleRows
+                : demoArticles
         "
       />
     </PlaygroundShell>
@@ -1456,7 +1472,28 @@ const articleSidebarDemoTocItems = [
   },
 ]
 
+const articleSidebarSceneItems = [
+  { id: 'omnichannel-marketing', title: '全渠道营销', href: '/jiejuefangan/quanqudaoyingxiao' },
+  { id: 'opportunity-management', title: '商机管理', href: '/jiejuefangan/shangjiguanli' },
+  { id: 'lead-management', title: '线索管理', href: '/jiejuefangan/xiansuoguanli' },
+  { id: 'sales-funnel', title: '销售漏斗', href: '/jiejuefangan/xiaoshouloudou' },
+  { id: 'order-management', title: '订单管理', href: '/jiejuefangan/dingdanguanli' },
+  { id: 'customer-management', title: '客户管理', href: '/kehuguanli' },
+  { id: 'member-management', title: '会员管理', href: '/jiejuefangan/huiyuanguanli' },
+  { id: 'purchase-management', title: '订货管理', href: '/jiejuefangan/dinghuoguanli' },
+  { id: 'device-management', title: '设备管理', href: '/jiejuefangan/shebeiguanli' },
+  { id: 'work-order-management', title: '工单管理', href: '/jiejuefangan/gongdanguanli' },
+]
+
 const articleSidebarControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'toc（文章目录）', value: 'toc' },
+      { label: 'link-tags（场景标签）', value: 'link-tags' },
+    ],
+  },
   {
     label: 'Collapsed Items',
     prop: 'collapsed-count',
@@ -1478,6 +1515,7 @@ const articleSidebarControls = [
 ]
 
 const articleSidebarDefaults = {
+  variant: 'toc',
   'collapsed-count': 4,
   'active-toc-id': 'knowledge-section-0',
 }
@@ -1485,6 +1523,7 @@ const articleSidebarDefaults = {
 const articleSidebarCodeExtra = {
   ':banners': 'banners',
   ':toc-items': 'tocItems',
+  variant: '"toc"',
 }
 
 // ===== TabShowcase 交互式控件 =====
@@ -2242,6 +2281,7 @@ const articleListControls = [
       { label: 'card（含描述）', value: 'card' },
       { label: 'compact（紧凑）', value: 'compact' },
       { label: 'list（纯文本）', value: 'list' },
+      { label: 'article-row（横向文章）', value: 'article-row' },
     ],
   },
   {
@@ -2252,19 +2292,28 @@ const articleListControls = [
       { label: '关闭', value: false },
     ],
   },
+  {
+    label: 'Pagination',
+    prop: 'show-pagination',
+    options: [
+      { label: '显示', value: true },
+      { label: '隐藏', value: false },
+    ],
+  },
 ]
 
 const articleListDefaults = {
   variant: 'card',
   rounded: true,
+  'show-pagination': true,
+  'current-page': 1,
+  'total-pages': 1709,
   title: '最新文章',
 }
 
 const articleListCodeExtra = {
   title: '"最新文章"',
   ':items': 'items',
-  variant: '"card"',
-  rounded: 'true',
 }
 
 // ===== ContentList 演示数据 =====
@@ -2332,6 +2381,45 @@ const demoArticles = [
     description:
       '一家初创企业如何通过销帮帮 CRM 实现客户管理标准化，在 18 个月内实现营收从 0 到 1000 万的跨越式增长。',
     publishDate: '2024-10-10',
+  },
+]
+
+const demoArticleRows = [
+  {
+    image: ecosystemAbility1,
+    title: '2026 年跨境业务 CRM 排行榜：适合外贸团队的 5 大热门系统',
+    description:
+      '2026年跨境业务CRM排行榜深度评测：纷享销客、Salesforce、HubSpot等5大热门外贸系统横向对比。解析AI智能化、LTC闭环与合规选型标准，帮助出海企业避开闲置陷阱。',
+    summary:
+      '2026年跨境业务CRM排行榜深度评测：纷享销客、Salesforce、HubSpot等5大热门外贸系统横向对比。解析AI智能化、LTC闭环与合规选型标准，帮助出海企业避开闲置陷阱。',
+    publishDate: '2026-8-4',
+    updatedAt: '2026-8-4',
+    author: '纷享销客',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility2,
+    title: '2026 国内头部出海企业 CRM 服务商梯队，跨国业务选型榜',
+    description:
+      '2026年出海CRM选型指南：深度解析跨国业务四大硬指标，梳理国内服务商梯队，纷享销客等国产CRM如何凭借GDPR合规、1+N架构与Agentic AI成为大型跨国集团的核心系统。',
+    summary:
+      '2026年出海CRM选型指南：深度解析跨国业务四大硬指标，梳理国内服务商梯队，纷享销客等国产CRM如何凭借GDPR合规、1+N架构与Agentic AI成为大型跨国集团的核心系统。',
+    publishDate: '2026-8-4',
+    updatedAt: '2026-8-4',
+    author: '纷享销客',
+    linkHref: '#',
+  },
+  {
+    image: ecosystemAbility3,
+    title: '跨境 B2B 大客户精细化管理选什么 CRM？2026 集团系统推荐',
+    description:
+      '围绕跨境B2B企业的大客户经营、线索流转、商机推进和多区域团队协作，拆解CRM系统在集团化管理场景中的核心能力和落地方式。',
+    summary:
+      '围绕跨境B2B企业的大客户经营、线索流转、商机推进和多区域团队协作，拆解CRM系统在集团化管理场景中的核心能力和落地方式。',
+    publishDate: '2026-8-3',
+    updatedAt: '2026-8-3',
+    author: '纷享销客',
+    linkHref: '#',
   },
 ]
 
