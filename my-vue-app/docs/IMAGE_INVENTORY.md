@@ -107,12 +107,43 @@
 | 97  | 免费试用   | 左侧产品插图                      | `/images/free-trial/hero.png`              | 业务场景图 |  600×500  |        🔴 待替换         |
 | 98  | 案例详情   | 案例配图 + Logo                   | API 动态加载（`case.image` + `case.logo`） | 业务场景图 |     —     |           动态           |
 | 99  | 文章详情   | 文章封面                          | API 动态加载（`article` 富文本）           | 业务场景图 |     —     |           动态           |
+| 100 | 留咨页面   | Hero Banner 背景                  | `/images/liuzi/pc_banner.png`              |   背景图   | 1920×1080 |        🔴 待替换         |
+| 101 | 留咨页面   | 页面 Logo                         | `/images/liuzi/logo.jpg`                   | 图标/Logo  |  200×80   |        🔴 待替换         |
+| 102 | 留咨页面   | AI+CRM 能力卡片 - AI 找客助手     | `/images/liuzi/1.png`                      | 业务场景图 |  552×346  |        🔴 待替换         |
+| 103 | 留咨页面   | AI+CRM 能力卡片 - AI 销售陪练     | `/images/liuzi/2.png`                      | 业务场景图 |  552×346  |        🔴 待替换         |
+| 104 | 留咨页面   | AI+CRM 能力卡片 - AI 业务分析     | `/images/liuzi/3.png`                      | 业务场景图 |  552×346  |        🔴 待替换         |
+| 105 | 留咨页面   | AI 能力图标 - 找客助手            | `/images/liuzi/aiFindCust.png`             | 图标/Logo  |   48×48   |        🔴 待替换         |
+| 106 | 留咨页面   | AI 能力图标 - 销售陪练            | `/images/liuzi/aiSales.png`                | 图标/Logo  |   48×48   |        🔴 待替换         |
+| 107 | 留咨页面   | AI 能力图标 - 业务分析            | `/images/liuzi/aiBusiness.png`             | 图标/Logo  |   48×48   |        🔴 待替换         |
+| 108 | 留咨页面   | AI 能力侧边图标 - 找客助手        | `/images/liuzi/aiFindCustIcon.png`         | 图标/Logo  |   24×24   |        🔴 待替换         |
+| 109 | 留咨页面   | AI 能力侧边图标 - 销售陪练        | `/images/liuzi/aiSalesIcon.png`            | 图标/Logo  |   24×24   |        🔴 待替换         |
+| 110 | 留咨页面   | AI 能力侧边图标 - 业务分析        | `/images/liuzi/aiBusinessIcon.png`         | 图标/Logo  |   24×24   |        🔴 待替换         |
+| 111 | 留咨页面   | 展示轮播 - 客户管理               | `/images/liuzi/1-1.png`                    | 业务场景图 | 1440×900  |        🔴 待替换         |
+| 112 | 留咨页面   | 展示轮播 - 销售管理               | `/images/liuzi/1-2.png`                    | 业务场景图 | 1440×900  |        🔴 待替换         |
+| 113 | 留咨页面   | 展示轮播 - 市场管理               | `/images/liuzi/1-3.png`                    | 业务场景图 | 1440×900  |        🔴 待替换         |
+| 114 | 留咨页面   | 展示轮播 - PaaS 能力              | `/images/liuzi/1-4.png`                    | 业务场景图 | 1440×900  |        🔴 待替换         |
+| 115 | 留咨页面   | 展示轮播 - AI 销售助理            | `/images/liuzi/1-5.png`                    | 业务场景图 | 1440×900  |        🔴 待替换         |
+| 116 | 留咨页面   | 右侧展示 - 芝麻找客助手           | `/images/liuzi/findCustomer.png`           | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 117 | 留咨页面   | 右侧展示 - 芝麻标讯助手           | `/images/liuzi/biddingInfo.png`            | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 118 | 留咨页面   | 右侧展示 - 日程助手               | `/images/liuzi/schedule.png`               | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 119 | 留咨页面   | 右侧展示 - 陪练助手               | `/images/liuzi/trainPartner.png`           | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 120 | 留咨页面   | 右侧展示 - 分析师                 | `/images/liuzi/analysis.png`               | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 121 | 留咨页面   | 右侧展示 - 跟进助手               | `/images/liuzi/followUp.png`               | 业务场景图 | 1020×840  |        🔴 待替换         |
+| 122 | 留咨页面   | 右侧展示 - 标题图标（3 个）       | `/images/liuzi/2-1.png` 等（共 6 个）      | 图标/Logo  |   40×40   |        🔴 待替换         |
+| 123 | 留咨页面   | BI 能力 - 智能报表                | `/images/liuzi/ability-1.png`              | 业务场景图 |  552×400  |        🔴 待替换         |
+| 124 | 留咨页面   | BI 能力 - 数据看板                | `/images/liuzi/ability-2.png`              | 业务场景图 |  552×400  |        🔴 待替换         |
+| 125 | 留咨页面   | BI 能力 - 数据二次开发            | `/images/liuzi/ability-3.png`              | 业务场景图 |  552×400  |        🔴 待替换         |
+| 126 | 留咨页面   | 生态合作 - 钉钉图标               | `/images/liuzi/ability-1.svg`              | 图标/Logo  |  220×120  |        🔴 待替换         |
+| 127 | 留咨页面   | 生态合作 - 企微图标               | `/images/liuzi/ability-2.svg`              | 图标/Logo  |  220×120  |        🔴 待替换         |
+| 128 | 留咨页面   | 生态合作 - 飞书图标               | `/images/liuzi/ability-3.svg`              | 图标/Logo  |  220×120  |        🔴 待替换         |
+| 129 | 知识问答   | 侧边栏横幅 - CRM 模板             | `/images/article-sidebar/crm-template.png` | 业务场景图 |  400×300  |        🔴 待替换         |
+| 130 | 知识问答   | 侧边栏横幅 - 销售管理模板         | `/images/article-sidebar/sales-template.png` | 业务场景图 |  400×300  |        🔴 待替换         |
 
 ---
 
 ## 按状态分类
 
-### 🔴 待替换（Mock 图片，共 12 个唯一文件）
+### 🔴 待替换（Mock 图片，共 41 个唯一文件）
 
 | 文件路径                                 | 使用页面                     |
 | ---------------------------------------- | ---------------------------- |
@@ -128,6 +159,9 @@
 | `/images/sales/tab-*.png`（共 13 个）    | 销售管理                     |
 | `statics/home/images/nnlx_mimg.jpg`      | 联系我们（4 个地点复用）     |
 | `/images/free-trial/hero.png`            | 免费试用                     |
+| `/images/liuzi/*`（共 29 个文件）        | 留咨页面                     |
+| `/images/article-sidebar/crm-template.png` | 知识问答                   |
+| `/images/article-sidebar/sales-template.png` | 知识问答                 |
 
 ### 🟡 占位图（1 个 SVG，被 7 个页面复用）
 
@@ -156,9 +190,9 @@
 
 | 类型       | 数量（唯一文件） | 说明                                                |
 | :--------- | :--------------: | --------------------------------------------------- |
-| 背景图     |        2         | 首页 Hero Banner 轮播背景                           |
-| 业务场景图 |        75        | 产品截图、功能演示、Tab 配图、卡片封面              |
-| 图标/Logo  |        64        | 生态能力图标、行业案例 Logo、下载平台图标、评价头像 |
+| 背景图     |        3         | 首页 Hero Banner 轮播背景 + 留咨页面 Banner         |
+| 业务场景图 |        103       | 产品截图、功能演示、Tab 配图、卡片封面              |
+| 图标/Logo  |        78        | 生态能力图标、行业案例 Logo、下载平台图标、评价头像 |
 | 二维码     |        6         | 各平台下载二维码                                    |
 
 ---

@@ -59,11 +59,11 @@ src/client/router.ts  → 新增 /customer 路由
 
 ### 问题 2：路由路径不符合规范（✅ 已修复）
 
-**描述**：最初使用 `/customer` 作为路由路径，但 `NAVIGATION_ROUTES.md` 中定义客户管理页面的路径为 `/kehuguanli`。
+**描述**：最初使用 `/customer` 作为路由路径，但 `routePaths.ts` 中定义客户管理页面的路径为 `/kehuguanli`。
 
 **修复**：将 `router.ts` 中的路由路径从 `customer` 改为 `kehuguanli`。
 
-**教训**：新增页面时，必须优先查阅 `docs/NAVIGATION_ROUTES.md` 中定义的路径规范，而非自行命名。
+**教训**：新增页面时，必须优先查阅 `src/client/data/routePaths.ts` 中定义的路径规范，而非自行命名。
 
 ---
 
@@ -224,7 +224,7 @@ src/client/router.ts  → 新增 /customer 路由
 | --------------------------------------- | ------------------ |
 | 页面参考图门禁（Phase 0）               | 待完善 #3          |
 | 板块 → 组件映射（用户指定，非 AI 盘点） | 核心重构           |
-| 路由规范查阅（NAVIGATION_ROUTES.md）    | 问题 2             |
+| 路由规范查阅（routePaths.ts）    | 问题 2             |
 | 图片资源检查 + 占位图自动生成           | 问题 1 + 待完善 #1 |
 | 可视化验证后保持 dev server 运行        | 问题 6             |
 
@@ -250,6 +250,6 @@ code/my-vue-app/CLAUDE.md                    → 同步流程描述和核心铁�
 | 样式调整轮次             | 3 轮+           | 1 轮（参考图对齐）                 |
 | 组件创建与页面组装耦合度 | 高（同一流程）  | 零（完全独立）                     |
 | UiKit 注册遗漏率         | 曾遗漏 5 个组件 | 0（门禁强制）                      |
-| 路由命名规范偏离         | 曾发生          | 0（强制查阅 NAVIGATION_ROUTES.md） |
+| 路由命名规范偏离         | 曾发生          | 0（强制查阅 routePaths.ts） |
 | 图片资源缺失             | 8 个图片缺失    | 0（自动生成占位图）                |
 | 可视化验证后 dev server  | 被 kill         | 保持运行                           |
