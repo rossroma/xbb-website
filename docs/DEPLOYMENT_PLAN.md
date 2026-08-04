@@ -82,7 +82,7 @@
 
 多阶段构建：
 - **Stage 1 (builder)**：`node:22-alpine`，安装 `python3 make g++`（bcrypt 需要），安装 pnpm，复制 workspace 根文件 + 后端源码，`pnpm install --filter` + `nest build`
-- **Stage 2 (production)**：`node:22-alpine`，安装 `tini`（信号处理），重新 `pnpm install --prod`，复制 `dist/`，创建 `uploads/` 目录，切换到非 root 用户 `node`，暴露 3000，健康检查 `curl localhost:3000/v1/health`
+- **Stage 2 (production)**：`node:22-alpine`，安装 `tini`（信号处理），重新 `pnpm install --prod`，复制 `dist/`，切换到非 root 用户 `node`，暴露 3000，健康检查 `curl localhost:3000/v1/health`（图片上传至阿里云 OSS，不再需要本地 `uploads/` 目录）
 
 ### 3. 前端 Dockerfile（`my-vue-app/Dockerfile`）
 
@@ -94,7 +94,7 @@
 
 核心功能：
 - **双 SPA 路由**：`/` → `index.html`，`/admin` → 301 重定向到 `/admin/`，`/admin/` → `try_files ... /admin.html`
-- **API 反向代理**：`/v1/` 和 `/uploads/` → `proxy_pass http://backend:3000`
+- **API 反向代理**：`/v1/` → `proxy_pass http://backend:3000`（图片已迁移至 OSS，不再需要 `/uploads/` 反向代理）
 - **静态资源缓存**：`/assets/` 设置 `Cache-Control: public, immutable`（Vite 打包带哈希）
 - **HTML 不缓存**：`index.html` 和 `admin.html` 设置 `no-cache`，确保新版本立即生效
 - **gzip 压缩** + 安全头（`X-Frame-Options`、`X-Content-Type-Options`、`X-XSS-Protection`）
@@ -102,7 +102,7 @@
 ### 5. docker-compose.yml（生产环境）
 
 两个服务：
-- **backend**：端口 `127.0.0.1:3000:3000`（仅本地访问），环境变量注入（`DB_HOST` 指向 RDS），挂载命名卷 `uploads_data`，健康检查，资源限制 512M，日志轮转
+- **backend**：端口 `127.0.0.1:3000:3000`（仅本地访问），环境变量注入（`DB_HOST` 指向 RDS + OSS 配置），健康检查，资源限制 512M，日志轮转（不再需要 `uploads_data` 卷挂载）
 - **frontend**：端口 `80:80`，`depends_on backend (condition: service_healthy)`，资源限制 128M
 
 **不含 MySQL 容器** — 数据库使用阿里云 RDS。

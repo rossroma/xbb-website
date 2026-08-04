@@ -19,8 +19,11 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
-    volumes:
-      - uploads_data:/app/my-nest-app/uploads
+      OSS_REGION: ${OSS_REGION}
+      OSS_BUCKET: ${OSS_BUCKET}
+      OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID}
+      OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET}
+      OSS_BASE_URL: ${OSS_BASE_URL:-}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/v1/health"]
       interval: 30s
@@ -59,7 +62,3 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-
-volumes:
-  uploads_data:
-    driver: local

@@ -52,7 +52,7 @@ src/
     ├── case/                   # 客户案例模块
     ├── partner/                # 渠道合作模块
     ├── sms/                    # 短信验证码模块
-    └── upload/                 # 文件上传模块
+    └── upload/                 # 文件上传模块（阿里云 OSS 存储）
 ```
 
 ## 模块开发规范
@@ -174,7 +174,7 @@ async findAll() { ... }
 | `/client/cases/*` | 公开 | 客户案例 |
 | `/client/partners/*` | 公开 | 渠道合作 |
 | `/client/sms/*` | 公开 | 短信验证码 |
-| `/upload/*` | JWT | 文件上传 |
+| `/upload/*` | JWT | 文件上传（上传至阿里云 OSS，返回完整 URL） |
 
 ## 常用命令
 
@@ -208,6 +208,12 @@ DB_DATABASE=xbb_website
 
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=7d
+
+# 阿里云 OSS（图片上传）
+OSS_REGION=oss-cn-hangzhou
+OSS_BUCKET=your-bucket-name
+OSS_ACCESS_KEY_ID=your-access-key-id
+OSS_ACCESS_KEY_SECRET=your-access-key-secret
 ```
 
 > ⚠️ `.env` 已加入 `.gitignore`，请勿提交到版本控制。

@@ -57,9 +57,6 @@ RUN pnpm install --filter my-nest-app --frozen-lockfile --prod
 # 从 builder 复制构建产物
 COPY --from=builder /app/my-nest-app/dist/ my-nest-app/dist/
 
-# 创建上传目录
-RUN mkdir -p /app/my-nest-app/uploads && chown -R node:node /app/my-nest-app/uploads
-
 # 切换到非 root 用户
 USER node
 
