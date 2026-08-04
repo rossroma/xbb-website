@@ -48,6 +48,51 @@
       </div>
     </Card>
 
+    <!-- ===== HeroBanner (showcase carousel) ===== -->
+    <Card id="hero-banner-showcase-carousel" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">HeroBanner 展示轮播</h2>
+      <p class="text-small text-text-secondary mb-6">
+        mode="showcase-carousel" 模式，复刻留资页第四/第五模块，支持左文右图和右文左图。
+      </p>
+      <div class="mb-4 flex flex-col items-start gap-2">
+        <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
+          Layout
+        </span>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="layout in showcaseCarouselLayoutOptions"
+            :key="layout"
+            type="button"
+            :class="[
+              'px-4 py-1.5 rounded-pill text-[13px] font-medium transition-all duration-fast',
+              showcaseCarouselLayout === layout
+                ? 'bg-brand-primary text-white'
+                : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
+            ]"
+            @click="setShowcaseCarouselLayout(layout)"
+          >
+            {{ layout }}
+          </button>
+        </div>
+      </div>
+      <div class="border border-border-subtle rounded-card overflow-hidden">
+        <HeroBanner
+          mode="showcase-carousel"
+          :showcase-layout="showcaseCarouselLayout"
+          :showcase-title="showcaseCarouselTitle"
+          :showcase-slides="showcaseCarouselSlides"
+        />
+      </div>
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: mode="showcase-carousel", showcaseSlides: HeroShowcaseSlide[]</li>
+          <li>showcaseLayout: text-left（左文右图）| text-right（右文左图）</li>
+          <li>自动播放 5s，hover 暂停，离开恢复</li>
+        </ul>
+      </div>
+    </Card>
+
     <!-- ===== GradientHero ===== -->
     <PlaygroundShell
       section-id="gradient-hero"
@@ -160,11 +205,53 @@
       <ImageShowcase v-bind="imgProps as any" />
     </PlaygroundShell>
 
+    <!-- ===== ArticleSidebar ===== -->
+    <PlaygroundShell
+      section-id="article-sidebar"
+      title="ArticleSidebar 文章侧边栏"
+      description="文章页右侧栏，顶部支持推广图片，底部为可展开收起的目录，目录超出宽度自动省略。"
+      code-tag="ArticleSidebar"
+      code-self-closing
+      :code-extra-props="articleSidebarCodeExtra"
+      :controls="articleSidebarControls"
+      :initial-props="articleSidebarDefaults"
+      :usage-notes="[
+        'Props: banners?, tocItems（必需）, activeTocId?, title?, collapsedCount?, defaultExpanded?, expandText?, collapseText?',
+        'Banner 字段：title, image（必需）；key?, imageAlt?, to?, href?（可选）',
+        'TocItem 字段：id, title（必需）；href?（可选，未传时默认跳转 #id）',
+        '推广位直接渲染整张图片，不再使用渐变方块和文案覆盖',
+        '目录收起态使用底部渐变遮罩，展开/收起为纯文字按钮',
+      ]"
+      v-slot="sidebarProps"
+    >
+      <div class="grid grid-cols-[minmax(0,1fr)_300px] gap-8 max-lg:grid-cols-1">
+        <article class="rounded-card border border-border-subtle bg-surface-primary p-8">
+          <h3 class="text-h2 font-bold text-text-primary leading-heading">
+            适合中小企业的客户关系crm管理系统推荐及使用建议
+          </h3>
+          <p class="mt-4 text-body text-text-secondary leading-body">
+            中小企业在市场竞争中处于一个非常特殊的位置：资源有限、业务灵活、发展速度快，但也更容易遇到客户管理混乱、销售跟进脱节、客户数据丢失等问题。
+          </p>
+          <p class="mt-4 text-body text-text-secondary leading-body">
+            本示例使用知识问答页面的目录文本，展示文章右侧推广图片和目录折叠遮罩的组合效果。
+          </p>
+        </article>
+        <div class="w-full max-w-75 justify-self-end max-lg:justify-self-start">
+          <ArticleSidebar
+            :banners="articleSidebarDemoBanners"
+            :toc-items="articleSidebarDemoTocItems"
+            :active-toc-id="String(sidebarProps['active-toc-id'])"
+            :collapsed-count="Number(sidebarProps['collapsed-count'])"
+          />
+        </div>
+      </div>
+    </PlaygroundShell>
+
     <!-- ===== ContentCardGrid ===== -->
     <PlaygroundShell
       section-id="content-card-grid"
       title="ContentCardGrid 图文卡片网格"
-      description="图文卡片网格，支持 4 种形态 × 2 种布局方向。variant 控制展示形态，layout 控制排列方向，rounded 控制圆角开关。"
+      description="图文卡片网格，支持多种形态 × 2 种布局方向。variant 控制展示形态，layout 控制排列方向，rounded 控制圆角开关。"
       code-tag="ContentCardGrid"
       code-self-closing
       :code-extra-props="imageTextCardGridCodeExtra"
@@ -172,7 +259,7 @@
       :initial-props="imageTextCardGridDefaults"
       :usage-notes="[
         'Props: title, cards（必需）；subtitle?, variant?, layout?, columns?, rounded?',
-        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）',
+        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）| address（地址）',
         'layout: vertical（默认）| horizontal（水平排列）',
         'columns: vertical 3/4/5，horizontal 1/2',
         'rounded: true（默认，圆角）| false（直角）',
@@ -184,6 +271,8 @@
     >
       <ContentCardGrid
         v-bind="itProps as any"
+        :title="String(itProps.title ?? '')"
+        :subtitle="String(itProps.subtitle ?? '')"
         :cards="
           itProps.variant === 'square'
             ? demoSquareCards
@@ -200,11 +289,29 @@
       />
     </PlaygroundShell>
 
+    <!-- ===== AiCrmFeatureGrid ===== -->
+    <Card id="ai-crm-feature-grid" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">AiCrmFeatureGrid AI+CRM 能力卡片</h2>
+      <p class="text-small text-text-secondary mb-6">
+        从 ContentCardGrid 的 ai-crm
+        变体拆分出来的独立组件，复用留资页模块三的高卡片、背景图、图标与能力清单样式。
+      </p>
+      <AiCrmFeatureGrid title="AI+CRM，驱动企业业绩增长20%利润翻倍" :cards="aiCrmDemoCards" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title?, cards（必需）</li>
+          <li>card 字段：title, image?, icon?, description?, sideImage?, points?</li>
+          <li>适合 AI+CRM 能力类高卡片展示，不再作为 ContentCardGrid 的 variant 使用</li>
+        </ul>
+      </div>
+    </Card>
+
     <!-- ===== IconCardGrid ===== -->
     <PlaygroundShell
       section-id="icon-card-grid"
       title="IconCardGrid 能力卡片网格"
-      description="展示功能/能力卡片，支持 5 种视觉风格 × 3 种色彩方案，2 / 3 / 4 / 5 / 7 列布局。"
+      description="展示功能/能力卡片，支持 5 种视觉风格 × 4 种色彩方案，2 / 3 / 4 / 5 / 7 列布局。"
       code-tag="IconCardGrid"
       :code-extra-props="featureCardGridCodeExtra"
       code-self-closing
@@ -213,7 +320,7 @@
       :usage-notes="[
         'Props: title, features（必需）；subtitle?, topImages?, columns?, variant?, colorScheme?',
         'variant: plain（默认）| icon-badge（图标徽章行内）| icon-badge-protruding（凸出）| accent-strip（顶部强调线）| icon-tile（图标方块 + 标题下置）',
-        'colorScheme: brand（品牌橙）| accent（蓝紫）| neutral（中性灰），所有变体一致生效',
+        'colorScheme: brand（品牌橙）| accent（蓝紫）| neutral（中性灰）| clean（icon-tile 无底色/无阴影/小图标）',
         'columns: 2 | 3 | 4 | 5 | 7（默认 4），移动端自动 1 列',
       ]"
       v-slot="fgProps"
@@ -659,7 +766,12 @@
       ]"
       v-slot="rcProps"
     >
-      <ReviewCardGrid v-bind="rcProps as any" :cards="reviewDemoCards" />
+      <ReviewCardGrid
+        v-bind="rcProps as any"
+        title="客户评价"
+        subtitle="来自各行各业的真实用户反馈"
+        :cards="reviewDemoCards"
+      />
     </PlaygroundShell>
 
     <!-- ===== Timeline ===== -->
@@ -747,6 +859,7 @@ import {
   Thunderbolt,
   Peoples,
 } from '@icon-park/vue-next'
+import { computed, ref } from 'vue'
 import Card from '@/client/components/ui/Card.vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import FeatureImageCard from '@/client/components/business/FeatureImageCard.vue'
@@ -758,6 +871,7 @@ import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
 import PromoBanner from '@/client/components/business/PromoBanner.vue'
 import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
+import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -765,6 +879,7 @@ import SplitSection from '@/client/components/business/SplitSection.vue'
 import GradientHero from '@/client/components/business/GradientHero.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'
 import FeatureList from '@/client/components/business/FeatureList.vue'
+import AiCrmFeatureGrid from '@/client/components/business/AiCrmFeatureGrid.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
@@ -902,6 +1017,249 @@ const heroBannerDemoSlide = {
   visualImageAlt: '客户管理产品展示',
 }
 
+const showcaseCarouselLayout = ref<'text-left' | 'text-right'>('text-left')
+const showcaseCarouselLayoutOptions = ['text-left', 'text-right'] as const
+const showcaseCarouselTitle = computed(() =>
+  showcaseCarouselLayout.value === 'text-right' ? 'AI智能生态，驱动管理全面提效' : '',
+)
+const showcaseCarouselSlides = computed(() =>
+  showcaseCarouselLayout.value === 'text-right'
+    ? managementShowcaseRightSlides
+    : managementShowcaseLeftSlides,
+)
+
+function setShowcaseCarouselLayout(layout: (typeof showcaseCarouselLayoutOptions)[number]): void {
+  showcaseCarouselLayout.value = layout
+}
+
+const managementShowcaseLeftSlides = [
+  {
+    key: 'customer-management',
+    title: '客户全生命周期数字化管理，提升企业效益',
+    image: '/images/liuzi/1-1.png',
+    imageAlt: '客户管理产品界面',
+    items: [
+      { title: '支持客户多维度查重' },
+      { title: '通过预设自定义字段及标签实现客户分层分类' },
+      { title: '构建企业潜在客户360°画像，\n提升私域客户池运作效率', afterBreaks: 2 },
+      { title: '实现对于客户旅程的精准把控' },
+    ],
+    primaryCta: '免费试用',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '申请演示',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'sales-management',
+    title: '精细化销售过程管理',
+    image: '/images/liuzi/1-2.png',
+    imageAlt: '销售管理产品界面',
+    items: [
+      { title: '对应不同客户类型和阶段\n标准化销售打单旅程，', afterBreaks: 2 },
+      { title: '抽炼优秀销售运营动作\n穿透并赋能每一位前线销售', afterBreaks: 2 },
+      { title: '让每个销售策略都有理有据\n全面提升销售团队效率和业务能力。' },
+    ],
+    primaryCta: '免费试用',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '申请演示',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'market-management',
+    title: '市场管理',
+    image: '/images/liuzi/1-3.png',
+    imageAlt: '市场管理产品界面',
+    items: [
+      { title: '销帮帮CRM支持统一管理市场活动' },
+      { title: '根据ROI分析，持续不断优化营销渠道\n获得更多高质量线索。', afterBreaks: 2 },
+      { title: '从线索收集、分配、跟进到转化' },
+      { title: '全面提高线索质量，加速转化。' },
+    ],
+    primaryCta: '免费试用',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '申请演示',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'paas-capability',
+    title: '完美的PaaS底层能力可以赋能您的整个商业流程',
+    image: '/images/liuzi/1-4.png',
+    imageAlt: 'PaaS能力产品界面',
+    items: [
+      { title: '销帮帮PaaS底层能力助力企业\n应对与日俱增的业务挑战', afterBreaks: 2 },
+      { title: '实现系统与企业个性化需求的快速适配' },
+    ],
+    primaryCta: '免费试用',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '申请演示',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'ai-sales-assistant',
+    title: 'AI 销售助理，重塑销售作业流程，助力业绩增长',
+    image: '/images/liuzi/1-5.png',
+    imageAlt: 'AI销售助理产品界面',
+    items: [
+      { title: '一键录入企业客户' },
+      { title: 'AI帮你补全客户资料' },
+      { title: '一键自动提炼会议内容' },
+      { title: 'AI帮你推动客户跟进' },
+      { title: '一键自动提炼跟进纪要' },
+      { title: 'AI帮跟进总结·跟进评估·假日祝福' },
+    ],
+    primaryCta: '免费试用',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '申请演示',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+]
+
+const managementShowcaseRightSlides = [
+  {
+    key: 'sesame-customer',
+    title: '芝麻找客助手',
+    titleIcon: '/images/liuzi/2-1.png',
+    image: '/images/liuzi/findCustomer.png',
+    imageAlt: '芝麻找客助手',
+    description:
+      '芝麻找客助手，是蚂蚁集团旗下芝麻企业信用打造的AI智能拓客工具，为企业销售全链路赋能，让业务拓客效率提升数十倍',
+    items: [
+      {
+        title: '多场景精准拓客',
+        description:
+          '支持「以客找客、主营找客、上下游找客」多维度拓客模式，快速锁定目标客户群体，精准匹配业务需求，高效挖掘潜在商机。',
+      },
+      {
+        title: '多维度权威数据',
+        description:
+          '依托独家企业认知库，整合产业链、投资、产品等多维度数据，提供匹配度、购买能力等企业评估指标，让客户筛选有据可依。',
+      },
+      {
+        title: '多渠道高效建联',
+        description:
+          '覆盖企业老板、决策层、核心员工等多角色联系方式，助力销售快速触达关键决策人，高效推进业务对接。',
+      },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'sesame-bidding',
+    title: '芝麻标讯助手',
+    titleIcon: '/images/liuzi/2-1.png',
+    image: '/images/liuzi/biddingInfo.png',
+    imageAlt: '芝麻标讯助手',
+    description: '任何重要投标机会。',
+    items: [
+      {
+        title: '商机深度分析，投标更有策略',
+        description:
+          '报价策略智能建议、甲方采购行为分析、潜在竞争对手分析，依托海量行业专家经验与独家算法融合计算，帮你精准制定投标方案，提升中标率。',
+      },
+      { title: 'AI智能赋能，全流程高效管理' },
+      { description: '精准商机推荐：智能匹配最适合你的招标项目' },
+      { description: '- 一句话查标讯：自然语言直接表达需求，快速定位目标标讯' },
+      { description: '- 客户/同行动态监控：招标、中标动态实时推送，掌握市场先机' },
+      { description: '- 一键下载附件：招标文件、附件材料一键获取，省心省力' },
+      { description: '- CRM联动管理：标讯线索一键入库，无缝对接企业管理流程' },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'schedule',
+    title: '日程助手',
+    titleIcon: '/images/liuzi/2-3.png',
+    image: '/images/liuzi/schedule.png',
+    imageAlt: '日程助手',
+    items: [
+      {
+        description:
+          '适合需要持续拜访、维护和推进客户的团队使用，让拜访安排更清晰、准备更充分、后续跟进更连续。日程助手围绕用户在访客计划中维护的数据，帮助用户更高效地完成拜访前准备与后续任务安排。用户在查看日程时，可以快速回顾客户基本情况、历史跟进内容和近期重点事项，减少临时翻找信息的时间，让每次拜访前都更有准备。',
+      },
+      {
+        description:
+          '同时，系统会基于每次拜访形成的跟进记录，自动生成推荐的跟进任务，帮助用户更顺畅地衔接下一步动作。用户可以根据实际情况，自由选择是否将这些任务加入访客计划。',
+      },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'train-partner',
+    title: '陪练助手',
+    titleIcon: '/images/liuzi/2-4.png',
+    image: '/images/liuzi/trainPartner.png',
+    imageAlt: '陪练助手',
+    items: [
+      {
+        description:
+          '陪练助手适合销售、客服、顾问、培训等需要高频沟通的岗位使用。它可以围绕常见业务场景，帮助用户提前练习开场表达、需求挖掘、异议回应、方案介绍和收尾推进，让新人更快上手，也让有经验的同事持续打磨表达能力。',
+      },
+      {
+        description:
+          '它最大的价值，是把“临场发挥”变成“可反复练习”。用户可以在正式接触客户前，先进行低成本演练，提前发现表达不清、逻辑不顺、回应不够有力的问题。这样不仅能提升个人信心，也能帮助团队逐步沉淀更稳定的沟通方法，让服务质量和成交表现更可控。',
+      },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'analysis',
+    title: '分析师',
+    titleIcon: '/images/liuzi/2-5.png',
+    image: '/images/liuzi/analysis.png',
+    imageAlt: '分析师',
+    items: [
+      {
+        description:
+          '分析师面向需要看经营情况、判断趋势、发现问题的管理者与业务团队。它可以帮助用户更快整理关键信息，聚焦核心指标变化，辅助判断哪里做得好、哪里值得优化，以及下一步应该优先关注什么。',
+      },
+      {
+        description:
+          '很多团队并不缺数据，缺的是把数据变成判断和行动的能力。无论是线索转化、客户活跃、团队效率，还是活动效果、产品使用情况，都可以借助分析师更高效地发现问题、解释现象、支持决策，让业务优化更有依据。分析师的价值，就在于帮助用户从繁杂信息中更快抓住重点，减少“看了很多表、还是不知道怎么办”的情况。',
+      },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+  {
+    key: 'follow-up',
+    title: '跟进助手',
+    titleIcon: '/images/liuzi/2-6.png',
+    image: '/images/liuzi/followUp.png',
+    imageAlt: '跟进助手',
+    items: [
+      {
+        description:
+          '适合用于客户拜访、电话沟通、项目推进等场景，让跟进更及时、记录更完整、后续动作更明确，帮助团队提升客户经营效率。',
+      },
+      {
+        description:
+          '跟进助手帮助用户把每一次沟通沉淀成可复用、可追踪的客户资产。用户可自主上传录音文件，系统会对沟通内容进行提炼分析，自动整理关键信息，并生成结构化的跟进记录，减少手工整理带来的时间消耗和信息遗漏。',
+      },
+      {
+        description:
+          '在完成记录沉淀后，跟进助手还会结合本次沟通内容，给出下一步行动建议，帮助用户更快判断后续该推进什么、联系什么人、补充哪些动作。',
+      },
+    ],
+    primaryCta: '申请演示',
+    primaryHref: '/mianfeishiyong/?type=new',
+    secondaryCta: '免费试用',
+    secondaryHref: '/mianfeishiyong/?type=new',
+  },
+]
+
 // ===== PromoBannerCarousel 演示数据 =====
 const promoCarouselDemoSlides = [
   {
@@ -950,6 +1308,7 @@ const featureCardGridControls = [
       { label: 'brand', value: 'brand' },
       { label: 'accent', value: 'accent' },
       { label: 'neutral', value: 'neutral' },
+      { label: 'clean', value: 'clean' },
     ],
   },
   {
@@ -1056,6 +1415,76 @@ const imageShowcaseCodeExtra = {
   image: '/images/customer/product-intro.png',
   layout: 'text-left',
   theme: 'orange',
+}
+
+// ===== ArticleSidebar 交互式控件 =====
+const articleSidebarDemoBanners = [
+  {
+    title: 'CRM客户管理系统模板',
+    image: '/images/article-sidebar/crm-template.png',
+    imageAlt: 'CRM客户管理系统模板',
+    to: '/kehuguanli',
+  },
+  {
+    title: '销售管理系统模板',
+    image: '/images/article-sidebar/sales-template.png',
+    imageAlt: '销售管理系统模板',
+    to: '/xiaoshouguanli',
+  },
+]
+
+const articleSidebarDemoTocItems = [
+  {
+    id: 'knowledge-section-0',
+    title: '🚀一、为什么中小企业需要专业的CRM管理系统？',
+  },
+  {
+    id: 'knowledge-section-1',
+    title: '🛠️二、热门CRM系统推荐及对比分析',
+  },
+  {
+    id: 'knowledge-section-2',
+    title: '📈三、CRM系统实施建议及常见误区避坑指南',
+  },
+  {
+    id: 'knowledge-section-3',
+    title: '🏁四、结语：中小企业客户管理升级，从选对CRM开始',
+  },
+  {
+    id: 'knowledge-faqs',
+    title: '本文相关FAQs',
+  },
+]
+
+const articleSidebarControls = [
+  {
+    label: 'Collapsed Items',
+    prop: 'collapsed-count',
+    options: [
+      { label: '3', value: 3 },
+      { label: '4', value: 4 },
+      { label: '5', value: 5 },
+    ],
+  },
+  {
+    label: 'Active Item',
+    prop: 'active-toc-id',
+    options: [
+      { label: '一、CRM价值', value: 'knowledge-section-0' },
+      { label: '二、系统推荐', value: 'knowledge-section-1' },
+      { label: 'FAQs', value: 'knowledge-faqs' },
+    ],
+  },
+]
+
+const articleSidebarDefaults = {
+  'collapsed-count': 4,
+  'active-toc-id': 'knowledge-section-0',
+}
+
+const articleSidebarCodeExtra = {
+  ':banners': 'banners',
+  ':toc-items': 'tocItems',
 }
 
 // ===== TabShowcase 交互式控件 =====
@@ -1176,7 +1605,8 @@ const imageTextCardGridControls = [
       { label: 'case（案例）', value: 'case' },
       { label: 'product（产品）', value: 'product' },
       { label: 'resource（资源）', value: 'resource' },
-      { label: 'address（地址）', value: 'square' },
+      { label: 'square（正方形）', value: 'square' },
+      { label: 'address（地址）', value: 'address' },
     ],
   },
   {
@@ -1729,6 +2159,57 @@ const demoProductCards = [
   },
 ]
 
+const aiCrmDemoCards = [
+  {
+    image: '/images/liuzi/1.png',
+    icon: '/images/liuzi/aiFindCust.png',
+    iconAlt: 'AI找客助手图标',
+    sideImage: '/images/liuzi/aiFindCustIcon.png',
+    sideImageAlt: '',
+    title: 'AI找客助手',
+    description: '快速锁定优质成交客户',
+    points: [
+      '智能推荐相似客户',
+      '挖掘上下游企业与潜在商机',
+      '智能筛选高价值客户名单',
+      '自动去重，减少无效线索',
+      '实时查看拓客效果与数据分析',
+    ],
+  },
+  {
+    image: '/images/liuzi/2.png',
+    icon: '/images/liuzi/aiSales.png',
+    iconAlt: 'AI销售陪练图标',
+    sideImage: '/images/liuzi/aiSalesIcon.png',
+    sideImageAlt: '',
+    title: 'AI销售陪练',
+    description: '全员具备销冠实力',
+    points: [
+      '模拟真实客户沟通场景',
+      'AI实时提问、追问与互动',
+      '自动发现销售沟通问题',
+      '提供针对性改进建议',
+      '快速复制优秀销售经验',
+    ],
+  },
+  {
+    image: '/images/liuzi/3.png',
+    icon: '/images/liuzi/aiBusiness.png',
+    iconAlt: 'AI业务分析图标',
+    sideImage: '/images/liuzi/aiBusinessIcon.png',
+    sideImageAlt: '',
+    title: 'AI业务分析',
+    description: '数据诊问题，AI 挖机会',
+    points: [
+      '自动汇总客户与销售数据',
+      '实时分析团队业绩情况',
+      '提前预警商机流失风险',
+      '找出销售过程中的关键瓶颈',
+      'AI生成改善建议与行动方案',
+    ],
+  },
+]
+
 const demoArticleCards = [
   {
     image: ecosystemAbility1,
@@ -2128,8 +2609,6 @@ const reviewCardGridControls = [
 
 const reviewCardGridDefaults = {
   columns: 2,
-  title: '客户评价',
-  subtitle: '来自各行各业的真实用户反馈',
 }
 
 const reviewCardGridCodeExtra = {
