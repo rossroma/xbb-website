@@ -1,6 +1,6 @@
 <template>
-  <div class="article-sidebar">
-    <div v-if="banners.length" class="article-sidebar__banners">
+  <div :class="['article-sidebar', `article-sidebar--${variant}`]">
+    <div v-if="variant === 'toc' && banners.length" class="article-sidebar__banners">
       <template v-for="banner in banners" :key="banner.key ?? banner.title">
         <RouterLink v-if="banner.to" :to="banner.to" class="article-sidebar__promo">
           <img
@@ -35,7 +35,11 @@
       </template>
     </div>
 
-    <nav :class="['article-sidebar__toc', { 'is-expanded': isExpanded }]" aria-label="文章目录">
+    <nav
+      v-if="variant === 'toc'"
+      :class="['article-sidebar__toc', { 'is-expanded': isExpanded }]"
+      :aria-label="ariaLabel || '文章目录'"
+    >
       <h2 class="article-sidebar__toc-title">{{ title }}</h2>
       <ol
         :class="['article-sidebar__toc-list', { 'is-collapsed': shouldShowToggle && !isExpanded }]"
@@ -57,11 +61,37 @@
         {{ isExpanded ? collapseText : expandText }}
       </button>
     </nav>
+
+    <nav v-else class="article-sidebar__links" :aria-label="ariaLabel || title">
+      <h2 class="article-sidebar__links-title">{{ title }}</h2>
+      <div class="article-sidebar__links-grid">
+        <component
+          :is="linkComponent(itemLink(item))"
+          v-for="item in tocItems"
+          :key="item.id"
+          v-bind="linkAttrs(itemLink(item))"
+          class="article-sidebar__link-tag"
+        >
+          {{ item.title }}
+        </component>
+      </div>
+      <component
+        :is="linkComponent(viewAllLink)"
+        v-if="viewAllLink && viewAllText"
+        v-bind="linkAttrs(viewAllLink)"
+        class="article-sidebar__view-all"
+      >
+        {{ viewAllText }}
+      </component>
+    </nav>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { RouterLink } from 'vue-router'
+
+type ArticleSidebarVariant = 'toc' | 'link-tags'
 
 export interface ArticleSidebarBanner {
   key?: string
@@ -82,21 +112,29 @@ const props = withDefaults(
   defineProps<{
     banners?: ArticleSidebarBanner[]
     tocItems: ArticleSidebarTocItem[]
+    variant?: ArticleSidebarVariant
     activeTocId?: string
     title?: string
+    ariaLabel?: string
     collapsedCount?: number
     defaultExpanded?: boolean
     expandText?: string
     collapseText?: string
+    viewAllText?: string
+    viewAllLink?: string
   }>(),
   {
     banners: () => [],
+    variant: 'toc',
     activeTocId: '',
     title: '目录',
+    ariaLabel: '',
     collapsedCount: 4,
     defaultExpanded: false,
     expandText: '展开更多',
     collapseText: '收起',
+    viewAllText: '',
+    viewAllLink: '',
   },
 )
 
@@ -106,6 +144,38 @@ const collapsedHeight = computed(() => `${Math.max(props.collapsedCount, 1) * 38
 const tocListStyle = computed(() => ({
   '--article-sidebar-collapsed-height': collapsedHeight.value,
 }))
+
+function itemLink(item: ArticleSidebarTocItem): string {
+  return item.href ?? `#${item.id}`
+}
+
+function isInternalRoute(href: string): boolean {
+  return href.startsWith('/') && !href.startsWith('//')
+}
+
+function isExternalLink(href: string): boolean {
+  return /^https?:\/\//.test(href) || href.startsWith('//')
+}
+
+function linkComponent(href: string) {
+  return isInternalRoute(href) ? RouterLink : 'a'
+}
+
+function linkAttrs(href: string) {
+  if (isInternalRoute(href)) {
+    return { to: href }
+  }
+
+  if (isExternalLink(href)) {
+    return {
+      href,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    }
+  }
+
+  return { href }
+}
 </script>
 
 <style scoped>
@@ -119,6 +189,12 @@ const tocListStyle = computed(() => ({
   overscroll-behavior: contain;
   padding-right: 4px;
   scrollbar-width: thin;
+}
+
+.article-sidebar--link-tags {
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
 }
 
 .article-sidebar__banners {
@@ -255,5 +331,94 @@ const tocListStyle = computed(() => ({
 
 .article-sidebar__toc-toggle:hover {
   opacity: 0.8;
+}
+
+.article-sidebar__links {
+  overflow: hidden;
+  border: 0;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.article-sidebar__links-title {
+  position: relative;
+  border-bottom: 1px solid #edf0f5;
+  padding: 18px 20px 15px 32px;
+  color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.article-sidebar__links-title::before {
+  position: absolute;
+  top: 21px;
+  left: 20px;
+  width: 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--color-brand-primary);
+  content: '';
+}
+
+.article-sidebar__links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 10px;
+  padding: 18px 20px 20px;
+}
+
+.article-sidebar__link-tag {
+  display: flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #edf0f5;
+  border-radius: 3px;
+  background: #f7f9fc;
+  padding: 8px 9px;
+  color: #354052;
+  font-size: 14px;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    border-color var(--transition-duration-fast) ease,
+    background var(--transition-duration-fast) ease,
+    color var(--transition-duration-fast) ease;
+}
+
+.article-sidebar__link-tag:hover {
+  border-color: rgba(255, 100, 0, 0.36);
+  background: #fff7f0;
+  color: var(--color-brand-primary);
+}
+
+.article-sidebar__link-tag:focus-visible,
+.article-sidebar__view-all:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+.article-sidebar__view-all {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #edf0f5;
+  padding: 15px 20px;
+  color: var(--color-brand-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  transition:
+    background var(--transition-duration-fast) ease,
+    color var(--transition-duration-fast) ease;
+}
+
+.article-sidebar__view-all:hover {
+  background: var(--color-brand-primary-soft);
+  color: var(--color-brand-primary-hover);
 }
 </style>
