@@ -10,12 +10,13 @@ import {
 } from '@icon-park/vue-next'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'
-import heroImage from '../../../../../statics/home/images/new2022/products/banner-large.jpg'
-import crmImage from '../../../../../statics/home/images/new2022/products/crm@2x.png'
-import workOrderImage from '../../../../../statics/home/images/new2022/products/gongdanguanli@2x.png'
-import financeImage from '../../../../../statics/home/images/new2022/products/zijinguanli@2x.png'
-import marketingImage from '../../../../../statics/home/images/new2022/products/shichangguanli@2x.png'
-import inventoryImage from '../../../../../statics/home/images/new2022/products/jxc@2x.png'
+
+const heroImage = '/images/new2022/products/banner-large.jpg'
+const crmImage = '/images/new2022/products/crm@2x.png'
+const workOrderImage = '/images/new2022/products/gongdanguanli@2x.png'
+const financeImage = '/images/new2022/products/zijinguanli@2x.png'
+const marketingImage = '/images/new2022/products/shichangguanli@2x.png'
+const inventoryImage = '/images/new2022/products/jxc@2x.png'
 
 export const moduleCenterUrl =
   'https://module-center.xbongbong.com/preview.html#/application#wz_141'

@@ -156,6 +156,7 @@ export const siteNavItems: HeaderNavItem[] = [
     children: [
       { label: '公司介绍', desc: '公司介绍', to: '/gongsijianjie' },
       { label: '新闻动态', desc: '新闻动态', to: toPagePath('list_news') },
+      { label: '知识问答', desc: 'CRM 选型与实践问答', to: toPagePath('knowledge_qna') },
       { label: '联系我们', desc: '联系我们', to: toPagePath('list_contact') },
     ],
   },

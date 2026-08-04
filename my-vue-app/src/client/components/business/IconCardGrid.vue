@@ -40,12 +40,27 @@
         class="flex flex-col items-center text-center"
       >
         <div
-          class="flex w-full max-w-50 aspect-square items-center justify-center bg-surface-primary p-3 shadow-subtle"
+          :class="[
+            'flex w-full max-w-50 aspect-square items-center justify-center p-3',
+            colorScheme === 'clean'
+              ? 'bg-transparent shadow-none'
+              : 'bg-surface-primary shadow-subtle',
+          ]"
         >
           <div class="flex h-full w-full items-center justify-center" :style="getTileStyle(index)">
+            <img
+              v-if="feature.image"
+              :src="feature.image"
+              :alt="feature.imageAlt ?? feature.title"
+              :class="[
+                'max-h-[72%] object-contain',
+                colorScheme === 'clean' ? 'max-w-[60%]' : 'max-w-[72%]',
+              ]"
+              loading="lazy"
+            />
             <component
               :is="feature.icon"
-              v-if="feature.icon"
+              v-else-if="feature.icon"
               :size="64"
               theme="outline"
               :stroke-width="2.6"
@@ -144,6 +159,12 @@
         </div>
       </Card>
     </CardGrid>
+
+    <div v-if="ctaText && ctaHref" class="mt-12 flex justify-center max-lg:mt-10">
+      <UiButton :href="ctaHref" variant="hero" :color="ctaButtonColor" size="lg">
+        {{ ctaText }}
+      </UiButton>
+    </div>
   </SectionBlock>
 </template>
 
@@ -154,6 +175,7 @@ import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 import Card from '@/client/components/ui/Card.vue'
 import IconBadge from '@/client/components/ui/IconBadge.vue'
+import UiButton from '@/client/components/ui/Button.vue'
 
 /** 能力卡片项 */
 export interface FeatureItem {
@@ -161,6 +183,10 @@ export interface FeatureItem {
   description: string
   /** IconPark 图标组件（IconCardGrid variant="icon-badge" | "icon-badge-protruding" 时使用） */
   icon?: Component
+  /** 图片图标路径（IconCardGrid variant="icon-tile" 时使用） */
+  image?: string
+  /** 图片图标 alt 文本 */
+  imageAlt?: string
   /** 强调色，覆盖 IconCardGrid colorScheme 默认值（variant="accent-strip" 时使用） */
   accentColor?: string
 }
@@ -174,7 +200,7 @@ export interface TopImage {
 /** 卡片视觉风格（扁平化，无幽灵组合） */
 type CardVariant = 'plain' | 'icon-badge' | 'icon-badge-protruding' | 'accent-strip' | 'icon-tile'
 /** 色彩方案（所有变体一致生效） */
-type ColorScheme = 'brand' | 'accent' | 'neutral'
+type ColorScheme = 'brand' | 'accent' | 'neutral' | 'clean'
 
 const props = withDefaults(
   defineProps<{
@@ -185,8 +211,12 @@ const props = withDefaults(
     columns?: 2 | 3 | 4 | 5 | 7
     /** 视觉风格 */
     variant?: CardVariant
-    /** 色彩方案：brand（品牌橙）| accent（蓝紫）| neutral（中性灰） */
+    /** 色彩方案：brand（品牌橙）| accent（蓝紫）| neutral（中性灰）| clean（无底色图标） */
     colorScheme?: ColorScheme
+    /** 可选 CTA 文案 */
+    ctaText?: string
+    /** 可选 CTA 链接 */
+    ctaHref?: string
   }>(),
   {
     columns: 4,
@@ -201,6 +231,7 @@ const themeColor = computed(() => {
     brand: '#ff6400',
     accent: '#5b61ff',
     neutral: '#86909c',
+    clean: '#ff6400',
   }
   return map[props.colorScheme]
 })
@@ -211,6 +242,7 @@ const iconBadgeVariant = computed(() => {
     brand: 'gradient',
     accent: 'accent',
     neutral: 'neutral',
+    clean: 'gradient',
   }
   return map[props.colorScheme]
 })
@@ -237,6 +269,13 @@ const BADGE_PALETTES: Record<ColorScheme, readonly string[]> = {
     'bg-fs-icon-slate',
     'bg-fs-icon-plain',
     'bg-fs-icon-slate',
+  ],
+  clean: [
+    'bg-fs-icon-orange',
+    'bg-fs-icon-amber',
+    'bg-fs-icon-green',
+    'bg-fs-icon-teal',
+    'bg-fs-icon-purple',
   ],
 }
 
@@ -267,6 +306,13 @@ const TILE_COLORS: Record<ColorScheme, readonly { bg: string; color: string }[]>
     { bg: '#f8fafc', color: '#1f2329' },
     { bg: '#f6f6fb', color: '#64748b' },
   ],
+  clean: [
+    { bg: 'transparent', color: '#ff6400' },
+    { bg: 'transparent', color: '#f59e0b' },
+    { bg: 'transparent', color: '#e55a00' },
+    { bg: 'transparent', color: '#ff6400' },
+    { bg: 'transparent', color: '#f59e0b' },
+  ],
 }
 
 function getTileStyle(index: number): { backgroundColor: string; color: string } {
@@ -280,6 +326,10 @@ function getTileStyle(index: number): { backgroundColor: string; color: string }
 
 const gridMarginClass = computed(() => {
   return 'mt-10'
+})
+
+const ctaButtonColor = computed<'brand' | 'accent'>(() => {
+  return props.colorScheme === 'accent' ? 'accent' : 'brand'
 })
 
 const tileGridColsClass = computed(() => {

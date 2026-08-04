@@ -61,6 +61,12 @@ const router = createRouter({
           meta: { hideStickyFormBar: true },
         },
         {
+          path: 'liuzi',
+          name: 'LeadCapturePage',
+          component: () => import('@/client/views/liuzi/LeadCapturePage.vue'),
+          meta: { hideStickyFormBar: true },
+        },
+        {
           path: 'chanpin',
           name: 'ClientProducts',
           component: () => import('@/client/views/product/ProductOverview.vue'),
@@ -109,6 +115,11 @@ const router = createRouter({
           path: 'gongsidongtai/:id',
           name: 'ClientNewsDetail',
           component: () => import('@/client/views/news/ArticleDetail.vue'),
+        },
+        {
+          path: 'zhishiwenda',
+          name: 'KnowledgeQnA',
+          component: () => import('@/client/views/knowledge/KnowledgeQnA.vue'),
         },
         {
           path: 'hangyeanli',

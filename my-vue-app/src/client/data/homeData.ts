@@ -11,21 +11,16 @@ import {
   FileSettings,
 } from '@icon-park/vue-next'
 
-// ========== 图片 imports ==========
-import serviceSystemConsultant from '../../../../statics/home/images/consultant.png'
-import serviceSystemHours from '../../../../statics/home/images/service-hours.png'
-import solutionCardImprove from '../../../../statics/home/images/2-1.png'
-import solutionCardProcess from '../../../../statics/home/images/2-2.png'
-import solutionCardAiDriven from '../../../../statics/home/images/2-3.png'
-import solutionCardOrganization from '../../../../statics/home/images/2-4.png'
-import custChoiseImg from '../../../../statics/home/images/cust-choise.png'
-import heroBanner2 from '../../../../statics/home/images/banner2.png'
-import heroBanner3 from '../../../../statics/home/images/banner3.png'
-
-const logoModules = import.meta.glob('../../../../statics/home/images/logos/*', {
-  eager: true,
-  import: 'default',
-}) as Record<string, string>
+// ========== 图片 paths ==========
+const serviceSystemConsultant = '/images/consultant.png'
+const serviceSystemHours = '/images/service-hours.png'
+const solutionCardImprove = '/images/2-1.png'
+const solutionCardProcess = '/images/2-2.png'
+const solutionCardAiDriven = '/images/2-3.png'
+const solutionCardOrganization = '/images/2-4.png'
+const custChoiseImg = '/images/cust-choise.png'
+const heroBanner2 = '/images/banner2.png'
+const heroBanner3 = '/images/banner3.png'
 
 // ========== 图标别名 ==========
 export const BurnlifeNotimeOutlined = Fire
@@ -100,7 +95,7 @@ export interface BannerSlide {
 export const makeLogos = (group: number, names: string[]) =>
   names.map((name, index) => ({
     name,
-    src: logoModules[`../../../../statics/home/images/logos/${group}-${index + 1}.png`] ?? '',
+    src: `/images/logos/${group}-${index + 1}.png`,
   }))
 
 // ========== Banner 轮播数据 ==========

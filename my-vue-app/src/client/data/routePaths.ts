@@ -98,6 +98,12 @@ export const routePaths = [
     pageKey: 'list_news',
   },
   {
+    key: 'knowledge_qna',
+    path: 'zhishiwenda',
+    name: 'KnowledgeQnA',
+    pageKey: 'knowledge_qna',
+  },
+  {
     key: 'list_voices',
     path: 'yonghuxinsheng',
     name: 'ClientVoices',
