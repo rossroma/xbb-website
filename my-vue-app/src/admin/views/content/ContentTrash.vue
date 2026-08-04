@@ -44,7 +44,7 @@
           {{ getCategoryName(row.bid) }}
         </template>
       </el-table-column>
-      <el-table-column label="删除时间" width="160">
+      <el-table-column label="更新时间" width="160">
         <template #default="{ row }">
           {{ formatTime(row.updatetime) }}
         </template>
@@ -86,16 +86,22 @@ import {
   batchPermanentDeleteArticles,
 } from '@/shared/api/article'
 import { getAdminCategories } from '@/shared/api/category'
+import { formatTime } from '@/shared/utils/formatTime'
 
 const router = useRouter()
+
+/** 回收站文章状态标识 */
+const TRASH_STATUS = -1
 
 // ==================== 分类 ====================
 
 const allCategories = ref<any[]>([])
 
+/** 分类 ID → 名称映射（O(1) 查找） */
+const categoryNameMap = ref<Map<number, string>>(new Map())
+
 const getCategoryName = (bid: number) => {
-  const cat = allCategories.value.find((c: any) => c.id === bid)
-  return cat?.title || String(bid) || '-'
+  return categoryNameMap.value.get(bid) ?? String(bid) || '-'
 }
 
 // ==================== 文章列表 ====================
@@ -107,11 +113,6 @@ const selectedIds = ref<number[]>([])
 
 const pagination = reactive({ page: 1, limit: 10, total: 0 })
 
-const formatTime = (ts: number) => {
-  if (!ts) return '-'
-  return new Date(ts * 1000).toLocaleString('zh-CN', { hour12: false })
-}
-
 const handleSelectionChange = (rows: any[]) => {
   selectedIds.value = rows.map((r) => r.id)
 }
@@ -119,7 +120,9 @@ const handleSelectionChange = (rows: any[]) => {
 const loadCategories = async () => {
   try {
     const result = await getAdminCategories({ limit: 999 })
-    allCategories.value = result?.items || []
+    const items = result?.items || []
+    allCategories.value = items
+    categoryNameMap.value = new Map(items.map((c: any) => [c.id, c.title]))
   } catch {
     // 静默处理
   }
@@ -131,7 +134,7 @@ const loadArticles = async () => {
     const result = await getAdminArticles({
       page: pagination.page,
       limit: pagination.limit,
-      status: -1,
+      status: TRASH_STATUS,
     })
     articles.value = result?.items || []
     pagination.total = result?.total || 0
@@ -224,7 +227,7 @@ onMounted(async () => {
 <style scoped>
 .content-trash {
   padding: 20px;
-  background: #fff;
+  background: var(--el-bg-color);
   border-radius: 4px;
 }
 

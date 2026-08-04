@@ -7,26 +7,26 @@
     <div class="stats-cards">
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-number">{{ stats.total_operations }}</div>
+          <div class="stat-number">{{ stats.totalOperations }}</div>
           <div class="stat-label">总操作数</div>
         </div>
       </el-card>
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-number">{{ stats.total_logins }}</div>
+          <div class="stat-number">{{ stats.totalLogins }}</div>
           <div class="stat-label">总登录次数</div>
         </div>
       </el-card>
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-number warning">{{ stats.failed_logins }}</div>
+          <div class="stat-number warning">{{ stats.failedLogins }}</div>
           <div class="stat-label">登录失败</div>
         </div>
       </el-card>
       <el-card class="stat-card">
         <div class="stat-content">
-          <div class="stat-number success">{{ stats.active_users }}</div>
-          <div class="stat-label">活跃用户</div>
+          <div class="stat-number success">{{ stats.todayOperations }}</div>
+          <div class="stat-label">今日操作</div>
         </div>
       </el-card>
     </div>
@@ -50,7 +50,7 @@
       </el-form>
     </div>
 
-    <el-empty description="暂无统计数据" v-if="!loading && stats.total_operations === 0" />
+    <el-empty description="暂无统计数据" v-if="!loading && stats.totalOperations === 0" />
   </div>
 </template>
 
@@ -68,10 +68,10 @@ const searchForm = reactive({
 })
 
 const stats = reactive({
-  total_operations: 0,
-  total_logins: 0,
-  failed_logins: 0,
-  active_users: 0
+  totalOperations: 0,
+  totalLogins: 0,
+  failedLogins: 0,
+  todayOperations: 0,
 })
 
 const loadStats = async () => {
@@ -136,12 +136,12 @@ onMounted(() => {
 
 .stat-label {
   font-size: 14px;
-  color: #666;
-  margin-top: 5px;
+  color: var(--el-text-color-secondary);
+  margin-top: 4px;
 }
 
 .search-area {
-  background: #f5f5f5;
+  background: var(--el-fill-color-light);
   padding: 20px;
   border-radius: 4px;
   margin-bottom: 20px;

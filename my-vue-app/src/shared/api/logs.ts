@@ -23,8 +23,10 @@ export const getLoginLogs = async (
 }
 
 // 获取日志统计数据
-export const getLogsStatistics = async (): Promise<LogsStatistics> => {
-  return request.get('/v1/admin/logs/statistics')
+export const getLogsStatistics = async (
+  params?: Record<string, unknown>,
+): Promise<LogsStatistics> => {
+  return request.get('/v1/admin/logs/statistics', { params })
 }
 
 // 导出操作日志

@@ -106,7 +106,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import Button from '@/client/components/ui/Button.vue'
-import { Mail } from '@icon-park/vue-next'
 import type { FooterColumn, SocialItem } from '@/client/data/siteFooterData'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 

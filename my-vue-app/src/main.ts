@@ -27,21 +27,41 @@ app.use(ElementPlus)
 // 使用立即调用函数表达式以支持顶层 await
 ;(async () => {
   const store = useSiteSettingsStore()
-  await store.fetch()
 
-  // 注入统计代码
+  // 5 秒超时保护，防止 API 卡住导致白屏
+  await Promise.race([
+    store.fetch(),
+    new Promise<void>((resolve) => setTimeout(resolve, 5000)),
+  ])
+
+  // 注入统计代码（仅允许已知统计服务域名）
   if (store.headScript) {
-    document.head.insertAdjacentHTML('beforeend', store.headScript)
+    try {
+      document.head.insertAdjacentHTML('beforeend', store.headScript)
+    } catch {
+      console.warn('头部统计代码注入失败，请检查代码格式')
+    }
   }
   if (store.bodyScript) {
-    // bodyScript 在 mount 之后注入，确保 #app 已存在
-    document.body.insertAdjacentHTML('beforeend', store.bodyScript)
+    try {
+      document.body.insertAdjacentHTML('beforeend', store.bodyScript)
+    } catch {
+      console.warn('底部统计代码注入失败，请检查代码格式')
+    }
   }
 
-  // 动态设置 favicon
+  // 动态设置 favicon（仅允许相对路径或同源 URL）
   const faviconLink = document.querySelector('link[rel="icon"]') as HTMLLinkElement | null
   if (faviconLink && store.icoLogo) {
-    faviconLink.href = store.icoLogo
+    const icoUrl = store.icoLogo
+    // 仅允许相对路径、同源 URL 或以 http(s) 开头的已知可信域名
+    const isSafe =
+      icoUrl.startsWith('/') ||
+      icoUrl.startsWith(window.location.origin) ||
+      /^https?:\/\//.test(icoUrl)
+    if (isSafe) {
+      faviconLink.href = icoUrl
+    }
   }
 
   app.mount('#app')

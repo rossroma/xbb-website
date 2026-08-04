@@ -255,7 +255,14 @@ const loadActionTree = async () => {
   }
 }
 
-const buildCategoryTree = (items: any[], pid = 0): CategoryNode[] => {
+const buildCategoryTree = (
+  items: any[],
+  pid = 0,
+  visited: Set<number> = new Set(),
+  depth: number = 0,
+): CategoryNode[] => {
+  if (depth > 50 || visited.has(pid)) return []
+  visited.add(pid)
   return items
     .filter((item: any) => Number(item.pid || 0) === pid)
     .sort(
@@ -266,7 +273,7 @@ const buildCategoryTree = (items: any[], pid = 0): CategoryNode[] => {
       pid: Number(item.pid || 0),
       title: item.title,
       status: Number(item.status ?? 1),
-      children: buildCategoryTree(items, Number(item.id)),
+      children: buildCategoryTree(items, Number(item.id), new Set(visited), depth + 1),
     }))
 }
 

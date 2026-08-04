@@ -183,6 +183,7 @@ import '@wangeditor/editor/dist/css/style.css'
 import { getAdminCategories } from '@/shared/api/category'
 import request from '@/shared/api/request'
 import { getToken } from '@/shared/utils/token'
+import { buildCategoryTree } from '@/shared/utils/categoryTree'
 
 const route = useRoute()
 const router = useRouter()
@@ -204,12 +205,6 @@ const categoryTitle = computed(() => {
   const cat = allCategories.value.find((c) => c.id === currentBid.value)
   return cat?.title || ''
 })
-
-const buildCategoryTree = (items: any[], pid: number): any[] => {
-  return items
-    .filter((c) => c.pid === pid)
-    .map((c) => ({ ...c, children: buildCategoryTree(items, c.id) }))
-}
 
 const flattenTree = (nodes: any[], level: number): any[] => {
   const result: any[] = []
@@ -368,6 +363,11 @@ const loadArticle = async () => {
 
 const handleSubmit = async () => {
   if (!formRef.value) return
+  // 新建文章时必须有分类归属
+  if (!isEdit.value && !form.bid) {
+    ElMessage.warning('请先选择所属分类')
+    return
+  }
   try {
     await formRef.value.validate()
     submitting.value = true

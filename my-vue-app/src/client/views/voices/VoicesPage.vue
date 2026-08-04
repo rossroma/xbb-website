@@ -232,7 +232,6 @@ function handlePageChange(page: number) {
 // ==================== 生命周期 ====================
 
 onMounted(async () => {
-  await loadCategories()
-  await loadVoices()
+  await Promise.all([loadCategories(), loadVoices()])
 })
 </script>

@@ -120,12 +120,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { getAdminArticles, getArticleCounts } from '@/shared/api/article'
 import { getAdminCategories } from '@/shared/api/category'
 import request from '@/shared/api/request'
+import { buildCategoryTree } from '@/shared/utils/categoryTree'
+import { formatTime } from '@/shared/utils/formatTime'
 
 const router = useRouter()
 
@@ -142,21 +144,12 @@ const treeProps = {
   label: 'title',
 }
 
-/** 将扁平分类列表转为嵌套树结构 */
-const buildCategoryTree = (items: any[], pid: number = 0): any[] => {
-  return items
-    .filter((c) => c.pid === pid)
-    .sort((a, b) => (a.ord ?? 10) - (b.ord ?? 10))
-    .map((c) => ({
-      ...c,
-      children: buildCategoryTree(items, c.id),
-    }))
-}
+/** 分类 ID → 名称映射（O(1) 查找） */
+const categoryNameMap = ref<Map<number, string>>(new Map())
 
 /** 根据分类 ID 查找分类名称 */
 const getCategoryName = (bid: number) => {
-  const cat = allCategories.value.find((c: any) => c.id === bid)
-  return cat?.title || String(bid) || '-'
+  return categoryNameMap.value.get(bid) ?? String(bid) || '-'
 }
 
 /** 点击分类树节点 */
@@ -179,16 +172,14 @@ const searchForm = reactive({
   isRecommended: undefined as number | undefined,
 })
 
-const formatTime = (ts: number) => {
-  if (!ts) return '-'
-  return new Date(ts * 1000).toLocaleString('zh-CN', { hour12: false })
-}
-
 const loadCategories = async () => {
   try {
     const result = await getAdminCategories({ limit: 999 })
-    allCategories.value = result?.items || []
-    categoryTree.value = buildCategoryTree(allCategories.value, 0)
+    const items = result?.items || []
+    allCategories.value = items
+    categoryTree.value = buildCategoryTree(items, 0)
+    // 构建 O(1) 分类名称查找表
+    categoryNameMap.value = new Map(items.map((c: any) => [c.id, c.title]))
   } catch {
     // 静默处理
   }
@@ -273,8 +264,7 @@ const handleDelete = async (row: any) => {
 }
 
 onMounted(async () => {
-  await Promise.all([loadCategories(), loadArticleCounts()])
-  loadArticles()
+  await Promise.all([loadCategories(), loadArticleCounts(), loadArticles()])
 })
 </script>
 
@@ -288,8 +278,9 @@ onMounted(async () => {
 /* ====== 左栏：分类树 ====== */
 .left-panel {
   width: 250px;
+  max-width: 100%;
   flex-shrink: 0;
-  background: #fff;
+  background: var(--el-bg-color);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
@@ -298,7 +289,7 @@ onMounted(async () => {
 
 .panel-header {
   padding: 16px;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--el-border-color-light);
   flex-shrink: 0;
 }
 
@@ -306,7 +297,7 @@ onMounted(async () => {
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #303133;
+  color: var(--el-text-color-primary);
 }
 
 .tree-wrapper {
@@ -325,13 +316,13 @@ onMounted(async () => {
 
 .tree-node-label {
   font-size: 13px;
-  color: #303133;
+  color: var(--el-text-color-primary);
 }
 
 .tree-node-count {
   font-size: 11px;
-  color: #909399;
-  background: #f0f2f5;
+  color: var(--el-text-color-secondary);
+  background: var(--el-fill-color-light);
   border-radius: 10px;
   padding: 0 6px;
   min-width: 20px;
@@ -347,7 +338,7 @@ onMounted(async () => {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--el-bg-color);
   border-radius: 4px;
   padding: 16px;
   overflow: hidden;
@@ -367,7 +358,7 @@ onMounted(async () => {
 }
 
 .article-title {
-  color: #303133;
+  color: var(--el-text-color-primary);
 }
 
 .rec-badge {

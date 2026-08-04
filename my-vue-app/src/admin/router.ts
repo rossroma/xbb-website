@@ -237,6 +237,16 @@ const router = createRouter({
       ],
     },
 
+    // 旧路由重定向（/admin/* → /*）
+    // 保留对旧书签和外链的兼容
+    {
+      path: '/admin/:pathMatch(.*)*',
+      redirect: (to) => {
+        const newPath = to.path.replace(/^\/admin/, '') || '/dashboard'
+        return newPath
+      },
+    },
+
     // 后台 404 兜底 — 嵌套在 Layout 内以保留侧边栏和顶栏
     {
       path: '/:pathMatch(.*)*',
@@ -312,9 +322,14 @@ const canAccessAdminRoute = (path: string, admin: any) => {
 
   if (path.startsWith('/content')) {
     const parts = path.split('/').filter(Boolean)
-    // /content 或 /content/edit/:id 或 /content/create
+    // /content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
     if (parts.length === 1) {
-      // /content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
+      const { isSuperAdmin, categorySet } = getPermissionContext(admin)
+      if (isSuperAdmin) return true
+      return categorySet.size > 0
+    }
+    // /content/trash — 回收站需要与内容管理相同的权限
+    if (parts[1] === 'trash') {
       const { isSuperAdmin, categorySet } = getPermissionContext(admin)
       if (isSuperAdmin) return true
       return categorySet.size > 0
