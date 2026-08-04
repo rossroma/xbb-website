@@ -32,4 +32,9 @@ export class AppController {
       '获取数据成功',
     );
   }
+
+  @Get('v1/health')
+  health() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
 }

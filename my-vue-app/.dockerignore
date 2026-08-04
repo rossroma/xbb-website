@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+.env
+.env.*
+.husky
+.vscode
+.vite
+coverage/
+cypress/
+test/
+public/

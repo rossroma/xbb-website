@@ -100,11 +100,8 @@ async function prerender() {
   await new Promise((resolve) => server.listen(PORT, resolve))
   console.log(`[prerender] Static server: http://localhost:${PORT}`)
 
-  // 2. 启动浏览器（优先环境变量，其次 macOS 系统 Chrome，最后自动查找）
-  const executablePath =
-    process.env.PUPPETEER_EXECUTABLE_PATH ||
-    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' ||
-    undefined
+  // 2. 启动浏览器（优先环境变量，其次自动查找系统 Chromium）
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined
 
   const browser = await puppeteer.launch({
     headless: true,
