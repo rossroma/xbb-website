@@ -43,10 +43,15 @@ export class LogsService {
    */
   async logOperation(data: OperationLogData): Promise<void> {
     const operationLog = this.operationLogRepo.create({
+      admin_id: data.admin_id || null,
       username: data.admin_name || '',
       title: data.content || `${data.title || ''}`,
       type: data.type || 0,
       login_ip: data.ip || '',
+      method: data.method || null,
+      url: data.url || null,
+      params: data.params ? JSON.stringify(data.params) : null,
+      target_id: data.target_id || null,
       addtime: Math.floor(Date.now() / 1000),
     });
     await this.operationLogRepo.save(operationLog);

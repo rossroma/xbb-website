@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
@@ -29,6 +30,12 @@ import { PartnerModule } from './modules/partner/partner.module';
       ttl: 60000,
       limit: 5,
     }]),
+    // 缓存模块（内存缓存，TTL 默认 5 分钟）
+    CacheModule.register({
+      isGlobal: true,
+      ttl: 300_000, // 5 分钟
+      max: 100,      // 最多缓存 100 个 key
+    }),
     // 定时任务调度
     ScheduleModule.forRoot(),
     // 启用数据库连接

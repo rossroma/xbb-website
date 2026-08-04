@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,18 +12,10 @@ import { JwtPayload } from './strategies/jwt.strategy';
 import { Admin } from './entities/admin.entity';
 import { AdminGroup } from './entities/admin-group.entity';
 import { LogsService } from '../logs/logs.service';
-import * as crypto from 'crypto';
 import * as svgCaptcha from 'svg-captcha';
-
-interface CaptchaRecord {
-  code: string;
-  expiresAt: number;
-}
 
 @Injectable()
 export class AuthService {
-  private readonly captchaStore = new Map<string, CaptchaRecord>();
-
   constructor(
     private jwtService: JwtService,
     @InjectRepository(Admin)
@@ -33,33 +25,33 @@ export class AuthService {
     private logsService: LogsService,
   ) { }
 
+  /**
+   * 生成算式验证码（JWT 无状态方案）
+   * 算式结果编码为 JWT Token，5 分钟有效，不依赖内存/Redis/数据库
+   */
   generateCaptcha(): { captchaId: string; image: string; expiresIn: number } {
-    this.cleanupExpiredCaptchas();
-
-    // 使用数学算式验证码（如 "3+5=?"），text 为算式结果
     const captcha = svgCaptcha.createMathExpr({
-      noise: 2,             // 干扰线条数
-      color: true,          // 彩色字符
-      background: '#f8f9fa', // 浅灰色背景
-      width: 100,           // 宽度
-      height: 40,           // 高度
-      fontSize: 34,         // 字号
-      mathMin: 1,           // 算式最小值
-      mathMax: 9,           // 算式最大值
-      mathOperator: '+',    // 仅使用加法，简单友好
+      noise: 2,
+      color: true,
+      background: '#f8f9fa',
+      width: 100,
+      height: 40,
+      fontSize: 34,
+      mathMin: 1,
+      mathMax: 9,
+      mathOperator: '+',
     });
 
-    const captchaId = crypto.randomUUID();
-    const expiresIn = 5 * 60 * 1000;
-    this.captchaStore.set(captchaId, {
-      code: captcha.text.toUpperCase(),
-      expiresAt: Date.now() + expiresIn,
-    });
+    const expiresIn = 5 * 60; // 秒
+    const captchaId = this.jwtService.sign(
+      { code: captcha.text.toUpperCase() },
+      { expiresIn },
+    );
 
     return {
       captchaId,
       image: `data:image/svg+xml;base64,${Buffer.from(captcha.data).toString('base64')}`,
-      expiresIn,
+      expiresIn: expiresIn * 1000,
     };
   }
 
@@ -68,12 +60,15 @@ export class AuthService {
 
     this.validateCaptcha(captchaId, captchaCode);
 
-    // 查找用户
+    // 查找用户（含用户组权限信息，用于嵌入 JWT）
     const admin = await this.adminRepository.findOne({
-      where: { username, status: 1 }, // 只查找状态为1的用户
+      where: { username, status: 1 },
+      relations: ['adminGroup'],
     });
 
     if (!admin) {
+      // 记录登录失败日志
+      await this.logsService.recordLogin(username, ip, 0, userAgent).catch(() => {});
       throw new BusinessException(
         RESPONSE_CODE.AUTH_FAILED,
         '用户名或密码错误',
@@ -84,21 +79,25 @@ export class AuthService {
     const isPasswordValid = await this.validatePassword(password, admin.userpwd, admin.salt);
 
     if (!isPasswordValid) {
+      // 记录登录失败日志
+      await this.logsService.recordLogin(username, ip, 0, userAgent).catch(() => {});
       throw new BusinessException(
         RESPONSE_CODE.AUTH_FAILED,
         '用户名或密码错误',
       );
     }
 
-    // 记录登录日志
+    // 记录登录成功日志
     await this.logsService.recordLogin(username, ip, 1, userAgent);
 
-    // 生成 JWT token
+    // 生成 JWT token（嵌入 group_rules，避免每次请求查库）
     const payload: JwtPayload = {
       sub: admin.id,
       username: admin.username,
       type: admin.type,
       group_id: admin.group_id,
+      group_rules: admin.adminGroup?.rules || '',
+      group_rules_category: admin.adminGroup?.rules_category || '',
     };
 
     const token = this.jwtService.sign(payload);
@@ -160,42 +159,22 @@ export class AuthService {
     };
   }
 
-  private async validatePassword(password: string, hashedPassword: string, salt: string): Promise<boolean> {
-    // 优先使用 bcrypt 验证（新密码）
-    try {
-      return await bcrypt.compare(password, hashedPassword);
-    } catch {
-      // bcrypt 无法解析时，回退兼容旧系统的 MD5 加密方式
-    }
-
-    // 兼容旧系统：MD5(password + salt) 或 MD5(salt + password)
-    const md5Hash1 = crypto.createHash('md5').update(password + salt).digest('hex');
-    const md5Hash2 = crypto.createHash('md5').update(salt + password).digest('hex');
-
-    return hashedPassword === md5Hash1 || hashedPassword === md5Hash2;
+  private async validatePassword(password: string, hashedPassword: string, _salt: string): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
   }
 
   private validateCaptcha(captchaId: string, captchaCode: string): void {
-    this.cleanupExpiredCaptchas();
-
-    const record = this.captchaStore.get(captchaId);
-    if (!record) {
-      throw new BusinessException(RESPONSE_CODE.AUTH_FAILED, '算式已失效，请刷新后重试');
-    }
-
-    this.captchaStore.delete(captchaId);
-
-    if (record.code !== captchaCode.trim().toUpperCase()) {
-      throw new BusinessException(RESPONSE_CODE.AUTH_FAILED, '算式结果错误');
-    }
-  }
-
-  private cleanupExpiredCaptchas(): void {
-    const now = Date.now();
-    for (const [key, record] of this.captchaStore.entries()) {
-      if (record.expiresAt <= now) {
-        this.captchaStore.delete(key);
+    try {
+      const payload = this.jwtService.verify<{ code: string }>(captchaId);
+      if (payload.code !== captchaCode.trim().toUpperCase()) {
+        throw new BusinessException(RESPONSE_CODE.AUTH_FAILED, '算式结果错误');
       }
+    } catch (error: any) {
+      if (error instanceof BusinessException) throw error;
+      if (error?.name === 'TokenExpiredError') {
+        throw new BusinessException(RESPONSE_CODE.AUTH_FAILED, '算式已失效，请刷新后重试');
+      }
+      throw new BusinessException(RESPONSE_CODE.AUTH_FAILED, '算式已失效，请刷新后重试');
     }
   }
 }

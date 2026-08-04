@@ -1,16 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Admin } from '../entities/admin.entity';
 
 export interface JwtPayload {
   sub: number;
   username: string;
   type: number;
   group_id: number;
+  /** 用户组权限规则（逗号分隔的 action_code），嵌入 JWT 避免每次请求查库 */
+  group_rules?: string;
+  /** 用户组分类权限规则 */
+  group_rules_category?: string;
 }
 
 export interface RequestUser {
@@ -26,11 +27,7 @@ export interface RequestUser {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private configService: ConfigService,
-    @InjectRepository(Admin)
-    private adminRepository: Repository<Admin>,
-  ) {
+  constructor(private configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -39,26 +36,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<RequestUser> {
-    // 查询数据库验证用户是否存在且状态正常，同时加载用户组权限信息
-    const admin = await this.adminRepository.findOne({
-      where: { id: payload.sub, status: 1 },
-      relations: ['adminGroup'],
-    });
-
-    if (!admin) {
-      throw new UnauthorizedException('账户不存在或已被禁用');
-    }
-
     return {
-      id: admin.id,
-      username: admin.username,
-      type: admin.type,
-      group_id: admin.group_id,
-      // 挂载用户组权限信息，供 PermissionsGuard 使用
-      group_info: admin.adminGroup
+      id: payload.sub,
+      username: payload.username,
+      type: payload.type,
+      group_id: payload.group_id,
+      group_info: payload.group_rules !== undefined
         ? {
-            rules: admin.adminGroup.rules || '',
-            rules_category: admin.adminGroup.rules_category || '',
+            rules: payload.group_rules || '',
+            rules_category: payload.group_rules_category || '',
           }
         : null,
     };

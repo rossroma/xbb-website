@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, Min, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min, Max, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class QueryAdminDto {
@@ -12,6 +12,7 @@ export class QueryAdminDto {
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @Min(1)
+  @Max(100)
   limit?: number;
 
   @IsOptional()

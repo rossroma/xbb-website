@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { createHash, randomInt } from 'crypto';
 import * as path from 'path';
 import * as svgCaptcha from 'svg-captcha';
+import * as bcrypt from 'bcrypt';
 import { firstValueFrom } from 'rxjs';
 import { SmsCode } from './entities/sms-code.entity';
 import { SmsLog } from './entities/sms-log.entity';
@@ -34,6 +35,8 @@ try {
 @Injectable()
 export class SmsService {
   private readonly logger = new Logger(SmsService.name);
+  /** 手机号级别的发送锁，防止并发请求绕过频率限制 */
+  private readonly phoneLocks = new Map<string, Promise<void>>();
 
   constructor(
     @InjectRepository(SmsCode)
@@ -121,36 +124,71 @@ export class SmsService {
       throw new BadRequestException('算式结果错误');
     }
 
-    // 2. 频率限制检查
-    await this.checkRateLimit(tel, clientIp);
+    // 2. 获取手机号级别的锁，防止并发请求绕过频率限制
+    await this.acquirePhoneLock(tel);
 
-    // 3. 生成 6 位数字验证码
-    const code = this.generateSmsCode();
+    try {
+      // 3. 频率限制检查
+      await this.checkRateLimit(tel, clientIp);
 
-    // 4. 调用助通科技 API 发送短信
-    const result = await this.callSmsApi(tel, code);
+      // 4. 生成 6 位数字验证码
+      const code = this.generateSmsCode();
 
-    // 5. 记录发送日志
-    await this.recordSmsLog(tel, clientIp, result.success ? 'success' : 'failed', code, userAgent, result.errorMsg);
+      // 5. 调用助通科技 API 发送短信
+      const result = await this.callSmsApi(tel, code);
 
-    if (!result.success) {
-      throw new ServiceUnavailableException(result.errorMsg || '短信发送失败，请稍后重试');
+      // 6. 记录发送日志
+      await this.recordSmsLog(tel, clientIp, result.success ? 'success' : 'failed', code, userAgent, result.errorMsg);
+
+      if (!result.success) {
+        throw new ServiceUnavailableException(result.errorMsg || '短信发送失败，请稍后重试');
+      }
+
+      // 7. 存储验证码到数据库
+      await this.storeSmsCode(tel, code, clientIp);
+
+      // 8. 清理同手机号的旧验证码
+      await this.cleanOldCodes(tel);
+
+      return { expireSeconds: smsConfig.minSendInterval };
+    } finally {
+      this.releasePhoneLock(tel);
     }
-
-    // 6. 存储验证码到数据库
-    await this.storeSmsCode(tel, code, clientIp);
-
-    // 7. 清理同手机号的旧验证码
-    await this.cleanOldCodes(tel);
-
-    return { expireSeconds: smsConfig.minSendInterval };
   }
 
   /**
-   * 频率限制检查（尽力而为）
+   * 获取手机号级别的发送锁（串行化同一手机号的请求）
+   * 防止并发请求绕过频率限制检查
+   */
+  private async acquirePhoneLock(phone: string): Promise<void> {
+    const existing = this.phoneLocks.get(phone);
+    if (existing) {
+      await existing;
+    }
+    // 创建新的锁 Promise，在 releasePhoneLock 中 resolve
+    let resolve: () => void;
+    const lock = new Promise<void>((r) => { resolve = r; });
+    this.phoneLocks.set(phone, lock);
+    // 存储 resolve 回调到锁对象上
+    (lock as any)._resolve = resolve!;
+  }
+
+  /**
+   * 释放手机号级别的发送锁
+   */
+  private releasePhoneLock(phone: string): void {
+    const lock = this.phoneLocks.get(phone);
+    if (lock && (lock as any)._resolve) {
+      (lock as any)._resolve();
+      this.phoneLocks.delete(phone);
+    }
+  }
+
+  /**
+   * 频率限制检查
    *
-   * 注意：当前实现依赖数据库查询，并发场景下存在竞态窗口。
-   * 高并发生产环境建议使用 Redis（INCR + EXPIRE）实现原子化频率限制。
+   * 注意：在 phoneLocks 保护下执行，同一手机号的请求已串行化。
+   * 跨实例部署时仍需 Redis（INCR + EXPIRE）实现原子化频率限制。
    *
    * - 同一手机号最小发送间隔 60 秒
    * - 同一手机号每小时最多 5 次
@@ -256,15 +294,16 @@ export class SmsService {
   }
 
   /**
-   * 存储短信验证码到数据库
+   * 存储短信验证码到数据库（bcrypt 哈希存储，不可逆）
    */
   private async storeSmsCode(phone: string, code: string, ip: string): Promise<void> {
+    const hashedCode = await bcrypt.hash(code, 10);
     const smsCode = this.smsCodeRepository.create({
       phone,
-      code,
+      code: hashedCode,
       verified: 0,
       ip,
-      created_at: new Date(), // 显式设置时间，避免依赖 @CreateDateColumn 的隐式行为
+      created_at: new Date(),
     });
     await this.smsCodeRepository.save(smsCode);
   }
@@ -315,61 +354,60 @@ export class SmsService {
   /**
    * 验证短信验证码
    *
-   * 使用原子 UPDATE 防止并发重用（TOCTOU 竞态条件）：
+   * 使用 bcrypt 比对 + 原子 UPDATE 防止并发重用（TOCTOU 竞态条件）：
    * 先原子标记 verified=1，再检查 affected rows，确保同一条记录不会被两个请求同时通过。
    *
    * @returns verified: true 表示验证成功
    */
   async verifyCode(tel: string, code: string): Promise<{ verified: boolean }> {
-    // 查找该手机号最新的未验证验证码
-    const record = await this.smsCodeRepository.findOne({
+    // 查找该手机号全部未验证的验证码（按时间倒序，逐个 bcrypt 比对）
+    const records = await this.smsCodeRepository.find({
       where: { phone: tel, verified: 0 },
       order: { created_at: 'DESC' },
+      take: 3,
     });
 
-    if (!record) {
+    if (records.length === 0) {
       // 检查是否已有已验证的记录（如：上一次提交时验证码已使用，但后续提交失败）
-      const verifiedRecord = await this.smsCodeRepository.findOne({
-        where: { phone: tel, verified: 1 },
-        order: { created_at: 'DESC' },
-      });
-
-      if (verifiedRecord) {
-        const verifiedAge = (Date.now() - verifiedRecord.created_at.getTime()) / 1000;
-        // 已验证记录仍在有效期内
-        if (verifiedAge <= smsConfig.codeExpireSeconds) {
-          // 同一验证码，允许重试通过（上次提交失败的场景）
-          if (verifiedRecord.code.toUpperCase() === code.toUpperCase()) {
-            return { verified: true };
-          }
-          throw new BadRequestException('验证码已使用，请重新获取');
-        }
+      const verified = await this.isPhoneVerified(tel);
+      if (verified) {
+        return { verified: true };
       }
-
       throw new BadRequestException('请先获取验证码');
     }
 
-    // 检查是否过期（5 分钟）
-    const age = (Date.now() - record.created_at.getTime()) / 1000;
-    if (age > smsConfig.codeExpireSeconds) {
-      // 清理过期记录
-      await this.smsCodeRepository.remove(record);
-      throw new BadRequestException('验证码已过期，请重新获取');
+    // 逐个比对 bcrypt 哈希（取最新 3 条，避免过期记录干扰）
+    let matchedRecord: (typeof records)[0] | null = null;
+    for (const record of records) {
+      const age = (Date.now() - record.created_at.getTime()) / 1000;
+      if (age > smsConfig.codeExpireSeconds) {
+        continue; // 过期记录跳过
+      }
+      const isMatch = await bcrypt.compare(code, record.code);
+      if (isMatch) {
+        matchedRecord = record;
+        break;
+      }
     }
 
-    // 验证码匹配（不区分大小写，与旧版一致）
-    if (record.code.toUpperCase() !== code.toUpperCase()) {
-      throw new BadRequestException('验证码错误');
+    if (!matchedRecord) {
+      // 清理过期记录
+      const expiredRecords = records.filter(
+        (r) => (Date.now() - r.created_at.getTime()) / 1000 > smsConfig.codeExpireSeconds,
+      );
+      if (expiredRecords.length > 0) {
+        await this.smsCodeRepository.remove(expiredRecords);
+      }
+      throw new BadRequestException('验证码错误或已过期，请重新获取');
     }
 
     // 原子标记为已验证（WHERE id=? AND verified=0 确保只生效一次）
     const result = await this.smsCodeRepository.update(
-      { id: record.id, verified: 0 },
+      { id: matchedRecord.id, verified: 0 },
       { verified: 1 },
     );
 
     if (result.affected === 0) {
-      // 并发请求已抢先标记，该验证码已被使用
       throw new BadRequestException('验证码已使用，请重新获取');
     }
 

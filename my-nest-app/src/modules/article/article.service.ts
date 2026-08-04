@@ -168,17 +168,13 @@ export class ArticleService {
       );
     }
 
-    // 增加访问量
-    await this.articleRepository.update(id, {
-      hit: () => 'hit + 1',
-    });
+    // 增加访问量（异步，不阻塞响应）
+    this.articleRepository.increment({ id }, 'hit', 1).catch(() => {});
 
-    // 重新获取更新后的文章
-    const updatedArticle = await this.articleRepository.findOne({
-      where: { id },
-    });
+    // 直接在内存中更新 hit，无需重新查库
+    article.hit = (article.hit || 0) + 1;
 
-    return new ArticleResponseDto(updatedArticle);
+    return new ArticleResponseDto(article);
   }
 
   /** 查询文章详情并附带上一篇/下一篇导航（客户端） */
@@ -194,15 +190,9 @@ export class ArticleService {
       );
     }
 
-    // 增加访问量
-    await this.articleRepository.update(id, {
-      hit: () => 'hit + 1',
-    });
-
-    // 重新获取更新后的文章
-    const updatedArticle = await this.articleRepository.findOne({
-      where: { id },
-    });
+    // 增加访问量（异步，不阻塞响应）
+    this.articleRepository.increment({ id }, 'hit', 1).catch(() => {});
+    article.hit = (article.hit || 0) + 1;
 
     // 查询上一篇：同分类下 addtime 更早（或同时但 id 更小）的最新一篇
     const prevArticle = await this.articleRepository
@@ -230,7 +220,7 @@ export class ArticleService {
       .addOrderBy('article.id', 'ASC')
       .getOne();
 
-    const articleDto = new ArticleResponseDto(updatedArticle);
+    const articleDto = new ArticleResponseDto(article);
     const prev = prevArticle ? new ArticleNavInfo(prevArticle) : null;
     const next = nextArticle ? new ArticleNavInfo(nextArticle) : null;
 

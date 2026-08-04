@@ -35,8 +35,13 @@ async function bootstrap() {
     new PermissionsGuard(reflector),
   );
 
-  // 启用 CORS
-  app.enableCors();
+  // 启用 CORS（仅允许白名单来源）
+  app.enableCors({
+    origin: process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',')
+      : ['http://localhost:5173', 'http://localhost:3000'],
+    credentials: true,
+  });
 
   // 测试数据库连接
   console.log('🚀 NestJS application starting...');

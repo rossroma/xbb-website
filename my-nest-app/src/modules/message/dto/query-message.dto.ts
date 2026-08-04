@@ -1,4 +1,4 @@
-import { IsOptional, IsInt, IsString, Min, IsIn } from 'class-validator';
+import { IsOptional, IsInt, IsString, Min, Max, IsIn } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class QueryMessageDto {
@@ -12,6 +12,7 @@ export class QueryMessageDto {
   @Transform(({ value }) => parseInt(value))
   @IsInt()
   @Min(1)
+  @Max(100)
   limit?: number = 10;
 
   @IsOptional()

@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -13,10 +12,8 @@ import {
 import { MessageService } from '../message.service';
 import { UpdateMessageDto } from '../dto/update-message.dto';
 import { QueryMessageDto } from '../dto/query-message.dto';
-import { ReplyMessageDto } from '../dto/reply-message.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
-import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { OperationLog } from '../../logs/decorators/operation-log.decorator';
 import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.interceptor';
 
@@ -59,16 +56,6 @@ export class AdminMessageController {
   @OperationLog({ title: '留言', type: 2, targetFields: ['title', 'id'], titlePrefix: '留言：', sourceOrder: ['response', 'body', 'params'] })
   async update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
     return await this.messageService.update(+id, updateMessageDto);
-  }
-
-  // 回复留言
-  @Post(':id/reply')
-  async reply(
-    @Param('id') id: string,
-    @Body() replyDto: ReplyMessageDto,
-    @CurrentUser() user: any,
-  ) {
-    return await this.messageService.reply(+id, replyDto, user.id, user.username);
   }
 
   // 删除留言

@@ -43,6 +43,17 @@ export class UploadController {
   ) {
     if (!file) throw new BadRequestException('请选择要上传的文件');
 
+    // 校验文件魔术字节，确保是真实图片（非仅依赖 MIME 类型）
+    try {
+      const metadata = await sharp(file.buffer).metadata();
+      if (!metadata.format) {
+        throw new BadRequestException('无法识别的图片格式');
+      }
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      throw new BadRequestException('文件不是有效的图片');
+    }
+
     const unique = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
     const ext = extname(file.originalname).toLowerCase();
     const filename = `${unique}${ext}`;

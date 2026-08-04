@@ -79,15 +79,9 @@ export class CaseService {
       );
     }
 
-    // 增加访问量
-    await this.caseRepository.update(id, {
-      hit: () => 'hit + 1',
-    });
-
-    // 重新获取更新后的案例
-    const updatedCase = await this.caseRepository.findOne({
-      where: { id },
-    });
+    // 增加访问量（异步，不阻塞响应）
+    this.caseRepository.increment({ id }, 'hit', 1).catch(() => {});
+    caseEntity.hit = (caseEntity.hit || 0) + 1;
 
     // 构建子类目过滤条件
     const bidCondition = childBids.length > 0
@@ -159,7 +153,7 @@ export class CaseService {
       relatedCases = [...relatedCases, ...fillCases];
     }
 
-    const caseDto = new CaseResponseDto(updatedCase);
+    const caseDto = new CaseResponseDto(caseEntity);
     const prev = prevCase ? new CaseNavInfo(prevCase) : null;
     const next = nextCase ? new CaseNavInfo(nextCase) : null;
     const relatedDtos = relatedCases.map((c) => new CaseResponseDto(c, false));

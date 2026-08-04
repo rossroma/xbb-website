@@ -1,6 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import type { Cache } from 'cache-manager';
 import { Base } from './entities/base.entity';
 import { Setting } from './entities/setting.entity';
 import { UpdateBaseDto } from './dto/update-base.dto';
@@ -19,6 +21,7 @@ export class SettingsService {
     private baseRepository: Repository<Base>,
     @InjectRepository(Setting)
     private settingRepository: Repository<Setting>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) { }
 
   // ==================== 获取所有配置 ====================
@@ -56,6 +59,7 @@ export class SettingsService {
       Object.assign(base, baseDto);
     }
     const updatedBase = await this.baseRepository.save(base);
+    await this.cacheManager.del('settings:siteInfo');
 
     // 更新系统设置
     let setting = await this.settingRepository.findOne({ where: { id: 1 } });
@@ -124,12 +128,16 @@ export class SettingsService {
   // ==================== 客户端获取网站信息 ====================
 
   async getSiteInfo(): Promise<SiteInfoResponseDto> {
+    const cacheKey = 'settings:siteInfo';
+    const cached = await this.cacheManager.get<SiteInfoResponseDto>(cacheKey);
+    if (cached) return cached;
+
     const base = await this.baseRepository.findOne({ where: { id: 1 } });
     if (!base) {
       throw new NotFoundException('网站基础信息不存在');
     }
 
-    return {
+    const result = {
       title: base.title,
       keyword: base.keyword,
       descs: base.descs,
@@ -147,6 +155,8 @@ export class SettingsService {
       toolscode_top: base.toolscode_top,
       toolscode_bottom: base.toolscode_bottom,
     };
+    await this.cacheManager.set(cacheKey, result, 3_600_000); // 1 小时
+    return result;
   }
 
   // ==================== 辅助方法 ====================

@@ -144,10 +144,12 @@ export class GalleryService {
 
   // ==================== 客户端接口 ====================
 
+  /** 客户端列表查询（当前与 admin 一致，待 DB 添加 status 字段后加入 status=1 过滤） */
   async getGalleriesForClient(query: QueryGalleryDto): Promise<GalleryListResponseDto> {
     return this.findAllGalleries(query);
   }
 
+  /** 客户端展示信息列表查询（当前与 admin 一致，待 DB 添加 status 字段后加入 status=1 过滤） */
   async getShowInfosForClient(query: QueryGalleryDto): Promise<ShowInfoListResponseDto> {
     return this.findAllShowInfos(query);
   }

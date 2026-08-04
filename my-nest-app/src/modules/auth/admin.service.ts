@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import * as crypto from 'crypto';
 import { Admin } from './entities/admin.entity';
 import { AdminGroup } from './entities/admin-group.entity';
 import { AdminAction } from './entities/admin-action.entity';
@@ -257,14 +256,9 @@ export class AdminService {
 
   // ==================== 辅助方法 ====================
 
-  private generateSalt(): string {
-    return crypto.randomBytes(16).toString('hex');
-  }
-
   private async hashPassword(password: string): Promise<{ hash: string; salt: string }> {
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    return { hash, salt };
+    const hash = await bcrypt.hash(password, 10);
+    return { hash, salt: '' };
   }
 
   private formatAdminResponse(admin: Admin): AdminResponseDto {

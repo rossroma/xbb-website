@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, Min, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsNumber, Min, Max, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class QueryArticleDto {
@@ -12,6 +12,7 @@ export class QueryArticleDto {
   @Type(() => Number)
   @IsNumber({}, { message: '每页数量必须是数字' })
   @Min(1, { message: '每页数量不能小于1' })
+  @Max(100, { message: '每页数量不能超过100' })
   limit?: number = 10;
 
   @IsOptional()

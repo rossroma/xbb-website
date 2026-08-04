@@ -5,7 +5,6 @@ import { Message } from './entities/message.entity';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { QueryMessageDto } from './dto/query-message.dto';
-import { ReplyMessageDto } from './dto/reply-message.dto';
 import { MessageResponseDto, MessageListResponseDto, MessageStatsDto } from './dto/message-response.dto';
 
 @Injectable()
@@ -113,27 +112,6 @@ export class MessageService {
     }
 
     await this.messageRepository.update(id, updateMessageDto);
-    const updated = await this.messageRepository.findOne({ where: { id } });
-    if (!updated) {
-      throw new NotFoundException(`更新后的留言 #${id} 不存在`);
-    }
-    return this.formatMessageResponse(updated);
-  }
-
-  // 回复留言 - 暂时禁用，数据库不支持
-  async reply(id: number, replyDto: ReplyMessageDto, adminId: number, adminName: string): Promise<MessageResponseDto> {
-    // 由于数据库表没有回复相关字段，暂时只更新状态
-    const message = await this.messageRepository.findOne({ where: { id } });
-    if (!message) {
-      throw new NotFoundException(`留言 #${id} 不存在`);
-    }
-
-    const updateData = {
-      read_status: 1,
-      check_status: 1, // 标记为已审核
-    };
-
-    await this.messageRepository.update(id, updateData);
     const updated = await this.messageRepository.findOne({ where: { id } });
     if (!updated) {
       throw new NotFoundException(`更新后的留言 #${id} 不存在`);

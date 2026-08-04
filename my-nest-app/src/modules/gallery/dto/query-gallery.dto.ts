@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, Min } from 'class-validator';
+import { IsOptional, IsString, IsInt, IsIn, Min, Max } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class QueryGalleryDto {
@@ -12,6 +12,7 @@ export class QueryGalleryDto {
   @Transform(({ value }) => parseInt(value))
   @IsInt()
   @Min(1)
+  @Max(100)
   limit?: number = 10;
 
   @IsOptional()
@@ -25,6 +26,7 @@ export class QueryGalleryDto {
 
   @IsOptional()
   @IsString()
+  @IsIn(['id', 'ord', 'addtime', 'title', 'bid'], { message: '排序字段不正确' })
   sort?: string = 'ord';
 
   @IsOptional()
