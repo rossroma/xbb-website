@@ -124,6 +124,11 @@ const router = createRouter({
           component: () => import('@/client/views/knowledge/KnowledgeQnA.vue'),
         },
         {
+          path: 'zhishiwenda/:slug',
+          name: 'KnowledgeQnADetail',
+          component: () => import('@/client/views/knowledge/KnowledgeArticleDetail.vue'),
+        },
+        {
           path: 'hangyeanli',
           name: 'ClientCases',
           component: () => import('@/client/views/cases/CasesPage.vue'),

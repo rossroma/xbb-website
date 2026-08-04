@@ -1,6 +1,7 @@
 import type { BreadcrumbItem } from '@/client/components/layout/Breadcrumb.vue'
 import type { FaqCategory, FaqItem } from '@/client/components/business/FaqList.vue'
-import type { ReviewCard } from '@/client/components/business/ReviewCardGrid.vue'
+import type { ArticleSidebarTocItem } from '@/client/components/business/ArticleSidebar.vue'
+import type { ContentCard } from '@/client/components/business/ContentList.vue'
 
 export type KnowledgeArticleBlock =
   | { type: 'heading'; text: string }
@@ -19,6 +20,24 @@ export type KnowledgeSidebarBanner = {
   theme: 'teal' | 'violet'
 }
 
+export type KnowledgeArticle = {
+  slug: string
+  title: string
+  summary: string
+  author: string
+  publishDate: string
+  updatedAt: string
+  image: string
+  imageAlt: string
+  blocks: KnowledgeArticleBlock[]
+  faqCategories?: FaqCategory[]
+  faqItems?: FaqItem[]
+}
+
+export const knowledgeQnASeo = {
+  title: '知识问答 - 销帮帮 CRM',
+  description: '围绕中小企业 CRM 选型、实施与常见问题的知识问答页面。',
+}
 
 export const knowledgeQnABreadcrumb: BreadcrumbItem[] = [
   { label: '首页', to: '/' },
@@ -39,8 +58,9 @@ export const knowledgeQnAHeroSlide = {
   key: 'knowledge-qna-hero',
   mediaType: 'image' as const,
   eyebrow: '',
-  title: '适合中小企业的客户关系crm管理系统推荐及使用建议',
-  subtitle: '零门槛、免安装！海量模板方案，点击即可，在线试用！',
+  title: '知识问答',
+  subtitle:
+    '为企业提供CRM系统、数字化转型、企业经营管理、销售管理、市场营销、客户服务等方面的专业知识。',
   desc: '',
   primaryCta: '',
   secondaryCta: '',
@@ -420,35 +440,47 @@ export const knowledgeQnAFaqItems: FaqItem[] = [
   },
 ]
 
-export const knowledgeQnAReviewCards: ReviewCard[] = [
+export const knowledgeSceneSolutionItems: ArticleSidebarTocItem[] = [
+  { id: 'omni-channel-marketing', title: '全渠道营销', href: '/jiejuefangan/quanqudaoyingxiao' },
+  { id: 'opportunity-management', title: '商机管理', href: '/jiejuefangan/shangjiguanli' },
+  { id: 'lead-management', title: '线索管理', href: '/jiejuefangan/xiansuoguanli' },
+  { id: 'sales-funnel', title: '销售漏斗', href: '/jiejuefangan/xiaoshouloudou' },
+  { id: 'order-management', title: '订单管理', href: '/jiejuefangan/dingdanguanli' },
+  { id: 'customer-management', title: '客户管理', href: '/kehuguanli' },
+  { id: 'member-management', title: '会员管理', href: '/jiejuefangan/huiyuanguanli' },
+  { id: 'purchase-management', title: '订货管理', href: '/jiejuefangan/dinghuoguanli' },
+  { id: 'device-management', title: '设备管理', href: '/jiejuefangan/shebeiguanli' },
+  { id: 'work-order-management', title: '工单管理', href: '/jiejuefangan/gongdanguanli' },
+]
+
+export const knowledgeQnAArticles: KnowledgeArticle[] = [
   {
-    logo: '/images/customer/tab-unified.svg',
-    logoAlt: 'logic游牧人',
-    industry: '评论',
-    content: '文章内容很实用，特别是对小企业主来说，选择合适的CRM系统确实是一大挑战。',
-    username: 'logic游牧人',
-    rating: 5,
-    date: '2026年4月17日',
-    likes: 493,
-  },
-  {
-    logo: '/images/customer/tab-retention.svg',
-    logoAlt: 'data低轨迹',
-    industry: '评论',
-    content: '推荐的系统看起来不错，但希望能增加关于数据迁移的具体建议，尤其是对小企业来说。',
-    username: 'data低轨迹',
-    rating: 5,
-    date: '2026年4月17日',
-    likes: 214,
-  },
-  {
-    logo: '/images/customer/tab-tracking.svg',
-    logoAlt: 'dash调参员',
-    industry: '评论',
-    content: '提到的CRM系统中，哪一个价格最亲民？对预算有限的团队来说，这点很关键。',
-    username: 'dash调参员',
-    rating: 5,
-    date: '2026年4月17日',
-    likes: 114,
+    slug: 'crm-system-recommendation-for-smb',
+    title: knowledgeQnAHeader.title,
+    summary: knowledgeQnAHeader.intro,
+    author: '销帮帮',
+    publishDate: '2026-8-4',
+    updatedAt: '2026-8-4 10:14:06',
+    image: '/images/article-sidebar/crm-template.png',
+    imageAlt: knowledgeQnAHeader.title,
+    blocks: knowledgeQnAArticleBlocks,
+    faqCategories: knowledgeQnAFaqCategories,
+    faqItems: knowledgeQnAFaqItems,
   },
 ]
+
+export const knowledgeArticleList: ContentCard[] = knowledgeQnAArticles.map((article) => ({
+  image: article.image,
+  imageAlt: article.imageAlt,
+  title: article.title,
+  description: article.summary,
+  summary: article.summary,
+  publishDate: article.publishDate,
+  updatedAt: article.updatedAt,
+  author: article.author,
+  linkHref: `/zhishiwenda/${article.slug}`,
+}))
+
+export function getKnowledgeArticleBySlug(slug: string): KnowledgeArticle | undefined {
+  return knowledgeQnAArticles.find((article) => article.slug === slug)
+}
