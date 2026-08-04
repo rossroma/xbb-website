@@ -11,6 +11,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { GalleryService } from '../gallery.service';
 import { CreateGalleryDto } from '../dto/create-gallery.dto';
 import { UpdateGalleryDto } from '../dto/update-gallery.dto';
@@ -30,6 +31,7 @@ import {
 
 @Controller('v1/admin/gallery')
 @UseGuards(JwtAuthGuard)
+@RequirePermissions('gallery', 'images')
 export class AdminGalleryController {
   constructor(private readonly galleryService: GalleryService) { }
 

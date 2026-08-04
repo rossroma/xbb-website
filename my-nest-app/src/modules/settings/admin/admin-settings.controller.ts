@@ -7,12 +7,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { SettingsService } from '../settings.service';
 import { UpdateBaseDto } from '../dto/update-base.dto';
 import { UpdateSettingDto } from '../dto/update-setting.dto';
 
 @Controller('v1/admin/settings')
 @UseGuards(JwtAuthGuard)
+@RequirePermissions('setting', '61')
 export class AdminSettingsController {
   constructor(private readonly settingsService: SettingsService) { }
 

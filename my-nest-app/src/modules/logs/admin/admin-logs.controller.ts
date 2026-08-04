@@ -6,10 +6,12 @@ import {
 } from '@nestjs/common';
 import { LogsService } from '../logs.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { ResponseResult } from '../../../common/interfaces/response.interface';
 
 @Controller('v1/admin/logs')
 @UseGuards(JwtAuthGuard)
+@RequirePermissions('logs', '60', 'logins', '59')
 export class AdminLogsController {
   constructor(private readonly logsService: LogsService) {}
 

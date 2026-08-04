@@ -12,6 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { AdsService } from '../ads.service';
 import { CreateAdsDto } from '../dto/create-ads.dto';
 import { UpdateAdsDto } from '../dto/update-ads.dto';
@@ -22,6 +23,7 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/ads')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
+@RequirePermissions('adstypes', '37', 'adsType', '51')
 export class AdminAdsController {
   constructor(private readonly adsService: AdsService) { }
 

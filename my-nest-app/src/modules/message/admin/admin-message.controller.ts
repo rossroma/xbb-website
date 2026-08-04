@@ -15,6 +15,7 @@ import { UpdateMessageDto } from '../dto/update-message.dto';
 import { QueryMessageDto } from '../dto/query-message.dto';
 import { ReplyMessageDto } from '../dto/reply-message.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { OperationLog } from '../../logs/decorators/operation-log.decorator';
 import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.interceptor';
@@ -22,6 +23,7 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/messages')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
+@RequirePermissions('message_4', '67')
 export class AdminMessageController {
   constructor(private readonly messageService: MessageService) { }
 

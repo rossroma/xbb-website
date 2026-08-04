@@ -16,6 +16,7 @@ import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
 import { CategoryResponseDto, CategoryListResponseDto } from '../dto/category-response.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { ResponseResult } from '../../../common/interfaces/response.interface';
 import { OperationLog } from '../../logs/decorators/operation-log.decorator';
 import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.interceptor';
@@ -23,6 +24,7 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/categories')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
+@RequirePermissions('types', '35', 'typeList', '50')
 export class AdminCategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 

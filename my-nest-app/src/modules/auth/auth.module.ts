@@ -9,6 +9,7 @@ import { AdminAuthController } from './admin/admin-auth.controller';
 import { AdminAdminController } from './admin/admin-admin.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { PermissionsGuard } from './guards/permissions.guard';
 import { Admin } from './entities/admin.entity';
 import { AdminGroup } from './entities/admin-group.entity';
 import { AdminAction } from './entities/admin-action.entity';
@@ -32,7 +33,7 @@ import { OperationLogInterceptor } from '../logs/interceptors/operation-log.inte
     }),
   ],
   controllers: [AdminAuthController, AdminAdminController],
-  providers: [AuthService, AdminService, JwtStrategy, JwtAuthGuard, OperationLogInterceptor],
-  exports: [AuthService, AdminService, JwtAuthGuard],
+  providers: [AuthService, AdminService, JwtStrategy, JwtAuthGuard, PermissionsGuard, OperationLogInterceptor],
+  exports: [AuthService, AdminService, JwtAuthGuard, PermissionsGuard],
 })
 export class AuthModule { }

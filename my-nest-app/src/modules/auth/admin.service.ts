@@ -226,23 +226,29 @@ export class AdminService {
       return this.findAllAdminActions();
     }
 
-    // 根据用户组权限获取
+    // 根据用户组权限获取（rules 存储的是 action_code 字符串，不是整数 ID）
     if (admin.adminGroup && admin.adminGroup.rules) {
-      const ruleIds = admin.adminGroup.rules.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-      if (ruleIds.length > 0) {
-        const actions = await this.adminActionRepository.findByIds(ruleIds);
-        const filteredActions = actions.filter(action => action.status === 1);
+      const actionCodes = admin.adminGroup.rules.split(',').map(code => code.trim()).filter(Boolean);
+      if (actionCodes.length > 0) {
+        const actions = await this.adminActionRepository
+          .createQueryBuilder('action')
+          .where('action.action_code IN (:...codes)', { codes: actionCodes })
+          .andWhere('action.status = :status', { status: 1 })
+          .orderBy('action.ord', 'ASC')
+          .addOrderBy('action.id', 'ASC')
+          .getMany();
 
-        const existingIds = new Set(filteredActions.map(a => a.id));
-        const missingParentIds = [...new Set(filteredActions.map(a => a.parent_id))]
+        // 补全父级节点，保持树结构完整
+        const existingIds = new Set(actions.map(a => a.id));
+        const missingParentIds = [...new Set(actions.map(a => a.parent_id))]
           .filter(pid => pid !== 0 && !existingIds.has(pid));
         if (missingParentIds.length > 0) {
           const parents = await this.adminActionRepository.findByIds(missingParentIds);
-          filteredActions.push(...parents);
-          filteredActions.sort((a, b) => a.ord - b.ord || a.id - b.id);
+          actions.push(...parents);
+          actions.sort((a, b) => a.ord - b.ord || a.id - b.id);
         }
 
-        return this.buildActionTree(filteredActions);
+        return this.buildActionTree(actions);
       }
     }
 

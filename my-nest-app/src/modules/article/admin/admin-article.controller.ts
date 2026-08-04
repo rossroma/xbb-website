@@ -18,6 +18,7 @@ import { QueryArticleDto } from '../dto/query-article.dto';
 import { BatchArticleDto } from '../dto/batch-article.dto';
 import { ArticleResponseDto, ArticleListResponseDto } from '../dto/article-response.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequirePermissions } from '../../auth/decorators/require-permissions.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { ResponseResult } from '../../../common/interfaces/response.interface';
 import { OperationLog } from '../../logs/decorators/operation-log.decorator';
@@ -26,6 +27,7 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/articles')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
+@RequirePermissions('article', 'category')
 export class AdminArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
