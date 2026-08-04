@@ -247,7 +247,7 @@
                 ? articleSidebarSceneItems
                 : articleSidebarDemoTocItems
             "
-            :variant="sidebarProps.variant as 'toc' | 'link-tags'"
+            :variant="sidebarProps.variant as ArticleSidebarVariant"
             :title="sidebarProps.variant === 'link-tags' ? '推荐CRM场景解决方案' : '文章目录'"
             :active-toc-id="
               sidebarProps.variant === 'link-tags' ? '' : String(sidebarProps['active-toc-id'])
@@ -887,7 +887,7 @@ import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
 import PromoBanner from '@/client/components/business/PromoBanner.vue'
 import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
-import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
+import ArticleSidebar, { type ArticleSidebarVariant } from '@/client/components/business/ArticleSidebar.vue'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
