@@ -87,7 +87,7 @@ export class ArticleService {
   }
 
   async findAllForClient(queryDto: QueryArticleDto): Promise<ArticleListResponseDto> {
-    const { page = 1, limit = 10, title, bid } = queryDto;
+    const { page = 1, limit = 10, title, bid, isRecommended, sortBy = 'addtime_desc' } = queryDto;
 
     const queryBuilder = this.articleRepository.createQueryBuilder('article');
 
@@ -101,9 +101,36 @@ export class ArticleService {
     if (bid !== undefined) {
       queryBuilder.andWhere('article.bid = :bid', { bid });
     }
+    if (isRecommended !== undefined) {
+      if (isRecommended === 1) {
+        queryBuilder.andWhere('article.flag LIKE :flag', { flag: '%1%' });
+      } else {
+        queryBuilder.andWhere('(article.flag IS NULL OR article.flag NOT LIKE :flag)', { flag: '%1%' });
+      }
+    }
 
-    // 排序：按创建时间降序，新增的文章在前面
-    queryBuilder.orderBy('article.addtime', 'DESC').addOrderBy('article.ord', 'ASC').addOrderBy('article.id', 'DESC');
+    // 动态排序
+    switch (sortBy) {
+      case 'addtime_asc':
+        queryBuilder.orderBy('article.addtime', 'ASC').addOrderBy('article.id', 'ASC');
+        break;
+      case 'hit_desc':
+        queryBuilder.orderBy('article.hit', 'DESC').addOrderBy('article.addtime', 'DESC');
+        break;
+      case 'hit_asc':
+        queryBuilder.orderBy('article.hit', 'ASC').addOrderBy('article.addtime', 'DESC');
+        break;
+      case 'ord_asc':
+        queryBuilder.orderBy('article.ord', 'ASC').addOrderBy('article.addtime', 'DESC');
+        break;
+      case 'ord_desc':
+        queryBuilder.orderBy('article.ord', 'DESC').addOrderBy('article.addtime', 'DESC');
+        break;
+      case 'addtime_desc':
+      default:
+        queryBuilder.orderBy('article.addtime', 'DESC').addOrderBy('article.ord', 'ASC').addOrderBy('article.id', 'DESC');
+        break;
+    }
 
     // 分页
     const skip = (page - 1) * limit;
