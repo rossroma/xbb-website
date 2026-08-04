@@ -1,10 +1,11 @@
 import { useHead } from '@vueuse/head'
 import { useRoute } from 'vue-router'
 import { getPageSeo } from '@/client/data/pageSeoConfig'
+import { generateJsonLd } from '@/client/data/jsonLd'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
 /**
- * 为当前页面统一设置 SEO 元数据（title、description、keywords、Open Graph）。
+ * 为当前页面统一设置 SEO 元数据（title、description、keywords、Open Graph）和 JSON-LD 结构化数据。
  *
  * 优先级：
  *   1. 页面级配置（`pageSeoConfig.ts` — 最精准，预渲染时直接可用）
@@ -21,7 +22,12 @@ export function usePageSEO(): void {
 
   const title = pageSeo?.title || store.seoTitle || '销帮帮CRM'
   const description = pageSeo?.description || store.seoDescription || ''
-  const keywords = store.seoKeywords || ''
+  const keywords = pageSeo?.keywords || store.seoKeywords || ''
+
+  // JSON-LD 结构化数据
+  const jsonLdScripts = pageSeo?.jsonLd
+    ? generateJsonLd(pageSeo.jsonLd, route.path, { title, description }, store.settings)
+    : []
 
   useHead({
     title,
@@ -33,5 +39,7 @@ export function usePageSEO(): void {
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
     ],
+    // @vueuse/head 的 Script 类型有 index signature 约束，JSON-LD 对象结构兼容
+    script: jsonLdScripts.length > 0 ? (jsonLdScripts as Array<{ type: string; children: string }>) : undefined,
   })
 }
