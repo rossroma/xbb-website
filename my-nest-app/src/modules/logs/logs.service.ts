@@ -5,8 +5,6 @@ import { OperationLog } from './entities/operation-log.entity';
 import { LoginLog } from './entities/login-log.entity';
 
 export interface OperationLogData {
-  /** 操作人 ID */
-  admin_id?: number;
   /** 操作人名称 */
   admin_name?: string;
   /** 操作模块 */
@@ -17,16 +15,8 @@ export interface OperationLogData {
   title?: string;
   /** 操作内容描述 */
   content?: string;
-  /** 目标资源 ID */
-  target_id?: number;
   /** 请求 IP */
   ip?: string;
-  /** 请求方法 */
-  method?: string;
-  /** 请求 URL */
-  url?: string;
-  /** 请求参数 */
-  params?: Record<string, any>;
 }
 
 @Injectable()
@@ -43,15 +33,10 @@ export class LogsService {
    */
   async logOperation(data: OperationLogData): Promise<void> {
     const operationLog = this.operationLogRepo.create({
-      admin_id: data.admin_id || null,
       username: data.admin_name || '',
       title: data.content || `${data.title || ''}`,
       type: data.type || 0,
       login_ip: data.ip || '',
-      method: data.method || null,
-      url: data.url || null,
-      params: data.params ? JSON.stringify(data.params) : null,
-      target_id: data.target_id || null,
       addtime: Math.floor(Date.now() / 1000),
     });
     await this.operationLogRepo.save(operationLog);

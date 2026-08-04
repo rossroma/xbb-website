@@ -23,10 +23,7 @@ export class Article {
   @Column({ length: 200, default: '', comment: '缩略图' })
   simg: string;
 
-  @Column({ length: 200, default: '', comment: 'Logo 图片' })
-  logo: string;
-
-  @Column({ length: 300, default: '', comment: '标签（逗号分隔）' })
+  @Column({ length: 300, nullable: true, comment: '标签（逗号分隔）' })
   tags: string;
 
   @Column({ type: 'int', nullable: true, comment: '发布者ID' })

@@ -31,8 +31,6 @@ export class OperationLogInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    const method = request.method;
-    const url = request.url;
     const ip = request.ip || request.headers['x-forwarded-for'] || '';
 
     const typeMap: Record<number, string> = {
@@ -47,16 +45,12 @@ export class OperationLogInterceptor implements NestInterceptor {
     return next.handle().pipe(
       tap(() => {
         this.logsService.logOperation({
-          admin_id: user?.id,
           admin_name: user?.username,
           module: options.title,
           type: options.type,
           title: options.title,
           content,
           ip,
-          method,
-          url,
-          params: request.body,
         });
       }),
     );
