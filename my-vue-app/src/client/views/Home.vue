@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <HeroBanner
-      :slides="heroBannerSection.slides"
+      :slides="heroSlides"
       :brand-video="heroBrandVideo"
       @action="handleHeroAction"
     />
@@ -170,8 +170,10 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePageSEO } from '@/client/composables/usePageSEO'
+import { useAds, AD_POSITION } from '@/client/composables/usePageAds'
 import { toPagePath } from '@/client/data/routePaths'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import GradientCardGrid from '@/client/components/business/GradientCardGrid.vue'
@@ -192,6 +194,7 @@ import {
   caseCarouselSection,
   serviceCardsSection,
   heroBrandVideo,
+  adsToBannerSlides,
 } from '@/client/data/homeData'
 import { floatingToolbarData } from '@/client/data/siteConfigData'
 import type { BannerSlide } from '@/client/data/homeData'
@@ -200,13 +203,28 @@ usePageSEO()
 
 const router = useRouter()
 
+// 首页 Banner 轮播 — 优先使用后台广告数据，API 不可用时回退到硬编码
+const { items: bannerAds } = useAds(AD_POSITION.HOME_BANNER)
+const heroSlides = computed(() => adsToBannerSlides(bannerAds.value))
+
+/** CTA 按钮路由映射（按 ord），与 slideVisualByOrd 中的视觉样式一一对应 */
+const routeActionsByOrd: Record<number, { primary: string; secondary: string }> = {
+  1: { primary: 'channel_products', secondary: 'list_contact' },
+  2: { primary: 'channel_products', secondary: '' },
+  3: { primary: 'list_cases', secondary: 'channel_qudao' },
+  4: { primary: 'single_mfsy', secondary: 'list_contact' },
+}
+
 const navigateToClientPage = async (pageKey: string) => {
   if (!pageKey) return
   await router.push(toPagePath(pageKey))
 }
 
 const handleHeroAction = async (slide: BannerSlide, action: 'primary' | 'secondary') => {
-  const target = heroBannerSection.routeActions[slide.key]?.[action]
+  // 优先按 ord 查找路由（广告数据），fallback 按 key 查找（硬编码数据）
+  const target =
+    routeActionsByOrd[slide.ord ?? 0]?.[action] ||
+    heroBannerSection.routeActions[slide.key]?.[action]
   if (target) await navigateToClientPage(target)
 }
 </script>

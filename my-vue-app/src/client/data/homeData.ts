@@ -69,6 +69,8 @@ export interface HeroVisualBridge {
 
 export interface BannerSlide {
   key: string
+  /** 轮播顺序（来自 Ads 数据），用于 CTA 路由映射 */
+  ord?: number
   mediaType: 'video' | 'image'
   eyebrow: string
   title: string
@@ -520,4 +522,109 @@ export const caseCarouselSection = {
 export const serviceCardsSection = {
   heading: '全方位陪伴服务体系 全面助力企业增长',
   cards: serviceSystemCards,
+}
+
+// ====================================================================
+// Ads 数据适配器 — 将后台广告数据映射为组件 props
+// ====================================================================
+
+import type { Ads } from '@/shared/api/ads'
+
+/**
+ * 每个轮播位（按 ord）的默认视觉样式
+ * 广告数据只覆盖图片 + 文案，视觉风格保持前端硬编码
+ */
+const slideVisualByOrd: Record<number, Partial<BannerSlide>> = {
+  1: {
+    mediaType: 'video' as const,
+    bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
+    line: 'rgba(116, 129, 255, 0.16)',
+    accent: '#5b61ff',
+    glow: 'rgba(91, 97, 255, 0.18)',
+    orb: 'rgba(127, 214, 255, 0.22)',
+    buttonStyle: 'hero-button--sunset',
+    secondaryButtonStyle: 'hero-button--indigo-soft',
+    visualImage: '',
+    visualImageAlt: '',
+  },
+  2: {
+    mediaType: 'image' as const,
+    line: 'rgba(94, 105, 255, 0.16)',
+    accent: '#6670ff',
+    glow: 'rgba(123, 134, 242, 0.18)',
+    orb: 'rgba(131, 214, 255, 0.18)',
+    buttonStyle: 'hero-button--violet',
+    secondaryButtonStyle: 'hero-button--ghost-indigo',
+    visualTheme: 'interaction' as const,
+    showVisual: false,
+  },
+  3: {
+    mediaType: 'image' as const,
+    line: 'rgba(85, 126, 255, 0.16)',
+    accent: '#4b74ff',
+    glow: 'rgba(75, 116, 255, 0.18)',
+    orb: 'rgba(122, 207, 255, 0.18)',
+    buttonStyle: 'hero-button--sunset',
+    secondaryButtonStyle: 'hero-button--indigo-soft',
+    visualTheme: 'proof' as const,
+  },
+  4: {
+    mediaType: 'image' as const,
+    bg: 'linear-gradient(135deg, #f9fbff 0%, #f1f6ff 46%, #f7f1ff 100%)',
+    line: 'rgba(101, 112, 255, 0.15)',
+    accent: '#6b63ff',
+    glow: 'rgba(107, 99, 255, 0.16)',
+    orb: 'rgba(255, 178, 91, 0.12)',
+    buttonStyle: 'hero-button--sunset',
+    secondaryButtonStyle: 'hero-button--indigo-soft',
+    visualTheme: 'trial' as const,
+  },
+}
+
+/** 超出 4 个轮播位时的默认样式 */
+const defaultSlideStyle: Partial<BannerSlide> = {
+  mediaType: 'image' as const,
+  bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
+  line: 'rgba(116, 129, 255, 0.16)',
+  accent: '#5b61ff',
+  glow: 'rgba(91, 97, 255, 0.18)',
+  orb: 'rgba(127, 214, 255, 0.22)',
+  buttonStyle: 'hero-button--sunset',
+}
+
+/**
+ * 将 Ads 广告数据转换为首页 Banner 轮播数据
+ * API 数据为空时自动回退到硬编码的 bannerSlides
+ */
+export function adsToBannerSlides(ads: Ads[]): BannerSlide[] {
+  if (!ads?.length) return bannerSlides
+
+  return ads
+    .slice()
+    .sort((a, b) => a.ord - b.ord)
+    .map((ad) => {
+      const visual = slideVisualByOrd[ad.ord] || defaultSlideStyle
+      return {
+        key: `ad-${ad.id}`,
+        ord: ad.ord,
+        mediaType: visual.mediaType!,
+        eyebrow: ad.subtitle || '',
+        title: ad.title || '',
+        subtitle: visual.subtitle,
+        desc: ad.descs || '',
+        primaryCta: ad.content || '了解更多',
+        secondaryCta: visual.secondaryCta,
+        bg: ad.simg ? `url(${ad.simg}) center / cover no-repeat` : visual.bg!,
+        line: visual.line!,
+        accent: visual.accent!,
+        glow: visual.glow!,
+        orb: visual.orb!,
+        buttonStyle: visual.buttonStyle,
+        secondaryButtonStyle: visual.secondaryButtonStyle,
+        visualTheme: visual.visualTheme,
+        showVisual: visual.showVisual,
+        visualImage: visual.visualImage,
+        visualImageAlt: visual.visualImageAlt,
+      }
+    })
 }

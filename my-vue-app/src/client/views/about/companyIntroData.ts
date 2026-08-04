@@ -223,3 +223,21 @@ export const footerCtaSection = {
   primaryCta: '联系我们',
   secondaryCta: '下载销帮帮AI CRM',
 }
+
+// ====================================================================
+// Ads 数据适配器 — 将后台广告数据映射为组件 props
+// ====================================================================
+
+import type { Ads } from '@/shared/api/ads'
+
+/**
+ * 将 Ads 广告数据转换为权威认可资质列表
+ * API 数据为空时自动回退到硬编码的 recognitionSection.items
+ */
+export function adsToRecognitionItems(ads: Ads[]): string[] {
+  if (!ads?.length) return recognitionSection.items
+  return ads
+    .slice()
+    .sort((a, b) => a.ord - b.ord)
+    .map((ad) => ad.title)
+}

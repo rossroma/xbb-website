@@ -66,3 +66,26 @@ export const addressSection = {
     }
   ] satisfies ContentCard[],
 }
+
+// ====================================================================
+// Ads 数据适配器 — 将后台广告数据映射为组件 props
+// ====================================================================
+
+import type { Ads } from '@/shared/api/ads'
+
+/**
+ * 将 Ads 广告数据转换为公司地址卡片列表
+ * API 数据为空时自动回退到硬编码的 addressSection.cards
+ */
+export function adsToAddressCards(ads: Ads[]): ContentCard[] {
+  if (!ads?.length) return addressSection.cards
+  return ads
+    .slice()
+    .sort((a, b) => a.ord - b.ord)
+    .map((ad) => ({
+      title: ad.title,
+      description: ad.descs || '',
+      image: ad.simg || '',
+      imageAlt: `${ad.title}地图`,
+    }))
+}
