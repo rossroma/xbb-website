@@ -154,7 +154,7 @@
         :page-size="pagination.limit"
         :page-sizes="[10, 20, 50, 100]"
         :total="pagination.total"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -561,10 +561,7 @@ onMounted(() => {
 }
 
 .search-area {
-  background: #f5f5f5;
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .search-form {
@@ -590,8 +587,9 @@ onMounted(() => {
 }
 
 .pagination {
-  margin-top: 20px;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 
 .action-buttons {

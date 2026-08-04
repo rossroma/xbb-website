@@ -80,7 +80,7 @@
       :page-size="listQuery.limit"
       :total="total"
       :page-sizes="[10, 20, 30, 50]"
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
@@ -351,11 +351,6 @@ watch(
 )
 </script>
 
-<script lang="ts">
-export default {
-  name: 'AdsList',
-}
-</script>
 
 <style scoped>
 .app-container {
@@ -373,7 +368,7 @@ export default {
 }
 
 .filter-container {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .filter-item {

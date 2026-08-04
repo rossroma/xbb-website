@@ -29,22 +29,6 @@ const router = createRouter({
       ],
     },
 
-    // 文章管理
-    {
-      path: '/article',
-      component: Layout,
-      redirect: '/article/list',
-      meta: { title: '文章管理', icon: 'Document', requiresAuth: true },
-      children: [
-        {
-          path: 'list',
-          name: 'ArticleList',
-          component: () => import('@/admin/views/article/list.vue'),
-          meta: { title: '文章列表', icon: 'List', requiresAuth: true },
-        },
-      ],
-    },
-
     // 栏目管理
     {
       path: '/category',
@@ -268,10 +252,6 @@ const canAccessAdminRoute = (path: string, admin: any) => {
   if (path === '/dashboard') return true
 
   const checks: Array<[boolean, boolean]> = [
-    [
-      path.startsWith('/article'),
-      hasMenuPermission(admin, PERMISSION_TOKENS.article as MenuPermissionMeta),
-    ],
     [
       path.startsWith('/category'),
       hasMenuPermission(admin, PERMISSION_TOKENS.category as MenuPermissionMeta),

@@ -215,11 +215,6 @@ onMounted(() => {
 })
 </script>
 
-<script lang="ts">
-export default {
-  name: 'AdsTypes',
-}
-</script>
 
 <style scoped>
 .app-container {
@@ -227,7 +222,7 @@ export default {
 }
 
 .filter-container {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .filter-item {

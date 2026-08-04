@@ -141,10 +141,7 @@ onMounted(() => {
 }
 
 .search-area {
-  background: var(--el-fill-color-light);
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .search-form {

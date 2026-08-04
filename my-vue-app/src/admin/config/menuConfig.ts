@@ -28,6 +28,4 @@ export const PERMISSION_TOKENS = {
     3: { ruleTokens: ['message_3', '67'] },
     4: { ruleTokens: ['message_4', '67'] },
   },
-  /** 文章管理 */
-  article: { ruleTokens: ['article', 'category'] },
-} as const satisfies Record<string, MenuPermissionMeta | Record<number, MenuPermissionMeta>>
+  } as const satisfies Record<string, MenuPermissionMeta | Record<number, MenuPermissionMeta>>
