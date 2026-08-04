@@ -215,8 +215,6 @@ const loadArticles = async () => {
     const result = await getAdminArticles(params)
     articles.value = result?.items || []
     pagination.total = result?.total || 0
-  } catch {
-    ElMessage.error('加载文章列表失败')
   } finally {
     loading.value = false
   }
@@ -258,8 +256,8 @@ const handleDelete = async (row: any) => {
     ElMessage.success('已移入回收站')
     loadArticleCounts()
     loadArticles()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 

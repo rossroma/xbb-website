@@ -9,19 +9,16 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { extname, join } from 'path';
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
+import { extname } from 'path';
 import sharp = require('sharp');
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-const uploadDir = join(process.cwd(), 'uploads');
-const thumbDir = join(process.cwd(), 'uploads', 'thumbs');
-if (!existsSync(uploadDir)) mkdirSync(uploadDir, { recursive: true });
-if (!existsSync(thumbDir)) mkdirSync(thumbDir, { recursive: true });
+import { OssService } from './oss.service';
 
 @Controller('v1/admin/upload')
 @UseGuards(JwtAuthGuard)
 export class UploadController {
+  constructor(private readonly ossService: OssService) {}
+
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -57,7 +54,6 @@ export class UploadController {
     const unique = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
     const ext = extname(file.originalname).toLowerCase();
     const filename = `${unique}${ext}`;
-    const filepath = join(uploadDir, filename);
 
     const w = maxWidth ? parseInt(maxWidth) : 1920;
     const h = maxHeight ? parseInt(maxHeight) : 1920;
@@ -66,22 +62,25 @@ export class UploadController {
       .resize(w, h, { fit: 'inside', withoutEnlargement: true })
       .toBuffer();
 
-    writeFileSync(filepath, compressed);
+    // 上传到 OSS（不再写入本地磁盘）
+    const objectKey = `uploads/${filename}`;
+    const url = await this.ossService.upload(objectKey, compressed, file.mimetype);
 
     const result: any = {
-      url: `/uploads/${filename}`,
+      url,
       filename: file.originalname,
       size: compressed.length,
     };
 
     if (thumb === '1') {
-      const thumbFilename = `thumb_${filename}`;
-      const thumbPath = join(thumbDir, thumbFilename);
       const thumbBuffer = await sharp(file.buffer)
         .resize(300, 300, { fit: 'cover' })
         .toBuffer();
-      writeFileSync(thumbPath, thumbBuffer);
-      result.thumb_url = `/uploads/thumbs/${thumbFilename}`;
+
+      const thumbKey = `uploads/thumbs/${filename}`;
+      const thumbUrl = await this.ossService.upload(thumbKey, thumbBuffer, file.mimetype);
+
+      result.thumb_url = thumbUrl;
     }
 
     return result;

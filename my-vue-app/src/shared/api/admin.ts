@@ -114,7 +114,3 @@ export const getAdminActions = async (): Promise<Record<string, unknown>[]> => {
   return request.get('/v1/admin/admin-actions')
 }
 
-// 获取管理员权限
-export const getAdminPermissions = async (adminId: number): Promise<Record<string, unknown>> => {
-  return request.get(`/v1/admin/admin-permissions/${adminId}`)
-}

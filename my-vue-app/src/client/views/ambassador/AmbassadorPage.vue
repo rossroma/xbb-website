@@ -41,7 +41,7 @@
       variant="rich"
     />
 
-    <div class="mx-auto mt-[120px] w-[min(1200px,calc(100%-48px))] max-md:mt-8">
+    <div class="mx-auto mt-30 w-[min(1200px,calc(100%-48px))] max-md:mt-8">
       <img
         :src="referralProcessSection.rewardImage"
         :alt="referralProcessSection.rewardImageAlt"

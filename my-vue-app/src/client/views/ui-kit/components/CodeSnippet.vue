@@ -11,7 +11,7 @@
       </button>
     </div>
     <!-- 代码内容 -->
-    <pre class="p-4 text-[13px] leading-[1.7] overflow-x-auto"><code class="text-[#e2e8f0] font-mono">{{ codeText }}</code></pre>
+    <pre class="p-4 text-[13px] leading-body overflow-x-auto"><code class="text-[#e2e8f0] font-mono">{{ codeText }}</code></pre>
   </div>
 </template>
 

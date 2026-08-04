@@ -161,31 +161,27 @@ const baseForm = ref({
 })
 
 const loadSettings = async () => {
-  try {
-    const data = await getBase()
-    if (data) {
-      const b = data as Record<string, string>
-      baseForm.value = {
-        title: b.title || '',
-        keyword: b.keyword || '',
-        descs: b.descs || '',
-        company: b.company || '',
-        logo: b.logo || '',
-        wap_logo: b.wap_logo || '',
-        ico_logo: b.ico_logo || '',
-        tel: b.tel || '',
-        phone: b.phone || '',
-        email: b.email || '',
-        address: b.address || '',
-        fax: b.fax || '',
-        postcode: b.postcode || '',
-        content2: b.content2 || '',
-        toolscode_top: b.toolscode_top || '',
-        toolscode_bottom: b.toolscode_bottom || '',
-      }
+  const data = await getBase()
+  if (data) {
+    const b = data as Record<string, string>
+    baseForm.value = {
+      title: b.title || '',
+      keyword: b.keyword || '',
+      descs: b.descs || '',
+      company: b.company || '',
+      logo: b.logo || '',
+      wap_logo: b.wap_logo || '',
+      ico_logo: b.ico_logo || '',
+      tel: b.tel || '',
+      phone: b.phone || '',
+      email: b.email || '',
+      address: b.address || '',
+      fax: b.fax || '',
+      postcode: b.postcode || '',
+      content2: b.content2 || '',
+      toolscode_top: b.toolscode_top || '',
+      toolscode_bottom: b.toolscode_bottom || '',
     }
-  } catch {
-    ElMessage.error('加载配置失败')
   }
 }
 
@@ -195,8 +191,6 @@ const handleSave = async () => {
     await updateBase(baseForm.value)
     ElMessage.success('保存成功')
     await loadSettings()
-  } catch {
-    ElMessage.error('保存失败')
   } finally {
     loading.value = false
   }

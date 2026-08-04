@@ -78,9 +78,9 @@
           :key="item"
           clickable
           :aria-label="item"
-          class="min-h-[100px] !border-transparent !p-0 !shadow-[0_10px_28px_rgba(15,23,42,0.08)] hover:!shadow-[0_14px_32px_rgba(15,23,42,0.12)]"
+          class="min-h-25 !border-transparent !p-0 !shadow-[0_10px_28px_rgba(15,23,42,0.08)] hover:!shadow-[0_14px_32px_rgba(15,23,42,0.12)]"
         >
-          <div class="flex min-h-[100px] items-center justify-center px-6 text-center">
+          <div class="flex min-h-25 items-center justify-center px-6 text-center">
             <span class="text-[18px] font-normal text-[#09233f] leading-subtitle">
               {{ item }}
             </span>

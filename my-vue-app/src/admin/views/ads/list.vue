@@ -229,20 +229,14 @@ const fetchList = async () => {
     const response = await getAdminAds(listQuery.value)
     list.value = response.items
     total.value = response.total
-  } catch (error) {
-    ElMessage.error('获取广告列表失败')
   } finally {
     listLoading.value = false
   }
 }
 
 const fetchAdsTypes = async () => {
-  try {
-    const res = await getAdminAdsTypes({ limit: 999 })
-    adsTypes.value = (res.items as unknown as AdsType[]) || (res as unknown as AdsType[])
-  } catch (error) {
-    ElMessage.error('获取广告位列表失败')
-  }
+  const res = await getAdminAdsTypes({ limit: 999 })
+  adsTypes.value = (res.items as unknown as AdsType[]) || (res as unknown as AdsType[])
 }
 
 const getAdsTypeName = (bid: number) => {
@@ -285,13 +279,9 @@ const handleCreate = () => {
 
 const handleEdit = async (row: Ads) => {
   dialogType.value = 'edit'
-  try {
-    const data = await getAdminAdsDetail(row.id)
-    formData.value = { ...data }
-    dialogVisible.value = true
-  } catch (error) {
-    ElMessage.error('获取广告详情失败')
-  }
+  const data = await getAdminAdsDetail(row.id)
+  formData.value = { ...data }
+  dialogVisible.value = true
 }
 
 const handleSubmit = async () => {
@@ -299,19 +289,15 @@ const handleSubmit = async () => {
 
   await formRef.value.validate(async (valid) => {
     if (valid) {
-      try {
-        if (dialogType.value === 'create') {
-          await createAdminAds(formData.value)
-          ElMessage.success('创建成功')
-        } else {
-          await updateAdminAds(formData.value.id!, formData.value)
-          ElMessage.success('更新成功')
-        }
-        dialogVisible.value = false
-        fetchList()
-      } catch (error) {
-        ElMessage.error('操作失败')
+      if (dialogType.value === 'create') {
+        await createAdminAds(formData.value)
+        ElMessage.success('创建成功')
+      } else {
+        await updateAdminAds(formData.value.id!, formData.value)
+        ElMessage.success('更新成功')
       }
+      dialogVisible.value = false
+      fetchList()
     }
   })
 }
@@ -322,14 +308,10 @@ const handleDelete = (row: Ads) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async () => {
-    try {
-      await deleteAdminAds(row.id)
-      ElMessage.success('删除成功')
-      fetchList()
-    } catch (error) {
-      ElMessage.error('删除失败')
-    }
-  })
+    await deleteAdminAds(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
+  }).catch(() => {})
 }
 
 onMounted(() => {

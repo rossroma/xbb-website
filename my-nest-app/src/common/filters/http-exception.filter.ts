@@ -9,7 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { BusinessException } from '../exceptions/business.exception';
 import { ResponseResult } from '../interfaces/response.interface';
-import { RESPONSE_CODE, RESPONSE_MESSAGE } from '../constants/response-code';
+import { RESPONSE_CODE } from '../constants/response-code';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let code: number = RESPONSE_CODE.INTERNAL_SERVER_ERROR;
-    let message: string = RESPONSE_MESSAGE.INTERNAL_SERVER_ERROR;
+    let message: string = '服务器内部错误';
 
     // 处理不同类型的异常
     if (exception instanceof BusinessException) {

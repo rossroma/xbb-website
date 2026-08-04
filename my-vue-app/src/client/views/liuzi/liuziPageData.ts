@@ -1,4 +1,4 @@
-﻿import type { AiCrmFeatureCard } from '@/client/components/business/AiCrmFeatureGrid.vue'
+import type { AiCrmFeatureCard } from '@/client/components/business/AiCrmFeatureGrid.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { HeroShowcaseSlide } from '@/client/components/business/HeroBanner.vue'
 import type { BannerSlide } from '@/client/data/homeData'

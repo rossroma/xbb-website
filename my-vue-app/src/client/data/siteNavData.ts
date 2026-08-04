@@ -1,7 +1,7 @@
 import { toPagePath } from '@/client/data/routePaths'
 
 /** 导航菜单图标 */
-export interface HeaderMenuIcon {
+interface HeaderMenuIcon {
   src: string
   width: number
   height: number
@@ -20,7 +20,7 @@ export interface HeaderNavNode {
 }
 
 /** 巨型菜单 */
-export interface HeaderMegaMenu {
+interface HeaderMegaMenu {
   overview: HeaderNavNode[]
   features: HeaderNavNode[]
 }

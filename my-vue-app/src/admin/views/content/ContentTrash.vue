@@ -138,8 +138,6 @@ const loadArticles = async () => {
     })
     articles.value = result?.items || []
     pagination.total = result?.total || 0
-  } catch {
-    ElMessage.error('加载回收站列表失败')
   } finally {
     loading.value = false
   }
@@ -148,13 +146,9 @@ const loadArticles = async () => {
 // ==================== 操作 ====================
 
 const handleRestore = async (row: any) => {
-  try {
-    await restoreArticle(row.id)
-    ElMessage.success('文章已恢复')
-    loadArticles()
-  } catch {
-    ElMessage.error('恢复失败')
-  }
+  await restoreArticle(row.id)
+  ElMessage.success('文章已恢复')
+  loadArticles()
 }
 
 const handlePermanentDelete = async (row: any) => {
@@ -171,8 +165,8 @@ const handlePermanentDelete = async (row: any) => {
     await permanentDeleteArticle(row.id)
     ElMessage.success('已彻底删除')
     loadArticles()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 
@@ -191,8 +185,8 @@ const handleBatchRestore = async () => {
     ElMessage.success(`成功恢复 ${selectedIds.value.length} 篇文章`)
     selectedIds.value = []
     loadArticles()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('批量恢复失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 
@@ -211,8 +205,8 @@ const handleBatchPermanentDelete = async () => {
     ElMessage.success(`成功彻底删除 ${selectedIds.value.length} 篇文章`)
     selectedIds.value = []
     loadArticles()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('批量删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 

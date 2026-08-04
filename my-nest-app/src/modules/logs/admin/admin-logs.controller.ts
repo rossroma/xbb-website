@@ -61,18 +61,4 @@ export class AdminLogsController {
     return ResponseResult.success(result, '获取登录日志列表成功');
   }
 
-  /**
-   * 获取日志统计
-   */
-  @Get('statistics')
-  async getLogsStatistics(
-    @Query('start_date') start_date?: string,
-    @Query('end_date') end_date?: string,
-  ): Promise<ResponseResult<Record<string, number>>> {
-    const result = await this.logsService.getLogsStats({
-      start_date,
-      end_date,
-    });
-    return ResponseResult.success(result, '获取日志统计成功');
   }
-}

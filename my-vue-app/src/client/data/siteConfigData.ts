@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import { Wechat, Phone, Rocket, Up, User } from '@icon-park/vue-next'
+import { Wechat, Phone, Rocket, User } from '@icon-park/vue-next'
 
 const floatingServiceIcon = '/images/cservice.png'
 const floatingQrCode = '/images/sdr_contact_me_qr.png'

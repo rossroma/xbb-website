@@ -137,8 +137,6 @@ const fetchList = async () => {
     const res = await getAdminAdsTypes(listQuery.value)
     list.value = (res.items as unknown as AdsType[]) || (res as unknown as AdsType[])
     total.value = res.total || list.value.length
-  } catch (error) {
-    ElMessage.error('获取广告位列表失败')
   } finally {
     listLoading.value = false
   }
@@ -159,13 +157,9 @@ const handleCreate = () => {
 
 const handleEdit = async (row: AdsType) => {
   dialogType.value = 'edit'
-  try {
-    const data = await getAdminAdsTypeDetail(row.id)
-    formData.value = { ...data }
-    dialogVisible.value = true
-  } catch (error) {
-    ElMessage.error('获取广告位详情失败')
-  }
+  const data = await getAdminAdsTypeDetail(row.id)
+  formData.value = { ...data }
+  dialogVisible.value = true
 }
 
 const handleManage = (row: AdsType) => {
@@ -177,19 +171,15 @@ const handleSubmit = async () => {
 
   await formRef.value.validate(async (valid) => {
     if (valid) {
-      try {
-        if (dialogType.value === 'create') {
-          await createAdminAdsType(formData.value)
-          ElMessage.success('创建成功')
-        } else {
-          await updateAdminAdsType(formData.value.id!, formData.value)
-          ElMessage.success('更新成功')
-        }
-        dialogVisible.value = false
-        fetchList()
-      } catch (error) {
-        ElMessage.error('操作失败')
+      if (dialogType.value === 'create') {
+        await createAdminAdsType(formData.value)
+        ElMessage.success('创建成功')
+      } else {
+        await updateAdminAdsType(formData.value.id!, formData.value)
+        ElMessage.success('更新成功')
       }
+      dialogVisible.value = false
+      fetchList()
     }
   })
 }
@@ -200,14 +190,10 @@ const handleDelete = (row: AdsType) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(async () => {
-    try {
-      await deleteAdminAdsType(row.id)
-      ElMessage.success('删除成功')
-      fetchList()
-    } catch (error) {
-      ElMessage.error('删除失败')
-    }
-  })
+    await deleteAdminAdsType(row.id)
+    ElMessage.success('删除成功')
+    fetchList()
+  }).catch(() => {})
 }
 
 onMounted(() => {

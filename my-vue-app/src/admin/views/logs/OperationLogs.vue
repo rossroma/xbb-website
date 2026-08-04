@@ -64,7 +64,6 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { getOperationLogs } from '@/shared/api/logs'
 
 interface LogItem {
@@ -111,7 +110,6 @@ const loadLogs = async () => {
     pagination.total = result.total || 0
   } catch (error) {
     console.error('加载操作日志失败:', error)
-    ElMessage.error('加载操作日志失败')
   } finally {
     loading.value = false
   }

@@ -14,7 +14,7 @@
     </SectionBlock>
 
     <div
-      class="mt-[60px] w-screen pb-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] max-lg:mt-[80px] max-lg:py-16 max-md:mt-[60px] max-md:py-12"
+      class="mt-15 w-screen pb-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] max-lg:mt-20 max-lg:py-16 max-md:mt-15 max-md:py-12"
     >
       <ContentCardGrid
         class="!mt-0"

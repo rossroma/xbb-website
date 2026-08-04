@@ -10,6 +10,6 @@ import { ClientSettingsController } from './client/client-settings.controller';
   imports: [TypeOrmModule.forFeature([Base, Setting])],
   controllers: [AdminSettingsController, ClientSettingsController],
   providers: [SettingsService],
-  exports: [SettingsService],
+  exports: [],
 })
 export class SettingsModule { }

@@ -36,7 +36,7 @@
             >
               <strong class="inline-flex items-end gap-1">
                 <span
-                  class="text-[46px] font-bold leading-none tracking-normal bg-metrics-gradient bg-clip-text text-transparent max-md:text-[40px]"
+                  class="text-[46px] font-bold leading-none tracking-normal bg-metrics-gradient bg-clip-text text-transparent max-md:text-metrics-unit"
                 >
                   {{ m.value }}
                 </span>

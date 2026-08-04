@@ -21,7 +21,7 @@ export const getAuthHeaders = (): { Authorization: string } | Record<string, nev
 
 /**
  * 创建 axios 请求拦截器 — 自动注入 Bearer token
- * 供 request.ts 和 upload.ts 共享使用，避免 token 注入逻辑重复
+ * 供 request.ts 共享使用，避免 token 注入逻辑重复
  */
 export function createAuthInterceptor() {
   return (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {

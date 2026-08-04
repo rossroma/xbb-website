@@ -120,11 +120,6 @@ export class CategoryService {
     });
   }
 
-  /** @deprecated 使用 findEnabledCategoryBySlug 替代 */
-  async findEnabledCategoryByEnglish(english: string): Promise<Category | null> {
-    return this.findEnabledCategoryBySlug(english);
-  }
-
   /** 获取指定父类目下所有已启用子类目的 ID 列表 */
   async findChildBidIds(parentId: number): Promise<number[]> {
     const children = await this.categoryRepository.find({
@@ -132,16 +127,6 @@ export class CategoryService {
       select: ['id'],
     });
     return children.map((c) => c.id);
-  }
-
-  /** 供内部模块调用 — 查找第一个启用的栏目 */
-  async findFirstEnabledCategory(): Promise<Category | null> {
-    return this.categoryRepository
-      .createQueryBuilder('c')
-      .where('c.status = :status', { status: 1 })
-      .orderBy('c.ord', 'DESC')
-      .addOrderBy('c.id', 'DESC')
-      .getOne();
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<CategoryResponseDto> {

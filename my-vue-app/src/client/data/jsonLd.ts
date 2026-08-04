@@ -11,15 +11,6 @@ import type { SiteSettings } from '@/client/stores/siteSettings'
 export type JsonLdType = 'Organization' | 'WebSite' | 'BreadcrumbList' | 'Product'
 
 /**
- * 页面 SEO 配置中与 JSON-LD 相关的字段。
- * 由 `pageSeoConfig.ts` 中的 `PageSeoMeta` 使用。
- */
-export interface JsonLdConfig {
-  /** 需要生成的 JSON-LD 类型列表 */
-  types: JsonLdType[]
-}
-
-/**
  * 按路由 path 定义面包屑名称。
  * 仅包含有独立页面的路由，子页面（如 /hangyeanli/:id）不在此列。
  */

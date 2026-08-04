@@ -174,16 +174,6 @@ const routes = computed(() =>
           meta: { title: '登录日志', icon: 'User' },
           permission: PERMISSION_TOKENS.loginLogs,
         },
-        {
-          path: '/logs/statistics',
-          meta: { title: '日志统计', icon: 'DataAnalysis' },
-          permission: {
-            ruleTokens: [
-              ...PERMISSION_TOKENS.loginLogs.ruleTokens,
-              ...PERMISSION_TOKENS.operationLogs.ruleTokens,
-            ],
-          },
-        },
       ],
     },
     {

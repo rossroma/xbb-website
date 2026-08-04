@@ -23,12 +23,12 @@ const heroBanner2 = '/images/banner2.png'
 const heroBanner3 = '/images/banner3.png'
 
 // ========== 图标别名 ==========
-export const BurnlifeNotimeOutlined = Fire
-export const PaCustomRoleOutlined = SettingConfig
-export const TechnicalSupportOutlined = SettingComputer
-export const InfoCcmOutlined = Info
-export const HelpdeskOutlined = Help
-export const PaCompensationProfileOutlined = FileSettings
+const BurnlifeNotimeOutlined = Fire
+const PaCustomRoleOutlined = SettingConfig
+const TechnicalSupportOutlined = SettingComputer
+const InfoCcmOutlined = Info
+const HelpdeskOutlined = Help
+const PaCompensationProfileOutlined = FileSettings
 
 // ========== 公共资源 ==========
 export const ecosystemAbility1 = '/ecosystem/ability-1.svg'
@@ -37,27 +37,17 @@ export const ecosystemAbility3 = '/ecosystem/ability-3.svg'
 export const ecosystemAbility1688 = '/ecosystem/1688.png'
 export const heroBrandVideo =
   'https://xbongbong.oss-cn-hangzhou.aliyuncs.com/market/%E4%BC%81%E4%B8%9A%E5%AE%A3%E4%BC%A0%E7%89%87%E8%8A%82%E9%80%89.mp4'
-export {
-  heroBanner2,
-  heroBanner3,
-  custChoiseImg,
-  solutionCardImprove,
-  solutionCardProcess,
-  solutionCardAiDriven,
-  solutionCardOrganization,
-  serviceSystemConsultant,
-  serviceSystemHours,
-}
+export { custChoiseImg }
 
 // ========== 类型定义 ==========
-export interface HeroVisualBadge {
+interface HeroVisualBadge {
   label: string
   value: string
   slot: 'top' | 'middle' | 'bottom'
   tone?: 'violet' | 'sky' | 'amber'
 }
 
-export interface HeroVisualBridge {
+interface HeroVisualBridge {
   title: string
   slot: 'top' | 'middle' | 'bottom'
   kicker?: string
@@ -94,7 +84,7 @@ export interface BannerSlide {
 }
 
 // ========== 工具函数 ==========
-export const makeLogos = (group: number, names: string[]) =>
+const makeLogos = (group: number, names: string[]) =>
   names.map((name, index) => ({
     name,
     src: `/images/logos/${group}-${index + 1}.png`,

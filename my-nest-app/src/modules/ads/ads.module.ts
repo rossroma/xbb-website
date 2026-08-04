@@ -17,6 +17,6 @@ import { OperationLogInterceptor } from '../logs/interceptors/operation-log.inte
     ClientAdsController,
   ],
   providers: [AdsService, OperationLogInterceptor],
-  exports: [AdsService],
+  exports: [],
 })
 export class AdsModule { }

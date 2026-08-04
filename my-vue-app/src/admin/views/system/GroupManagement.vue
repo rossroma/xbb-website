@@ -236,8 +236,6 @@ const loadAdminGroups = async () => {
     })
     adminGroups.value = result.items || (Array.isArray(result) ? result : [])
     pagination.total = result.total || adminGroups.value.length
-  } catch {
-    ElMessage.error('加载用户组列表失败')
   } finally {
     loading.value = false
   }
@@ -248,8 +246,6 @@ const loadActionTree = async () => {
   try {
     const result = await getAdminActions()
     actionTree.value = (result as unknown as ActionNode[]) || []
-  } catch {
-    ElMessage.error('加载权限列表失败')
   } finally {
     permLoading.value = false
   }
@@ -282,9 +278,7 @@ const loadCategoryTree = async () => {
     const result = await getAdminCategories({ limit: 999 })
     const items = result?.items || []
     categoryTree.value = buildCategoryTree(items)
-  } catch {
-    ElMessage.error('加载内容板块权限失败')
-  }
+  } catch {}
 }
 
 const parseRulesCategory = (value?: string | null): string[] => {
@@ -437,8 +431,6 @@ const handlePermSubmit = async () => {
     ElMessage.success('权限设置成功')
     permDialogVisible.value = false
     loadAdminGroups()
-  } catch {
-    ElMessage.error('权限设置失败')
   } finally {
     submitting.value = false
   }
@@ -469,7 +461,7 @@ const handleSubmit = async () => {
     dialogVisible.value = false
     loadAdminGroups()
   } catch (err) {
-    if (err !== false) ElMessage.error('操作失败')
+    if (err !== false) {/* 全局拦截器已处理 */}
   } finally {
     submitting.value = false
   }
@@ -485,8 +477,8 @@ const handleDelete = async (row: any) => {
     await deleteAdminGroup(row.id)
     ElMessage.success('删除成功')
     loadAdminGroups()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 

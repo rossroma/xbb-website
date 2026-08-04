@@ -1232,8 +1232,7 @@
     <Card id="pagination" class="scroll-mt-14 lg:scroll-mt-0">
       <h2 class="text-h2 font-bold text-text-primary mb-2">Pagination 翻页</h2>
       <p class="text-small text-text-secondary mb-6">
-        通用翻页组件，支持页码导航、每页条数切换、快速跳转，与 <code>useCrudList</code> composable
-        配合使用。
+        通用翻页组件，支持页码导航、每页条数切换、快速跳转。
       </p>
 
       <!-- 基本翻页 -->
@@ -1329,8 +1328,7 @@
           </li>
           <li>
             <strong>@change</strong>：页码或每页条数变化时触发，参数为
-            <code>(page, size)</code>，适合与 <code>useCrudList</code> 的
-            <code>fetchList</code> 配合
+            <code>(page, size)</code>
           </li>
           <li>总页数 ≤ 7 时全部显示；超过 7 页时自动添加省略号</li>
           <li>当前页靠近首尾时自动扩展可见页码范围，避免省略号过多</li>

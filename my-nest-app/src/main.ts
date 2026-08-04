@@ -2,7 +2,6 @@ import 'dotenv/config'
 
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
@@ -13,8 +12,6 @@ import { PermissionsGuard } from './modules/auth/guards/permissions.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
   // 全局异常过滤器
   app.useGlobalFilters(new HttpExceptionFilter());

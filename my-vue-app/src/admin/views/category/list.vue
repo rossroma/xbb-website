@@ -344,8 +344,6 @@ const fetchList = async () => {
   try {
     const result = await getCategories({ limit: 9999, sortBy: 'ord_asc' })
     allCategories.value = (result.items as unknown as CategoryItem[]) || []
-  } catch {
-    ElMessage.error('获取栏目列表失败')
   } finally {
     loading.value = false
   }
@@ -426,8 +424,8 @@ const handleDelete = async (row: CategoryItem) => {
     await deleteCategory(row.id)
     ElMessage.success('删除成功')
     fetchList()
-  } catch (e: any) {
-    if (e !== 'cancel') ElMessage.error(e || '删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 
@@ -447,8 +445,6 @@ const handleSubmit = async () => {
       }
       dialogVisible.value = false
       fetchList()
-    } catch (e: any) {
-      ElMessage.error(e || '操作失败')
     } finally {
       submitLoading.value = false
     }

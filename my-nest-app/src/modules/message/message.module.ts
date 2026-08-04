@@ -29,6 +29,6 @@ import { OperationLogInterceptor } from '../logs/interceptors/operation-log.inte
     DataCenterRetryService,
     OperationLogInterceptor,
   ],
-  exports: [MessageService, DataCenterPushService],
+  exports: [],
 })
 export class MessageModule {}

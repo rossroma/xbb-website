@@ -223,7 +223,6 @@ const loadAdmins = async () => {
     pagination.total = result?.total || 0
   } catch (err) {
     console.error('加载管理员列表失败:', err)
-    ElMessage.error('加载管理员列表失败')
   } finally {
     loading.value = false
   }
@@ -236,7 +235,6 @@ const loadAdminGroups = async () => {
     adminGroups.value = result?.items || (Array.isArray(result) ? result : [])
   } catch (err) {
     console.error('加载用户组列表失败:', err)
-    ElMessage.error('加载用户组列表失败')
   }
 }
 
@@ -279,8 +277,6 @@ const handleSubmit = async () => {
     loadAdmins()
   } catch (err) {
     console.error('操作失败:', err)
-    const errorMessage = typeof err === 'string' ? err : '操作失败'
-    ElMessage.error(errorMessage)
   } finally {
     submitting.value = false
   }
@@ -299,10 +295,7 @@ const handleDelete = async (row: Record<string, unknown>) => {
     ElMessage.success('删除成功')
     loadAdmins()
   } catch (err) {
-    if (err !== 'cancel') {
-      console.error('删除失败:', err)
-      ElMessage.error('删除失败')
-    }
+    if (err !== 'cancel') console.error('删除失败:', err)
   }
 }
 

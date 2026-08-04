@@ -354,8 +354,6 @@ const loadArticle = async () => {
       flag: data.flag || '',
       addtime: data.addtime,
     })
-  } catch {
-    ElMessage.error('加载文章失败')
   } finally {
     loading.value = false
   }

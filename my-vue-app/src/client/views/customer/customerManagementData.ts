@@ -13,7 +13,7 @@ import {
   ChartHistogram,
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
-import type { FeatureItem, TopImage } from '@/client/components/business/IconCardGrid.vue'
+import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 
 
 // ========== Hero 区域 ==========

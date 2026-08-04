@@ -14,6 +14,6 @@ import { OperationLogInterceptor } from '../logs/interceptors/operation-log.inte
   ],
   controllers: [AdminArticleController, ClientArticleController],
   providers: [ArticleService, OperationLogInterceptor],
-  exports: [ArticleService],
+  exports: [],
 })
 export class ArticleModule { }

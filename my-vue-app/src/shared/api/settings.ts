@@ -7,11 +7,6 @@ export function getAllSettings(): Promise<Record<string, unknown>> {
   return request.get('/v1/admin/settings')
 }
 
-/** 批量更新配置 */
-export function updateAllSettings(data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return request.put('/v1/admin/settings', data)
-}
-
 /** 获取基础信息 */
 export function getBase(): Promise<Record<string, unknown>> {
   return request.get('/v1/admin/settings/base')
@@ -20,16 +15,6 @@ export function getBase(): Promise<Record<string, unknown>> {
 /** 更新基础信息 */
 export function updateBase(data: Record<string, unknown>): Promise<Record<string, unknown>> {
   return request.put('/v1/admin/settings/base', data)
-}
-
-/** 获取系统设置 */
-export function getSetting(): Promise<Record<string, unknown>> {
-  return request.get('/v1/admin/settings/setting')
-}
-
-/** 更新系统设置 */
-export function updateSetting(data: Record<string, unknown>): Promise<Record<string, unknown>> {
-  return request.put('/v1/admin/settings/setting', data)
 }
 
 // ==================== 客户端接口 ====================

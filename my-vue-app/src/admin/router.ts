@@ -178,12 +178,6 @@ const router = createRouter({
           component: () => import('@/admin/views/logs/LoginLogs.vue'),
           meta: { title: '登录日志', icon: 'User', requiresAuth: true },
         },
-        {
-          path: 'statistics',
-          name: 'LogsStatistics',
-          component: () => import('@/admin/views/logs/LogsStatistics.vue'),
-          meta: { title: '日志统计', icon: 'DataAnalysis', requiresAuth: true },
-        },
       ],
     },
 
@@ -246,10 +240,6 @@ const canAccessAdminRoute = (path: string, admin: any) => {
     [
       path.startsWith('/logs/logins'),
       hasMenuPermission(admin, PERMISSION_TOKENS.loginLogs as MenuPermissionMeta),
-    ],
-    [
-      path.startsWith('/logs/statistics'),
-      hasMenuPermission(admin, PERMISSION_TOKENS.operationLogs as MenuPermissionMeta),
     ],
       ]
 

@@ -34,6 +34,6 @@ import { OperationLogInterceptor } from '../logs/interceptors/operation-log.inte
   ],
   controllers: [AdminAuthController, AdminAdminController],
   providers: [AuthService, AdminService, JwtStrategy, JwtAuthGuard, PermissionsGuard, OperationLogInterceptor],
-  exports: [AuthService, AdminService, JwtAuthGuard, PermissionsGuard],
+  exports: [JwtAuthGuard, PermissionsGuard],
 })
 export class AuthModule { }
