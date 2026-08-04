@@ -187,40 +187,7 @@ const router = createRouter({
       ],
     },
 
-    // 图片集管理
-    {
-      path: '/gallery',
-      component: Layout,
-      redirect: '/gallery/images',
-      meta: { title: '图片集管理', icon: 'Picture', requiresAuth: true },
-      children: [
-        {
-          path: 'images',
-          name: 'GalleryManagement',
-          component: () => import('@/admin/views/gallery/GalleryManagement.vue'),
-          meta: { title: '图片集管理', icon: 'PictureRounded', requiresAuth: true },
-        },
-        {
-          path: 'images2',
-          name: 'Gallery2Management',
-          component: () => import('@/admin/views/gallery/Gallery2Management.vue'),
-          meta: { title: '图片组2管理', icon: 'PictureRounded', requiresAuth: true },
-        },
-        {
-          path: 'images3',
-          name: 'Gallery3Management',
-          component: () => import('@/admin/views/gallery/Gallery3Management.vue'),
-          meta: { title: '图片组3管理', icon: 'PictureRounded', requiresAuth: true },
-        },
-        {
-          path: 'show-info',
-          name: 'ShowInfoManagement',
-          component: () => import('@/admin/views/gallery/ShowInfoManagement.vue'),
-          meta: { title: '展示信息管理', icon: 'InfoFilled', requiresAuth: true },
-        },
-      ],
-    },
-
+    
     // 旧路由重定向（/admin/* → /*）
     // 保留对旧书签和外链的兼容
     {
@@ -284,11 +251,7 @@ const canAccessAdminRoute = (path: string, admin: any) => {
       path.startsWith('/logs/statistics'),
       hasMenuPermission(admin, PERMISSION_TOKENS.operationLogs as MenuPermissionMeta),
     ],
-    [
-      path.startsWith('/gallery'),
-      hasMenuPermission(admin, PERMISSION_TOKENS.gallery as MenuPermissionMeta),
-    ],
-  ]
+      ]
 
   for (const [match, allowed] of checks) {
     if (match) return allowed

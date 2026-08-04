@@ -196,30 +196,7 @@ const routes = computed(() =>
       },
       children: messageChildren,
     },
-    {
-      path: '/gallery',
-      meta: { title: '图片集管理', icon: 'Picture' },
-      hidden: true,
-      children: [
-        {
-          path: '/gallery/images',
-          meta: { title: '图片集管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/images2',
-          meta: { title: '图片组2管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/images3',
-          meta: { title: '图片组3管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/show-info',
-          meta: { title: '展示信息管理', icon: 'InfoFilled' },
-        },
-      ],
-    },
-    ]),
+        ]),
 )
 
 onMounted(() => {

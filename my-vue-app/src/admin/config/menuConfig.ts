@@ -19,9 +19,7 @@ export const PERMISSION_TOKENS = {
   operationLogs: { ruleTokens: ['logs', '60'] },
   /** 登录日志 */
   loginLogs: { ruleTokens: ['logins', '59'] },
-  /** 图片集管理 */
-  gallery: { ruleTokens: ['gallery', 'images'] },
-  /** 留言管理 */
+    /** 留言管理 */
   message: {
     1: { ruleTokens: ['message_1', '67'] },
     2: { ruleTokens: ['message_2', '67'] },
