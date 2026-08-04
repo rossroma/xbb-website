@@ -28,20 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import ContactCard from '@/client/components/business/ContactCard.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
-import { addressSection, contactInfoSection, contactUsSeo, heroBannerSlide } from './contactUsData'
+import { addressSection, contactInfoSection, heroBannerSlide } from './contactUsData'
 
-useHead({
-  title: contactUsSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: contactUsSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

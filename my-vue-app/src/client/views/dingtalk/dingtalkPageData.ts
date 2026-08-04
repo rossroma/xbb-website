@@ -5,11 +5,6 @@ import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 
-export const dingtalkSeo = {
-  title: '销帮帮 X 钉钉 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 与钉钉协同，打通业务数据孤岛，支持客户管理、销售管理、市场管理、智能报表、流程引擎等核心能力，让销售管理更专业易用。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

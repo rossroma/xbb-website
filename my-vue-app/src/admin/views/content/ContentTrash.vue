@@ -101,7 +101,7 @@ const allCategories = ref<any[]>([])
 const categoryNameMap = ref<Map<number, string>>(new Map())
 
 const getCategoryName = (bid: number) => {
-  return categoryNameMap.value.get(bid) ?? String(bid) || '-'
+  return (categoryNameMap.value.get(bid) ?? String(bid)) || '-'
 }
 
 // ==================== 文章列表 ====================

@@ -45,12 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import CTASection from '@/client/components/business/CTASection.vue'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import {
-  biAnalysisSeo,
   heroBannerSlide,
   mobileDataSection,
   dashboardSection,
@@ -59,13 +58,5 @@ import {
   footerCtaSection,
 } from './biAnalysisData'
 
-useHead({
-  title: biAnalysisSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: biAnalysisSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

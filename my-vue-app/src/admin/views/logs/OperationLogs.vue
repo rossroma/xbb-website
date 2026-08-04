@@ -107,7 +107,7 @@ const loadLogs = async () => {
       params.end_date = dateRange.value[1]
     }
     const result = await getOperationLogs(params)
-    logs.value = (result.items as LogItem[]) || []
+    logs.value = (result.items as unknown as LogItem[]) || []
     pagination.total = result.total || 0
   } catch (error) {
     console.error('加载操作日志失败:', error)

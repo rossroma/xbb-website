@@ -165,7 +165,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import AiCrmFeatureGrid from '@/client/components/business/AiCrmFeatureGrid.vue'
 import CaptchaModal from '@/client/components/business/CaptchaModal.vue'
 import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
@@ -192,22 +192,13 @@ import {
   ecosystemSection,
   leadHeroSlide,
   liuziTrialHref,
-  liuziPageSeo,
   logoSection,
   managementShowcaseLeftSlides,
   managementShowcaseRightSection,
 } from './liuziPageData'
 import { pageContent as trialFormContent } from '@/client/views/trial/trialData'
 
-useHead({
-  title: liuziPageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: liuziPageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 const {
   form,

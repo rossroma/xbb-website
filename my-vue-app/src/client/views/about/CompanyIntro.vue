@@ -141,8 +141,8 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import Timeline from '@/client/components/business/Timeline.vue'
 import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -152,7 +152,6 @@ import Card from '@/client/components/ui/Card.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import {
   aboutSection,
-  companyIntroSeo,
   ecosystemSection,
   footerCtaSection,
   heroBannerSlide,
@@ -173,13 +172,5 @@ const supportCardClass = (index: number) => {
   return classes[index % classes.length]
 }
 
-useHead({
-  title: companyIntroSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: companyIntroSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

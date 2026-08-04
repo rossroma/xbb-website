@@ -106,7 +106,7 @@ const loadLogs = async () => {
       params.end_date = dateRange.value[1]
     }
     const result = await getLoginLogs(params)
-    logs.value = (result.items as LoginLogItem[]) || []
+    logs.value = (result.items as unknown as LoginLogItem[]) || []
     pagination.total = result.total || 0
   } catch (error) {
     console.error('加载登录日志失败:', error)

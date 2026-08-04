@@ -1,11 +1,6 @@
 // ========== 下载中心页面 SEO 配置 ==========
 import type { PlatformDownloadCard } from '@/client/components/business/PlatformDownload.vue'
 
-export const downloadCenterSeo = {
-  title: '下载中心 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 下载中心，支持钉钉版、飞书版、1688版本、企微版、独立版与销帮帮AI CRM 多平台扫码体验，即刻上手。',
-}
 
 // ========== 各平台下载区域（PlatformDownload） ==========
 export const downloadCenterSection = {

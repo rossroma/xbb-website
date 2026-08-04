@@ -64,5 +64,9 @@ app.use(ElementPlus)
     }
   }
 
+  // 通知预渲染器：页面数据已就绪，可以截取 HTML
+  document.dispatchEvent(new Event('prerender-ready'))
+  ;(window as unknown as Record<string, unknown>).__PRERENDER_READY__ = true
+
   app.mount('#app')
 })()

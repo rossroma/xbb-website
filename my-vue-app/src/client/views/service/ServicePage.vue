@@ -34,25 +34,16 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
 import {
   heroBannerSlide,
-  servicePageSeo,
   servicePlusSection,
   serviceShowcaseSections,
   supportSection,
 } from './servicePageData'
 
-useHead({
-  title: servicePageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: servicePageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

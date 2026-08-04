@@ -36,8 +36,8 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -45,7 +45,6 @@ import {
   heroBannerSlide,
   moduleCenterUrl,
   productAbilitySection,
-  productOverviewSeo,
   productShowcaseSections,
 } from './productOverviewData'
 
@@ -53,13 +52,5 @@ const openModuleCenter = () => {
   window.open(moduleCenterUrl, '_blank', 'noopener,noreferrer')
 }
 
-useHead({
-  title: productOverviewSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: productOverviewSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

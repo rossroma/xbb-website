@@ -34,26 +34,17 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
 import {
-  feishuSeo,
   heroBannerSlide,
   basicAbilitySection,
   collaborationSection,
   showcaseSections,
 } from './feishuPageData'
 
-useHead({
-  title: feishuSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: feishuSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

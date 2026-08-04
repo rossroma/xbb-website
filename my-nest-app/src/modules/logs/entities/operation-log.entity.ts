@@ -20,10 +20,10 @@ export class OperationLog {
   @Column({ length: 30, nullable: true, comment: '操作 IP' })
   login_ip: string;
 
-  @Column({ length: 10, nullable: true, comment: '请求方法（GET/POST/PATCH/DELETE）' })
+  @Column({ type: 'varchar', length: 10, nullable: true, comment: '请求方法（GET/POST/PATCH/DELETE）' })
   method: string | null;
 
-  @Column({ length: 500, nullable: true, comment: '请求 URL' })
+  @Column({ type: 'varchar', length: 500, nullable: true, comment: '请求 URL' })
   url: string | null;
 
   @Column({ type: 'text', nullable: true, comment: '请求参数（JSON）' })

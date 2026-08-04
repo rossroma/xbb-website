@@ -149,7 +149,7 @@ const categoryNameMap = ref<Map<number, string>>(new Map())
 
 /** 根据分类 ID 查找分类名称 */
 const getCategoryName = (bid: number) => {
-  return categoryNameMap.value.get(bid) ?? String(bid) || '-'
+  return (categoryNameMap.value.get(bid) ?? String(bid)) || '-'
 }
 
 /** 点击分类树节点 */

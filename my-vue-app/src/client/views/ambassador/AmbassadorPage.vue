@@ -70,15 +70,14 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import { PhoneTelephone } from '@icon-park/vue-next'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'
 import FaqList from '@/client/components/business/FaqList.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import {
-  ambassadorSeo,
   contactSection,
   faqCategories,
   faqItems,
@@ -91,13 +90,5 @@ const [contactHotlineLabel = '客服热线', contactHotlineValue = contactSectio
   contactSection.subtitle.split(/[：:]/)
 const contactHotline = contactHotlineValue.replace(/[^\d-]/g, '')
 
-useHead({
-  title: ambassadorSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: ambassadorSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

@@ -19,10 +19,6 @@ export type KnowledgeSidebarBanner = {
   theme: 'teal' | 'violet'
 }
 
-export const knowledgeQnASeo = {
-  title: '知识问答 - 销帮帮 CRM',
-  description: '围绕中小企业 CRM 选型、实施与常见问题的知识问答页面。',
-}
 
 export const knowledgeQnABreadcrumb: BreadcrumbItem[] = [
   { label: '首页', to: '/' },

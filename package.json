@@ -4,6 +4,7 @@
   "private": true,
   "description": "销帮帮 CRM 官网 — Vue 3 + NestJS 全栈项目",
   "scripts": {
+    "re": "kill $(lsof -t -i :5173) 2>/dev/null; kill $(lsof -t -i :3000) 2>/dev/null; sleep 1; nohup pnpm -C my-vue-app dev > /tmp/xbb-frontend.log 2>&1 & nohup pnpm -C my-nest-app start:dev > /tmp/xbb-backend.log 2>&1 & sleep 3; echo '✅ 前端 http://localhost:5173 | 后端 http://localhost:3000'",
     "dev": "pnpm --parallel -r dev",
     "dev:frontend": "pnpm -C my-vue-app dev",
     "dev:backend": "pnpm -C my-nest-app start:dev",

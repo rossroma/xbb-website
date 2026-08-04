@@ -9,11 +9,6 @@ import {
   industryCards,
 } from '@/client/data/homeData'
 
-export const companyIntroSeo = {
-  title: '公司介绍 - 销帮帮AI CRM',
-  description:
-    '杭州逍邦网络科技有限公司成立于2015年，是国内一线CRM品牌和企服领域知名品牌，致力为客户提供客户全生命周期管理和数字化销售管理服务。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

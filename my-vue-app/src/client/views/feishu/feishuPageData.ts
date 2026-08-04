@@ -5,11 +5,6 @@ import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 
-export const feishuSeo = {
-  title: '销帮帮 X 飞书 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 与飞书协同，提供客户管理、销售管理、市场管理、智能报表、流程引擎等核心能力，让团队协作和业务服务真正无缝。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

@@ -12,11 +12,6 @@ import type { BannerSlide } from '@/client/data/homeData'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 
-export const biAnalysisSeo = {
-  title: 'BI 分析 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM BI 分析能力，支持 Web 端和手机端查看仪表盘，自定义分析看板、多维度数据穿透与七大类初始化报表，让业务数据真正服务经营决策。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

@@ -5,10 +5,6 @@ import { footerEmail, footerHotline, socials as footerSocials } from '@/client/d
 
 const addressMapImage = '/images/nnlx_mimg.jpg'
 
-export const contactUsSeo = {
-  title: '联系我们 - 销帮帮AI CRM',
-  description: '联系销帮帮AI CRM，获取产品咨询、免费试用、服务热线、企业邮箱和公司地址信息。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

@@ -20,11 +20,6 @@ import {
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 
-export const salesManagementSeo = {
-  title: '销售管理 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 销售管理系统，AI 销售陪练助力团队能力提升，过程透明化让每一步有据可查，访客计划、签到管理、工作报告构建完整销售管理闭环。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

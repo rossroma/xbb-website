@@ -111,6 +111,10 @@ export interface ReviewCard {
   content: string
   /** 评价用户名称 */
   username: string
+  /** 评价日期（如 "2026年4月17日"） */
+  date?: string
+  /** 点赞数 */
+  likes?: number
   /** 星级评分（1-5） */
   rating: number
 }

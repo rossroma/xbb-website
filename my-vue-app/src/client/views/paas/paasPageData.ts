@@ -15,11 +15,6 @@ import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.v
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 
-export const paasSeo = {
-  title: 'PaaS - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM PaaS 底层能力，支持自定义表单、流程引擎、权限管理、BI 引擎、低代码二开与开放 API，快速适配企业个性化业务需求。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

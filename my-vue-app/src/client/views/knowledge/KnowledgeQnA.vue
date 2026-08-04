@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
 import CaptchaModal from '@/client/components/business/CaptchaModal.vue'
@@ -95,7 +95,6 @@ import {
   knowledgeQnAFaqItems,
   knowledgeQnAHeroSlide,
   knowledgeQnAReviewCards,
-  knowledgeQnASeo,
   knowledgeQnASidebarBanners,
 } from './knowledgeQnAData'
 
@@ -209,15 +208,7 @@ onBeforeUnmount(() => {
   tocObserver = null
 })
 
-useHead({
-  title: knowledgeQnASeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: knowledgeQnASeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>
 
 <style scoped>

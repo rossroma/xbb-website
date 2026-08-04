@@ -171,7 +171,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import { toPagePath } from '@/client/data/routePaths'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import GradientCardGrid from '@/client/components/business/GradientCardGrid.vue'
@@ -191,21 +191,12 @@ import {
   enterpriseVideoSection,
   caseCarouselSection,
   serviceCardsSection,
-  homeSeo,
   heroBrandVideo,
 } from '@/client/data/homeData'
 import { floatingToolbarData } from '@/client/data/siteConfigData'
 import type { BannerSlide } from '@/client/data/homeData'
 
-useHead({
-  title: homeSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: homeSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 const router = useRouter()
 

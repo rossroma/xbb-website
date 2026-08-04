@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
@@ -92,19 +92,11 @@ import EmptyState from '@/client/components/ui/EmptyState.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import { getClientCases, type CaseListResponse } from '@/shared/api/case'
 import { getClientCategories, type ClientCategoryListResponse, type Category } from '@/shared/api/category'
-import { casesPageSeo, casePromoSlides, CASE_ROOT_BID } from './casesData'
+import { casePromoSlides, CASE_ROOT_BID } from './casesData'
 
 // ==================== SEO ====================
 
-useHead({
-  title: casesPageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: casesPageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 // ==================== 状态 ====================
 

@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
@@ -82,19 +82,11 @@ import EmptyState from '@/client/components/ui/EmptyState.vue'
 import { getClientArticles, type ClientArticleListResponse } from '@/shared/api/article'
 import { getClientCategories, type ClientCategoryListResponse } from '@/shared/api/category'
 import type { Category } from '@/shared/api/category'
-import { newsPageSeo, newsBannerSlide, DEFAULT_CATEGORY_TABS } from './newsData'
+import { newsBannerSlide, DEFAULT_CATEGORY_TABS } from './newsData'
 
 // ==================== SEO ====================
 
-useHead({
-  title: newsPageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: newsPageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 // ==================== 状态 ====================
 

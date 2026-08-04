@@ -50,12 +50,11 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
 import {
-  aiSalesAssistantSeo,
   heroBannerSlide,
   lookalikeSection,
   transparentSection,
@@ -65,13 +64,5 @@ import {
   footerCtaSection,
 } from './aiSalesAssistantData'
 
-useHead({
-  title: aiSalesAssistantSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: aiSalesAssistantSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

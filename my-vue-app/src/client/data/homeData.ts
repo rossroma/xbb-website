@@ -449,12 +449,6 @@ export const serviceSystemCards = [
 // 首页区域配置（按组件维度组织，合并标题 / CTA / 路由映射）
 // ====================================================================
 
-/** 首页 SEO 配置 */
-export const homeSeo = {
-  title: '销帮帮 CRM - 企业增长型官网首页',
-  description:
-    '销帮帮 CRM 面向成长型企业提供线索管理、销售流程、客户服务与经营分析能力，帮助团队建立更高效的客户经营体系。',
-}
 
 /** 区域一：Hero Banner */
 export const heroBannerSection = {

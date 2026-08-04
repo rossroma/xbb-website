@@ -17,11 +17,6 @@ const freeSupportImage = '/images/youzhibg1.png'
 const premiumServiceImage = '/images/youzhibg3.png'
 const vipServiceImage = '/images/youzhibg2.png'
 
-export const servicePageSeo = {
-  title: '优质服务 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 优质服务体系，提供帮助文档、视频教程、精品课程、直播培训、VIP售后群、专属服务和服务热线支持。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

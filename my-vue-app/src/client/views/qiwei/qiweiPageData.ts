@@ -5,11 +5,6 @@ import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 
-export const qiweiSeo = {
-  title: '销帮帮 X 企业微信 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 与企业微信协同，提供客户管理、销售管理、市场管理、智能报表、流程引擎等核心能力，借助流量运营能力更高效地转化和服务客户。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

@@ -1,9 +1,3 @@
-/** 免费试用页面 — SEO 配置 */
-export const trialPageSeo = {
-  title: '免费试用 - 销帮帮 CRM',
-  description:
-    '立即免费试用销帮帮CRM，开启高效客户管理之旅。智能客户管理、销售管理、数据分析，助力企业业绩增长。',
-}
 
 /** 页面静态文案（便于后续维护和国际化） */
 export const pageContent = {
