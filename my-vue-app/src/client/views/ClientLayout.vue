@@ -48,11 +48,20 @@ const scrollContainerToTop = () => {
   }
 }
 
+const waitForNextFrame = () =>
+  new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+
 const scrollToHash = async (hash: string) => {
   await nextTick()
-  const target = document.querySelector(hash)
-  if (target instanceof HTMLElement) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const target = document.querySelector(hash)
+    if (target instanceof HTMLElement) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
+    await waitForNextFrame()
   }
 }
 
@@ -66,7 +75,7 @@ const syncRoutePosition = async () => {
 }
 
 onMounted(syncRoutePosition)
-watch(() => route.fullPath, syncRoutePosition)
+watch(() => route.fullPath, syncRoutePosition, { flush: 'post' })
 </script>
 
 <style scoped>
