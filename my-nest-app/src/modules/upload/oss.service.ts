@@ -21,17 +21,23 @@ export class OssService {
       );
     }
 
+    // 使用 endpoint 参数显式指定 OSS 访问地址，避免 region 推断错误
+    // endpoint 格式：https://{region}.aliyuncs.com
+    const endpoint = process.env.OSS_ENDPOINT || `https://${region}.aliyuncs.com`;
+
     this.client = new OSS({
       region,
+      endpoint,
       bucket,
       accessKeyId,
       accessKeySecret,
-      // 不启用 secure 使用 https
       secure: true,
     });
 
     // 优先使用自定义域名/CDN 域名，否则使用默认 OSS 域名
     this.baseUrl = (process.env.OSS_BASE_URL || `https://${bucket}.${region}.aliyuncs.com`).replace(/\/+$/, '');
+
+    this.logger.log(`OSS 客户端已初始化，endpoint: ${endpoint}, bucket: ${bucket}`);
   }
 
   /**
@@ -52,8 +58,17 @@ export class OssService {
 
       return url;
     } catch (error) {
-      this.logger.error(`OSS 上传失败: ${objectKey}`, error instanceof Error ? error.message : error);
-      throw new Error(`OSS 上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
+      const errMsg = error instanceof Error ? error.message : String(error);
+      this.logger.error(`OSS 上传失败: ${objectKey}`, errMsg);
+
+      // 识别常见的 Endpoint 配置错误，给出更友好的提示
+      if (errMsg.includes('must be addressed using the specified endpoint')) {
+        throw new Error(
+          `OSS Endpoint 配置错误：Bucket 不在当前配置的 Region。请检查 .env 中 OSS_REGION 是否正确，当前值: ${process.env.OSS_REGION}`,
+        );
+      }
+
+      throw new Error(`OSS 上传失败: ${errMsg}`);
     }
   }
 }

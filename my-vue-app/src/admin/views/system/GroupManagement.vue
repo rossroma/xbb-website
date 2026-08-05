@@ -73,74 +73,24 @@
     <!-- 权限设置对话框 -->
     <el-dialog title="设置权限" v-model="permDialogVisible" width="700px" @close="resetPermForm">
       <div v-loading="permLoading" class="perm-container">
+        <!-- 全选/全不选/反选（仅对功能权限 CRUD 节点生效） -->
         <div class="perm-footer-actions perm-top-actions">
-          <span class="perm-footer-label">功能权限</span>
+          <span class="perm-footer-label">批量操作</span>
           <el-checkbox @change="selectAll">全选</el-checkbox>
           <el-checkbox @change="selectNone">全不选</el-checkbox>
           <el-checkbox @change="invertSelect">反选</el-checkbox>
+          <span class="perm-footer-hint">（仅影响功能权限，不影响栏目分类）</span>
         </div>
 
-        <div v-for="group in actionTree" :key="group.id" class="perm-group">
-          <div class="perm-group-header">
-            <el-checkbox
-              :model-value="isGroupAllChecked(group)"
-              :indeterminate="isGroupIndeterminate(group)"
-              @change="(val: boolean) => toggleGroup(group, val)"
-            >
-              <span class="perm-group-title">{{ group.action_name }}</span>
-            </el-checkbox>
-          </div>
-          <div class="perm-group-children" v-if="group.children && group.children.length">
-            <el-checkbox
-              v-for="child in group.children"
-              :key="child.id"
-              :model-value="selectedRules.includes(child.action_code)"
-              @change="(val: boolean) => toggleRule(child.action_code, val)"
-            >
-              {{ child.action_name }}
-            </el-checkbox>
-          </div>
-          <div class="perm-group-children" v-else>
-            <el-checkbox
-              :model-value="selectedRules.includes(group.action_code)"
-              @change="(val: boolean) => toggleRule(group.action_code, val)"
-            >
-              {{ group.action_name }}
-            </el-checkbox>
-          </div>
-        </div>
-
-        <div class="perm-section-header">
-          <div class="perm-section-title">内容板块管理</div>
-          <div class="perm-footer-actions category-footer-actions">
-            <span class="perm-footer-label">内容板块</span>
-            <el-checkbox @change="selectAllCategories">全选</el-checkbox>
-            <el-checkbox @change="clearAllCategories">全不选</el-checkbox>
-            <el-checkbox @change="invertCategorySelection">反选</el-checkbox>
-          </div>
-        </div>
-
-        <div v-for="group in categoryTree" :key="`category-${group.id}`" class="perm-group">
-          <div class="perm-group-header">
-            <el-checkbox
-              :model-value="isCategoryGroupAllChecked(group)"
-              :indeterminate="isCategoryGroupIndeterminate(group)"
-              @change="(val: boolean) => toggleCategoryGroup(group, val)"
-            >
-              <span class="perm-group-title">{{ group.title }}</span>
-            </el-checkbox>
-          </div>
-          <div class="perm-group-children" v-if="group.children.length">
-            <el-checkbox
-              v-for="item in flattenCategoryOptions(group.children, 2)"
-              :key="item.id"
-              :model-value="selectedCategoryRules.includes(item.id)"
-              @change="(val: boolean) => toggleCategoryRule(item.id, val)"
-            >
-              {{ item.label }}
-            </el-checkbox>
-          </div>
-        </div>
+        <!-- 递归渲染权限树 -->
+        <PermissionTreeNode
+          v-for="node in actionTree"
+          :key="node.action_code"
+          :node="node"
+          :selected-rules="selectedRules"
+          :selected-category-rules="selectedCategoryRules"
+          @toggle-node="handleToggleNode"
+        />
       </div>
       <template #footer>
         <el-button @click="permDialogVisible = false">取消</el-button>
@@ -161,6 +111,8 @@ import {
   getAdminActions,
 } from '@/shared/api/admin'
 import { getAdminCategories } from '@/shared/api/category'
+import PermissionTreeNode from './PermissionTreeNode.vue'
+import type { TreeNode } from './PermissionTreeNode.vue'
 
 interface ActionNode {
   id: number
@@ -180,11 +132,6 @@ interface CategoryNode {
   children: CategoryNode[]
 }
 
-interface CategoryOption {
-  id: string
-  label: string
-}
-
 const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
@@ -192,11 +139,14 @@ const permDialogVisible = ref(false)
 const permLoading = ref(false)
 const adminGroups = ref<Record<string, unknown>[]>([])
 const formRef = ref()
-const actionTree = ref<ActionNode[]>([])
 const selectedRules = ref<string[]>([])
-const categoryTree = ref<CategoryNode[]>([])
 const selectedCategoryRules = ref<string[]>([])
 const currentGroupId = ref<number | null>(null)
+
+// 权限树：将后端数据 + 动态注入的栏目分类转换为统一 TreeNode 格式
+const actionTree = ref<TreeNode[]>([])
+// 原始后端数据（用于提取 CRUD 节点等操作）
+const rawActionTree = ref<ActionNode[]>([])
 
 const pagination = reactive({
   page: 1,
@@ -226,6 +176,8 @@ const getRulesCount = (rules: string) => {
   return rules.split(',').filter((r: string) => r.trim()).length
 }
 
+// ==================== 用户组 CRUD ====================
+
 const loadAdminGroups = async () => {
   loading.value = true
   try {
@@ -238,201 +190,6 @@ const loadAdminGroups = async () => {
     pagination.total = result.total || adminGroups.value.length
   } finally {
     loading.value = false
-  }
-}
-
-const loadActionTree = async () => {
-  permLoading.value = true
-  try {
-    const result = await getAdminActions()
-    actionTree.value = (result as unknown as ActionNode[]) || []
-  } finally {
-    permLoading.value = false
-  }
-}
-
-const buildCategoryTree = (
-  items: any[],
-  pid = 0,
-  visited: Set<number> = new Set(),
-  depth: number = 0,
-): CategoryNode[] => {
-  if (depth > 50 || visited.has(pid)) return []
-  visited.add(pid)
-  return items
-    .filter((item: any) => Number(item.pid || 0) === pid)
-    .sort(
-      (a: any, b: any) => Number(a.ord || 0) - Number(b.ord || 0) || Number(a.id) - Number(b.id),
-    )
-    .map((item: any) => ({
-      id: Number(item.id),
-      pid: Number(item.pid || 0),
-      title: item.title,
-      status: Number(item.status ?? 1),
-      children: buildCategoryTree(items, Number(item.id), new Set(visited), depth + 1),
-    }))
-}
-
-const loadCategoryTree = async () => {
-  try {
-    const result = await getAdminCategories({ limit: 999 })
-    const items = result?.items || []
-    categoryTree.value = buildCategoryTree(items)
-  } catch {}
-}
-
-const parseRulesCategory = (value?: string | null): string[] => {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    if (Array.isArray(parsed)) {
-      return parsed.map((item) => String(item)).filter(Boolean)
-    }
-  } catch {
-    // fallback below
-  }
-  return value
-    .split(',')
-    .map((item) => item.replace(/[[\]"]+/g, '').trim())
-    .filter(Boolean)
-}
-
-const flattenCategoryOptions = (nodes: CategoryNode[], level = 1): CategoryOption[] => {
-  return nodes.flatMap((node) => {
-    const prefix = level === 1 ? '' : `[${level}级]`
-    const current = { id: String(node.id), label: `${prefix}${node.title}` }
-    return [current, ...flattenCategoryOptions(node.children, level + 1)]
-  })
-}
-
-const getCategoryLeafIds = (node: CategoryNode): string[] => {
-  if (!node.children.length) return [String(node.id)]
-  return [String(node.id), ...node.children.flatMap((child) => getCategoryLeafIds(child))]
-}
-
-const isCategoryGroupAllChecked = (group: CategoryNode) => {
-  const ids = getCategoryLeafIds(group)
-  return ids.length > 0 && ids.every((id) => selectedCategoryRules.value.includes(id))
-}
-
-const isCategoryGroupIndeterminate = (group: CategoryNode) => {
-  const ids = getCategoryLeafIds(group)
-  const checked = ids.filter((id) => selectedCategoryRules.value.includes(id))
-  return checked.length > 0 && checked.length < ids.length
-}
-
-const toggleCategoryGroup = (group: CategoryNode, checked: boolean) => {
-  const ids = getCategoryLeafIds(group)
-  if (checked) {
-    selectedCategoryRules.value = [...new Set([...selectedCategoryRules.value, ...ids])]
-  } else {
-    selectedCategoryRules.value = selectedCategoryRules.value.filter((id) => !ids.includes(id))
-  }
-}
-
-const toggleCategoryRule = (id: string, checked: boolean) => {
-  if (checked) {
-    if (!selectedCategoryRules.value.includes(id)) {
-      selectedCategoryRules.value = [...selectedCategoryRules.value, id]
-    }
-  } else {
-    selectedCategoryRules.value = selectedCategoryRules.value.filter((item) => item !== id)
-  }
-}
-
-const selectAllCategories = () => {
-  selectedCategoryRules.value = categoryTree.value.flatMap((group) => getCategoryLeafIds(group))
-}
-
-const clearAllCategories = () => {
-  selectedCategoryRules.value = []
-}
-
-const invertCategorySelection = () => {
-  const all = categoryTree.value.flatMap((group) => getCategoryLeafIds(group))
-  selectedCategoryRules.value = all.filter((id) => !selectedCategoryRules.value.includes(id))
-}
-
-const getAllLeafCodes = (node: ActionNode): string[] => {
-  if (!node.children || node.children.length === 0) return [node.action_code]
-  return node.children.flatMap((c) => getAllLeafCodes(c))
-}
-
-const isGroupAllChecked = (group: ActionNode) => {
-  const codes = getAllLeafCodes(group)
-  return codes.length > 0 && codes.every((code) => selectedRules.value.includes(code))
-}
-
-const isGroupIndeterminate = (group: ActionNode) => {
-  const codes = getAllLeafCodes(group)
-  const checked = codes.filter((code) => selectedRules.value.includes(code))
-  return checked.length > 0 && checked.length < codes.length
-}
-
-const toggleGroup = (group: ActionNode, val: boolean) => {
-  const codes = getAllLeafCodes(group)
-  if (val) {
-    selectedRules.value = [...new Set([...selectedRules.value, ...codes])]
-  } else {
-    selectedRules.value = selectedRules.value.filter((code) => !codes.includes(code))
-  }
-}
-
-const toggleRule = (code: string, val: boolean) => {
-  if (val) {
-    if (!selectedRules.value.includes(code)) selectedRules.value = [...selectedRules.value, code]
-  } else {
-    selectedRules.value = selectedRules.value.filter((r) => r !== code)
-  }
-}
-
-const selectAll = () => {
-  selectedRules.value = actionTree.value.flatMap((g) => getAllLeafCodes(g))
-}
-
-const selectNone = () => {
-  selectedRules.value = []
-}
-
-const invertSelect = () => {
-  const all = actionTree.value.flatMap((g) => getAllLeafCodes(g))
-  selectedRules.value = all.filter((code) => !selectedRules.value.includes(code))
-}
-
-const showPermissionDialog = async (row: any) => {
-  currentGroupId.value = row.id
-  selectedRules.value = row.rules
-    ? row.rules
-        .split(',')
-        .map((r: string) => r.trim())
-        .filter((r: string) => r)
-    : []
-  selectedCategoryRules.value = parseRulesCategory(row.rules_category)
-  permDialogVisible.value = true
-  if (actionTree.value.length === 0) await loadActionTree()
-  if (categoryTree.value.length === 0) await loadCategoryTree()
-}
-
-const resetPermForm = () => {
-  selectedRules.value = []
-  selectedCategoryRules.value = []
-  currentGroupId.value = null
-}
-
-const handlePermSubmit = async () => {
-  if (!currentGroupId.value) return
-  submitting.value = true
-  try {
-    const rules = selectedRules.value.join(',')
-    await updateAdminGroup(currentGroupId.value, {
-      rules,
-      rules_category: JSON.stringify(selectedCategoryRules.value),
-    })
-    ElMessage.success('权限设置成功')
-    permDialogVisible.value = false
-    loadAdminGroups()
-  } finally {
-    submitting.value = false
   }
 }
 
@@ -487,6 +244,246 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
+// ==================== 权限树 ====================
+
+/**
+ * 将 ActionNode 树转换为统一 TreeNode 格式
+ * 叶子节点（无 children）标记为 type='crud'，非叶子节点标记为 type='group'
+ */
+const convertActionNode = (node: ActionNode): TreeNode => {
+  const hasChildren = node.children && node.children.length > 0
+  return {
+    id: node.id,
+    action_code: node.action_code,
+    action_name: node.action_name,
+    type: hasChildren ? 'group' : 'crud',
+    children: hasChildren ? node.children.map(convertActionNode) : [],
+  }
+}
+
+/**
+ * 构建栏目分类树
+ */
+const buildCategoryTree = (
+  items: any[],
+  pid = 0,
+  visited: Set<number> = new Set(),
+  depth: number = 0,
+): CategoryNode[] => {
+  if (depth > 50 || visited.has(pid)) return []
+  visited.add(pid)
+  return items
+    .filter((item: any) => Number(item.pid || 0) === pid)
+    .sort(
+      (a: any, b: any) => Number(a.ord || 0) - Number(b.ord || 0) || Number(a.id) - Number(b.id),
+    )
+    .map((item: any) => ({
+      id: Number(item.id),
+      pid: Number(item.pid || 0),
+      title: item.title,
+      status: Number(item.status ?? 1),
+      children: buildCategoryTree(items, Number(item.id), new Set(visited), depth + 1),
+    }))
+}
+
+/**
+ * 将 CategoryNode 树转换为 TreeNode 格式（type='category'）
+ */
+const convertCategoryNode = (node: CategoryNode): TreeNode => {
+  const hasChildren = node.children && node.children.length > 0
+  return {
+    id: node.id,
+    action_code: String(node.id),
+    action_name: node.title,
+    type: 'category',
+    children: hasChildren ? node.children.map(convertCategoryNode) : [],
+  }
+}
+
+/**
+ * 加载权限树 + 栏目分类，合并为统一 TreeNode 树
+ */
+const loadPermissionTree = async () => {
+  permLoading.value = true
+  try {
+    // 加载功能权限树
+    const result = await getAdminActions()
+    const rawActions = (result as unknown as ActionNode[]) || []
+    rawActionTree.value = rawActions
+    const tree = rawActions.map(convertActionNode)
+
+    // 加载栏目分类树
+    const catResult = await getAdminCategories({ limit: 999 })
+    const catItems = catResult?.items || []
+    const catTree = buildCategoryTree(catItems)
+
+    // 将栏目分类注入到「内容管理」节点下
+    if (catTree.length > 0) {
+      const contentNode = findNodeByCode(tree, 'content_manage')
+      if (contentNode) {
+        const categoryNodes = catTree.map(convertCategoryNode)
+        contentNode.children.push(...categoryNodes)
+      }
+    }
+
+    actionTree.value = tree
+  } finally {
+    permLoading.value = false
+  }
+}
+
+/**
+ * 在 TreeNode 树中按 action_code 查找节点
+ */
+const findNodeByCode = (nodes: TreeNode[], code: string): TreeNode | null => {
+  for (const node of nodes) {
+    if (node.action_code === code) return node
+    if (node.children.length > 0) {
+      const found = findNodeByCode(node.children, code)
+      if (found) return found
+    }
+  }
+  return null
+}
+
+/**
+ * 收集树中所有 CRUD 类型节点（不含 category）
+ */
+const collectCrudNodes = (nodes: TreeNode[]): TreeNode[] => {
+  return nodes.flatMap(node => {
+    if (node.type === 'crud') return [node]
+    if (node.type === 'group' || node.type === 'category') {
+      return [node, ...collectCrudNodes(node.children)]
+    }
+    return []
+  })
+}
+
+// ==================== 权限选择逻辑 ====================
+
+/**
+ * 收集节点的所有后代节点
+ */
+const getAllDescendants = (node: TreeNode): TreeNode[] => {
+  return [node, ...node.children.flatMap(child => getAllDescendants(child))]
+}
+
+/**
+ * 处理节点勾选/取消
+ */
+const handleToggleNode = (node: TreeNode, checked: boolean) => {
+  if (node.type === 'crud') {
+    // CRUD 叶子节点
+    if (checked) {
+      if (!selectedRules.value.includes(node.action_code)) {
+        selectedRules.value = [...selectedRules.value, node.action_code]
+      }
+    } else {
+      selectedRules.value = selectedRules.value.filter(r => r !== node.action_code)
+    }
+  } else if (node.type === 'category') {
+    // 栏目分类节点
+    if (checked) {
+      if (!selectedCategoryRules.value.includes(node.action_code)) {
+        selectedCategoryRules.value = [...selectedCategoryRules.value, node.action_code]
+      }
+    } else {
+      selectedCategoryRules.value = selectedCategoryRules.value.filter(r => r !== node.action_code)
+    }
+  } else if (node.type === 'group') {
+    // 分组节点：级联勾选/取消所有后代
+    const descendants = getAllDescendants(node)
+    const crudCodes = descendants.filter(d => d.type === 'crud').map(d => d.action_code)
+    const catIds = descendants.filter(d => d.type === 'category').map(d => d.action_code)
+
+    if (checked) {
+      selectedRules.value = [...new Set([...selectedRules.value, ...crudCodes])]
+      selectedCategoryRules.value = [...new Set([...selectedCategoryRules.value, ...catIds])]
+    } else {
+      selectedRules.value = selectedRules.value.filter(r => !crudCodes.includes(r))
+      selectedCategoryRules.value = selectedCategoryRules.value.filter(r => !catIds.includes(r))
+    }
+  }
+}
+
+/**
+ * 全选：仅勾选所有 CRUD 节点（不包含栏目分类）
+ */
+const selectAll = () => {
+  const crudNodes = collectCrudNodes(actionTree.value)
+  selectedRules.value = [...new Set(crudNodes.map(n => n.action_code))]
+}
+
+/**
+ * 全不选：仅取消所有 CRUD 节点（不包含栏目分类）
+ */
+const selectNone = () => {
+  selectedRules.value = []
+}
+
+/**
+ * 反选：仅反转所有 CRUD 节点（不包含栏目分类）
+ */
+const invertSelect = () => {
+  const crudNodes = collectCrudNodes(actionTree.value)
+  const allCrudCodes = crudNodes.map(n => n.action_code)
+  selectedRules.value = allCrudCodes.filter(code => !selectedRules.value.includes(code))
+}
+
+// ==================== 权限对话框 ====================
+
+const parseRulesCategory = (value?: string | null): string[] => {
+  if (!value) return []
+  try {
+    const parsed = JSON.parse(value)
+    if (Array.isArray(parsed)) {
+      return parsed.map((item) => String(item)).filter(Boolean)
+    }
+  } catch {
+    // fallback below
+  }
+  return value
+    .split(',')
+    .map((item) => item.replace(/[[\]"]+/g, '').trim())
+    .filter(Boolean)
+}
+
+const showPermissionDialog = async (row: any) => {
+  currentGroupId.value = row.id
+  selectedRules.value = row.rules
+    ? row.rules
+        .split(',')
+        .map((r: string) => r.trim())
+        .filter((r: string) => r)
+    : []
+  selectedCategoryRules.value = parseRulesCategory(row.rules_category)
+  permDialogVisible.value = true
+  if (actionTree.value.length === 0) await loadPermissionTree()
+}
+
+const resetPermForm = () => {
+  selectedRules.value = []
+  selectedCategoryRules.value = []
+  currentGroupId.value = null
+}
+
+const handlePermSubmit = async () => {
+  if (!currentGroupId.value) return
+  submitting.value = true
+  try {
+    const rules = selectedRules.value.join(',')
+    await updateAdminGroup(currentGroupId.value, {
+      rules,
+      rules_category: JSON.stringify(selectedCategoryRules.value),
+    })
+    ElMessage.success('权限设置成功')
+    permDialogVisible.value = false
+    loadAdminGroups()
+  } finally {
+    submitting.value = false
+  }
+}
+
 onMounted(() => {
   loadAdminGroups()
 })
@@ -510,41 +507,6 @@ onMounted(() => {
   padding: 0 4px;
 }
 
-.perm-group {
-  margin-bottom: 12px;
-  border: 1px solid #ebeef5;
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.perm-section-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #303133;
-}
-
-.perm-section-header {
-  margin: 16px 0 12px;
-}
-
-.perm-group-header {
-  background: #f5f7fa;
-  padding: 8px 16px;
-  border-bottom: 1px solid #ebeef5;
-}
-
-.perm-group-title {
-  font-weight: 600;
-  color: #303133;
-}
-
-.perm-group-children {
-  padding: 10px 16px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-}
-
 .perm-footer-actions {
   margin-top: 12px;
   padding: 10px 16px;
@@ -552,6 +514,7 @@ onMounted(() => {
   border-radius: 4px;
   display: flex;
   gap: 24px;
+  align-items: center;
 }
 
 .perm-top-actions {
@@ -559,13 +522,14 @@ onMounted(() => {
   margin-bottom: 12px;
 }
 
-.category-footer-actions {
-  margin-top: 8px;
-  margin-bottom: 0;
-}
-
 .perm-footer-label {
   color: #606266;
   font-weight: 600;
+}
+
+.perm-footer-hint {
+  font-size: 12px;
+  color: #909399;
+  margin-left: 8px;
 }
 </style>

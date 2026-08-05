@@ -14,16 +14,17 @@ import { UpdateSettingDto } from '../dto/update-setting.dto';
 
 @Controller('v1/admin/settings')
 @UseGuards(JwtAuthGuard)
-@RequirePermissions('setting', '61')
 export class AdminSettingsController {
   constructor(private readonly settingsService: SettingsService) { }
 
   @Get()
+  @RequirePermissions('settings_manage.view')
   getAllSettings() {
     return this.settingsService.getAllSettings();
   }
 
   @Put()
+  @RequirePermissions('settings_manage.edit')
   updateAllSettings(
     @Body() body: { base?: UpdateBaseDto; setting?: UpdateSettingDto },
   ) {
@@ -34,21 +35,25 @@ export class AdminSettingsController {
   }
 
   @Get('base')
+  @RequirePermissions('settings_manage.view')
   getBase() {
     return this.settingsService.getBase();
   }
 
   @Put('base')
+  @RequirePermissions('settings_manage.edit')
   updateBase(@Body() updateBaseDto: UpdateBaseDto) {
     return this.settingsService.updateBase(updateBaseDto);
   }
 
   @Get('setting')
+  @RequirePermissions('settings_manage.view')
   getSetting() {
     return this.settingsService.getSetting();
   }
 
   @Put('setting')
+  @RequirePermissions('settings_manage.edit')
   updateSetting(@Body() updateSettingDto: UpdateSettingDto) {
     return this.settingsService.updateSetting(updateSettingDto);
   }

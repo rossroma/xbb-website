@@ -20,18 +20,19 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/messages')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
-@RequirePermissions('message_4', '67')
 export class AdminMessageController {
   constructor(private readonly messageService: MessageService) { }
 
   // 获取留言列表
   @Get()
+  @RequirePermissions('message_manage.view')
   async findAll(@Query() query: QueryMessageDto) {
     return await this.messageService.findAll(query);
   }
 
   // 批量更新状态（必须在 :id 路由之前）
   @Patch('batch/status')
+  @RequirePermissions('message_manage.edit')
   async batchUpdateStatus(
     @Body() body: { ids: number[]; status: { read_status?: number; check_status?: number } },
   ) {
@@ -41,18 +42,21 @@ export class AdminMessageController {
 
   // 获取留言统计（必须在 :id 路由之前）
   @Get('stats/overview')
+  @RequirePermissions('message_manage.view')
   async getStats() {
     return await this.messageService.getStats();
   }
 
   // 获取留言详情
   @Get(':id')
+  @RequirePermissions('message_manage.view')
   async findOne(@Param('id') id: string) {
     return await this.messageService.findOne(+id);
   }
 
   // 更新留言状态
   @Patch(':id')
+  @RequirePermissions('message_manage.edit')
   @OperationLog({ title: '留言', type: 2, targetFields: ['title', 'id'], titlePrefix: '留言：', sourceOrder: ['response', 'body', 'params'] })
   async update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
     return await this.messageService.update(+id, updateMessageDto);
@@ -60,6 +64,7 @@ export class AdminMessageController {
 
   // 删除留言
   @Delete(':id')
+  @RequirePermissions('message_manage.delete')
   @OperationLog({ title: '留言', type: 3, targetFields: ['id'], sourceOrder: ['params'], titlePrefix: '留言#' })
   async remove(@Param('id') id: string) {
     await this.messageService.remove(+id);

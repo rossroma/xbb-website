@@ -24,11 +24,11 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/categories')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
-@RequirePermissions('types', '35', 'typeList', '50')
 export class AdminCategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 
   @Post()
+  @RequirePermissions('category_manage.create')
   @OperationLog({ title: '栏目', type: 1, targetFields: ['title'], titlePrefix: '栏目：' })
   async create(@Body() createCategoryDto: CreateCategoryDto): Promise<ResponseResult<CategoryResponseDto>> {
     const result = await this.categoryService.create(createCategoryDto);
@@ -36,6 +36,7 @@ export class AdminCategoryController {
   }
 
   @Get()
+  @RequirePermissions('category_manage.view')
   async findAll(
     @Query('keyword') keyword?: string,
     @Query('page') page?: string,
@@ -52,12 +53,14 @@ export class AdminCategoryController {
   }
 
   @Get(':id')
+  @RequirePermissions('category_manage.view')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<CategoryResponseDto>> {
     const result = await this.categoryService.findOne(id);
     return ResponseResult.success(result, '获取栏目详情成功');
   }
 
   @Put(':id')
+  @RequirePermissions('category_manage.edit')
   @OperationLog({ title: '栏目', type: 2, targetFields: ['title'], titlePrefix: '栏目：' })
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -68,6 +71,7 @@ export class AdminCategoryController {
   }
 
   @Delete(':id')
+  @RequirePermissions('category_manage.delete')
   @OperationLog({ title: '栏目', type: 3, targetFields: ['title'], titlePrefix: '栏目：' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<CategoryResponseDto>> {
     const target = await this.categoryService.findOne(id);

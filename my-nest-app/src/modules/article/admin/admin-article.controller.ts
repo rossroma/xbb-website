@@ -27,13 +27,13 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/articles')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
-@RequirePermissions('article', 'category')
 export class AdminArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
   // ==================== 批量操作（静态路径，必须在 :id 之前） ====================
 
   @Patch('batch/restore')
+  @RequirePermissions('content_manage.edit')
   @OperationLog({ title: '文章', type: 2, titlePrefix: '文章：' })
   async batchRestore(@Body() dto: BatchArticleDto): Promise<ResponseResult<number>> {
     const count = await this.articleService.batchRestore(dto.ids);
@@ -41,6 +41,7 @@ export class AdminArticleController {
   }
 
   @Delete('batch/permanent')
+  @RequirePermissions('content_manage.delete')
   @OperationLog({ title: '文章', type: 3, titlePrefix: '文章：' })
   async batchPermanentDelete(@Body() dto: BatchArticleDto): Promise<ResponseResult<number>> {
     const count = await this.articleService.batchPermanentDelete(dto.ids);
@@ -50,6 +51,7 @@ export class AdminArticleController {
   // ==================== 辅助接口 ====================
 
   @Get('counts')
+  @RequirePermissions('content_manage.view')
   async getCounts(): Promise<ResponseResult<Record<number, number>>> {
     const result = await this.articleService.getArticleCounts();
     return ResponseResult.success(result, '获取文章统计成功');
@@ -58,6 +60,7 @@ export class AdminArticleController {
   // ==================== CRUD ====================
 
   @Post()
+  @RequirePermissions('content_manage.create')
   @OperationLog({ title: '文章', type: 1, targetFields: ['title'], titlePrefix: '文章：' })
   async create(
     @Body() createArticleDto: CreateArticleDto,
@@ -68,18 +71,21 @@ export class AdminArticleController {
   }
 
   @Get()
+  @RequirePermissions('content_manage.view')
   async findAll(@Query() queryDto: QueryArticleDto): Promise<ResponseResult<ArticleListResponseDto>> {
     const result = await this.articleService.findAll(queryDto);
     return ResponseResult.success(result, '获取文章列表成功');
   }
 
   @Get(':id')
+  @RequirePermissions('content_manage.view')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<ArticleResponseDto>> {
     const result = await this.articleService.findOne(id);
     return ResponseResult.success(result, '获取文章详情成功');
   }
 
   @Patch(':id')
+  @RequirePermissions('content_manage.edit')
   @OperationLog({ title: '文章', type: 2, targetFields: ['title'], titlePrefix: '文章：' })
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -90,6 +96,7 @@ export class AdminArticleController {
   }
 
   @Delete(':id')
+  @RequirePermissions('content_manage.delete')
   @OperationLog({ title: '文章', type: 3, targetFields: ['title'], titlePrefix: '文章：' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<ArticleResponseDto>> {
     const target = await this.articleService.findOne(id);
@@ -98,6 +105,7 @@ export class AdminArticleController {
   }
 
   @Patch(':id/restore')
+  @RequirePermissions('content_manage.edit')
   @OperationLog({ title: '文章', type: 2, targetFields: ['title'], titlePrefix: '文章：' })
   async restore(@Param('id', ParseIntPipe) id: number): Promise<ResponseResult<null>> {
     await this.articleService.restore(id);
@@ -105,6 +113,7 @@ export class AdminArticleController {
   }
 
   @Delete(':id/permanent')
+  @RequirePermissions('content_manage.delete')
   @OperationLog({ title: '文章', type: 3, targetFields: ['title'], titlePrefix: '文章：' })
   async permanentDelete(
     @Param('id', ParseIntPipe) id: number,

@@ -30,26 +30,26 @@ export class AdminAdminController {
   // ==================== 管理员管理 ====================
 
   @Post('admins')
-  @RequirePermissions('user', '54')
+  @RequirePermissions('admin_manage.create')
   @OperationLog({ title: '管理员', type: 1, targetFields: ['username'], titlePrefix: '管理员：' })
   async createAdmin(@Body() createAdminDto: CreateAdminDto): Promise<any> {
     return await this.adminService.createAdmin(createAdminDto);
   }
 
   @Get('admins')
-  @RequirePermissions('user', '54')
+  @RequirePermissions('admin_manage.view')
   async findAllAdmins(@Query() query: QueryAdminDto): Promise<any> {
     return await this.adminService.findAllAdmins(query);
   }
 
   @Get('admins/:id')
-  @RequirePermissions('user', '54')
+  @RequirePermissions('admin_manage.view')
   async findOneAdmin(@Param('id') id: string): Promise<any> {
     return await this.adminService.findOneAdmin(+id);
   }
 
   @Patch('admins/:id')
-  @RequirePermissions('user', '54')
+  @RequirePermissions('admin_manage.edit')
   @OperationLog({ title: '管理员', type: 2, targetFields: ['username'], titlePrefix: '管理员：' })
   async updateAdmin(
     @Param('id') id: string,
@@ -59,7 +59,7 @@ export class AdminAdminController {
   }
 
   @Delete('admins/:id')
-  @RequirePermissions('user', '54')
+  @RequirePermissions('admin_manage.delete')
   @OperationLog({ title: '管理员', type: 3, targetFields: ['username'] })
   async removeAdmin(@Param('id') id: string): Promise<any> {
     const target = await this.adminService.findOneAdmin(+id);
@@ -70,14 +70,14 @@ export class AdminAdminController {
   // ==================== 用户组管理 ====================
 
   @Post('admin-groups')
-  @RequirePermissions('admin_groups', '63')
+  @RequirePermissions('group_manage.create')
   @OperationLog({ title: '用户组', type: 1, targetFields: ['title'], titlePrefix: '用户组：' })
   async createAdminGroup(@Body() createAdminGroupDto: CreateAdminGroupDto): Promise<any> {
     return await this.adminService.createAdminGroup(createAdminGroupDto);
   }
 
   @Get('admin-groups')
-  @RequirePermissions('admin_groups', '63')
+  @RequirePermissions('group_manage.view')
   async findAllAdminGroups(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -91,13 +91,13 @@ export class AdminAdminController {
   }
 
   @Get('admin-groups/:id')
-  @RequirePermissions('admin_groups', '63')
+  @RequirePermissions('group_manage.view')
   async findOneAdminGroup(@Param('id') id: string): Promise<any> {
     return await this.adminService.findOneAdminGroup(+id);
   }
 
   @Patch('admin-groups/:id')
-  @RequirePermissions('admin_groups', '63')
+  @RequirePermissions('group_manage.edit')
   @OperationLog({ title: '用户组权限设置', type: 2, targetFields: ['title'], titlePrefix: '用户组权限：' })
   async updateAdminGroup(
     @Param('id') id: string,
@@ -107,7 +107,7 @@ export class AdminAdminController {
   }
 
   @Delete('admin-groups/:id')
-  @RequirePermissions('admin_groups', '63')
+  @RequirePermissions('group_manage.delete')
   @OperationLog({ title: '用户组', type: 3, targetFields: ['title'], titlePrefix: '用户组：' })
   async removeAdminGroup(@Param('id') id: string): Promise<any> {
     const target = await this.adminService.findOneAdminGroup(+id);

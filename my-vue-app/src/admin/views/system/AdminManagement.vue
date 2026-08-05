@@ -97,13 +97,17 @@
     <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px" @close="resetForm">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户名" />
+          <el-input
+            v-model="form.username"
+            placeholder="请输入用户名"
+            :disabled="!!form.id"
+          />
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input
             v-model="form.password"
             type="password"
-            placeholder="请输入密码"
+            :placeholder="form.id ? '留空则不修改密码' : '请输入密码'"
             show-password
           />
         </el-form-item>
@@ -191,18 +195,25 @@ const form = reactive({
 })
 
 // 表单验证规则
-const rules = {
+// 编辑模式下密码可选，新增时必填
+const isEdit = computed(() => !!form.id)
+
+const rules = computed(() => ({
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' },
     { min: 3, max: 20, message: '用户名长度在 3 到 20 个字符', trigger: 'blur' },
   ],
-  password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' },
-  ],
+  password: isEdit.value
+    ? [
+        { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' },
+      ]
+    : [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, max: 20, message: '密码长度在 6 到 20 个字符', trigger: 'blur' },
+      ],
   type: [{ required: true, message: '请选择类型', trigger: 'change' }],
   status: [{ required: true, message: '请选择状态', trigger: 'change' }],
-}
+}))
 
 // 计算属性
 const dialogTitle = computed(() => {

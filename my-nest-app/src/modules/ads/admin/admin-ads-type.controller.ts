@@ -22,17 +22,18 @@ import { OperationLogInterceptor } from '../../logs/interceptors/operation-log.i
 @Controller('v1/admin/ads-types')
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(OperationLogInterceptor)
-@RequirePermissions('adstypes', '37', 'adsType', '51')
 export class AdminAdsTypeController {
   constructor(private readonly adsService: AdsService) { }
 
   @Post()
+  @RequirePermissions('ads_manage.create')
   @OperationLog({ title: '广告位', type: 1, targetFields: ['title'], titlePrefix: '广告位：' })
   create(@Body() createAdsTypeDto: CreateAdsTypeDto) {
     return this.adsService.createAdsType(createAdsTypeDto);
   }
 
   @Get()
+  @RequirePermissions('ads_manage.view')
   findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -46,11 +47,13 @@ export class AdminAdsTypeController {
   }
 
   @Get(':id')
+  @RequirePermissions('ads_manage.view')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.adsService.findOneAdsType(id);
   }
 
   @Put(':id')
+  @RequirePermissions('ads_manage.edit')
   @OperationLog({ title: '广告位', type: 2, targetFields: ['title'], titlePrefix: '广告位：' })
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -60,6 +63,7 @@ export class AdminAdsTypeController {
   }
 
   @Delete(':id')
+  @RequirePermissions('ads_manage.delete')
   @OperationLog({ title: '广告位', type: 3, targetFields: ['title'], titlePrefix: '广告位：' })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.adsService.findOneAdsType(id).then((target) =>

@@ -97,6 +97,7 @@ export class SettingsService {
       Object.assign(base, updateBaseDto);
     }
     const updated = await this.baseRepository.save(base);
+    await this.cacheManager.del('settings:siteInfo');
     return this.formatBaseResponse(updated);
   }
 
@@ -122,6 +123,7 @@ export class SettingsService {
       Object.assign(setting, updateSettingDto);
     }
     const updated = await this.settingRepository.save(setting);
+    await this.cacheManager.del('settings:siteInfo');
     return this.formatSettingResponse(updated);
   }
 

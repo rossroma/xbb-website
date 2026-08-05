@@ -11,7 +11,6 @@ import { ResponseResult } from '../../../common/interfaces/response.interface';
 
 @Controller('v1/admin/logs')
 @UseGuards(JwtAuthGuard)
-@RequirePermissions('logs', '60', 'logins', '59')
 export class AdminLogsController {
   constructor(private readonly logsService: LogsService) {}
 
@@ -19,6 +18,7 @@ export class AdminLogsController {
    * 获取操作日志列表
    */
   @Get('operations')
+  @RequirePermissions('operation_logs.view')
   async getOperationLogs(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -42,6 +42,7 @@ export class AdminLogsController {
    * 获取登录日志列表
    */
   @Get('logins')
+  @RequirePermissions('login_logs.view')
   async getLoginLogs(
     @Query('page') page?: string,
     @Query('limit') limit?: string,

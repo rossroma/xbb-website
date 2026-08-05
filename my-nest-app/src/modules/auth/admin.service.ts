@@ -296,32 +296,26 @@ export class AdminService {
   }
 
   private buildActionTree(actions: AdminAction[]): AdminActionResponseDto[] {
-    // parent_id 对应旧系统分类编号（非本表ID），需映射到根节点 action_code
-    const categoryMap: Record<number, string> = {
-      1: 'baseinfo', 2: 'types', 4: 'adstypes',
-      7: 'system', 8: 'message', 10: 'templates',
-    }
+    // parent_id 直接引用本表 id，parent_id === 0 为根节点
+    const nodeMap = new Map<number, AdminActionResponseDto>();
+    const rootActions: AdminActionResponseDto[] = [];
 
-    const rootMap = new Map<string, AdminActionResponseDto>()
-    const rootActions: AdminActionResponseDto[] = []
+    // 第一遍：创建所有节点
+    actions.forEach(action => {
+      nodeMap.set(action.id, this.formatAdminActionResponse(action));
+    });
 
-    actions.filter(a => a.parent_id === 0).forEach(action => {
-      const node = this.formatAdminActionResponse(action)
-      rootMap.set(action.action_code, node)
-      rootActions.push(node)
-    })
-
-    actions.filter(a => a.parent_id !== 0).forEach(action => {
-      const parentCode = categoryMap[action.parent_id]
-      const parent = parentCode ? rootMap.get(parentCode) : undefined
-      const node = this.formatAdminActionResponse(action)
-      if (parent) {
-        parent.children.push(node)
+    // 第二遍：构建树结构
+    actions.forEach(action => {
+      const node = nodeMap.get(action.id)!;
+      if (action.parent_id === 0 || !nodeMap.has(action.parent_id)) {
+        rootActions.push(node);
       } else {
-        rootActions.push(node)
+        const parent = nodeMap.get(action.parent_id)!;
+        parent.children.push(node);
       }
-    })
+    });
 
-    return rootActions
+    return rootActions;
   }
 }
