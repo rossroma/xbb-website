@@ -9,8 +9,11 @@ import {
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { BannerSlide } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 
 // ========== Hero 区域 ==========
@@ -19,6 +22,8 @@ export const heroSection = {
   subtitle: '让业务数据真正服务经营决策',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
+  primaryHref: trialPagePath,
   image: blankShowcaseImage,
   imageAlt: 'BI 分析产品能力展示占位图',
   bg: 'linear-gradient(135deg, #eff6ff 0%, #eef2ff 50%, #f5f8ff 100%)',
@@ -33,7 +38,9 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
+  secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
   line: 'rgba(74, 127, 217, 0.16)',
   accent: '#4a7fd9',
@@ -51,6 +58,7 @@ export const mobileDataSection = {
   image: blankShowcaseImage,
   imageAlt: '移动端 BI 仪表盘展示占位图',
   ctaText: '立即咨询',
+  ctaHref: liuziPagePath,
 }
 
 // ========== 自定义分析看板区域（TabShowcase） ==========

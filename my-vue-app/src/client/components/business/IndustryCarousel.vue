@@ -67,21 +67,21 @@
 
       <template #arrow-left="{ slide: doSlide }">
         <button
-          class="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none text-metrics-unit leading-none max-md:left-2"
+          class="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:left-2"
           aria-label="上一个案例"
           @click="doSlide()"
         >
-          ‹
+          <Left :size="24" :stroke-width="4" />
         </button>
       </template>
 
       <template #arrow-right="{ slide: doSlide }">
         <button
-          class="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none text-metrics-unit leading-none max-md:right-2"
+          class="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:right-2"
           aria-label="下一个案例"
           @click="doSlide()"
         >
-          ›
+          <Right :size="24" :stroke-width="4" />
         </button>
       </template>
     </Carousel>
@@ -97,6 +97,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { Left, Right } from '@icon-park/vue-next'
 import Button from '@/client/components/ui/Button.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'

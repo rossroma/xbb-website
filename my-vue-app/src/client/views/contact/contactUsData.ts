@@ -2,8 +2,10 @@
 import type { BannerSlide } from '@/client/data/homeData'
 import type { ContentCard } from '@/client/components/business/ContentCardGrid.vue'
 import { footerEmail, footerHotline, socials as footerSocials } from '@/client/data/siteFooterData'
+import { toPagePath } from '@/client/data/routePaths'
 
 const addressMapImage = '/images/nnlx_mimg.jpg'
+const trialPagePath = toPagePath('single_mfsy')
 
 
 // ========== Hero 区域 ==========
@@ -21,6 +23,7 @@ export const heroBannerSlide: BannerSlide = {
   title: heroSection.title,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: trialPagePath,
   bg: heroSection.bg,
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',

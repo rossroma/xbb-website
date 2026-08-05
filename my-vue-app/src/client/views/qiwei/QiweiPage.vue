@@ -17,7 +17,6 @@
       :subtitle="trafficOperationSection.description"
       :image="trafficOperationSection.image"
       :image-alt="trafficOperationSection.imageAlt"
-      :primary-cta="trafficOperationSection.primaryCta"
     />
 
     <ImageShowcase

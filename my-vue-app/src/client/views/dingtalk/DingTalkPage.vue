@@ -17,7 +17,6 @@
       :subtitle="professionalSection.description"
       :image="professionalSection.image"
       :image-alt="professionalSection.imageAlt"
-      :primary-cta="professionalSection.primaryCta"
     />
 
     <ImageShowcase

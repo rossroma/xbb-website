@@ -1,4 +1,8 @@
 // ========== 用户心声页面 SEO 配置 ==========
+import { toPagePath } from '@/client/data/routePaths'
+
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 
 // ========== 用户心声根类目配置 ==========
@@ -17,7 +21,9 @@ export const voicesBannerSlide = {
   subtitle: '来自各行业的真实客户评价',
   desc: '',
   primaryCta: '免费试用',
+  primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
   bg: 'linear-gradient(135deg, #f0f1ff 0%, #e8e9fe 52%, #dce0ff 100%)',
   line: 'rgba(91, 97, 255, 0.16)',
   accent: '#5b61ff',

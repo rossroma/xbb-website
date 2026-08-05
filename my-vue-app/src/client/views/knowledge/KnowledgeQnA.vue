@@ -26,8 +26,8 @@
             variant="link-tags"
             title="推荐CRM场景解决方案"
             :toc-items="knowledgeSceneSolutionItems"
-            view-all-text="查看更多场景方案"
-            view-all-link="/jiejuefangan"
+            view-all-text="获取您的专属方案"
+            view-all-link="/liuzi"
           />
         </aside>
       </div>

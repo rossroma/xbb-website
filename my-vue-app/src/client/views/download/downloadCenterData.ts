@@ -22,13 +22,6 @@ export const downloadCenterSection = {
       qrCodeAlt: '飞书版下载二维码',
     },
     {
-      name: '1688版本',
-      icon: '/ecosystem/1688.png',
-      qrCode: '/images/download/placeholder-qr.svg',
-      iconAlt: '1688版本下载入口',
-      qrCodeAlt: '1688版本下载二维码占位图',
-    },
-    {
       name: '企微版',
       icon: '/images/download/wxup.jpg',
       qrCode: '/images/download/wxdown.jpg',
@@ -36,18 +29,18 @@ export const downloadCenterSection = {
       qrCodeAlt: '企微版下载二维码',
     },
     {
+      name: '1688版本',
+      icon: '/ecosystem/1688.png',
+      qrCode: '/images/download/xbbdown.jpg',
+      iconAlt: '1688版本下载入口',
+      qrCodeAlt: '1688版本下载二维码占位图',
+    },
+    {
       name: '独立版',
-      icon: '/images/download/xbbup.jpg',
+      icon: '/images/download/xbbup.png',
       qrCode: '/images/download/xbbdown.jpg',
       iconAlt: '独立版下载入口',
       qrCodeAlt: '独立版下载二维码',
-    },
-    {
-      name: '销帮帮AI CRM',
-      icon: '/images/download/aiup.png',
-      qrCode: '/images/download/aidown.png',
-      iconAlt: '销帮帮AI CRM 下载入口',
-      qrCodeAlt: '销帮帮AI CRM 下载二维码',
     },
   ] as PlatformDownloadCard[],
 }

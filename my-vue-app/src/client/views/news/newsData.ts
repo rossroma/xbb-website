@@ -1,4 +1,8 @@
 // ========== 新闻动态页面 SEO 配置 ==========
+import { toPagePath } from '@/client/data/routePaths'
+
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 
 // ========== Hero 区域 Banner 配置 ==========
@@ -12,7 +16,9 @@ export const newsBannerSlide = {
   subtitle: '了解销帮帮最新资讯与行业动态',
   desc: '',
   primaryCta: '免费试用',
+  primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
   bg: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 52%, #e0e7ff 100%)',
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#7461ff',

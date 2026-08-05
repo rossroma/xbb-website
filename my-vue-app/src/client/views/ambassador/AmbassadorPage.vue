@@ -63,8 +63,6 @@
       variant="warm"
       :title="finalCtaSection.title"
       :subtitle="finalCtaSection.subtitle"
-      :primary-cta="finalCtaSection.primaryCta"
-      :secondary-cta="finalCtaSection.secondaryCta"
     />
   </div>
 </template>

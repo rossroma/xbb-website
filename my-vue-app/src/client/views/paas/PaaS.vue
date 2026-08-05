@@ -9,6 +9,7 @@
       :image="capabilityIntroSection.image"
       :image-alt="capabilityIntroSection.imageAlt"
       :primary-cta="capabilityIntroSection.primaryCta"
+      :primary-href="capabilityIntroSection.primaryHref"
     />
 
     <TabShowcase

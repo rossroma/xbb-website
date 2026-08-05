@@ -9,6 +9,7 @@
       :image="mobileDataSection.image"
       :image-alt="mobileDataSection.imageAlt"
       :primary-cta="mobileDataSection.ctaText"
+      :primary-href="mobileDataSection.ctaHref"
     />
 
     <TabShowcase
@@ -27,6 +28,7 @@
 
     <CTASection
       variant="cool"
+      action-placement="under-title"
       :title="reportSection.title"
       :subtitle="reportSection.description"
       :image="reportSection.image"

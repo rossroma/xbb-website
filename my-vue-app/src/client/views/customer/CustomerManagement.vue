@@ -8,6 +8,7 @@
       :image="productIntroSection.image"
       :image-alt="productIntroSection.imageAlt"
       :primary-cta="productIntroSection.ctaText"
+      :primary-href="productIntroSection.ctaHref"
     />
 
     <TabShowcase :title="tabFeaturesSection.title" :tabs="tabFeaturesSection.tabs" theme="blue" />

@@ -8,6 +8,9 @@ import {
   heroBrandVideo,
   industryCards,
 } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
+
+const trialPagePath = toPagePath('single_mfsy')
 
 
 // ========== Hero 区域 ==========
@@ -29,6 +32,7 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: trialPagePath,
   bg: heroSection.bg,
   line: 'rgba(91, 97, 255, 0.16)',
   accent: '#5b61ff',
@@ -221,6 +225,8 @@ export const footerCtaSection = {
   title: '联系我们',
   subtitle: '下载销帮帮AI CRM',
   primaryCta: '联系我们',
+  primaryHref: '/liuzi',
   secondaryCta: '下载销帮帮AI CRM',
+  secondaryHref: '/xiazaizhongxin',
 }
 

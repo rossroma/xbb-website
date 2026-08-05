@@ -441,16 +441,16 @@ export const knowledgeQnAFaqItems: FaqItem[] = [
 ]
 
 export const knowledgeSceneSolutionItems: ArticleSidebarTocItem[] = [
-  { id: 'omni-channel-marketing', title: '全渠道营销', href: '/jiejuefangan/quanqudaoyingxiao' },
-  { id: 'opportunity-management', title: '商机管理', href: '/jiejuefangan/shangjiguanli' },
-  { id: 'lead-management', title: '线索管理', href: '/jiejuefangan/xiansuoguanli' },
-  { id: 'sales-funnel', title: '销售漏斗', href: '/jiejuefangan/xiaoshouloudou' },
-  { id: 'order-management', title: '订单管理', href: '/jiejuefangan/dingdanguanli' },
-  { id: 'customer-management', title: '客户管理', href: '/kehuguanli' },
-  { id: 'member-management', title: '会员管理', href: '/jiejuefangan/huiyuanguanli' },
-  { id: 'purchase-management', title: '订货管理', href: '/jiejuefangan/dinghuoguanli' },
-  { id: 'device-management', title: '设备管理', href: '/jiejuefangan/shebeiguanli' },
-  { id: 'work-order-management', title: '工单管理', href: '/jiejuefangan/gongdanguanli' },
+  { id: 'omni-channel-marketing', title: '全渠道营销', href: '/liuzi' },
+  { id: 'opportunity-management', title: 'AI获客', href: '/liuzi' },
+  { id: 'lead-management', title: '线索管理', href: '/liuzi' },
+  { id: 'sales-funnel', title: '客户管理', href: '/liuzi' },
+  { id: 'order-management', title: '商机管理', href: '/liuzi' },
+  { id: 'customer-management', title: '订单管理', href: '/liuzi' },
+  { id: 'member-management', title: '销售漏斗', href: '/liuzi' },
+  { id: 'purchase-management', title: 'AI分析师', href: '/liuzi' },
+  { id: 'device-management', title: 'AI陪练', href: '/liuzi' },
+  { id: 'work-order-management', title: '工单管理', href: '/liuzi' },
 ]
 
 export const knowledgeQnAArticles: KnowledgeArticle[] = [

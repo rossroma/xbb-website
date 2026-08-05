@@ -67,7 +67,11 @@ export interface BannerSlide {
   subtitle?: string
   desc: string
   primaryCta: string
+  primaryHref?: string
+  primaryTarget?: '_self' | '_blank'
   secondaryCta?: string
+  secondaryHref?: string
+  secondaryTarget?: '_self' | '_blank'
   buttonStyle?: string
   secondaryButtonStyle?: string
   bg: string
@@ -100,6 +104,7 @@ export const bannerSlides: BannerSlide[] = [
     desc: '专注于客户数字化\n让增长不再是靠感觉，而是靠系统',
     primaryCta: '了解更多',
     secondaryCta: '预约产品演示',
+    secondaryHref: '/liuzi',
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
     bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',

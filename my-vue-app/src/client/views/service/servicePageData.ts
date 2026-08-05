@@ -11,16 +11,19 @@ import {
 } from '@icon-park/vue-next'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
 
 const heroImage = '/images/youzhikehubg.png'
 const freeSupportImage = '/images/youzhibg1.png'
 const premiumServiceImage = '/images/youzhibg3.png'
 const vipServiceImage = '/images/youzhibg2.png'
+const trialPagePath = toPagePath('single_mfsy')
 
 
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '优质服务',
+  subtitle: '专业相伴，让系统真正落地',
   primaryCta: '免费试用',
   image: heroImage,
   imageAlt: '优质服务展示',
@@ -33,8 +36,10 @@ export const heroBannerSlide: BannerSlide = {
   mediaType: 'image',
   eyebrow: '',
   title: heroSection.title,
+  subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: trialPagePath,
   bg: heroSection.bg,
   line: 'rgba(74, 127, 217, 0.16)',
   accent: '#4a7fd9',

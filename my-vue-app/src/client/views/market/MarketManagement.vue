@@ -8,7 +8,6 @@
       :subtitle="leadSourceSection.description"
       :image="leadSourceSection.image"
       :image-alt="leadSourceSection.imageAlt"
-      :primary-cta="leadSourceSection.ctaText"
     />
 
     <ProcessSteps
