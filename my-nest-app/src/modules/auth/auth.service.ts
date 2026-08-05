@@ -88,7 +88,7 @@ export class AuthService {
     }
 
     // 记录登录成功日志
-    await this.logsService.recordLogin(username, ip, 1, userAgent);
+    await this.logsService.recordLogin(username, ip, 1, userAgent).catch(() => {});
 
     // 生成 JWT token（嵌入 group_rules，避免每次请求查库）
     const payload: JwtPayload = {
