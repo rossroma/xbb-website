@@ -4,7 +4,7 @@
 
 当前项目是 pnpm monorepo（NestJS 后端 + Vue 前端），代码托管在**内网 GitLab**，需要实现：
 
-- **`dev` 分支** → 自动部署到公网测试服务器（Docker MySQL + SSH 管道传输镜像）
+- **`develop` 分支** → 自动部署到公网测试服务器（Docker MySQL + SSH 管道传输镜像）
 - **`main` 分支** → 手动触发部署到公网生产服务器（阿里云 RDS + ACR 镜像分发）
 
 核心约束与已知信息：
@@ -16,7 +16,7 @@
 
 ## 整体架构
 
-### 测试环境（dev 分支 → 自动触发）
+### 测试环境（develop 分支 → 自动触发）
 
 ```
 内网 GitLab Runner                              测试服务器（公网）
@@ -71,11 +71,11 @@
 |-----|----------|------|
 | `build-backend` | `main` | 构建后端镜像 → 推送 ACR |
 | `build-frontend` | `main` | 构建前端镜像 → 推送 ACR |
-| `build-test` | `dev` | 构建前后端镜像 → `docker save \| gzip` → 上传为 artifact |
-| `deploy-test` | `dev` | 下载 artifact → `scp` 上传到测试服务器 → SSH 远程执行 `deploy.test.sh` |
+| `build-test` | `develop` | 构建前后端镜像 → `docker save \| gzip` → 上传为 artifact |
+| `deploy-test` | `develop` | 下载 artifact → `scp` 上传到测试服务器 → SSH 远程执行 `deploy.test.sh` |
 | `deploy-prod` | `main` | 手动触发 → `scp` 上传 compose 文件 → SSH 远程执行 `deploy.sh` |
 
-- `deploy-test` 为自动触发，代码 push 到 `dev` 分支即自动部署
+- `deploy-test` 为自动触发，代码 push 到 `develop` 分支即自动部署
 - `deploy-prod` 默认 `when: manual`（手动触发，首次验证后可改为自动）
 
 ### 2. 后端 Dockerfile（`my-nest-app/Dockerfile`）
@@ -235,7 +235,7 @@
 ## 部署流程
 
 ```
-dev 分支 push                    main 分支 merge
+develop 分支 push                    main 分支 merge
      │                                │
      ▼                                ▼
 ┌──────────────┐              ┌──────────────────┐
@@ -299,7 +299,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 ### 测试环境验证
 
-1. push 代码到 `dev` 分支
+1. push 代码到 `develop` 分支
 2. 检查 GitLab CI/CD Pipeline → `build-test` + `deploy-test` 阶段通过
 3. 服务器验证：
    ```bash
