@@ -23,7 +23,7 @@
       >
         <!-- 3D 翻转卡片 -->
         <div
-          class="group w-full aspect-square [perspective:1000px] cursor-pointer"
+          class="group w-full max-w-[175px] aspect-[20/23] [perspective:1000px] cursor-pointer"
           role="button"
           :aria-label="`查看 ${platform.name} 下载二维码`"
           tabindex="0"
@@ -35,22 +35,22 @@
           >
             <!-- 正面：平台图标 -->
             <div
-              class="backface-hidden absolute inset-0 flex items-center justify-center rounded-card bg-surface-secondary p-6 shadow-subtle"
+              class="backface-hidden absolute inset-0 flex items-center justify-center rounded-card bg-surface-secondary p-3 shadow-subtle"
             >
               <img
                 :src="platform.icon"
                 :alt="platform.iconAlt ?? platform.name"
-                class="max-w-[70%] max-h-[70%] object-contain"
+                class="max-w-[60%] max-h-[40%] object-contain"
               />
             </div>
             <!-- 背面：二维码 -->
             <div
-              class="backface-hidden absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-card bg-surface-primary p-5 shadow-subtle [transform:rotateY(180deg)]"
+              class="backface-hidden absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-card bg-surface-primary p-4 shadow-subtle [transform:rotateY(180deg)]"
             >
               <img
                 :src="platform.qrCode"
                 :alt="platform.qrCodeAlt ?? `${platform.name} 下载二维码`"
-                class="max-w-[80%] max-h-[75%] object-contain"
+                class="max-w-[86%] max-h-[80%] object-contain"
               />
               <span class="text-caption text-text-tertiary">扫码下载</span>
             </div>

@@ -9,28 +9,28 @@ export const downloadCenterSection = {
   platforms: [
     {
       name: '钉钉版',
-      icon: '/images/download/dingup.jpg',
+      icon: '/images/download/dingup.png',
       qrCode: '/images/download/dingdown.jpg',
       iconAlt: '钉钉版下载入口',
       qrCodeAlt: '钉钉版下载二维码',
     },
     {
       name: '飞书版',
-      icon: '/images/download/flyup.jpg',
+      icon: '/images/download/flyup.png',
       qrCode: '/images/download/flydown.jpg',
       iconAlt: '飞书版下载入口',
       qrCodeAlt: '飞书版下载二维码',
     },
     {
       name: '企微版',
-      icon: '/images/download/wxup.jpg',
+      icon: '/images/download/wxup.png',
       qrCode: '/images/download/wxdown.jpg',
       iconAlt: '企微版下载入口',
       qrCodeAlt: '企微版下载二维码',
     },
     {
       name: '1688版本',
-      icon: '/ecosystem/1688.png',
+      icon: '/images/download/1688.png',
       qrCode: '/images/download/xbbdown.jpg',
       iconAlt: '1688版本下载入口',
       qrCodeAlt: '1688版本下载二维码占位图',
