@@ -73,22 +73,18 @@
     <!-- 权限设置对话框 -->
     <el-dialog title="设置权限" v-model="permDialogVisible" width="700px" @close="resetPermForm">
       <div v-loading="permLoading" class="perm-container">
-        <!-- 全选/全不选/反选（仅对功能权限 CRUD 节点生效） -->
         <div class="perm-footer-actions perm-top-actions">
           <span class="perm-footer-label">批量操作</span>
           <el-checkbox @change="selectAll">全选</el-checkbox>
           <el-checkbox @change="selectNone">全不选</el-checkbox>
           <el-checkbox @change="invertSelect">反选</el-checkbox>
-          <span class="perm-footer-hint">（仅影响功能权限，不影响栏目分类）</span>
         </div>
 
-        <!-- 递归渲染权限树 -->
         <PermissionTreeNode
           v-for="node in actionTree"
           :key="node.action_code"
           :node="node"
           :selected-rules="selectedRules"
-          :selected-category-rules="selectedCategoryRules"
           @toggle-node="handleToggleNode"
         />
       </div>
@@ -110,7 +106,6 @@ import {
   deleteAdminGroup,
   getAdminActions,
 } from '@/shared/api/admin'
-import { getAdminCategories } from '@/shared/api/category'
 import PermissionTreeNode from './PermissionTreeNode.vue'
 import type { TreeNode } from './PermissionTreeNode.vue'
 
@@ -124,14 +119,6 @@ interface ActionNode {
   children: ActionNode[]
 }
 
-interface CategoryNode {
-  id: number
-  pid: number
-  title: string
-  status: number
-  children: CategoryNode[]
-}
-
 const loading = ref(false)
 const submitting = ref(false)
 const dialogVisible = ref(false)
@@ -140,13 +127,9 @@ const permLoading = ref(false)
 const adminGroups = ref<Record<string, unknown>[]>([])
 const formRef = ref()
 const selectedRules = ref<string[]>([])
-const selectedCategoryRules = ref<string[]>([])
 const currentGroupId = ref<number | null>(null)
 
-// 权限树：将后端数据 + 动态注入的栏目分类转换为统一 TreeNode 格式
 const actionTree = ref<TreeNode[]>([])
-// 原始后端数据（用于提取 CRUD 节点等操作）
-const rawActionTree = ref<ActionNode[]>([])
 
 const pagination = reactive({
   page: 1,
@@ -171,12 +154,12 @@ const formRules = {
 
 const dialogTitle = computed(() => (form.id ? '编辑用户组' : '新增用户组'))
 
+// ==================== 用户组 CRUD ====================
+
 const getRulesCount = (rules: string) => {
   if (!rules) return 0
   return rules.split(',').filter((r: string) => r.trim()).length
 }
-
-// ==================== 用户组 CRUD ====================
 
 const loadAdminGroups = async () => {
   loading.value = true
@@ -235,7 +218,7 @@ const handleDelete = async (row: any) => {
     ElMessage.success('删除成功')
     loadAdminGroups()
   } catch {
-    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
+    // ElMessageBox 取消或 API 错误
   }
 }
 
@@ -244,12 +227,8 @@ const resetForm = () => {
   formRef.value?.resetFields()
 }
 
-// ==================== 权限树 ====================
+// ==================== 权限树加载 ====================
 
-/**
- * 将 ActionNode 树转换为统一 TreeNode 格式
- * 叶子节点（无 children）标记为 type='crud'，非叶子节点标记为 type='group'
- */
 const convertActionNode = (node: ActionNode): TreeNode => {
   const hasChildren = node.children && node.children.length > 0
   return {
@@ -261,119 +240,53 @@ const convertActionNode = (node: ActionNode): TreeNode => {
   }
 }
 
-/**
- * 构建栏目分类树
- */
-const buildCategoryTree = (
-  items: any[],
-  pid = 0,
-  visited: Set<number> = new Set(),
-  depth: number = 0,
-): CategoryNode[] => {
-  if (depth > 50 || visited.has(pid)) return []
-  visited.add(pid)
-  return items
-    .filter((item: any) => Number(item.pid || 0) === pid)
-    .sort(
-      (a: any, b: any) => Number(a.ord || 0) - Number(b.ord || 0) || Number(a.id) - Number(b.id),
-    )
-    .map((item: any) => ({
-      id: Number(item.id),
-      pid: Number(item.pid || 0),
-      title: item.title,
-      status: Number(item.status ?? 1),
-      children: buildCategoryTree(items, Number(item.id), new Set(visited), depth + 1),
-    }))
-}
-
-/**
- * 将 CategoryNode 树转换为 TreeNode 格式（type='category'）
- */
-const convertCategoryNode = (node: CategoryNode): TreeNode => {
-  const hasChildren = node.children && node.children.length > 0
-  return {
-    id: node.id,
-    action_code: String(node.id),
-    action_name: node.title,
-    type: 'category',
-    children: hasChildren ? node.children.map(convertCategoryNode) : [],
-  }
-}
-
-/**
- * 加载权限树 + 栏目分类，合并为统一 TreeNode 树
- */
 const loadPermissionTree = async () => {
   permLoading.value = true
   try {
-    // 加载功能权限树
     const result = await getAdminActions()
     const rawActions = (result as unknown as ActionNode[]) || []
-    rawActionTree.value = rawActions
-    const tree = rawActions.map(convertActionNode)
-
-    // 加载栏目分类树
-    const catResult = await getAdminCategories({ limit: 999 })
-    const catItems = catResult?.items || []
-    const catTree = buildCategoryTree(catItems)
-
-    // 将栏目分类注入到「内容管理」节点下
-    if (catTree.length > 0) {
-      const contentNode = findNodeByCode(tree, 'content_manage')
-      if (contentNode) {
-        const categoryNodes = catTree.map(convertCategoryNode)
-        contentNode.children.push(...categoryNodes)
-      }
-    }
-
-    actionTree.value = tree
+    actionTree.value = rawActions.map(convertActionNode)
   } finally {
     permLoading.value = false
   }
 }
 
-/**
- * 在 TreeNode 树中按 action_code 查找节点
- */
-const findNodeByCode = (nodes: TreeNode[], code: string): TreeNode | null => {
-  for (const node of nodes) {
-    if (node.action_code === code) return node
-    if (node.children.length > 0) {
-      const found = findNodeByCode(node.children, code)
-      if (found) return found
-    }
-  }
-  return null
-}
-
-/**
- * 收集树中所有 CRUD 类型节点（不含 category）
- */
-const collectCrudNodes = (nodes: TreeNode[]): TreeNode[] => {
-  return nodes.flatMap(node => {
-    if (node.type === 'crud') return [node]
-    if (node.type === 'group' || node.type === 'category') {
-      return [node, ...collectCrudNodes(node.children)]
-    }
-    return []
-  })
-}
-
 // ==================== 权限选择逻辑 ====================
 
-/**
- * 收集节点的所有后代节点
- */
-const getAllDescendants = (node: TreeNode): TreeNode[] => {
-  return [node, ...node.children.flatMap(child => getAllDescendants(child))]
+// 收集节点的所有后代 CRUD 节点
+const getCrudDescendants = (node: TreeNode): TreeNode[] => {
+  return node.type === 'crud'
+    ? [node]
+    : node.children.flatMap(child => getCrudDescendants(child))
 }
 
-/**
- * 处理节点勾选/取消
- */
+// 获取模块对应的 view action_code
+const getViewCode = (node: TreeNode): string | null => {
+  if (node.type === 'crud' && node.action_code.endsWith('.view')) return node.action_code
+  const descendants = getCrudDescendants(node)
+  const viewNode = descendants.find(d => d.action_code.endsWith('.view'))
+  return viewNode?.action_code || null
+}
+
+// 收集节点下所有非 view 的 CRUD action_code
+const getNonViewCrudCodes = (node: TreeNode): string[] => {
+  return getCrudDescendants(node)
+    .filter(d => !d.action_code.endsWith('.view'))
+    .map(d => d.action_code)
+}
+
+// 收集节点下所有 CRUD action_code（含 view）
+const getAllCrudCodes = (node: TreeNode): string[] => {
+  return getCrudDescendants(node).map(d => d.action_code)
+}
+
 const handleToggleNode = (node: TreeNode, checked: boolean) => {
   if (node.type === 'crud') {
     // CRUD 叶子节点
+    if (node.action_code.endsWith('.view')) {
+      // view 节点不可手动切换，忽略
+      return
+    }
     if (checked) {
       if (!selectedRules.value.includes(node.action_code)) {
         selectedRules.value = [...selectedRules.value, node.action_code]
@@ -381,72 +294,78 @@ const handleToggleNode = (node: TreeNode, checked: boolean) => {
     } else {
       selectedRules.value = selectedRules.value.filter(r => r !== node.action_code)
     }
-  } else if (node.type === 'category') {
-    // 栏目分类节点
-    if (checked) {
-      if (!selectedCategoryRules.value.includes(node.action_code)) {
-        selectedCategoryRules.value = [...selectedCategoryRules.value, node.action_code]
-      }
-    } else {
-      selectedCategoryRules.value = selectedCategoryRules.value.filter(r => r !== node.action_code)
-    }
-  } else if (node.type === 'group') {
-    // 分组节点：级联勾选/取消所有后代
-    const descendants = getAllDescendants(node)
-    const crudCodes = descendants.filter(d => d.type === 'crud').map(d => d.action_code)
-    const catIds = descendants.filter(d => d.type === 'category').map(d => d.action_code)
+    return
+  }
 
-    if (checked) {
-      selectedRules.value = [...new Set([...selectedRules.value, ...crudCodes])]
-      selectedCategoryRules.value = [...new Set([...selectedCategoryRules.value, ...catIds])]
-    } else {
-      selectedRules.value = selectedRules.value.filter(r => !crudCodes.includes(r))
-      selectedCategoryRules.value = selectedCategoryRules.value.filter(r => !catIds.includes(r))
-    }
+  // group 节点：勾选/取消所有后代
+  if (checked) {
+    // 勾选模块 → 自动附带所有 CRUD（含 view）
+    const allCodes = getAllCrudCodes(node)
+    selectedRules.value = [...new Set([...selectedRules.value, ...allCodes])]
+  } else {
+    // 取消模块 → 移除所有 CRUD（含 view）
+    const allCodes = getAllCrudCodes(node)
+    selectedRules.value = selectedRules.value.filter(r => !allCodes.includes(r))
   }
 }
 
-/**
- * 全选：仅勾选所有 CRUD 节点（不包含栏目分类）
- */
-const selectAll = () => {
-  const crudNodes = collectCrudNodes(actionTree.value)
-  selectedRules.value = [...new Set(crudNodes.map(n => n.action_code))]
+// 收集树中所有模块级 group 节点
+const collectModuleNodes = (nodes: TreeNode[]): TreeNode[] => {
+  return nodes.flatMap(node => {
+    if (node.type === 'group') return [node, ...collectModuleNodes(node.children)]
+    return []
+  })
 }
 
-/**
- * 全不选：仅取消所有 CRUD 节点（不包含栏目分类）
- */
+// 收集所有非 view 的 CRUD 叶子节点
+const collectAllNonViewCrudCodes = (nodes: TreeNode[]): string[] => {
+  return nodes.flatMap(node => {
+    if (node.type === 'crud' && !node.action_code.endsWith('.view')) {
+      return [node.action_code]
+    }
+    if (node.type === 'group') {
+      return collectAllNonViewCrudCodes(node.children)
+    }
+    return []
+  })
+}
+
+// 全选：勾选所有模块 → 自动附带 view
+const selectAll = () => {
+  const allNonViewCodes = collectAllNonViewCrudCodes(actionTree.value)
+  const allViewCodes = actionTree.value
+    .flatMap(node => getAllCrudCodes(node))
+    .filter(code => code.endsWith('.view'))
+  selectedRules.value = [...new Set([...allNonViewCodes, ...allViewCodes])]
+}
+
+// 全不选：清空所有
 const selectNone = () => {
   selectedRules.value = []
 }
 
-/**
- * 反选：仅反转所有 CRUD 节点（不包含栏目分类）
- */
+// 反选：反转模块勾选状态
 const invertSelect = () => {
-  const crudNodes = collectCrudNodes(actionTree.value)
-  const allCrudCodes = crudNodes.map(n => n.action_code)
-  selectedRules.value = allCrudCodes.filter(code => !selectedRules.value.includes(code))
+  const moduleNodes = collectModuleNodes(actionTree.value)
+  const allCodes = new Set<string>()
+
+  for (const module of moduleNodes) {
+    const crudCodes = getAllCrudCodes(module)
+    const anyChecked = crudCodes.some(code => selectedRules.value.includes(code))
+
+    if (anyChecked) {
+      // 当前已勾选 → 取消（移除所有 CRUD 含 view）
+      // 不添加到 allCodes
+    } else {
+      // 当前未勾选 → 勾选（自动附带 view）
+      crudCodes.forEach(code => allCodes.add(code))
+    }
+  }
+
+  selectedRules.value = [...allCodes]
 }
 
 // ==================== 权限对话框 ====================
-
-const parseRulesCategory = (value?: string | null): string[] => {
-  if (!value) return []
-  try {
-    const parsed = JSON.parse(value)
-    if (Array.isArray(parsed)) {
-      return parsed.map((item) => String(item)).filter(Boolean)
-    }
-  } catch {
-    // fallback below
-  }
-  return value
-    .split(',')
-    .map((item) => item.replace(/[[\]"]+/g, '').trim())
-    .filter(Boolean)
-}
 
 const showPermissionDialog = async (row: any) => {
   currentGroupId.value = row.id
@@ -456,14 +375,12 @@ const showPermissionDialog = async (row: any) => {
         .map((r: string) => r.trim())
         .filter((r: string) => r)
     : []
-  selectedCategoryRules.value = parseRulesCategory(row.rules_category)
   permDialogVisible.value = true
   if (actionTree.value.length === 0) await loadPermissionTree()
 }
 
 const resetPermForm = () => {
   selectedRules.value = []
-  selectedCategoryRules.value = []
   currentGroupId.value = null
 }
 
@@ -474,7 +391,7 @@ const handlePermSubmit = async () => {
     const rules = selectedRules.value.join(',')
     await updateAdminGroup(currentGroupId.value, {
       rules,
-      rules_category: JSON.stringify(selectedCategoryRules.value),
+      rules_category: JSON.stringify([]),
     })
     ElMessage.success('权限设置成功')
     permDialogVisible.value = false
@@ -525,11 +442,5 @@ onMounted(() => {
 .perm-footer-label {
   color: #606266;
   font-weight: 600;
-}
-
-.perm-footer-hint {
-  font-size: 12px;
-  color: #909399;
-  margin-left: 8px;
 }
 </style>
