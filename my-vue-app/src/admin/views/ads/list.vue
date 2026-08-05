@@ -123,15 +123,19 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="缩略图">
-          <ImageUploader
-            v-model="formData.simg"
-            :thumb="true"
-            @thumb-url="
-              (url: string) => {
-                if (!formData.wap_simg) formData.wap_simg = url
-              }
-            "
-          />
+          <ImageUploader v-model="formData.simg" :thumb="true" />
+        </el-form-item>
+        <el-form-item label="缩略图2">
+          <ImageUploader v-model="formData.simg2" :thumb="true" />
+        </el-form-item>
+        <el-form-item label="手机缩略图">
+          <ImageUploader v-model="formData.wap_simg" :thumb="true" />
+        </el-form-item>
+        <el-form-item label="图片尺寸">
+          <el-input v-model="formData.width_height" placeholder="例如: 1920x500" />
+        </el-form-item>
+        <el-form-item label="上传资料">
+          <el-input v-model="formData.download" placeholder="请输入上传资料链接" />
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="formData.ord" :min="0" />
@@ -214,6 +218,8 @@ const formData = ref<Partial<Ads>>({
   simg: '',
   simg2: '',
   wap_simg: '',
+  width_height: '',
+  download: '',
   content: '',
   target: '_blank',
 })
@@ -271,6 +277,8 @@ const handleCreate = () => {
     simg: '',
     simg2: '',
     wap_simg: '',
+    width_height: '',
+    download: '',
     content: '',
     target: '_blank',
   }
