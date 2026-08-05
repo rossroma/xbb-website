@@ -51,19 +51,17 @@ export const footerColumns: FooterColumn[] = [
   {
     title: '产品中心',
     links: [
-      { text: 'AI 销售助理', href: '/ai' },
-      { text: '销帮帮 X 钉钉', href: '/dingtalk' },
-      { text: '销帮帮 X 飞书', href: '/feishubanben' },
-      { text: '销帮帮 X 企业微信', href: '/qiweibanben' },
+      { text: '产品概述', href: '/chanpin' },
+      {
+        text: '模板中心',
+        href: 'https://module-center.xbongbong.com/preview.html#/application#wz_141',
+      },
+      { text: '体验产品', href: '/mianfeishiyong' },
     ],
   },
   {
     title: '案例中心',
     links: [
-      {
-        text: '模板中心',
-        href: 'https://module-center.xbongbong.com/preview.html#/application#wz_141',
-      },
       { text: '行业案例', href: '/hangyeanli' },
       { text: '客户心声', href: '/yonghuxinsheng' },
     ],
