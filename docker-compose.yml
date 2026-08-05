@@ -48,6 +48,8 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
+    volumes:
+      - ${DEPLOY_PATH:-/opt/xbb-website}/Uploads:/usr/share/nginx/html/Uploads:ro
     depends_on:
       backend:
         condition: service_healthy

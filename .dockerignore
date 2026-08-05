@@ -1,0 +1,47 @@
+# ==========================================
+# Docker 构建忽略文件
+# ==========================================
+
+# 历史上传文件（运行时通过卷挂载提供，不打入镜像）
+my-vue-app/public/Uploads
+
+# Dependencies
+node_modules
+**/node_modules
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+.DS_Store
+
+# Logs
+*.log
+logs
+
+# Environment
+.env
+.env.*
+
+# Test
+coverage
+.nyc_output
+
+# Build artifacts (NestJS)
+my-nest-app/dist/
+
+# Docs
+docs
+
+# CI/CD
+.gitlab-ci.yml
+deploy.yml
+
+# Docker
+docker-compose.yml
+docker-compose.test.yml
+deploy.sh
+deploy.test.sh
