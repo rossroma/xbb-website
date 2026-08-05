@@ -4,6 +4,8 @@ import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const qiweiAppUrl =
+  'https://open.work.weixin.qq.com/appStore/app?appId=MTk3MDMyNDk0MDE1MzkxMl8xMDAxNTY2XzE%3D'
 
 export const qiweiSeo = {
   title: '销帮帮 X 企业微信 - 销帮帮 CRM',
@@ -16,6 +18,8 @@ export const heroSection = {
   title: '销帮帮CRM X 企业微信',
   subtitle: '强者结合 绝妙拍档',
   primaryCta: '马上体验',
+  primaryHref: qiweiAppUrl,
+  primaryTarget: '_blank' as const,
   secondaryCta: '',
   image: blankShowcaseImage,
   imageAlt: '销帮帮 CRM 企业微信版本展示',
@@ -31,6 +35,8 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
+  primaryTarget: heroSection.primaryTarget,
   secondaryCta: heroSection.secondaryCta,
   bg: heroSection.bg,
   line: 'rgba(16, 185, 129, 0.14)',

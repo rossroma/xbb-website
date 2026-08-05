@@ -215,7 +215,25 @@ const navigateToClientPage = async (pageKey: string) => {
 }
 
 const handleHeroAction = async (slide: BannerSlide, action: 'primary' | 'secondary') => {
-  const target = heroBannerSection.routeActions[slide.key]?.[action]
-  if (target) await navigateToClientPage(target)
+  const href = action === 'primary' ? slide.primaryHref : slide.secondaryHref
+  const hrefTarget = action === 'primary' ? slide.primaryTarget : slide.secondaryTarget
+
+  if (href) {
+    if (hrefTarget === '_blank') {
+      window.open(href, '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    if (href.startsWith('/') && !href.startsWith('//')) {
+      await router.push(href)
+      return
+    }
+
+    window.location.href = href
+    return
+  }
+
+  const routeTarget = heroBannerSection.routeActions[slide.key]?.[action]
+  if (routeTarget) await navigateToClientPage(routeTarget)
 }
 </script>

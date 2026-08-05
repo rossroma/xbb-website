@@ -36,7 +36,6 @@
       :subtitle="focusSection.description"
       :image="focusSection.image"
       :image-alt="focusSection.imageAlt"
-      :primary-cta="focusSection.ctaText"
     />
 
     <CTASection

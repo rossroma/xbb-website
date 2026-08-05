@@ -17,7 +17,6 @@
       :subtitle="collaborationSection.description"
       :image="collaborationSection.image"
       :image-alt="collaborationSection.imageAlt"
-      :primary-cta="collaborationSection.primaryCta"
     />
 
     <ImageShowcase

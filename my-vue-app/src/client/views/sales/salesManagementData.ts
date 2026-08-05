@@ -19,6 +19,10 @@ import {
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
+import { toPagePath } from '@/client/data/routePaths'
+
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 export const salesManagementSeo = {
   title: '销售管理 - 销帮帮 CRM',
@@ -32,6 +36,8 @@ export const heroSection = {
   subtitle: '精细化销售管理助力业绩增长',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
+  primaryHref: trialPagePath,
   image: '/images/sales/hero.png',
   imageAlt: '销售管理产品展示',
   bg: 'linear-gradient(135deg, #fef9f3 0%, #fef5eb 52%, #f8f5fb 100%)',
@@ -46,7 +52,9 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
+  secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
   line: 'rgba(255, 100, 0, 0.16)',
   accent: '#ff6400',

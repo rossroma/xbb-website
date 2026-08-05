@@ -28,7 +28,7 @@
 
     <FlowSteps :title="onboardingSection.title" :steps="onboardingSection.steps" variant="simple" />
 
-    <SectionBlock spacing="default">
+    <SectionBlock id="partner-contact" class="scroll-mt-[92px]" spacing="default">
       <div class="flex flex-col items-center text-center">
         <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
           {{ contactSection.title }}

@@ -14,6 +14,10 @@ import {
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { FeatureItem, TopImage } from '@/client/components/business/IconCardGrid.vue'
+import { toPagePath } from '@/client/data/routePaths'
+
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 export const customerManagementSeo = {
   title: '客户管理 - 销帮帮 CRM',
@@ -26,7 +30,9 @@ export const heroSection = {
   title: '客户管理',
   subtitle: '客户全生命周期数字化管理',
   primaryCta: '免费试用',
+  primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
   image: '/images/customer/hero.png',
   imageAlt: '客户管理产品展示',
   bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
@@ -41,7 +47,9 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
+  secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
@@ -60,6 +68,7 @@ export const productIntroSection = {
   image: '/images/customer/product-intro.png',
   imageAlt: 'CRM产品截图',
   ctaText: '立即咨询',
+  ctaHref: liuziPagePath,
 }
 
 // ========== Tab 功能介绍区域 ==========

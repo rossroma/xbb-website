@@ -135,7 +135,9 @@
       :title="footerCtaSection.title"
       :subtitle="footerCtaSection.subtitle"
       :primary-cta="footerCtaSection.primaryCta"
+      :primary-href="footerCtaSection.primaryHref"
       :secondary-cta="footerCtaSection.secondaryCta"
+      :secondary-href="footerCtaSection.secondaryHref"
     />
   </div>
 </template>

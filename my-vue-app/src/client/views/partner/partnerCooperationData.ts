@@ -1,4 +1,4 @@
-// ========== 伙伴合作页面 SEO 配置 ==========
+﻿// ========== 伙伴合作页面 SEO 配置 ==========
 import {
   Agreement,
   BookOpen,
@@ -18,8 +18,10 @@ import {
 import type { FeatureListItem } from '@/client/components/business/FeatureList.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
 
 const productVisualImage = '/images/customer/hero.png'
+const partnerContactHref = `${toPagePath('channel_qudao')}#partner-contact`
 
 export const partnerCooperationSeo = {
   title: '伙伴合作 - 销帮帮AI CRM',
@@ -32,7 +34,7 @@ export const heroSection = {
   title: '销帮帮AI CRM合作伙伴招募',
   subtitle: '互相成就，共享 AI CRM 增长红利，携手销帮帮AI CRM助力企业智能销售全面升级',
   primaryCta: '立即加入',
-  secondaryCta: '咨询合作',
+  primaryHref: partnerContactHref,
   image: productVisualImage,
   imageAlt: '销帮帮AI CRM产品界面展示',
   bg: 'linear-gradient(135deg, #faf7ff 0%, #f3f0ff 48%, #eef6ff 100%)',
@@ -47,6 +49,7 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
   bg: heroSection.bg,
   line: 'rgba(124, 92, 255, 0.16)',

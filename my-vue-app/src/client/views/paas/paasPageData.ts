@@ -12,8 +12,11 @@ import {
   Trend,
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
+import { toPagePath } from '@/client/data/routePaths'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 export const paasSeo = {
   title: 'PaaS - 销帮帮 CRM',
@@ -27,6 +30,8 @@ export const heroSection = {
   subtitle: '底层能力赋能商业个性化需求',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
+  primaryHref: trialPagePath,
   image: blankShowcaseImage,
   imageAlt: 'PaaS 产品能力展示',
   bg: 'linear-gradient(135deg, #fef9f3 0%, #fef5eb 52%, #f8f5fb 100%)',
@@ -41,7 +46,9 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
+  secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
   line: 'rgba(255, 100, 0, 0.16)',
   accent: '#ff6400',
@@ -60,6 +67,7 @@ export const capabilityIntroSection = {
   image: blankShowcaseImage,
   imageAlt: 'PaaS 底层能力展示占位图',
   primaryCta: '立即咨询',
+  primaryHref: liuziPagePath,
 }
 
 // ========== 业务搭建能力区域（TabShowcase，左文右图） ==========

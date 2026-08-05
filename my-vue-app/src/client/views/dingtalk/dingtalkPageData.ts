@@ -4,6 +4,8 @@ import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const dingtalkAppUrl =
+  'https://appcenter.dingtalk.com/detail.html?goodsCode=FW_GOODS-1000298770&sig=a387bc5449960a8184b3fc2f537e1870'
 
 export const dingtalkSeo = {
   title: '销帮帮 X 钉钉 - 销帮帮 CRM',
@@ -16,6 +18,8 @@ export const heroSection = {
   title: '销帮帮CRM X 钉钉',
   subtitle: '让进步发生 让业绩提升',
   primaryCta: '马上体验',
+  primaryHref: dingtalkAppUrl,
+  primaryTarget: '_blank' as const,
   secondaryCta: '',
   image: blankShowcaseImage,
   imageAlt: '销帮帮 CRM 钉钉版本展示',
@@ -31,6 +35,8 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
+  primaryTarget: heroSection.primaryTarget,
   secondaryCta: heroSection.secondaryCta,
   bg: heroSection.bg,
   line: 'rgba(37, 99, 235, 0.14)',

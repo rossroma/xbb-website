@@ -12,8 +12,11 @@ import {
 } from '@icon-park/vue-next'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { BannerSlide } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
 
 export const aiSalesAssistantSeo = {
   title: 'AI 销售助理 - 销帮帮 CRM',
@@ -27,6 +30,8 @@ export const heroSection = {
   subtitle: '用AI驱动销售增长',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
+  secondaryHref: liuziPagePath,
+  primaryHref: trialPagePath,
   image: blankShowcaseImage,
   imageAlt: 'AI 销售助理产品能力展示占位图',
   bg: 'linear-gradient(135deg, #faf9ff 0%, #eef2ff 50%, #f5f8ff 100%)',
@@ -41,7 +46,9 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
+  secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
   line: 'rgba(99, 102, 241, 0.16)',
   accent: '#6366f1',

@@ -4,6 +4,8 @@ import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { Theme } from '@/client/components/business/theme'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
+const feishuAppUrl =
+  'https://app.feishu.cn/app/cli_a068c888e8f8d00b?lang=zh-CN&open_in_browser=true'
 
 export const feishuSeo = {
   title: '销帮帮 X 飞书 - 销帮帮 CRM',
@@ -16,6 +18,8 @@ export const heroSection = {
   title: '销帮帮CRM X 飞书',
   subtitle: '拥抱数字化 拥抱先进',
   primaryCta: '马上体验',
+  primaryHref: feishuAppUrl,
+  primaryTarget: '_blank' as const,
   secondaryCta: '',
   image: blankShowcaseImage,
   imageAlt: '销帮帮 CRM 飞书版本展示',
@@ -31,6 +35,8 @@ export const heroBannerSlide = {
   subtitle: heroSection.subtitle,
   desc: '',
   primaryCta: heroSection.primaryCta,
+  primaryHref: heroSection.primaryHref,
+  primaryTarget: heroSection.primaryTarget,
   secondaryCta: heroSection.secondaryCta,
   bg: heroSection.bg,
   line: 'rgba(99, 102, 241, 0.14)',
