@@ -42,14 +42,14 @@
             v-if="singleSlide.primaryCta"
             variant="hero"
             size="lg"
-            @click="$emit('action', singleSlide, 'primary')"
+            @click="handleSingleAction(singleSlide, 'primary')"
             >{{ singleSlide.primaryCta }}</Button
           >
           <Button
             v-if="singleSlide.secondaryCta"
             variant="hero-outline"
             size="lg"
-            @click="$emit('action', singleSlide, 'secondary')"
+            @click="handleSingleAction(singleSlide, 'secondary')"
             >{{ singleSlide.secondaryCta }}</Button
           >
         </div>
@@ -422,6 +422,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
 import type { BannerSlide } from '@/client/data/homeData'
@@ -472,12 +473,45 @@ const props = withDefaults(
   },
 )
 
-defineEmits<{
+const emit = defineEmits<{
   action: [slide: BannerSlide, action: 'primary' | 'secondary']
 }>()
 
 /** 单页模式下的 Slide 数据 */
+const router = useRouter()
+
 const singleSlide = computed(() => props.slides[0] ?? null)
+
+function isInternalLink(href?: string): href is string {
+  return !!href && href.startsWith('/') && !href.startsWith('//')
+}
+
+function handleSingleAction(slide: BannerSlide, action: 'primary' | 'secondary') {
+  const href = action === 'primary' ? slide.primaryHref : slide.secondaryHref
+  const target = action === 'primary' ? slide.primaryTarget : slide.secondaryTarget
+
+  if (isInternalLink(href)) {
+    if (target === '_blank') {
+      window.open(href, '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    router.push(href)
+    return
+  }
+
+  if (href) {
+    if (target === '_blank') {
+      window.open(href, '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    window.location.href = href
+    return
+  }
+
+  emit('action', slide, action)
+}
 
 function isChecklistSlide(slide: HeroShowcaseSlide): boolean {
   return slide.items.every((item) => !item.title)
