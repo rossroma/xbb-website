@@ -141,10 +141,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import { useAds, AD_POSITION } from '@/client/composables/usePageAds'
 import Timeline from '@/client/components/business/Timeline.vue'
 import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -162,12 +160,10 @@ import {
   successSupportSection,
   technologySection,
   timelineSection,
-  adsToRecognitionItems,
 } from './companyIntroData'
 
-// 权威认可 — 优先使用后台广告数据，API 不可用时回退到硬编码
-const { items: recognitionAds } = useAds(AD_POSITION.ABOUT_RECOGNITION)
-const recognitionItems = computed(() => adsToRecognitionItems(recognitionAds.value))
+// 权威认可 — 使用本地静态数据
+const recognitionItems = recognitionSection.items
 
 const supportCardClass = (index: number) => {
   const classes = [

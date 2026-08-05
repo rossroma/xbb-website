@@ -9,10 +9,8 @@ import type { Ads } from '@/shared/api/ads'
 export const AD_POSITION = {
   /** 首页-Banner轮播 */
   HOME_BANNER: 1,
-  /** 关于我们-权威认可 */
-  ABOUT_RECOGNITION: 2,
   /** 联系我们-公司地址 */
-  CONTACT_ADDRESS: 3,
+  CONTACT_ADDRESS: 9,
 } as const
 
 /**
