@@ -220,15 +220,4 @@ export class SettingsService {
     };
   }
 
-  // ==================== 供内部模块调用 ====================
-
-  /** 获取原始 Base 实体（供其他模块使用） */
-  async findBaseEntity(): Promise<Base | null> {
-    return this.baseRepository.findOne({ where: { id: 1 } });
   }
-
-  /** 获取原始 Setting 实体（供其他模块使用） */
-  async findSettingEntity(): Promise<Setting | null> {
-    return this.settingRepository.findOne({ where: { id: 1 } });
-  }
-}

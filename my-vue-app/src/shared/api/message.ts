@@ -23,14 +23,6 @@ export const updateMessage = async (
   return request.patch(`/v1/admin/messages/${id}`, data)
 }
 
-/** 回复留言 */
-export const replyMessage = async (
-  id: number,
-  data: { reply_content: string },
-): Promise<Record<string, unknown>> => {
-  return request.post(`/v1/admin/messages/${id}/reply`, data)
-}
-
 /** 删除留言 */
 export const deleteMessage = async (id: number): Promise<void> => {
   return request.delete(`/v1/admin/messages/${id}`)
@@ -51,13 +43,6 @@ export const getMessageStats = async (): Promise<Record<string, unknown>> => {
 
 // ==================== 客户端接口 ====================
 
-/** 提交留言 */
-export const submitMessage = async (
-  data: Record<string, unknown>,
-): Promise<Record<string, unknown>> => {
-  return request.post('/v1/client/messages', data)
-}
-
 /** 提交免费试用（含 SEM 数据 + 数据中心推送） */
 export const submitTrial = async (
   data: Record<string, unknown>,
@@ -65,20 +50,12 @@ export const submitTrial = async (
   return request.post('/v1/client/trials', data)
 }
 
-/** 查看留言状态 */
-export const getMessageStatus = async (id: number): Promise<Record<string, unknown>> => {
-  return request.get(`/v1/client/messages/${id}`)
-}
-
 export default {
   getMessages,
   getMessage,
   updateMessage,
-  replyMessage,
   deleteMessage,
   batchUpdateMessageStatus,
   getMessageStats,
-  submitMessage,
   submitTrial,
-  getMessageStatus,
 }

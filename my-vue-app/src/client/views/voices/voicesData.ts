@@ -4,11 +4,6 @@ import { toPagePath } from '@/client/data/routePaths'
 const trialPagePath = toPagePath('single_mfsy')
 const liuziPagePath = '/liuzi'
 
-export const voicesPageSeo = {
-  title: '用户心声 - 销帮帮 CRM',
-  description:
-    '汇集来自互联网、制造业、教育等各行业客户的真实评价，了解销帮帮 CRM 如何助力企业实现数字化销售管理。',
-}
 
 // ========== 用户心声根类目配置 ==========
 

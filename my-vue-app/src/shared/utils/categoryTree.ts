@@ -1,11 +1,18 @@
+/** 扁平分类节点（仅包含树构建所需的最小字段） */
+interface CategoryNode {
+  id: number
+  pid: number
+  ord?: number
+}
+
 /** 将扁平分类列表转为嵌套树结构（防循环引用） */
-export const buildCategoryTree = (
-  items: any[],
+export const buildCategoryTree = <T extends CategoryNode>(
+  items: T[],
   pid: number = 0,
   visited: Set<number> = new Set(),
   depth: number = 0,
   maxDepth: number = 50,
-): any[] => {
+): (T & { children: T[] })[] => {
   if (depth > maxDepth || visited.has(pid)) return []
   visited.add(pid)
   return items

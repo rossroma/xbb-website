@@ -28,7 +28,7 @@
 | `message` | 留言/消息管理 |
 | `settings` | 网站全局配置 |
 | `logs` | 操作日志 |
-| `upload` | 文件上传（本地存储，sharp 压缩） |
+| `upload` | 文件上传（阿里云 OSS 存储，sharp 压缩） |
 
 ## 目录结构
 
@@ -55,7 +55,7 @@ src/
     ├── settings/
     ├── logs/
     └── upload/
-uploads/                   # 上传文件存储目录（不纳入版本控制）
+# 上传文件存储于阿里云 OSS，不再使用本地磁盘目录
 ```
 
 ## 环境配置

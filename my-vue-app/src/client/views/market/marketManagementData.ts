@@ -22,11 +22,6 @@ type MarketProcessSection = {
   steps: MarketProcessStep[]
 }
 
-export const marketManagementSeo = {
-  title: '市场管理 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 市场管理系统，支持官网、展会、电话、微信等全渠道线索统一汇入，沉淀跟进旅程，分析活动成效，提升线索转化效率。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

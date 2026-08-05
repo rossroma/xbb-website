@@ -9,17 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
-import { downloadCenterSeo, downloadCenterSection } from './downloadCenterData'
+import { usePageSEO } from '@/client/composables/usePageSEO'
+import { downloadCenterSection } from './downloadCenterData'
 
-useHead({
-  title: downloadCenterSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: downloadCenterSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

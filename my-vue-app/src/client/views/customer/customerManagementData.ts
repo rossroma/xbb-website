@@ -19,11 +19,6 @@ import { toPagePath } from '@/client/data/routePaths'
 const trialPagePath = toPagePath('single_mfsy')
 const liuziPagePath = '/liuzi'
 
-export const customerManagementSeo = {
-  title: '客户管理 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 客户管理系统，支持客户全生命周期数字化管理，多维查重、客户画像、客户分层分类，构建企业潜在客户360°画像，提升企业私域客户池运作效率。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

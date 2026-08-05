@@ -154,7 +154,7 @@
         :page-size="pagination.limit"
         :page-sizes="[10, 20, 50, 100]"
         :total="pagination.total"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -325,7 +325,6 @@ const loadMessages = async () => {
     pagination.total = result.total || 0
   } catch (error) {
     console.error('加载留言列表失败:', error)
-    ElMessage.error('加载留言列表失败')
   } finally {
     loading.value = false
   }
@@ -353,7 +352,6 @@ const viewMessage = async (row: MessageItem) => {
     loadStats()
   } catch (error) {
     console.error('获取留言详情失败:', error)
-    ElMessage.error('获取留言详情失败')
   }
 }
 
@@ -363,9 +361,7 @@ const markAsRead = async (row: MessageItem) => {
     ElMessage.success('已标记为已读')
     loadMessages()
     loadStats()
-  } catch (error) {
-    ElMessage.error('操作失败')
-  }
+  } catch {}
 }
 
 const approve = async (row: MessageItem) => {
@@ -374,9 +370,7 @@ const approve = async (row: MessageItem) => {
     ElMessage.success('审核通过')
     loadMessages()
     loadStats()
-  } catch (error) {
-    ElMessage.error('操作失败')
-  }
+  } catch {}
 }
 
 // 删除留言
@@ -393,10 +387,7 @@ const handleDelete = async (row: MessageItem) => {
     loadMessages()
     loadStats()
   } catch (error) {
-    if (error !== 'cancel') {
-      console.error('删除失败:', error)
-      ElMessage.error('删除失败')
-    }
+    if (error !== 'cancel') console.error('删除失败:', error)
   }
 }
 
@@ -415,7 +406,6 @@ const batchMarkAsRead = async () => {
     loadStats()
   } catch (error) {
     console.error('批量操作失败:', error)
-    ElMessage.error('批量操作失败')
   }
 }
 
@@ -429,7 +419,6 @@ const batchApprove = async () => {
     loadStats()
   } catch (error) {
     console.error('批量操作失败:', error)
-    ElMessage.error('批量操作失败')
   }
 }
 
@@ -450,10 +439,7 @@ const batchDelete = async () => {
     loadMessages()
     loadStats()
   } catch (error) {
-    if (error !== 'cancel') {
-      console.error('批量删除失败:', error)
-      ElMessage.error('批量删除失败')
-    }
+    if (error !== 'cancel') console.error('批量删除失败:', error)
   }
 }
 
@@ -561,10 +547,7 @@ onMounted(() => {
 }
 
 .search-area {
-  background: #f5f5f5;
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .search-form {
@@ -590,8 +573,9 @@ onMounted(() => {
 }
 
 .pagination {
-  margin-top: 20px;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 
 .action-buttons {

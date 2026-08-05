@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createHead } from '@vueuse/head'
 import { createPinia } from 'pinia'
+import { nextTick } from 'vue'
 import ElementPlus from 'element-plus'
 import { DEFAULT_ICON_CONFIGS } from '@icon-park/vue-next'
 import 'element-plus/dist/index.css'
@@ -64,5 +65,12 @@ app.use(ElementPlus)
     }
   }
 
+  // 先挂载 Vue 应用，确保初始渲染完成
   app.mount('#app')
+
+  // 等待 Vue 完成初始 DOM 渲染后再通知预渲染器
+  // 避免预渲染器在 Vue 渲染完成前截取 HTML（空白页面风险）
+  await nextTick()
+  document.dispatchEvent(new Event('prerender-ready'))
+  ;(window as unknown as Record<string, unknown>).__PRERENDER_READY__ = true
 })()

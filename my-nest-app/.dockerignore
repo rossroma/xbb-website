@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+.env
+.env.*
+test/
+coverage/
+.npmrc
+.eslintrc*
+.prettierrc
+nest-cli.json
+uploads/

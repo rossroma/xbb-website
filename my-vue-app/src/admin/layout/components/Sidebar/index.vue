@@ -174,16 +174,6 @@ const routes = computed(() =>
           meta: { title: '登录日志', icon: 'User' },
           permission: PERMISSION_TOKENS.loginLogs,
         },
-        {
-          path: '/logs/statistics',
-          meta: { title: '日志统计', icon: 'DataAnalysis' },
-          permission: {
-            ruleTokens: [
-              ...PERMISSION_TOKENS.loginLogs.ruleTokens,
-              ...PERMISSION_TOKENS.operationLogs.ruleTokens,
-            ],
-          },
-        },
       ],
     },
     {
@@ -196,30 +186,7 @@ const routes = computed(() =>
       },
       children: messageChildren,
     },
-    {
-      path: '/gallery',
-      meta: { title: '图片集管理', icon: 'Picture' },
-      hidden: true,
-      children: [
-        {
-          path: '/gallery/images',
-          meta: { title: '图片集管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/images2',
-          meta: { title: '图片组2管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/images3',
-          meta: { title: '图片组3管理', icon: 'PictureRounded' },
-        },
-        {
-          path: '/gallery/show-info',
-          meta: { title: '展示信息管理', icon: 'InfoFilled' },
-        },
-      ],
-    },
-    ]),
+        ]),
 )
 
 onMounted(() => {

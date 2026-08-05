@@ -215,18 +215,6 @@ export class MessageService {
     return statusMap[status] || '未知';
   }
 
-  // 敏感词过滤（简单实现）
-  private filterSensitiveWords(content: string): string {
-    const sensitiveWords = ['敏感词1', '敏感词2']; // 可以从配置文件或数据库读取
-    let filtered = content;
-
-    sensitiveWords.forEach(word => {
-      const regex = new RegExp(word, 'gi');
-      filtered = filtered.replace(regex, '*'.repeat(word.length));
-    });
-
-    return filtered;
   }
-}
 
   

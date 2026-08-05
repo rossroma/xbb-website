@@ -91,7 +91,7 @@
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
-type ArticleSidebarVariant = 'toc' | 'link-tags'
+export type ArticleSidebarVariant = 'toc' | 'link-tags'
 
 export interface ArticleSidebarBanner {
   key?: string

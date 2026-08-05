@@ -5,11 +5,6 @@ import type { FaqCategory, FaqItem } from '@/client/components/business/FaqList.
 
 const heroVisualImage = '/images/customer/hero.png'
 
-export const ambassadorSeo = {
-  title: '推广大使 - 销帮帮AI CRM',
-  description:
-    '成为销帮帮推荐大使，推荐客户成功签约即可获得现金返佣。了解申请推荐、审核、下单购买与获得奖金的完整流程。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

@@ -237,7 +237,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import { PhoneTelephone, Search } from '@icon-park/vue-next'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
@@ -250,21 +250,12 @@ import {
   heroBannerSlide,
   onboardingSection,
   partnerBenefitSection,
-  partnerCooperationSeo,
   partnerQuerySection,
   partnerTypeSection,
   whyChooseSection,
 } from './partnerCooperationData'
 
-useHead({
-  title: partnerCooperationSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: partnerCooperationSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 // ==================== 查询状态管理 ====================
 

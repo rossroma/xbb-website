@@ -141,24 +141,6 @@ export class AuthService {
     }, adminGroup);
   }
 
-  async validateUserById(userId: number): Promise<any | null> {
-    const admin = await this.adminRepository.findOne({
-      where: { id: userId, status: 1 },
-    });
-
-    if (!admin) {
-      return null;
-    }
-
-    return {
-      id: admin.id,
-      username: admin.username,
-      type: admin.type,
-      group_id: admin.group_id,
-      status: admin.status,
-    };
-  }
-
   private async validatePassword(password: string, hashedPassword: string, _salt: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }

@@ -14,12 +14,12 @@
     </SectionBlock>
 
     <div
-      class="mt-[60px] w-screen pb-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] max-lg:mt-[80px] max-lg:py-16 max-md:mt-[60px] max-md:py-12"
+      class="mt-15 w-screen pb-20 ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] max-lg:mt-20 max-lg:py-16 max-md:mt-15 max-md:py-12"
     >
       <ContentCardGrid
         class="!mt-0"
         :title="addressSection.title"
-        :cards="addressSection.cards"
+        :cards="addressCards"
         :columns="4"
         variant="address"
       />
@@ -28,20 +28,18 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
+import { computed } from 'vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
+import { useAds, AD_POSITION } from '@/client/composables/usePageAds'
 import ContactCard from '@/client/components/business/ContactCard.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
-import { addressSection, contactInfoSection, contactUsSeo, heroBannerSlide } from './contactUsData'
+import { addressSection, contactInfoSection, heroBannerSlide, adsToAddressCards } from './contactUsData'
 
-useHead({
-  title: contactUsSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: contactUsSeo.description,
-    },
-  ],
-})
+// 公司地址 — 优先使用后台广告数据，API 不可用时回退到硬编码
+const { items: addressAds } = useAds(AD_POSITION.CONTACT_ADDRESS)
+const addressCards = computed(() => adsToAddressCards(addressAds.value))
+
+usePageSEO()
 </script>

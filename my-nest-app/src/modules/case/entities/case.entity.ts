@@ -22,10 +22,7 @@ export class Case {
   @Column({ name: 'simg', length: 200, default: '', comment: '左侧配图 URL' })
   image: string;
 
-  @Column({ length: 200, default: '', comment: '案例 logo URL' })
-  logo: string;
-
-  @Column({ length: 300, default: '', comment: '标签（逗号分隔）' })
+  @Column({ length: 300, nullable: true, comment: '标签（逗号分隔）' })
   tags: string;
 
   @Column({ type: 'longtext', nullable: true, comment: '富文本正文' })

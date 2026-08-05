@@ -1,4 +1,5 @@
 import axios, { type AxiosResponse } from 'axios'
+import { ElMessage } from 'element-plus'
 import { removeToken, createAuthInterceptor } from '@/shared/utils/token'
 
 // 创建axios实例
@@ -28,8 +29,15 @@ instance.interceptors.response.use(
     if (error.response?.status === 401) {
       removeToken()
       window.location.href = '/login'
+      return Promise.reject(error.response?.data?.message || error.message)
     }
-    return Promise.reject(error.response?.data?.message || error.message)
+    // 全局错误提示 — 支持 per-request 静默模式
+    const msg = error.response?.data?.message || error.message || '请求失败'
+    const config = error.config as Record<string, unknown> | undefined
+    if (!config?._silent) {
+      ElMessage.error(msg)
+    }
+    return Promise.reject(msg)
   },
 )
 

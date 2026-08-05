@@ -1,14 +1,9 @@
-﻿import type { AiCrmFeatureCard } from '@/client/components/business/AiCrmFeatureGrid.vue'
+import type { AiCrmFeatureCard } from '@/client/components/business/AiCrmFeatureGrid.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { HeroShowcaseSlide } from '@/client/components/business/HeroBanner.vue'
 import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
-export const liuziPageSeo = {
-  title: '免费试用 - 销帮帮 AI CRM',
-  description:
-    '免费试用销帮帮 AI CRM，体验 AI 找客、销售陪练、业务分析、客户管理、销售管理、市场管理、PaaS 和 BI 数据分析能力。',
-}
 
 export const liuziTrialHref = `${toPagePath('single_mfsy')}/?type=new`
 

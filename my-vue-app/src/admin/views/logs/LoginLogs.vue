@@ -54,7 +54,7 @@
         :page-size="pagination.limit"
         :page-sizes="[10, 20, 50, 100]"
         :total="pagination.total"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="total, sizes, prev, pager, next"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
@@ -64,7 +64,6 @@
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { getLoginLogs } from '@/shared/api/logs'
 
 interface LoginLogItem {
@@ -106,11 +105,10 @@ const loadLogs = async () => {
       params.end_date = dateRange.value[1]
     }
     const result = await getLoginLogs(params)
-    logs.value = (result.items as LoginLogItem[]) || []
+    logs.value = (result.items as unknown as LoginLogItem[]) || []
     pagination.total = result.total || 0
   } catch (error) {
     console.error('加载登录日志失败:', error)
-    ElMessage.error('加载登录日志失败')
   } finally {
     loading.value = false
   }
@@ -150,10 +148,7 @@ onMounted(() => {
 }
 
 .search-area {
-  background: #f5f5f5;
-  padding: 20px;
-  border-radius: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .search-form {
@@ -161,7 +156,8 @@ onMounted(() => {
 }
 
 .pagination {
-  margin-top: 20px;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }
 </style>

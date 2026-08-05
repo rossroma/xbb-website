@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
@@ -45,7 +45,6 @@ import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import {
   knowledgeArticleList,
   knowledgeQnAHeroSlide,
-  knowledgeQnASeo,
   knowledgeSceneSolutionItems,
 } from './knowledgeQnAData'
 
@@ -61,15 +60,7 @@ const paginatedKnowledgeArticleList = computed(() => {
   return knowledgeArticleList.slice(startIndex, startIndex + knowledgeArticlePageSize)
 })
 
-useHead({
-  title: knowledgeQnASeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: knowledgeQnASeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>
 
 <style scoped>

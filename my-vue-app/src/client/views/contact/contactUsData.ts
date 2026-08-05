@@ -7,10 +7,6 @@ import { toPagePath } from '@/client/data/routePaths'
 const addressMapImage = '/images/nnlx_mimg.jpg'
 const trialPagePath = toPagePath('single_mfsy')
 
-export const contactUsSeo = {
-  title: '联系我们 - 销帮帮AI CRM',
-  description: '联系销帮帮AI CRM，获取产品咨询、免费试用、服务热线、企业邮箱和公司地址信息。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {
@@ -72,4 +68,27 @@ export const addressSection = {
       imageAlt: '深圳公司地图',
     }
   ] satisfies ContentCard[],
+}
+
+// ====================================================================
+// Ads 数据适配器 — 将后台广告数据映射为组件 props
+// ====================================================================
+
+import type { Ads } from '@/shared/api/ads'
+
+/**
+ * 将 Ads 广告数据转换为公司地址卡片列表
+ * API 数据为空时自动回退到硬编码的 addressSection.cards
+ */
+export function adsToAddressCards(ads: Ads[]): ContentCard[] {
+  if (!ads?.length) return addressSection.cards
+  return ads
+    .slice()
+    .sort((a, b) => a.ord - b.ord)
+    .map((ad) => ({
+      title: ad.title,
+      description: ad.descs || '',
+      image: ad.simg || '',
+      imageAlt: `${ad.title}地图`,
+    }))
 }

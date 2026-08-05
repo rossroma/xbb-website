@@ -13,19 +13,3 @@ export const RESPONSE_CODE = {
   RESOURCE_NOT_FOUND: 1004,
   DUPLICATE_RESOURCE: 1005,
 };
-
-export const RESPONSE_MESSAGE = {
-  SUCCESS: '操作成功',
-  BAD_REQUEST: '请求参数错误',
-  UNAUTHORIZED: '未授权访问',
-  FORBIDDEN: '权限不足',
-  NOT_FOUND: '资源不存在',
-  INTERNAL_SERVER_ERROR: '服务器内部错误',
-
-  // 业务消息
-  VALIDATION_ERROR: '数据验证失败',
-  AUTH_FAILED: '认证失败',
-  PERMISSION_DENIED: '权限不足',
-  RESOURCE_NOT_FOUND: '资源不存在',
-  DUPLICATE_RESOURCE: '资源已存在',
-};

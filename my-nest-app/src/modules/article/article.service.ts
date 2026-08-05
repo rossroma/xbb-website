@@ -349,57 +349,6 @@ export class ArticleService {
     return result.affected || 0;
   }
 
-  // ==================== 供内部模块调用 ====================
-
-  /** 查找一篇启用的文章（返回原始实体） */
-  async findEnabledArticleById(id: number): Promise<Article | null> {
-    return this.articleRepository.findOne({
-      where: { id, status: 1 },
-    });
-  }
-
-  /** 按栏目查找启用的文章列表（分页） */
-  async findEnabledArticlesByBid(
-    bid: number,
-    skip: number,
-    take: number,
-  ): Promise<{ items: Article[]; total: number }> {
-    const query = this.articleRepository
-      .createQueryBuilder('a')
-      .where('a.status = :status', { status: 1 })
-      .andWhere('a.bid = :bid', { bid })
-      .orderBy('a.addtime', 'DESC')
-      .addOrderBy('a.ord', 'ASC')
-      .addOrderBy('a.id', 'DESC')
-      .skip(skip)
-      .take(take);
-
-    return query.getManyAndCount().then(([items, total]) => ({ items, total }));
-  }
-
-  /** 查找第一篇启用的文章（可选按栏目过滤） */
-  async findFirstEnabledArticle(bid?: number): Promise<Article | null> {
-    const query = this.articleRepository
-      .createQueryBuilder('a')
-      .where('a.status = :status', { status: 1 })
-      .orderBy('a.addtime', 'DESC')
-      .addOrderBy('a.ord', 'ASC')
-      .addOrderBy('a.id', 'DESC');
-
-    if (bid !== undefined) {
-      query.andWhere('a.bid = :bid', { bid });
-    }
-
-    return query.getOne();
-  }
-
-  /** 按栏目查找启用的文章总数 */
-  async countEnabledArticlesByBid(bid: number): Promise<number> {
-    return this.articleRepository.count({
-      where: { status: 1, bid },
-    });
-  }
-
   /** 获取所有分类的文章数量统计（按 bid 分组，排除回收站） */
   async getArticleCounts(): Promise<Record<number, number>> {
     const result = await this.articleRepository

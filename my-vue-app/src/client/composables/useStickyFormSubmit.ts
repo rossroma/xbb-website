@@ -4,7 +4,7 @@ import { sendSms, verifySms } from '@/shared/api/sms'
 import { getSemData } from '@/shared/utils/semData'
 
 /** 表单字段值 */
-export interface StickyFormValues {
+interface StickyFormValues {
   title: string
   tel: string
   regcode: string

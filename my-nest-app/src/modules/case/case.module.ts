@@ -9,6 +9,6 @@ import { CategoryModule } from '../category/category.module';
   imports: [TypeOrmModule.forFeature([Case]), CategoryModule],
   controllers: [ClientCaseController],
   providers: [CaseService],
-  exports: [CaseService],
+  exports: [],
 })
 export class CaseModule {}

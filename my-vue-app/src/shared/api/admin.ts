@@ -3,36 +3,11 @@ import type { PaginatedResult } from './types'
 
 // ==================== 文章管理 ====================
 
-// 获取文章列表
+// 获取文章列表（dashboard 统计用）
 export const getArticles = async (
   params?: Record<string, unknown>,
 ): Promise<PaginatedResult<Record<string, unknown>>> => {
   return request.get('/v1/admin/articles', { params })
-}
-
-// 获取文章详情
-export const getArticle = async (id: number): Promise<Record<string, unknown>> => {
-  return request.get(`/v1/admin/articles/${id}`)
-}
-
-// 创建文章
-export const createArticle = async (
-  articleData: Record<string, unknown>,
-): Promise<Record<string, unknown>> => {
-  return request.post('/v1/admin/articles', articleData)
-}
-
-// 更新文章
-export const updateArticle = async (
-  id: number,
-  articleData: Record<string, unknown>,
-): Promise<Record<string, unknown>> => {
-  return request.patch(`/v1/admin/articles/${id}`, articleData)
-}
-
-// 删除文章
-export const deleteArticle = async (id: number): Promise<void> => {
-  return request.delete(`/v1/admin/articles/${id}`)
 }
 
 // ==================== 栏目管理 ====================
@@ -139,7 +114,3 @@ export const getAdminActions = async (): Promise<Record<string, unknown>[]> => {
   return request.get('/v1/admin/admin-actions')
 }
 
-// 获取管理员权限
-export const getAdminPermissions = async (adminId: number): Promise<Record<string, unknown>> => {
-  return request.get(`/v1/admin/admin-permissions/${adminId}`)
-}

@@ -23,11 +23,6 @@ import { toPagePath } from '@/client/data/routePaths'
 const productVisualImage = '/images/customer/hero.png'
 const partnerContactHref = `${toPagePath('channel_qudao')}#partner-contact`
 
-export const partnerCooperationSeo = {
-  title: '伙伴合作 - 销帮帮AI CRM',
-  description:
-    '销帮帮AI CRM合作伙伴招募，面向渠道服务商、ISV伙伴与数字化业务团队开放合作，共享AI CRM增长红利。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

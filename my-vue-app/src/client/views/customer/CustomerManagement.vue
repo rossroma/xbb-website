@@ -39,13 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
 import {
-  customerManagementSeo,
   heroBannerSlide,
   productIntroSection,
   tabFeaturesSection,
@@ -54,13 +53,5 @@ import {
   footerCtaSection,
 } from './customerManagementData'
 
-useHead({
-  title: customerManagementSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: customerManagementSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

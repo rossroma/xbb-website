@@ -119,5 +119,5 @@ pnpm check-docs           # 文档一致性检查
 | `.claude/memory/seo.md`          | SEO/GEO 技术规范                       |
 | `DESIGN.md`                      | 设计令牌、排版、布局、响应式规范       |
 | `docs/UI_KIT_SPEC.md`            | 组件开发通用约束                       |
-| `docs/NAVIGATION_ROUTES.md`      | 导航菜单与路由映射                     |
+| `src/client/data/routePaths.ts`  | 路由路径映射（页面 key → URL path）    |
 | `src/client/styles/tailwind.css` | Tailwind v4 设计令牌定义               |

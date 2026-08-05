@@ -12,11 +12,6 @@ import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
 
-export const companyIntroSeo = {
-  title: '公司介绍 - 销帮帮AI CRM',
-  description:
-    '杭州逍邦网络科技有限公司成立于2015年，是国内一线CRM品牌和企服领域知名品牌，致力为客户提供客户全生命周期管理和数字化销售管理服务。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {
@@ -233,4 +228,22 @@ export const footerCtaSection = {
   primaryHref: '/liuzi',
   secondaryCta: '下载销帮帮AI CRM',
   secondaryHref: '/xiazaizhongxin',
+}
+
+// ====================================================================
+// Ads 数据适配器 — 将后台广告数据映射为组件 props
+// ====================================================================
+
+import type { Ads } from '@/shared/api/ads'
+
+/**
+ * 将 Ads 广告数据转换为权威认可资质列表
+ * API 数据为空时自动回退到硬编码的 recognitionSection.items
+ */
+export function adsToRecognitionItems(ads: Ads[]): string[] {
+  if (!ads?.length) return recognitionSection.items
+  return ads
+    .slice()
+    .sort((a, b) => a.ord - b.ord)
+    .map((ad) => ad.title)
 }

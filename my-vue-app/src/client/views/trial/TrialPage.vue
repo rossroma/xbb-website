@@ -151,7 +151,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import Form from '@/client/components/ui/Form.vue'
 import FormInput from '@/client/components/ui/FormInput.vue'
 import FormCheckbox from '@/client/components/ui/FormCheckbox.vue'
@@ -160,7 +160,7 @@ import CaptchaModal from '@/client/components/business/CaptchaModal.vue'
 import TrialSuccessModal from './TrialSuccessModal.vue'
 import { useStickyFormSubmit } from '@/client/composables/useStickyFormSubmit'
 import { captureSemData } from '@/shared/utils/semData'
-import { trialPageSeo, pageContent } from './trialData'
+import { pageContent } from './trialData'
 import {
   footerColumns,
   socials,
@@ -177,15 +177,7 @@ captureSemData()
 
 // ==================== SEO ====================
 
-useHead({
-  title: trialPageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: trialPageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 // ==================== 表单状态 ====================
 

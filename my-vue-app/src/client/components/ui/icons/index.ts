@@ -1,0 +1,1 @@
+export { default as WechatVideo } from './WechatVideo'

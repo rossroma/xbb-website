@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useHead } from '@vueuse/head'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
@@ -88,19 +88,11 @@ import EmptyState from '@/client/components/ui/EmptyState.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import { getClientCases, type CaseListResponse, type CaseListItem } from '@/shared/api/case'
 import { getClientCategories, type ClientCategoryListResponse, type Category } from '@/shared/api/category'
-import { voicesPageSeo, voicesBannerSlide, VOICE_ROOT_BID } from './voicesData'
+import { voicesBannerSlide, VOICE_ROOT_BID } from './voicesData'
 
 // ==================== SEO ====================
 
-useHead({
-  title: voicesPageSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: voicesPageSeo.description,
-    },
-  ],
-})
+usePageSEO()
 
 // ==================== 状态 ====================
 

@@ -18,11 +18,6 @@ const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 const trialPagePath = toPagePath('single_mfsy')
 const liuziPagePath = '/liuzi'
 
-export const aiSalesAssistantSeo = {
-  title: 'AI 销售助理 - 销帮帮 CRM',
-  description:
-    '销帮帮 AI CRM 用 AI 驱动销售增长，支持以客找客、销售过程透明化、AI 陪练助手、AI 分析师和智能数据问答，重塑销售作业流程。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

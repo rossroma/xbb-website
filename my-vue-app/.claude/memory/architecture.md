@@ -3,7 +3,7 @@ name: architecture
 description: 前端项目架构视图 — 分层结构、核心模块、组件体系、数据流、关键设计决策
 metadata:
   type: project
-  updated: 2026-07-28
+  updated: 2026-08-04
 ---
 
 # 前端架构
@@ -14,7 +14,7 @@ metadata:
 - **构建**: Vite 7
 - **UI 组件库**: Element Plus（仅后台使用）+ 自研 UI Kit（前台）
 - **样式方案**: Tailwind CSS v4（`@theme` 令牌 + 工具类）
-- **状态管理**: Pinia（仅后台 auth store）
+- **状态管理**: Pinia（后台 auth store + 前台 siteSettings store）
 - **路由**: Vue Router 5（History 模式）
 - **HTTP 客户端**: Axios（`src/shared/api/request.ts`）
 - **富文本编辑**: WangEditor 5（后台）
@@ -64,7 +64,7 @@ src/
 │   ├── App.vue
 │   ├── router.ts
 │   ├── components/
-│   │   ├── ui/                 # UI Kit 组件（21 个）
+│   │   ├── ui/                 # UI Kit 组件（23 个）
 │   │   │   ├── Badge.vue       # 徽章（5 color variants）
 │   │   │   ├── Button.vue      # 多态按钮（8 variants, 4 sizes, 2 color schemes）
 │   │   │   ├── Card.vue        # 卡片（3 variants: default/warm/image）
@@ -82,34 +82,50 @@ src/
 │   │   │   ├── IconBadge.vue   # 圆形图标徽章
 │   │   │   ├── MediaCard.vue   # 媒体卡片
 │   │   │   ├── MetricItem.vue  # 渐变数值展示
+│   │   │   ├── Pagination.vue  # 翻页
 │   │   │   ├── SectionBlock.vue# 间距/宽度约束容器
 │   │   │   ├── SectionHeading.vue # 章节标题（kicker + 标题 + 副标题）
-│   │   │   └── Skeleton.vue    # 骨架屏（3 types: text/card/image）
-│   │   ├── business/           # Business 组件（19 个）
+│   │   │   ├── Skeleton.vue    # 骨架屏（3 types: text/card/image）
+│   │   │   ├── Tabs.vue        # 选项卡
+│   │   │   └── VideoCard.vue   # 视频卡片
+│   │   ├── business/           # Business 组件（28 个）
+│   │   │   ├── AiCrmFeatureGrid.vue   # AI+CRM 能力卡片
+│   │   │   ├── ArticleSidebar.vue     # 文章侧边栏
 │   │   │   ├── CTASection.vue         # 行动号召
+│   │   │   ├── CaptchaModal.vue       # 算式验证码弹窗
+│   │   │   ├── CaseDetailHeader.vue   # 案例详情头部
+│   │   │   ├── ContactCard.vue        # 联系方式卡片
 │   │   │   ├── ContentCardGrid.vue    # 图文卡片网格
 │   │   │   ├── ContentList.vue        # 内容列表
+│   │   │   ├── FaqList.vue            # 常见问题列表
 │   │   │   ├── FeatureImageCard.vue   # 特色图片卡片
 │   │   │   ├── FeatureList.vue        # 功能列表
 │   │   │   ├── FlowSteps.vue          # 流程步骤
 │   │   │   ├── GradientCardGrid.vue   # 渐变卡片网格
 │   │   │   ├── GradientHero.vue       # 渐变 Hero
-│   │   │   ├── HeroBanner.vue         # 主 Hero 横幅
+│   │   │   ├── HeroBanner.vue         # 主 Hero 横幅（含轮播/展示轮播模式）
 │   │   │   ├── IconCardGrid.vue       # 图标卡片网格
+│   │   │   ├── ImageShowcase.vue      # 图文展示
 │   │   │   ├── IndustryCarousel.vue   # 行业案例轮播
 │   │   │   ├── MetricsPanel.vue       # 数据指标面板
 │   │   │   ├── PartnerGrid.vue        # 合作伙伴网格
 │   │   │   ├── PlatformDownload.vue   # 平台下载
 │   │   │   ├── ProcessSteps.vue       # 流程步骤卡片
 │   │   │   ├── PromoBanner.vue        # 推广横幅
+│   │   │   ├── PromoBannerCarousel.vue # 轮播横幅
+│   │   │   ├── ReviewCardGrid.vue     # 用户评价
 │   │   │   ├── SplitCardLayout.vue    # 非对称卡片布局
 │   │   │   ├── SplitSection.vue       # 图文分栏
-│   │   │   └── TabShowcase.vue        # Tab 展示
-│   │   ├── layout/             # Layout 组件（4 个）
+│   │   │   ├── TabShowcase.vue        # Tab 展示
+│   │   │   ├── Timeline.vue           # 发展历程
+│   │   │   └── theme.ts              # 主题配置
+│   │   ├── layout/             # Layout 组件（6 个）
 │   │   │   ├── SiteHeader.vue       # 全局导航（mega menu + 移动端抽屉）
 │   │   │   ├── SiteFooter.vue       # 全局页脚（6 列网格 + 渐变背景）
 │   │   │   ├── FloatingToolbar.vue  # 右侧悬浮工具栏（hover 展开）
-│   │   │   └── StickyFormBar.vue    # 底部试用表单栏
+│   │   │   ├── StickyFormBar.vue    # 底部试用表单栏
+│   │   │   ├── Breadcrumb.vue       # 面包屑导航
+│   │   │   └── PageNav.vue          # 上下翻页
 │   ├── views/
 │   │   ├── Home.vue            # 首页（/，纯组件组装）
 │   │   ├── ClientLayout.vue    # 前台布局壳
@@ -123,13 +139,30 @@ src/
 │   │   │   ├── LayoutPage.vue       # Layout 组件
 │   │   │   ├── CompositePage.vue    # 组合组件
 │   │   │   └── components/    # PlaygroundShell、CodeSnippet
-│   │   ├── customer/           # 客户管理页面
-│   │   │   ├── CustomerManagement.vue
-│   │   │   └── customerManagementData.ts   # 页面专属数据
-│   │   ├── sales/               # 销售管理页面
-│   │   │   ├── SalesManagement.vue
-│   │   │   └── salesManagementData.ts      # 页面专属数据
-│   │   └── contact/            # 联系表单（留言）
+│   │   ├── about/              # 关于我们 → CompanyIntro.vue
+│   │   ├── ai/                 # AI 销售助理 → AISalesAssistant.vue
+│   │   ├── ambassador/         # 推广大使 → AmbassadorPage.vue
+│   │   ├── bi/                 # BI 分析 → BIAnalysis.vue
+│   │   ├── cases/              # 案例中心 → CasesPage.vue + CaseDetail.vue
+│   │   ├── contact/            # 联系我们 → ContactUs.vue
+│   │   ├── customer/           # 客户管理 → CustomerManagement.vue
+│   │   ├── dingtalk/           # 钉钉版 → DingTalkPage.vue
+│   │   ├── download/           # 下载中心 → DownloadCenter.vue
+│   │   ├── feishu/             # 飞书版 → FeishuPage.vue
+│   │   ├── knowledge/          # 知识问答 → KnowledgeQnA.vue
+│   │   ├── liuzi/              # 留咨页面 → LeadCapturePage.vue
+│   │   ├── market/             # 市场管理 → MarketManagement.vue
+│   │   ├── news/               # 新闻动态 → NewsPage.vue + ArticleDetail.vue
+│   │   ├── paas/               # PaaS → PaaS.vue
+│   │   ├── partner/            # 伙伴合作 → PartnerCooperation.vue
+│   │   ├── product/            # 产品总览 → ProductOverview.vue
+│   │   ├── qiwei/              # 企微版 → QiweiPage.vue
+│   │   ├── sales/              # 销售管理 → SalesManagement.vue
+│   │   ├── service/            # 优质服务 → ServicePage.vue
+│   │   ├── trial/              # 免费试用 → TrialPage.vue
+│   │   └── voices/             # 客户心声 → VoicesPage.vue
+│   ├── stores/
+│   │   └── siteSettings.ts      # 站点设置 Store（Logo、联系方式、SEO、统计代码）
 │   ├── data/
 │   │   ├── homeData.ts         # 首页数据（Banner、卡片、指标等）
 │   │   ├── routePaths.ts       # 路由 path ↔ pageKey 映射表
@@ -146,7 +179,7 @@ src/
 │   ├── router.ts
 │   ├── views/                  # 后台页面（login, dashboard, article, category, …）
 │   ├── layout/                 # 后台布局
-│   ├── stores/                 # Pinia Store（auth.ts）
+│   ├── stores/                 # Pinia Store（auth.ts）+ 前台 siteSettings
 │   └── styles/
 ├── shared/                     # 前后台共享
 │   └── api/                    # 12 个 API 模块 + request.ts 实例
@@ -192,10 +225,34 @@ Emits (事件出口)
 ## 路由结构
 
 ```
+/login                       → 重定向到 /admin.html（管理后台入口）
+
 / (ClientLayout)
 ├── /                         → Home.vue（首页）
-├── /message                  → MessageForm.vue（联系表单）
+├── /mianfeishiyong           → TrialPage.vue（免费试用）
+├── /liuzi                    → LeadCapturePage.vue（留咨页面）
+├── /chanpin                  → ProductOverview.vue（产品总览）
+├── /lianxiwomen              → ContactUs.vue（联系我们）
+├── /xiazaizhongxin           → DownloadCenter.vue（下载中心）
+├── /youzhifuwu               → ServicePage.vue（优质服务）
+├── /huobanhezuo              → PartnerCooperation.vue（伙伴合作）
+├── /jianzheyoufen            → AmbassadorPage.vue（推广大使）
 ├── /kehuguanli               → CustomerManagement.vue（客户管理）
+├── /xiaoshouguanli           → SalesManagement.vue（销售管理）
+├── /shichangguanli           → MarketManagement.vue（市场管理）
+├── /bi                       → BIAnalysis.vue（BI 分析）
+├── /paas                     → PaaS.vue（PaaS）
+├── /ai                       → AISalesAssistant.vue（AI 销售助理）
+├── /dingtalk                 → DingTalkPage.vue（钉钉版）
+├── /feishubanben             → FeishuPage.vue（飞书版）
+├── /qiweibanben              → QiweiPage.vue（企微版）
+├── /gongsijianjie            → CompanyIntro.vue（公司介绍）
+├── /gongsidongtai            → NewsPage.vue（新闻动态）
+├── /gongsidongtai/:id        → ArticleDetail.vue（文章详情）
+├── /zhishiwenda              → KnowledgeQnA.vue（知识问答）
+├── /hangyeanli               → CasesPage.vue（行业案例）
+├── /hangyeanli/:id           → CaseDetail.vue（案例详情）
+├── /yonghuxinsheng           → VoicesPage.vue（客户心声）
 └── /:pathMatch(.*)*          → NotFound.vue（404 兜底）
 
 /ui-kit (UiKitLayout)
@@ -236,5 +293,5 @@ Emits (事件出口)
 - **Phase 3B**: ✅ 业务/布局组件（纯 Tailwind）
 - **Phase 3C**: ✅ 新首页 Home.vue（/），旧首页已下线
 - **Phase 3D**: ✅ 前端与后端模板解耦 — 删除 ClientDynamicPage.vue、client-page.ts、handlebars 依赖
-- **Phase 4**: 🔜 重构子页面（案例、新闻、服务、关于等），提取 ListPage 通用列表组件
+- **Phase 4**: ✅ 子页面构建 — 22 个子页面全部完成（产品、案例、新闻、服务、关于、生态版本、功能模块、留咨、知识问答等）
 - **Phase 5**: 🔜 全面清理 Element Plus 依赖，统一组件体系

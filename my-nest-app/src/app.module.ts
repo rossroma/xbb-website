@@ -14,7 +14,6 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { MessageModule } from './modules/message/message.module';
 import { SmsModule } from './modules/sms/sms.module';
 import { LogsModule } from './modules/logs/logs.module';
-import { GalleryModule } from './modules/gallery/gallery.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CaseModule } from './modules/case/case.module';
 import { PartnerModule } from './modules/partner/partner.module';
@@ -64,7 +63,6 @@ import { PartnerModule } from './modules/partner/partner.module';
     MessageModule,
     SmsModule,
     LogsModule,
-    GalleryModule,
     UploadModule,
     CaseModule,
     PartnerModule,

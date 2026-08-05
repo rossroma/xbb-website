@@ -74,13 +74,13 @@
         class="mt-12 grid grid-cols-3 gap-x-16 gap-y-8 max-lg:grid-cols-2 max-lg:gap-x-8 max-md:grid-cols-1"
       >
         <Card
-          v-for="item in recognitionSection.items"
+          v-for="item in recognitionItems"
           :key="item"
           clickable
           :aria-label="item"
-          class="min-h-[100px] !border-transparent !p-0 !shadow-[0_10px_28px_rgba(15,23,42,0.08)] hover:!shadow-[0_14px_32px_rgba(15,23,42,0.12)]"
+          class="min-h-25 !border-transparent !p-0 !shadow-[0_10px_28px_rgba(15,23,42,0.08)] hover:!shadow-[0_14px_32px_rgba(15,23,42,0.12)]"
         >
-          <div class="flex min-h-[100px] items-center justify-center px-6 text-center">
+          <div class="flex min-h-25 items-center justify-center px-6 text-center">
             <span class="text-[18px] font-normal text-[#09233f] leading-subtitle">
               {{ item }}
             </span>
@@ -143,8 +143,10 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
+import { computed } from 'vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
+import { useAds, AD_POSITION } from '@/client/composables/usePageAds'
 import Timeline from '@/client/components/business/Timeline.vue'
 import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -154,7 +156,6 @@ import Card from '@/client/components/ui/Card.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import {
   aboutSection,
-  companyIntroSeo,
   ecosystemSection,
   footerCtaSection,
   heroBannerSlide,
@@ -163,7 +164,12 @@ import {
   successSupportSection,
   technologySection,
   timelineSection,
+  adsToRecognitionItems,
 } from './companyIntroData'
+
+// 权威认可 — 优先使用后台广告数据，API 不可用时回退到硬编码
+const { items: recognitionAds } = useAds(AD_POSITION.ABOUT_RECOGNITION)
+const recognitionItems = computed(() => adsToRecognitionItems(recognitionAds.value))
 
 const supportCardClass = (index: number) => {
   const classes = [
@@ -175,13 +181,5 @@ const supportCardClass = (index: number) => {
   return classes[index % classes.length]
 }
 
-useHead({
-  title: companyIntroSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: companyIntroSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

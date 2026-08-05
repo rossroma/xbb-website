@@ -93,13 +93,13 @@ triggers:
 
 **步骤**：
 
-1. **查阅路由规范**：如果项目中存在 `docs/NAVIGATION_ROUTES.md`，**必须读取**，确认路径命名符合规范
+1. **查阅路由规范**：必须读取 `src/client/data/routePaths.ts`，确认路径命名符合规范
 2. 确定路由路径（如 `/kehuguanli`，而非自行命名为 `/customer`）
 3. 确定路由在 `clientRoutes` 中的位置
 4. 检查是否与现有路由冲突
 5. 确认是否需要路由参数（如 `/products/:id`）
 
-**反例**：不查阅 `NAVIGATION_ROUTES.md`，自行命名路由路径 → 导致路径不符合项目规范
+**反例**：不查阅 `routePaths.ts`，自行命名路由路径 → 导致路径不符合项目规范
 
 ### Phase 4：数据绑定与 SEO 元数据设计
 
@@ -127,7 +127,7 @@ triggers:
 **确认内容**：
 
 - 板块 → 组件映射（所有组件已存在）
-- 路由路径和位置（已查阅 NAVIGATION_ROUTES.md）
+- 路由路径和位置（已查阅 routePaths.ts）
 - 数据绑定方案
 - 页面 SEO 元数据（`useHead` 标题和描述）
 
@@ -386,7 +386,7 @@ fi
 - [ ] 页面参考图已提供
 - [ ] 板块 → 组件映射已确认
 - [ ] 所有组件已存在（已在 UiKit 注册）
-- [ ] 路由设计已查阅 NAVIGATION_ROUTES.md，无冲突
+- [ ] 路由设计已查阅 routePaths.ts，无冲突
 - [ ] 数据绑定方案已获用户确认
 - [ ] SEO 元数据方案已确认
 - [ ] 页面文件已创建（纯组装，无 `<style scoped>`，无内联组件逻辑）

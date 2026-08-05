@@ -21,11 +21,6 @@ const inventoryImage = '/images/new2022/products/jxc@2x.png'
 export const moduleCenterUrl =
   'https://module-center.xbongbong.com/preview.html#/application#wz_141'
 
-export const productOverviewSeo = {
-  title: '产品概述 - 销帮帮AI CRM',
-  description:
-    '销帮帮AI CRM产品概述，覆盖CRM、市场管理、资金管理、工单管理、进销存、BI分析和AI能力。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

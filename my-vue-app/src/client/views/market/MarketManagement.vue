@@ -30,25 +30,16 @@
 </template>
 
 <script setup lang="ts">
-import { useHead } from '@vueuse/head'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import { usePageSEO } from '@/client/composables/usePageSEO'
 import CTASection from '@/client/components/business/CTASection.vue'
 import ProcessSteps from '@/client/components/business/ProcessSteps.vue'
 import {
-  marketManagementSeo,
   heroBannerSlide,
   leadSourceSection,
   processSections,
   footerCtaSection,
 } from './marketManagementData'
 
-useHead({
-  title: marketManagementSeo.title,
-  meta: [
-    {
-      name: 'description',
-      content: marketManagementSeo.description,
-    },
-  ],
-})
+usePageSEO()
 </script>

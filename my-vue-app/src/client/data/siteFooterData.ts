@@ -1,5 +1,6 @@
 import type { Component } from 'vue'
-import { Mail, Wechat, Tiktok } from '@icon-park/vue-next'
+import { Wechat, Tiktok } from '@icon-park/vue-next'
+import { WechatVideo } from '@/client/components/ui/icons'
 import { toPagePath } from '@/client/data/routePaths'
 
 const footerWechatQr = '/images/wxImg.png'
@@ -7,13 +8,13 @@ const footerDouyinQr = '/images/code-douyin.png'
 const footerWechatVideoQr = '/images/code-wechatVideo.png'
 
 /** 页脚链接 */
-export interface FooterLink {
+interface FooterLink {
   text: string
   href: string
 }
 
 /** 页脚操作按钮 */
-export interface FooterAction {
+interface FooterAction {
   text: string
   href: string
   variant?: 'primary' | 'outline'
@@ -109,19 +110,9 @@ export const footerColumns: FooterColumn[] = [
 /** 社交图标数据 */
 export const socials: SocialItem[] = [
   { label: '微信', icon: Wechat, qr: footerWechatQr, qrText: '扫描二维码\n关注微信公众号' },
-  { label: '视频号', icon: Wechat, qr: footerWechatVideoQr, qrText: '扫描二维码\n关注微信视频号' },
+  { label: '视频号', icon: WechatVideo, qr: footerWechatVideoQr, qrText: '扫描二维码\n关注微信视频号' },
   { label: '抖音', icon: Tiktok, qr: footerDouyinQr, qrText: '扫描二维码\n关注抖音官方号' },
 ]
-
-/** 站点联系信息默认值 */
-export const defaultSiteInfo: SiteInfo = {
-  company: '',
-  address: '',
-  tel: '',
-  phone: '',
-  email: '',
-  content2: '',
-}
 
 /** 版权信息 */
 export const copyrightText = '2017-2025 杭州逍邦网络科技有限公司 版权所有'

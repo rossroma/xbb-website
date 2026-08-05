@@ -1,5 +1,5 @@
 /** 导航路径映射 — 集中管理所有页面 key → URL path 的映射关系 */
-export type RoutePathConfig = {
+type RoutePathConfig = {
   readonly key: string
   readonly path: string
   readonly name: string

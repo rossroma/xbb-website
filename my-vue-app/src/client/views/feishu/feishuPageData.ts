@@ -7,11 +7,6 @@ const blankShowcaseImage = '/images/paas/blank-showcase.svg'
 const feishuAppUrl =
   'https://app.feishu.cn/app/cli_a068c888e8f8d00b?lang=zh-CN&open_in_browser=true'
 
-export const feishuSeo = {
-  title: '销帮帮 X 飞书 - 销帮帮 CRM',
-  description:
-    '销帮帮 CRM 与飞书协同，提供客户管理、销售管理、市场管理、智能报表、流程引擎等核心能力，让团队协作和业务服务真正无缝。',
-}
 
 // ========== Hero 区域 ==========
 export const heroSection = {

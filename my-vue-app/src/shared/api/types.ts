@@ -21,21 +21,6 @@ export interface PaginationQuery {
 
 // ==================== 实体类型 ====================
 
-/** 图片集实体 */
-export interface GalleryEntity {
-  id: number
-  title: string
-  subtitle?: string
-  bid: number
-  simg?: string
-  simg2?: string
-  descs?: string
-  url?: string
-  ord: number
-  content?: string
-  addtime?: number
-  formatted_addtime?: string
-}
 
 /** 日志条目 */
 export interface LogEntry {

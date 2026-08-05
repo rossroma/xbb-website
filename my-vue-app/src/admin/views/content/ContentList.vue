@@ -149,7 +149,7 @@ const categoryNameMap = ref<Map<number, string>>(new Map())
 
 /** 根据分类 ID 查找分类名称 */
 const getCategoryName = (bid: number) => {
-  return categoryNameMap.value.get(bid) ?? String(bid) || '-'
+  return (categoryNameMap.value.get(bid) ?? String(bid)) || '-'
 }
 
 /** 点击分类树节点 */
@@ -215,8 +215,6 @@ const loadArticles = async () => {
     const result = await getAdminArticles(params)
     articles.value = result?.items || []
     pagination.total = result?.total || 0
-  } catch {
-    ElMessage.error('加载文章列表失败')
   } finally {
     loading.value = false
   }
@@ -258,8 +256,8 @@ const handleDelete = async (row: any) => {
     ElMessage.success('已移入回收站')
     loadArticleCounts()
     loadArticles()
-  } catch (err) {
-    if (err !== 'cancel') ElMessage.error('删除失败')
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
   }
 }
 

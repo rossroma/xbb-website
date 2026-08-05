@@ -3,11 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // 登录页入口 — 重定向到管理后台
+    // 登录页入口 — 重定向到管理后台（独立入口，全页跳转）
     {
       path: '/login',
       redirect: () => {
         window.location.href = '/admin.html'
+        // 返回空字符串满足 TypeScript 类型检查（实际不会执行到这里）
+        return '/'
       },
     },
     {

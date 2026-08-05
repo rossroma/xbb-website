@@ -5,8 +5,6 @@ import { OperationLog } from './entities/operation-log.entity';
 import { LoginLog } from './entities/login-log.entity';
 
 export interface OperationLogData {
-  /** 操作人 ID */
-  admin_id?: number;
   /** 操作人名称 */
   admin_name?: string;
   /** 操作模块 */
@@ -17,16 +15,8 @@ export interface OperationLogData {
   title?: string;
   /** 操作内容描述 */
   content?: string;
-  /** 目标资源 ID */
-  target_id?: number;
   /** 请求 IP */
   ip?: string;
-  /** 请求方法 */
-  method?: string;
-  /** 请求 URL */
-  url?: string;
-  /** 请求参数 */
-  params?: Record<string, any>;
 }
 
 @Injectable()
@@ -43,15 +33,10 @@ export class LogsService {
    */
   async logOperation(data: OperationLogData): Promise<void> {
     const operationLog = this.operationLogRepo.create({
-      admin_id: data.admin_id || null,
       username: data.admin_name || '',
       title: data.content || `${data.title || ''}`,
       type: data.type || 0,
       login_ip: data.ip || '',
-      method: data.method || null,
-      url: data.url || null,
-      params: data.params ? JSON.stringify(data.params) : null,
-      target_id: data.target_id || null,
       addtime: Math.floor(Date.now() / 1000),
     });
     await this.operationLogRepo.save(operationLog);
@@ -66,27 +51,6 @@ export class LogsService {
       login_ip: ip || '',
       type: 1, // 管理员登录
       user_agent: userAgent || '',
-      addtime: Math.floor(Date.now() / 1000),
-    });
-    await this.loginLogRepo.save(loginLog);
-  }
-
-  /**
-   * 记录登录日志（扩展版）
-   */
-  async logLogin(data: {
-    admin_id?: number;
-    admin_name?: string;
-    status: 'success' | 'failed';
-    ip?: string;
-    user_agent?: string;
-    reason?: string;
-  }): Promise<void> {
-    const loginLog = this.loginLogRepo.create({
-      username: data.admin_name || '',
-      login_ip: data.ip || '',
-      type: data.status === 'success' ? 1 : 0,
-      user_agent: data.user_agent || '',
       addtime: Math.floor(Date.now() / 1000),
     });
     await this.loginLogRepo.save(loginLog);
@@ -223,85 +187,6 @@ export class LogsService {
     }));
 
     return { items: formattedItems, total };
-  }
-
-  /**
-   * 获取日志统计
-   */
-  async getLogsStats(params: {
-    start_date?: string;
-    end_date?: string;
-  }) {
-    const startTime = params.start_date
-      ? Math.floor(new Date(params.start_date).getTime() / 1000)
-      : 0;
-    const endTime = params.end_date
-      ? Math.floor(new Date(params.end_date).getTime() / 1000) + 86400
-      : Math.floor(Date.now() / 1000);
-
-    const todayStart = Math.floor(
-      new Date(new Date().toLocaleDateString('zh-CN', { timeZone: 'Asia/Shanghai' })).getTime() / 1000,
-    );
-
-    const [totalOperations, totalLogins, failedLogins, activeUsers, todayOperations] =
-      await Promise.all([
-        // 总操作数
-        this.operationLogRepo
-          .createQueryBuilder('log')
-          .where('log.addtime >= :startTime AND log.addtime <= :endTime', {
-            startTime: startTime || undefined,
-            endTime,
-          })
-          .getCount()
-          .catch(() => 0),
-
-        // 总登录次数
-        this.loginLogRepo
-          .createQueryBuilder('log')
-          .where('log.addtime >= :startTime AND log.addtime <= :endTime', {
-            startTime: startTime || undefined,
-            endTime,
-          })
-          .getCount()
-          .catch(() => 0),
-
-        // 登录失败次数
-        this.loginLogRepo
-          .createQueryBuilder('log')
-          .where('log.addtime >= :startTime AND log.addtime <= :endTime', {
-            startTime: startTime || undefined,
-            endTime,
-          })
-          .andWhere('log.type = :type', { type: 0 })
-          .getCount()
-          .catch(() => 0),
-
-        // 活跃用户数（去重）
-        this.operationLogRepo
-          .createQueryBuilder('log')
-          .select('DISTINCT log.username')
-          .where('log.addtime >= :startTime AND log.addtime <= :endTime', {
-            startTime: startTime || undefined,
-            endTime,
-          })
-          .getCount()
-          .catch(() => 0),
-
-        // 今日操作数
-        this.operationLogRepo
-          .createQueryBuilder('log')
-          .where('log.addtime >= :todayStart', { todayStart })
-          .getCount()
-          .catch(() => 0),
-      ]);
-
-    return {
-      total_operations: totalOperations,
-      total_logins: totalLogins,
-      failed_logins: failedLogins,
-      active_users: activeUsers,
-      today_operations: todayOperations,
-    };
   }
 
   /** 操作类型数字 → 英文 key */
