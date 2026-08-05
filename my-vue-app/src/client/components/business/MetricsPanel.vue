@@ -14,7 +14,10 @@
 
     <!-- 指标卡片网格 -->
     <div
-      :class="['relative mt-7 overflow-hidden', variant === 'detail' ? 'px-0 py-0' : 'px-6 py-5']"
+      :class="[
+        'relative mt-7',
+        variant === 'detail' ? 'overflow-visible px-0 py-2' : 'overflow-hidden px-6 py-5',
+      ]"
     >
       <div class="relative z-10">
         <CardGrid :cols="columns" gap="loose">
@@ -32,7 +35,7 @@
             <article
               v-for="m in metrics"
               :key="m.label"
-              class="min-h-48 rounded-card border border-transparent bg-surface-primary px-7 py-6 text-left shadow-[0_10px_28px_rgba(15,23,42,0.08)]"
+              class="min-h-48 rounded-card border border-border-subtle bg-surface-primary px-7 py-6 text-left shadow-[0_8px_22px_rgba(15,23,42,0.06)] transition-shadow duration-normal hover:shadow-[0_14px_28px_rgba(15,23,42,0.1)]"
             >
               <strong class="inline-flex items-end gap-1">
                 <span
