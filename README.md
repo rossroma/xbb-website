@@ -144,9 +144,13 @@ pnpm lint
 
 **镜像仓库**：`ghcr.io/rossroma/xbb-website`
 
-**测试环境手动部署**（无需 self-hosted runner）：
+**测试环境**：develop 分支推送后自动触发，GitHub runner 通过 SSH 远程部署到测试服务器。
+
+**手动部署**：
 ```bash
 docker pull ghcr.io/rossroma/xbb-website/xbb-backend:latest
 docker pull ghcr.io/rossroma/xbb-website/xbb-frontend:latest
 bash deploy.test.sh
 ```
+
+**GitHub Secrets 配置**：`TEST_SSH_HOST` / `TEST_SSH_PORT` / `TEST_SSH_USER` / `TEST_SSH_PRIVATE_KEY` / `TEST_DB_PASSWORD` / `TEST_DB_DATABASE` / `TEST_JWT_SECRET` / `TEST_DEPLOY_PATH` / `VITE_API_BASE_URL`
