@@ -1,29 +1,26 @@
 #!/usr/bin/env bash
 # ==========================================
 # 测试环境部署脚本
-# 加载本地镜像 tar → 启动 Docker MySQL + 应用 → 验证
+# 从 ghcr.io 拉取镜像 → 启动 Docker MySQL + 应用 → 验证
 # ==========================================
 
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/xbb-website-test}"
 COMPOSE_FILE="${DEPLOY_PATH}/docker-compose.test.yml"
-IMAGES_DIR="${DEPLOY_PATH}/images"
+BACKEND_IMAGE="ghcr.io/rossroma/xbb-website/xbb-backend:latest"
+FRONTEND_IMAGE="ghcr.io/rossroma/xbb-website/xbb-frontend:latest"
 
 echo "🚀 [$(date '+%Y-%m-%d %H:%M:%S')] 开始测试环境部署..."
 
 # ==========================================
-# 1. 加载镜像（docker save 打包的 tar）
+# 1. 拉取镜像（从 ghcr.io）
 # ==========================================
-echo "📦 加载 Docker 镜像..."
-if [ -f "${IMAGES_DIR}/xbb-backend.tar" ]; then
-  docker load < "${IMAGES_DIR}/xbb-backend.tar"
-  echo "  ✅ 后端镜像加载完成"
-fi
-if [ -f "${IMAGES_DIR}/xbb-frontend.tar" ]; then
-  docker load < "${IMAGES_DIR}/xbb-frontend.tar"
-  echo "  ✅ 前端镜像加载完成"
-fi
+echo "📦 拉取 Docker 镜像..."
+docker pull "${BACKEND_IMAGE}"
+echo "  ✅ 后端镜像拉取完成"
+docker pull "${FRONTEND_IMAGE}"
+echo "  ✅ 前端镜像拉取完成"
 
 # ==========================================
 # 2. 优雅停止旧服务

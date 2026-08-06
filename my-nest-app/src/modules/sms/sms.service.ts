@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { createHash, randomInt } from 'crypto';
 import * as path from 'path';
 import * as svgCaptcha from 'svg-captcha';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { firstValueFrom } from 'rxjs';
 import { SmsCode } from './entities/sms-code.entity';
 import { SmsLog } from './entities/sms-log.entity';

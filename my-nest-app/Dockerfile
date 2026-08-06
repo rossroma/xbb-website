@@ -3,11 +3,7 @@
 # ============================================
 FROM node:22-alpine AS builder
 
-# bcrypt 编译需要 python3 / make / g++
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-RUN apk add --no-cache python3 make g++
-
-# 安装 pnpm（版本锁定，与项目一致）
+# 安装 pnpm
 RUN npm config set registry https://registry.npmmirror.com
 RUN npm install -g pnpm@10.33.0
 

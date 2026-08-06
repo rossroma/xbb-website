@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Admin } from './entities/admin.entity';
 import { AdminGroup } from './entities/admin-group.entity';
 import { AdminAction } from './entities/admin-action.entity';

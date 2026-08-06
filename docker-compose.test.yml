@@ -35,7 +35,7 @@ services:
       - --default-authentication-plugin=mysql_native_password
 
   backend:
-    image: xbb-backend:latest
+    image: ghcr.io/rossroma/xbb-website/xbb-backend:latest
     container_name: xbb-backend
     restart: unless-stopped
     ports:
@@ -77,7 +77,7 @@ services:
         max-file: "3"
 
   frontend:
-    image: xbb-frontend:latest
+    image: ghcr.io/rossroma/xbb-website/xbb-frontend:latest
     container_name: xbb-frontend
     restart: unless-stopped
     ports:
