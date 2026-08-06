@@ -57,6 +57,8 @@ build-test:
   image: docker:27-dind
   services:
     - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
   only:
     - develop
   script:
