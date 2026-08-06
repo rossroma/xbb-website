@@ -213,10 +213,10 @@ jobs:
             docker compose -f docker-compose.test.yml down --timeout 30 || true
 
             # 启动
-            DB_PASSWORD="${{ secrets.TEST_DB_PASSWORD }}" \
-            DB_DATABASE="${{ secrets.TEST_DB_DATABASE }}" \
-            JWT_SECRET="${{ secrets.TEST_JWT_SECRET }}" \
-            DEPLOY_PATH="${{ secrets.TEST_DEPLOY_PATH }}" \
+            export DB_PASSWORD="${{ secrets.TEST_DB_PASSWORD }}"
+            export DB_DATABASE="${{ secrets.TEST_DB_DATABASE }}"
+            export JWT_SECRET="${{ secrets.TEST_JWT_SECRET }}"
+            export DEPLOY_PATH="${{ secrets.TEST_DEPLOY_PATH }}"
             docker compose -f docker-compose.test.yml up -d --wait
 
             # 健康检查
