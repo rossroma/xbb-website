@@ -47,6 +47,7 @@ export interface CaseDetailResponse {
 export interface CaseListItem {
   id: number
   title: string
+  bid?: number
   description: string
   image: string
   tags: string[]

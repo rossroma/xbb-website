@@ -133,12 +133,24 @@ const reviewCards = computed<ReviewCard[]>(() => {
 
 // ==================== 数据转换 ====================
 
+/** 根据 bid 从分类映射表中查找分类名称 */
+function getCategoryName(bid?: number): string {
+  if (bid === undefined) return ''
+  for (const [key, id] of categoryMap.value) {
+    if (id === bid) {
+      const tab = categoryTabs.value.find((t) => t.key === key)
+      return tab?.label ?? ''
+    }
+  }
+  return ''
+}
+
 /** 将 API 返回的 CaseListItem 转为 ReviewCard */
 function toReviewCard(item: CaseListItem): ReviewCard {
   return {
     logo: item.image || '',
     logoAlt: item.title,
-    industry: item.tags?.[0] ?? '',
+    industry: getCategoryName(item.bid),
     content: item.description || '',
     username: item.title,
     rating: 5,

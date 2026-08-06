@@ -4,6 +4,7 @@ export class CaseResponseDto {
   title: string;
   description: string;
   image: string;
+  bid?: number;
   tags: string[];
   content?: string;
   seoTitle: string;
@@ -20,6 +21,7 @@ export class CaseResponseDto {
     this.title = caseEntity.title;
     this.description = caseEntity.description;
     this.image = caseEntity.image;
+    this.bid = caseEntity.bid;
     this.tags = caseEntity.tags
       ? caseEntity.tags.split(',').map((t: string) => t.trim()).filter(Boolean)
       : [];
