@@ -55,11 +55,11 @@ services:
       OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID}
       OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET}
       OSS_BASE_URL: ${OSS_BASE_URL:-}
-      SMS_USERNAME: ${SMS_USERNAME}
-      SMS_PASSWORD: ${SMS_PASSWORD}
-      CAPTCHA_JWT_SECRET: ${CAPTCHA_JWT_SECRET}
-      DATACENTER_TOKEN: ${DATACENTER_TOKEN}
-      PARTNER_API_TOKEN: ${PARTNER_API_TOKEN}
+      SMS_USERNAME: ${SMS_USERNAME:-test}
+      SMS_PASSWORD: ${SMS_PASSWORD:-test}
+      CAPTCHA_JWT_SECRET: ${CAPTCHA_JWT_SECRET:-test-captcha-secret}
+      DATACENTER_TOKEN: ${DATACENTER_TOKEN:-test-datacenter-token}
+      PARTNER_API_TOKEN: ${PARTNER_API_TOKEN:-test-partner-token}
     depends_on:
       mysql:
         condition: service_healthy
