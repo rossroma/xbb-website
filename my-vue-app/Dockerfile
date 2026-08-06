@@ -4,7 +4,8 @@
 # 使用 Puppeteer 官方镜像，内置 Node.js + Chromium + 所有依赖
 FROM ghcr.io/puppeteer/puppeteer:latest AS builder
 
-# 安装 pnpm（优先国内镜像，失败则回退到官方源，兼容海外 CI 环境）
+# 安装 pnpm（Puppeteer 镜像默认非 root 用户，需切回 root）
+USER root
 RUN npm install -g pnpm@10.33.0 --registry https://registry.npmmirror.com || \
     npm install -g pnpm@10.33.0 --registry https://registry.npmjs.org
 
