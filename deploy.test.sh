@@ -1,34 +1,32 @@
 #!/usr/bin/env bash
 # ==========================================
-# 测试环境部署脚本
-# 从 ACR 拉取镜像 → 启动 Docker MySQL + 应用 → 验证
+# 测试环境部署脚本（手动部署用）
+# 从 ghcr.io 拉取镜像 → 启动 Docker MySQL + 应用 → 验证
 # ==========================================
 
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-/opt/xbb-website-test}"
 COMPOSE_FILE="${DEPLOY_PATH}/docker-compose.test.yml"
-ACR_REGISTRY="${ACR_REGISTRY:-}"
-ACR_NAMESPACE="${ACR_NAMESPACE:-}"
-ACR_USERNAME="${ACR_USERNAME:-}"
-ACR_PASSWORD="${ACR_PASSWORD:-}"
+GHCR_TOKEN="${GHCR_TOKEN:-}"
+GITHUB_ACTOR="${GITHUB_ACTOR:-rossroma}"
 
 echo "🚀 [$(date '+%Y-%m-%d %H:%M:%S')] 开始测试环境部署..."
 
 # ==========================================
-# 1. 拉取镜像（从 ACR，国内网络）
+# 1. 拉取镜像（从 ghcr.io）
 # ==========================================
 echo "📦 拉取 Docker 镜像..."
-if [ -n "${ACR_PASSWORD}" ]; then
-  echo "${ACR_PASSWORD}" | docker login "${ACR_REGISTRY}" -u "${ACR_USERNAME}" --password-stdin
+if [ -n "${GHCR_TOKEN}" ]; then
+  echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GITHUB_ACTOR}" --password-stdin
 fi
 
-docker pull "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest"
-docker tag "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest" xbb-backend:latest
+docker pull ghcr.io/rossroma/xbb-website/xbb-backend:latest
+docker tag ghcr.io/rossroma/xbb-website/xbb-backend:latest xbb-backend:latest
 echo "  ✅ 后端镜像拉取完成"
 
-docker pull "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest"
-docker tag "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest" xbb-frontend:latest
+docker pull ghcr.io/rossroma/xbb-website/xbb-frontend:latest
+docker tag ghcr.io/rossroma/xbb-website/xbb-frontend:latest xbb-frontend:latest
 echo "  ✅ 前端镜像拉取完成"
 
 # ==========================================

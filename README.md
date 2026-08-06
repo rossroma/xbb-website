@@ -155,18 +155,14 @@ bash deploy.test.sh
 
 **GitHub Secrets 配置**：
 
-| 分类 | Secret | 说明 |
-|------|--------|------|
-| SSH | `TEST_SSH_HOST` | 测试服务器 IP |
-| SSH | `TEST_SSH_PORT` | SSH 端口（默认 22） |
-| SSH | `TEST_SSH_USER` | SSH 用户名 |
-| SSH | `TEST_SSH_PRIVATE_KEY` | SSH 私钥 |
-| ACR | `ACR_REGISTRY` | 阿里云镜像仓库地址 |
-| ACR | `ACR_NAMESPACE` | 命名空间 |
-| ACR | `ACR_USERNAME` | ACR 用户名 |
-| ACR | `ACR_PASSWORD` | ACR 密码 |
-| 应用 | `TEST_DB_PASSWORD` | 测试数据库密码 |
-| 应用 | `TEST_DB_DATABASE` | 测试数据库名 |
-| 应用 | `TEST_JWT_SECRET` | JWT 密钥 |
-| 应用 | `TEST_DEPLOY_PATH` | 部署目录 |
-| 构建 | `VITE_API_BASE_URL` | 前端 API 地址 |
+| Secret | 说明 |
+|--------|------|
+| `TEST_SSH_HOST` | 测试服务器 IP |
+| `TEST_SSH_PORT` | SSH 端口（默认 22） |
+| `TEST_SSH_USER` | SSH 用户名 |
+| `TEST_SSH_PRIVATE_KEY` | SSH 私钥 |
+| `TEST_DB_PASSWORD` | 测试数据库密码 |
+| `TEST_DB_DATABASE` | 测试数据库名 |
+| `TEST_JWT_SECRET` | JWT 密钥 |
+| `TEST_DEPLOY_PATH` | 部署目录 |
+| `VITE_API_BASE_URL` | 前端 API 地址 |
