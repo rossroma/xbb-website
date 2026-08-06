@@ -18,8 +18,7 @@ import { createServer } from 'node:http'
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { execSync } from 'node:child_process'
-import puppeteer from 'puppeteer-core'
+import puppeteer from 'puppeteer'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const DIST_DIR = resolve(__dirname, '..', 'dist')
@@ -96,39 +95,25 @@ const server = createServer((req, res) => {
 
 // ========== 预渲染逻辑 ==========
 
-function findChrome() {
-  // 1. 环境变量
-  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-    return process.env.PUPPETEER_EXECUTABLE_PATH
-  }
-  // 2. 自动查找（CI Docker 环境）
-  try { return execSync('which google-chrome', { stdio: 'pipe' }).toString().trim() } catch {}
-  try { return execSync('which google-chrome-stable', { stdio: 'pipe' }).toString().trim() } catch {}
-  try { return execSync('which chromium', { stdio: 'pipe' }).toString().trim() } catch {}
-  try { return execSync('which chromium-browser', { stdio: 'pipe' }).toString().trim() } catch {}
-  return null
-}
-
 async function prerender() {
-  // 0. 检查 Chromium 是否可用
-  const executablePath = findChrome()
-  if (!executablePath) {
-    console.warn('[prerender] ⚠️  未找到 Chrome/Chromium，跳过预渲染（本地开发可忽略）')
-    server.close()
-    return
-  }
-  console.log(`[prerender] Chrome: ${executablePath}`)
-
   // 1. 启动静态文件服务器
   await new Promise((resolve) => server.listen(PORT, resolve))
   console.log(`[prerender] Static server: http://localhost:${PORT}`)
 
-  // 2. 启动浏览器
-  const browser = await puppeteer.launch({
-    headless: true,
-    executablePath,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  // 2. 启动浏览器（puppeteer 自动查找镜像自带 Chrome，本地无则跳过）
+  let browser
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    })
+  } catch (err) {
+    console.warn('[prerender] ⚠️  无法启动浏览器，跳过预渲染（本地开发可忽略）')
+    console.warn(`[prerender] ${err.message}`)
+    server.close()
+    return
+  }
+  console.log(`[prerender] Chrome: ${browser.process()?.spawnfile || 'auto-detected'}`)
 
   let success = 0
   let failed = 0
