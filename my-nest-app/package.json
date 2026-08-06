@@ -49,6 +49,7 @@
     "class-validator": "^0.14.4",
     "dotenv": "^16.4.5",
     "handlebars": "^4.7.9",
+    "multer": "^2.0.2",
     "mysql2": "^3.6.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",

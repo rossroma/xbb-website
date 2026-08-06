@@ -67,6 +67,9 @@ importers:
       handlebars:
         specifier: ^4.7.9
         version: 4.7.9
+      multer:
+        specifier: ^2.0.2
+        version: 2.0.2
       mysql2:
         specifier: ^3.6.5
         version: 3.23.2(@types/node@20.19.43)
