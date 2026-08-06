@@ -26,8 +26,9 @@ COPY pnpm-workspace.yaml ./
 COPY pnpm-lock.yaml ./
 COPY package.json ./
 
-# 复制前端子项目
+# 复制前端子项目（package.json + .npmrc，确保 pnpm 配置一致）
 COPY my-vue-app/package.json my-vue-app/
+COPY my-vue-app/.npmrc my-vue-app/
 
 # 安装前端依赖
 RUN pnpm config set registry https://registry.npmmirror.com

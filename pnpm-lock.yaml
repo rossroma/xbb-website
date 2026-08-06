@@ -288,6 +288,9 @@ importers:
       puppeteer:
         specifier: ^22.15.0
         version: 22.15.0(typescript@5.9.3)
+      puppeteer-core:
+        specifier: ^22.15.0
+        version: 22.15.0
       start-server-and-test:
         specifier: ^2.1.5
         version: 2.1.5

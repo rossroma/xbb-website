@@ -63,6 +63,7 @@
     "oxlint": "~1.50.0",
     "prettier": "3.8.1",
     "puppeteer": "^22.15.0",
+    "puppeteer-core": "^22.15.0",
     "start-server-and-test": "^2.1.5",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",
