@@ -43,16 +43,12 @@
               <el-input v-model="baseForm.postcode" placeholder="请输入邮编" />
             </el-form-item>
             <el-form-item label="底部版权信息">
-              <div class="wang-editor-wrap">
-                <Toolbar :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple" />
-                <Editor
-                  v-model="baseForm.content2"
-                  :defaultConfig="editorConfig"
-                  mode="simple"
-                  style="height: 200px"
-                  @onCreated="handleEditorCreated"
-                />
-              </div>
+              <el-input
+                v-model="baseForm.content2"
+                type="textarea"
+                :rows="5"
+                placeholder="请输入底部版权信息，支持 HTML 标签（如 &lt;a&gt;）"
+              />
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -119,10 +115,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowRef, onBeforeUnmount, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import '@wangeditor/editor/dist/css/style.css'
 import { getBase, updateBase } from '@/shared/api/settings'
 import ImageUploader from '@/admin/components/ImageUploader.vue'
 
@@ -130,16 +124,6 @@ defineOptions({ name: 'SettingsPage' })
 
 const activeTab = ref('base')
 const loading = ref(false)
-const editorRef = shallowRef()
-
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入底部版权信息...' }
-
-const handleEditorCreated = (editor: any) => {
-  editorRef.value = editor
-}
-
-onBeforeUnmount(() => editorRef.value?.destroy())
 
 const baseForm = ref({
   title: '',
@@ -220,14 +204,4 @@ onMounted(loadSettings)
   margin-top: 4px;
 }
 
-.wang-editor-wrap {
-  border: 1px solid #dcdfe6;
-  border-radius: 4px;
-  width: 100%;
-}
-
-.wang-editor-wrap :deep(.w-e-toolbar) {
-  background: #fafafa;
-  border-bottom: 1px solid #dcdfe6;
-}
 </style>

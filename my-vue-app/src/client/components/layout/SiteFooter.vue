@@ -82,8 +82,7 @@
       <!-- 版权信息 -->
       <div class="mt-4 pt-3 border-t border-footer-border-light text-center">
         <p class="text-small text-text-tertiary leading-relaxed">
-          <span class="text-small">COPYRIGHT</span> ©<span class="text-small">
-            {{ displayCopyright }}&nbsp;&nbsp;&nbsp;<a
+          <span class="text-small">COPYRIGHT</span> ©<span class="text-small" v-html="displayCopyright"></span>&nbsp;&nbsp;&nbsp;<a
               href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802003191"
               target="_blank"
               rel="nofollow"
@@ -95,8 +94,7 @@
               rel="nofollow"
               class="text-text-tertiary hover:text-brand-primary transition-colors duration-fast motion-reduce:transition-none no-underline"
               >ICP证：浙ICP备15012475号-1</a
-            >&nbsp;&nbsp;&nbsp;&nbsp;</span
-          >
+            >&nbsp;&nbsp;&nbsp;&nbsp;
         </p>
       </div>
     </div>
