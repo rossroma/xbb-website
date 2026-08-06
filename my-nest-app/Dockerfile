@@ -4,6 +4,7 @@
 FROM node:22-alpine AS builder
 
 # bcrypt 编译需要 python3 / make / g++
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache python3 make g++
 
 # 安装 pnpm（版本锁定，与项目一致）
@@ -38,6 +39,7 @@ RUN pnpm -C my-nest-app build
 FROM node:22-alpine AS production
 
 # 安装 tini（信号处理，优雅关闭）
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache tini curl
 
 # 安装 pnpm

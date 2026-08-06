@@ -38,6 +38,7 @@ RUN pnpm -C my-vue-app build
 FROM nginx:1.27-alpine AS production
 
 # 安装 curl（健康检查需要）
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 RUN apk add --no-cache curl
 
 # 复制自定义 nginx 配置
