@@ -21,7 +21,7 @@ export class SmsCode {
   @Index('idx_phone')
   phone: string;
 
-  @Column({ length: 10, comment: '验证码' })
+  @Column({ length: 60, comment: '验证码（bcrypt 哈希）' })
   code: string;
 
   @Column({ type: 'tinyint', default: 0, comment: '是否已验证：0 未验证，1 已验证' })

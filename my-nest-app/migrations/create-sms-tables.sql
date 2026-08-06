@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS `sms_codes` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `phone` VARCHAR(20) NOT NULL COMMENT '手机号',
-  `code` VARCHAR(10) NOT NULL COMMENT '验证码',
+  `code` VARCHAR(60) NOT NULL COMMENT '验证码（bcrypt 哈希）',
   `verified` TINYINT DEFAULT 0 COMMENT '是否已验证：0 未验证，1 已验证',
   `ip` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '客户端 IP',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

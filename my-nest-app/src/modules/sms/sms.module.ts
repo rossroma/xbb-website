@@ -4,6 +4,7 @@ import { HttpModule } from '@nestjs/axios';
 import { JwtModule } from '@nestjs/jwt';
 import { SmsService } from './sms.service';
 import { SmsController } from './sms.controller';
+import { AdminSmsController } from './admin/admin-sms.controller';
 import { SmsCode } from './entities/sms-code.entity';
 import { SmsLog } from './entities/sms-log.entity';
 
@@ -16,7 +17,7 @@ import { SmsLog } from './entities/sms-log.entity';
     }),
     JwtModule.register({}),
   ],
-  controllers: [SmsController],
+  controllers: [SmsController, AdminSmsController],
   providers: [SmsService],
   exports: [SmsService],
 })

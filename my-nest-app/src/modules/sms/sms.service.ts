@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException, ServiceUnavailableException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Between } from 'typeorm';
 import { HttpService } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
 import { createHash, randomInt } from 'crypto';
@@ -11,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import { SmsCode } from './entities/sms-code.entity';
 import { SmsLog } from './entities/sms-log.entity';
 import { smsConfig } from './config/sms.config';
+import { QuerySmsLogDto } from './dto/query-sms-log.dto';
 
 // 加载自定义字体（Arial Bold），替换默认的 Comic Sans 风格字体
 // 使用粗体提升验证码可读性，Arial 字体更加专业整洁
@@ -429,5 +430,64 @@ export class SmsService {
     // 验证状态有效期为 10 分钟
     const age = (Date.now() - record.created_at.getTime()) / 1000;
     return age <= 600; // 10 分钟
+  }
+
+  // ==================== 日志查询（管理端） ====================
+
+  /**
+   * 查询短信发送日志（分页）
+   *
+   * 支持按手机号、发送状态、日期范围筛选
+   */
+  async findLogs(query: QuerySmsLogDto) {
+    const { page = 1, limit = 10, phone, status, start_date, end_date, sortBy = 'created_at_desc' } = query;
+    const skip = (page - 1) * limit;
+
+    const queryBuilder = this.smsLogRepository.createQueryBuilder('sms_logs');
+
+    // 手机号模糊搜索
+    if (phone) {
+      queryBuilder.andWhere('sms_logs.phone LIKE :phone', { phone: `%${phone}%` });
+    }
+
+    // 发送状态筛选
+    if (status) {
+      queryBuilder.andWhere('sms_logs.status = :status', { status });
+    }
+
+    // 日期范围筛选
+    if (start_date && end_date) {
+      const start = new Date(start_date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(end_date);
+      end.setHours(23, 59, 59, 999);
+      queryBuilder.andWhere('sms_logs.created_at BETWEEN :start AND :end', { start, end });
+    } else if (start_date) {
+      const start = new Date(start_date);
+      start.setHours(0, 0, 0, 0);
+      queryBuilder.andWhere('sms_logs.created_at >= :start', { start });
+    } else if (end_date) {
+      const end = new Date(end_date);
+      end.setHours(23, 59, 59, 999);
+      queryBuilder.andWhere('sms_logs.created_at <= :end', { end });
+    }
+
+    // 排序
+    const [sortField, sortOrder] = sortBy.split('_');
+    queryBuilder.orderBy(`sms_logs.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
+
+    // 分页
+    const [list, total] = await queryBuilder
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      list,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

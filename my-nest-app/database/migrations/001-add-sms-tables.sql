@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS `sms_codes` (
   `id` int NOT NULL AUTO_INCREMENT,
   `phone` varchar(20) NOT NULL COMMENT '手机号',
-  `code` varchar(10) NOT NULL COMMENT '验证码',
+  `code` varchar(60) NOT NULL COMMENT '验证码（bcrypt 哈希）',
   `verified` tinyint NOT NULL DEFAULT '0' COMMENT '是否已验证：0 未验证，1 已验证',
   `ip` varchar(50) NOT NULL COMMENT '客户端 IP',
   `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
