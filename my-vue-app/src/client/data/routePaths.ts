@@ -20,12 +20,6 @@ export const routePaths = [
     pageKey: 'channel_products',
   },
   {
-    key: 'product_price',
-    path: 'chanpinjiage',
-    name: 'ClientProductPrice',
-    pageKey: 'product_price',
-  },
-  {
     key: 'list_cases',
     path: 'hangyeanli',
     name: 'ClientCases',
@@ -122,14 +116,14 @@ const routePathAliases = [
   { key: 'single_xbb', fullPath: '/chanpin' },
   { key: 'single_xbb2', fullPath: '/chanpin' },
   { key: 'xbb_paas', fullPath: '/chanpin' },
-  { key: 'channel_shuzihuaxcs', fullPath: '/guanyuwomen' },
-  { key: 'single_shuzihua', fullPath: '/guanyuwomen' },
-  { key: 'single_sf', fullPath: '/guanyuwomen' },
+  { key: 'channel_shuzihuaxcs', fullPath: '/gongsijianjie' },
+  { key: 'single_shuzihua', fullPath: '/gongsijianjie' },
+  { key: 'single_sf', fullPath: '/gongsijianjie' },
   { key: 'single_service', fullPath: '/youzhifuwu' },
   { key: 'single_live', fullPath: '/youzhifuwu' },
   { key: 'single_tuiguang', fullPath: '/jianzheyoufen' },
   { key: 'list_tuiguang', fullPath: '/jianzheyoufen' },
-  { key: 'single_market', fullPath: '/guanyuwomen' },
+  { key: 'single_market', fullPath: '/gongsijianjie' },
   { key: 'list_services', fullPath: '/youzhifuwu' },
 ] as const satisfies readonly RoutePathAlias[]
 
