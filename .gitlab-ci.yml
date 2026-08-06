@@ -50,15 +50,17 @@ build-frontend:
     - docker
 
 # ==========================================
-# 构建测试镜像（dev 分支 → 导出 tar）
+# 构建测试镜像（develop 分支 → 导出 tar）
 # ==========================================
 build-test:
   stage: build
   image: docker:27-dind
   services:
     - docker:27-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
   only:
-    - dev
+    - develop
   script:
     # 构建后端
     - docker build -f my-nest-app/Dockerfile -t xbb-backend:latest .
@@ -76,13 +78,13 @@ build-test:
     - docker
 
 # ==========================================
-# 部署测试环境（dev 分支 → 自动触发）
+# 部署测试环境（develop 分支 → 自动触发）
 # ==========================================
 deploy-test:
   stage: deploy-test
   image: alpine:latest
   only:
-    - dev
+    - develop
   dependencies:
     - build-test
   before_script:
