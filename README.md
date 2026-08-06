@@ -167,4 +167,8 @@ bash deploy.test.sh
 | 应用 | `TEST_DB_DATABASE` | 测试数据库名 |
 | 应用 | `TEST_JWT_SECRET` | JWT 密钥 |
 | 应用 | `TEST_DEPLOY_PATH` | 部署目录 |
+| OSS | `OSS_REGION` | OSS 区域 |
+| OSS | `OSS_BUCKET` | OSS Bucket 名称 |
+| OSS | `OSS_ACCESS_KEY_ID` | OSS AccessKey ID |
+| OSS | `OSS_ACCESS_KEY_SECRET` | OSS AccessKey Secret |
 | 构建 | `VITE_API_BASE_URL` | 前端 API 地址 |
