@@ -96,13 +96,19 @@ const server = createServer((req, res) => {
 // ========== 预渲染逻辑 ==========
 
 async function prerender() {
+  // 0. 检查 Chromium 是否可用（本地开发环境可能没有安装）
+  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+  if (!executablePath) {
+    console.warn('[prerender] ⚠️  PUPPETEER_EXECUTABLE_PATH 未设置，跳过预渲染（本地开发可忽略）')
+    server.close()
+    return
+  }
+
   // 1. 启动静态文件服务器
   await new Promise((resolve) => server.listen(PORT, resolve))
   console.log(`[prerender] Static server: http://localhost:${PORT}`)
 
-  // 2. 启动浏览器（优先环境变量，其次自动查找系统 Chromium）
-  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined
-
+  // 2. 启动浏览器
   const browser = await puppeteer.launch({
     headless: true,
     executablePath,
