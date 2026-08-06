@@ -7,6 +7,7 @@ FROM node:22-alpine AS builder
 RUN apk add --no-cache python3 make g++
 
 # 安装 pnpm（版本锁定，与项目一致）
+RUN npm config set registry https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 WORKDIR /app
@@ -22,6 +23,7 @@ COPY my-nest-app/tsconfig*.json my-nest-app/
 COPY my-nest-app/nest-cli.json my-nest-app/
 
 # 安装后端依赖（利用 pnpm workspace filter）
+RUN pnpm config set registry https://registry.npmmirror.com
 RUN pnpm install --filter my-nest-app --frozen-lockfile
 
 # 复制后端源码
@@ -39,6 +41,7 @@ FROM node:22-alpine AS production
 RUN apk add --no-cache tini curl
 
 # 安装 pnpm
+RUN npm config set registry https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 WORKDIR /app
@@ -52,6 +55,7 @@ COPY package.json ./
 COPY my-nest-app/package.json my-nest-app/
 
 # 仅安装生产依赖
+RUN pnpm config set registry https://registry.npmmirror.com
 RUN pnpm install --filter my-nest-app --frozen-lockfile --prod
 
 # 从 builder 复制构建产物

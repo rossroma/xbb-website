@@ -16,6 +16,7 @@ RUN apk add --no-cache \
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 # 安装 pnpm（版本锁定，与项目一致）
+RUN npm config set registry https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 WORKDIR /app
@@ -29,6 +30,7 @@ COPY package.json ./
 COPY my-vue-app/package.json my-vue-app/
 
 # 安装前端依赖
+RUN pnpm config set registry https://registry.npmmirror.com
 RUN pnpm install --filter my-vue-app --frozen-lockfile
 
 # 复制前端源码
