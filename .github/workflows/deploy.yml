@@ -24,9 +24,49 @@ env:
 
 jobs:
   # ==========================================
+  # 预检：类型检查 + Lint（失败阻断构建，节省时间）
+  # ==========================================
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: 缓存 TypeScript 增量构建信息
+        uses: actions/cache@v4
+        with:
+          path: |
+            my-vue-app/.tsbuildinfo
+            my-vue-app/tsconfig.tsbuildinfo
+            my-nest-app/tsconfig.tsbuildinfo
+          key: tsbuildinfo-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            tsbuildinfo-${{ github.ref_name }}-
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: 后端类型检查
+        run: pnpm -C my-nest-app exec tsc --noEmit
+
+      - name: 前端类型检查
+        run: pnpm -C my-vue-app exec vue-tsc --noEmit
+
+      - name: Lint 检查（变更文件）
+        run: pnpm -C my-vue-app lint
+
+  # ==========================================
   # 构建后端镜像 → 双推 ghcr.io + ACR
   # ==========================================
   build-backend:
+    needs: check
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -72,6 +112,7 @@ jobs:
   # 构建前端镜像 → 双推 ghcr.io + ACR
   # ==========================================
   build-frontend:
+    needs: check
     runs-on: ubuntu-latest
     permissions:
       contents: read
