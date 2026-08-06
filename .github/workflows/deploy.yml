@@ -53,14 +53,37 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: 后端类型检查
-        run: pnpm -C my-nest-app exec tsc --noEmit
+      - name: 预检（全部跑完再报告）
+        run: |
+          set +e
+          FAILED=0
 
-      - name: 前端类型检查
-        run: pnpm -C my-vue-app exec vue-tsc --noEmit
+          echo "::group::🔍 后端类型检查"
+          pnpm -C my-nest-app exec tsc --noEmit
+          if [ $? -ne 0 ]; then FAILED=1; echo "❌ 后端类型检查失败"; else echo "✅ 后端类型检查"; fi
+          echo "::endgroup::"
 
-      - name: Lint 检查（变更文件）
-        run: pnpm -C my-vue-app lint
+          echo "::group::🔍 前端类型检查"
+          pnpm -C my-vue-app exec vue-tsc --noEmit
+          if [ $? -ne 0 ]; then FAILED=1; echo "❌ 前端类型检查失败"; else echo "✅ 前端类型检查"; fi
+          echo "::endgroup::"
+
+          echo "::group::🔍 Lint 检查"
+          pnpm -C my-vue-app lint
+          if [ $? -ne 0 ]; then FAILED=1; echo "❌ Lint 检查失败"; else echo "✅ Lint 检查"; fi
+          echo "::endgroup::"
+
+          echo "::group::🔍 后端单元测试"
+          pnpm -C my-nest-app test
+          if [ $? -ne 0 ]; then FAILED=1; echo "❌ 后端单元测试失败"; else echo "✅ 后端单元测试"; fi
+          echo "::endgroup::"
+
+          if [ $FAILED -ne 0 ]; then
+            echo ""
+            echo "❌ 预检未通过，请修复以上问题后重新推送"
+            exit 1
+          fi
+          echo "✅ 全部预检通过"
 
   # ==========================================
   # 构建后端镜像 → 双推 ghcr.io + ACR
