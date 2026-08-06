@@ -139,30 +139,32 @@ pnpm lint
 
 | 分支 | 触发方式 | 行为 |
 |------|---------|------|
-| `develop` | 自动 | 构建镜像 → 推送 ghcr.io → 部署测试环境 |
+| `develop` | 自动 | 构建镜像 → 双推 ghcr.io + ACR → SSH 部署测试环境 |
 | `main` | 手动 | 构建镜像 → 推送 ghcr.io → 部署生产环境 |
 
-**镜像仓库**：`ghcr.io/rossroma/xbb-website`
-
-**测试环境**：develop 分支推送后自动触发，GitHub runner 通过 SSH 远程部署到测试服务器。
+**镜像策略**：构建阶段推送到 ghcr.io（供 GitHub Actions 层缓存）和 ACR（供国内服务器拉取），部署阶段从 ACR 拉取。
 
 **手动部署**：
 ```bash
-docker pull ghcr.io/rossroma/xbb-website/xbb-backend:latest
-docker pull ghcr.io/rossroma/xbb-website/xbb-frontend:latest
+ACR_REGISTRY=xxx ACR_NAMESPACE=xxx ACR_USERNAME=xxx ACR_PASSWORD=xxx \
+DB_PASSWORD=xxx DB_DATABASE=xxx JWT_SECRET=xxx \
 bash deploy.test.sh
 ```
 
 **GitHub Secrets 配置**：
 
-| Secret | 说明 |
-|--------|------|
-| `TEST_SSH_HOST` | 测试服务器 IP |
-| `TEST_SSH_PORT` | SSH 端口（默认 22） |
-| `TEST_SSH_USER` | SSH 用户名 |
-| `TEST_SSH_PRIVATE_KEY` | SSH 私钥 |
-| `TEST_DB_PASSWORD` | 测试数据库密码 |
-| `TEST_DB_DATABASE` | 测试数据库名 |
-| `TEST_JWT_SECRET` | JWT 密钥 |
-| `TEST_DEPLOY_PATH` | 部署目录 |
-| `VITE_API_BASE_URL` | 前端 API 地址 |
+| 分类 | Secret | 说明 |
+|------|--------|------|
+| SSH | `TEST_SSH_HOST` | 测试服务器 IP |
+| SSH | `TEST_SSH_PORT` | SSH 端口（默认 22） |
+| SSH | `TEST_SSH_USER` | SSH 用户名 |
+| SSH | `TEST_SSH_PRIVATE_KEY` | SSH 私钥 |
+| ACR | `ACR_REGISTRY` | 阿里云镜像仓库地址 |
+| ACR | `ACR_NAMESPACE` | ACR 命名空间 |
+| ACR | `ACR_USERNAME` | ACR 用户名 |
+| ACR | `ACR_PASSWORD` | ACR 密码 |
+| 应用 | `TEST_DB_PASSWORD` | 测试数据库密码 |
+| 应用 | `TEST_DB_DATABASE` | 测试数据库名 |
+| 应用 | `TEST_JWT_SECRET` | JWT 密钥 |
+| 应用 | `TEST_DEPLOY_PATH` | 部署目录 |
+| 构建 | `VITE_API_BASE_URL` | 前端 API 地址 |

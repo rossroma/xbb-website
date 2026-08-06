@@ -5,6 +5,10 @@
 #   develop 分支 → 自动构建 + 部署测试环境
 #   main 分支   → 手动触发 + 部署生产环境
 # ==========================================
+# 镜像策略：
+#   构建阶段 → 双推 ghcr.io（层缓存） + ACR（国内拉取）
+#   部署阶段 → 测试服务器从 ACR 拉取
+# ==========================================
 
 name: Deploy
 
@@ -14,13 +18,13 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
+  GHCR: ghcr.io
   IMAGE_BACKEND: ${{ github.repository }}/xbb-backend
   IMAGE_FRONTEND: ${{ github.repository }}/xbb-frontend
 
 jobs:
   # ==========================================
-  # 构建后端镜像 → 推送 ghcr.io
+  # 构建后端镜像 → 双推 ghcr.io + ACR
   # ==========================================
   build-backend:
     runs-on: ubuntu-latest
@@ -33,9 +37,16 @@ jobs:
       - name: 登录 ghcr.io
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.GHCR }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 登录 ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
@@ -47,13 +58,15 @@ jobs:
           file: my-nest-app/Dockerfile
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:latest
+            ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+            ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:latest
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   # ==========================================
-  # 构建前端镜像 → 推送 ghcr.io
+  # 构建前端镜像 → 双推 ghcr.io + ACR
   # ==========================================
   build-frontend:
     runs-on: ubuntu-latest
@@ -66,9 +79,16 @@ jobs:
       - name: 登录 ghcr.io
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ${{ env.GHCR }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 登录 ACR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
@@ -82,8 +102,10 @@ jobs:
           build-args: |
             VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:latest
+            ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+            ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:latest
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
+            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -106,36 +128,36 @@ jobs:
             set -e
             echo "🚀 开始测试环境部署..."
 
-            # 登录 ghcr.io（使用 GitHub Token）
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            # 登录 ACR
+            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-            # 拉取镜像
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:latest
-            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_BACKEND }}:latest xbb-backend:latest
+            # 从 ACR 拉取
+            docker pull ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest
+            docker tag ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest xbb-backend:latest
 
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:latest
-            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_FRONTEND }}:latest xbb-frontend:latest
+            docker pull ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest
+            docker tag ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest xbb-frontend:latest
 
             # 停止旧服务
             cd ${{ secrets.TEST_DEPLOY_PATH }}
             docker compose -f docker-compose.test.yml down --timeout 30 || true
 
-            # 启动新服务
+            # 启动
             DB_PASSWORD="${{ secrets.TEST_DB_PASSWORD }}" \
             DB_DATABASE="${{ secrets.TEST_DB_DATABASE }}" \
             JWT_SECRET="${{ secrets.TEST_JWT_SECRET }}" \
             DEPLOY_PATH="${{ secrets.TEST_DEPLOY_PATH }}" \
             docker compose -f docker-compose.test.yml up -d --wait
 
-            # 验证
-            curl -sf http://localhost:3000/v1/health && echo "✅ 后端" || { echo "❌ 后端"; exit 1; }
-            curl -sf http://localhost/ && echo "✅ 前端" || { echo "❌ 前端"; exit 1; }
+            # 健康检查
+            for i in $(seq 1 10); do
+              curl -sf http://localhost:3000/v1/health && break
+              [ "$i" -eq 10 ] && { echo "❌ 后端启动超时"; exit 1; }
+              sleep 3
+            done
+            echo "✅ 后端正常"
 
-            # 清理
+            curl -sf http://localhost/ && echo "✅ 前端正常" || { echo "❌ 前端异常"; exit 1; }
+
             docker image prune -f
             echo "✅ 部署完成"
-
-  # ==========================================
-  # 部署生产环境（main 分支 → 手动触发）
-  # TODO: 生产环境暂保留原有 ACR 流程，后续迁移
-  # ==========================================
