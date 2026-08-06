@@ -5,7 +5,7 @@
 FROM ghcr.io/puppeteer/puppeteer:latest AS builder
 
 # 确保 Puppeteer 能找到 Chromium（镜像默认设置在某些情况下丢失）
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 
 # 安装 pnpm（Puppeteer 镜像默认非 root 用户，需切回 root）
 USER root
