@@ -83,7 +83,11 @@
           <p class="mt-2 line-clamp-2 text-body text-text-secondary leading-body">
             {{ item.description }}
           </p>
-          <time :datetime="item.publishDate" class="mt-auto pt-4 text-caption text-text-tertiary">
+          <time
+            v-if="!hideDate"
+            :datetime="item.publishDate"
+            class="mt-auto pt-4 text-caption text-text-tertiary"
+          >
             {{ item.publishDate }}
           </time>
         </div>
@@ -147,7 +151,7 @@
             {{ item.title }}
           </h3>
           <time
-            v-if="item.publishDate"
+            v-if="!hideDate && item.publishDate"
             :datetime="item.publishDate"
             class="mt-2 text-caption text-text-tertiary"
           >
@@ -360,6 +364,8 @@ const props = withDefaults(
     currentPage?: number
     /** article-row 模式总页数 */
     totalPages?: number
+    /** 隐藏发布日期（card/compact 变体生效） */
+    hideDate?: boolean
   }>(),
   {
     variant: 'card',
@@ -368,6 +374,7 @@ const props = withDefaults(
     showPagination: false,
     currentPage: 1,
     totalPages: 0,
+    hideDate: false,
   },
 )
 

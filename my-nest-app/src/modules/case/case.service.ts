@@ -25,6 +25,7 @@ export class CaseService {
     bid?: number,
     tag?: string,
     rootBid: number = CASE_ROOT_BID,
+    order?: string,
   ): Promise<CaseListResponseDto> {
     const queryBuilder = this.caseRepository
       .createQueryBuilder('case')
@@ -49,11 +50,15 @@ export class CaseService {
       queryBuilder.andWhere('case.tags LIKE :tag', { tag: `%${tag}%` });
     }
 
-    // 排序：按发布时间降序
-    queryBuilder
-      .orderBy('case.addtime', 'DESC')
-      .addOrderBy('case.ord', 'ASC')
-      .addOrderBy('case.id', 'DESC');
+    // 排序：random 模式使用随机排序，否则按发布时间降序
+    if (order === 'random') {
+      queryBuilder.orderBy('RAND()');
+    } else {
+      queryBuilder
+        .orderBy('case.addtime', 'DESC')
+        .addOrderBy('case.ord', 'ASC')
+        .addOrderBy('case.id', 'DESC');
+    }
 
     // 分页
     const skip = (page - 1) * limit;

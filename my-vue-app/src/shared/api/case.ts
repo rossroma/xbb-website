@@ -71,6 +71,8 @@ export const getClientCases = (params?: {
   /** 根类目 ID（用于「全部」时确定查询范围，行业案例=18，用户心声=19） */
   rootBid?: number
   tag?: string
+  /** 排序方式：'random' 随机排序，不传则按发布时间降序 */
+  order?: 'random'
 }): Promise<CaseListResponse> => {
   return request.get('/v1/client/cases', { params })
 }

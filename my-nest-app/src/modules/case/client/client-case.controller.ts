@@ -22,6 +22,7 @@ export class ClientCaseController {
     @Query('bid') bid?: string,
     @Query('tag') tag?: string,
     @Query('rootBid') rootBid?: string,
+    @Query('order') order?: string,
   ): Promise<ResponseResult<CaseListResponseDto>> {
     const result = await this.caseService.findAllForClient(
       page ? parseInt(page, 10) : 1,
@@ -29,6 +30,7 @@ export class ClientCaseController {
       bid ? parseInt(bid, 10) : undefined,
       tag,
       rootBid ? parseInt(rootBid, 10) : undefined,
+      order,
     );
     return ResponseResult.success(result, '获取案例列表成功');
   }

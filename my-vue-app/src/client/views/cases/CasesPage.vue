@@ -61,6 +61,7 @@
         :items="caseCards"
         variant="card"
         hide-header
+        hide-date
         class="mt-8"
       />
 
@@ -113,6 +114,8 @@ const categoryMap = ref<Map<string, number>>(new Map())
 
 /** 当前选中的 Tab key */
 const activeTabKey = ref('all')
+/** 上一次的 Tab key，用于防止重复请求同一分类 */
+const prevTabKey = ref('all')
 
 /** 案例列表数据 */
 const caseList = ref<CaseListResponse | null>(null)
@@ -167,10 +170,11 @@ async function loadCases() {
 
   try {
     const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number; rootBid?: number } = {
+    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: string } = {
       page: currentPage.value,
       limit: pageSize.value,
       rootBid: CASE_ROOT_BID,
+      order: 'random',
     }
     if (bid !== undefined) {
       params.bid = bid
@@ -219,7 +223,8 @@ async function loadCategories() {
 
 /** Tab 切换 */
 function handleTabChange(key: string) {
-  if (activeTabKey.value === key && caseList.value) return
+  if (prevTabKey.value === key && caseList.value) return
+  prevTabKey.value = key
   activeTabKey.value = key
   currentPage.value = 1
   loadCases()
