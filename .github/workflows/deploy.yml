@@ -190,14 +190,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: 上传 docker-compose 到测试服务器
-        uses: appleboy/scp-action@v0
-        with:
-          host: ${{ secrets.TEST_SSH_HOST }}
-          port: ${{ secrets.TEST_SSH_PORT || 22 }}
-          username: ${{ secrets.TEST_SSH_USER }}
-          key: ${{ secrets.TEST_SSH_PRIVATE_KEY }}
-          source: docker-compose.test.yml
-          target: ${{ secrets.TEST_DEPLOY_PATH }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TEST_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.TEST_SSH_PORT || 22 }} \
+            docker-compose.test.yml \
+            ${{ secrets.TEST_SSH_USER }}@${{ secrets.TEST_SSH_HOST }}:${{ secrets.TEST_DEPLOY_PATH }}/
 
       - name: SSH 部署到测试服务器
         uses: appleboy/ssh-action@v1
