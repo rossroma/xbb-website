@@ -18,6 +18,7 @@ import { createServer } from 'node:http'
 import { readFileSync, mkdirSync, writeFileSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
 import puppeteer from 'puppeteer-core'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -95,14 +96,28 @@ const server = createServer((req, res) => {
 
 // ========== 预渲染逻辑 ==========
 
+function findChrome() {
+  // 1. 环境变量
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+    return process.env.PUPPETEER_EXECUTABLE_PATH
+  }
+  // 2. 自动查找（CI Docker 环境）
+  try { return execSync('which google-chrome', { stdio: 'pipe' }).toString().trim() } catch {}
+  try { return execSync('which google-chrome-stable', { stdio: 'pipe' }).toString().trim() } catch {}
+  try { return execSync('which chromium', { stdio: 'pipe' }).toString().trim() } catch {}
+  try { return execSync('which chromium-browser', { stdio: 'pipe' }).toString().trim() } catch {}
+  return null
+}
+
 async function prerender() {
-  // 0. 检查 Chromium 是否可用（本地开发环境可能没有安装）
-  const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+  // 0. 检查 Chromium 是否可用
+  const executablePath = findChrome()
   if (!executablePath) {
-    console.warn('[prerender] ⚠️  PUPPETEER_EXECUTABLE_PATH 未设置，跳过预渲染（本地开发可忽略）')
+    console.warn('[prerender] ⚠️  未找到 Chrome/Chromium，跳过预渲染（本地开发可忽略）')
     server.close()
     return
   }
+  console.log(`[prerender] Chrome: ${executablePath}`)
 
   // 1. 启动静态文件服务器
   await new Promise((resolve) => server.listen(PORT, resolve))

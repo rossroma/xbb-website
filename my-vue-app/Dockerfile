@@ -4,9 +4,6 @@
 # 使用 Puppeteer 官方镜像，内置 Node.js + Chromium + 所有依赖
 FROM ghcr.io/puppeteer/puppeteer:latest AS builder
 
-# 确保 Puppeteer 能找到 Chromium（镜像默认设置在某些情况下丢失）
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
-
 # 安装 pnpm（Puppeteer 镜像默认非 root 用户，需切回 root）
 USER root
 RUN npm install -g pnpm@10.33.0 --registry https://registry.npmmirror.com || \
