@@ -61,6 +61,9 @@ importers:
       class-validator:
         specifier: ^0.14.4
         version: 0.14.4
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
       handlebars:
         specifier: ^4.7.9
         version: 4.7.9

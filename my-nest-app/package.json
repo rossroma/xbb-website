@@ -44,6 +44,7 @@
     "cache-manager": "^7.2.9",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.4",
+    "dotenv": "^16.4.5",
     "handlebars": "^4.7.9",
     "mysql2": "^3.6.5",
     "passport": "^0.7.0",
