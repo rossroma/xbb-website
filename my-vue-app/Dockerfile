@@ -4,9 +4,9 @@
 # 使用 Puppeteer 官方镜像，内置 Node.js + Chromium + 所有依赖
 FROM ghcr.io/puppeteer/puppeteer:latest AS builder
 
-# 安装 pnpm
-RUN npm config set registry https://registry.npmmirror.com
-RUN npm install -g pnpm@10.33.0
+# 安装 pnpm（优先国内镜像，失败则回退到官方源，兼容海外 CI 环境）
+RUN npm install -g pnpm@10.33.0 --registry https://registry.npmmirror.com || \
+    npm install -g pnpm@10.33.0 --registry https://registry.npmjs.org
 
 WORKDIR /app
 
@@ -18,9 +18,9 @@ COPY package.json ./
 # 复制前端子项目
 COPY my-vue-app/package.json my-vue-app/
 
-# 安装前端依赖
-RUN pnpm config set registry https://registry.npmmirror.com
-RUN pnpm install --filter my-vue-app --frozen-lockfile
+# 安装前端依赖（优先国内镜像，失败回退官方源）
+RUN pnpm install --filter my-vue-app --frozen-lockfile --registry https://registry.npmmirror.com || \
+    pnpm install --filter my-vue-app --frozen-lockfile --registry https://registry.npmjs.org
 
 # 复制前端源码
 COPY my-vue-app/ my-vue-app/
@@ -37,9 +37,9 @@ RUN pnpm -C my-vue-app build
 # ============================================
 FROM nginx:1.27-alpine AS production
 
-# 安装 curl（健康检查需要）
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
-RUN apk add --no-cache curl
+# 安装 curl（健康检查需要），优先阿里云镜像，失败回退官方源
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories || true
+RUN apk add --no-cache curl || apk add --no-cache curl
 
 # 复制自定义 nginx 配置
 COPY my-vue-app/nginx.conf /etc/nginx/nginx.conf

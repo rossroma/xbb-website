@@ -41,17 +41,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 登录 ACR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ACR_REGISTRY }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送
+      - name: 构建并推送 ghcr.io
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -60,10 +53,20 @@ jobs:
           tags: |
             ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
             ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:latest
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: 同步到 ACR（国内加速）
+        continue-on-error: true
+        shell: bash
+        run: |
+          ACR_IMAGE="${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend"
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_REGISTRY }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          docker pull ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
+          docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
+          docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
+          docker push ${ACR_IMAGE}:${{ github.sha }}
+          docker push ${ACR_IMAGE}:latest
 
   # ==========================================
   # 构建前端镜像 → 双推 ghcr.io + ACR
@@ -83,17 +86,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 登录 ACR
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.ACR_REGISTRY }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送
+      - name: 构建并推送 ghcr.io
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -104,10 +100,20 @@ jobs:
           tags: |
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:latest
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
-            ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: 同步到 ACR（国内加速）
+        continue-on-error: true
+        shell: bash
+        run: |
+          ACR_IMAGE="${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend"
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_REGISTRY }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          docker pull ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+          docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
+          docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
+          docker push ${ACR_IMAGE}:${{ github.sha }}
+          docker push ${ACR_IMAGE}:latest
 
   # ==========================================
   # 部署测试环境（develop 分支 → 自动触发）
