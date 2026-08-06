@@ -171,4 +171,9 @@ bash deploy.test.sh
 | OSS | `OSS_BUCKET` | OSS Bucket 名称 |
 | OSS | `OSS_ACCESS_KEY_ID` | OSS AccessKey ID |
 | OSS | `OSS_ACCESS_KEY_SECRET` | OSS AccessKey Secret |
+| 短信 | `SMS_USERNAME` | 短信平台用户名 |
+| 短信 | `SMS_PASSWORD` | 短信平台密码 |
+| 短信 | `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
+| 回调 | `DATACENTER_TOKEN` | 数据中心回调 Token |
+| 合作 | `PARTNER_API_TOKEN` | 合作伙伴 API Token |
 | 构建 | `VITE_API_BASE_URL` | 前端 API 地址 |

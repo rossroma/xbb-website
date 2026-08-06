@@ -221,6 +221,11 @@ jobs:
             export OSS_BUCKET="${{ secrets.OSS_BUCKET }}"
             export OSS_ACCESS_KEY_ID="${{ secrets.OSS_ACCESS_KEY_ID }}"
             export OSS_ACCESS_KEY_SECRET="${{ secrets.OSS_ACCESS_KEY_SECRET }}"
+            export SMS_USERNAME="${{ secrets.SMS_USERNAME }}"
+            export SMS_PASSWORD="${{ secrets.SMS_PASSWORD }}"
+            export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
+            export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
+            export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
             docker compose -f docker-compose.test.yml up -d --wait
 
             # 健康检查
