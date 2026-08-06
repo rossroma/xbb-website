@@ -472,8 +472,10 @@ export class SmsService {
       queryBuilder.andWhere('sms_logs.created_at <= :end', { end });
     }
 
-    // 排序
-    const [sortField, sortOrder] = sortBy.split('_');
+    // 排序：格式如 "created_at_desc"，取最后一个 _ 分隔
+    const lastUnderscoreIndex = sortBy.lastIndexOf('_');
+    const sortField = sortBy.substring(0, lastUnderscoreIndex);
+    const sortOrder = sortBy.substring(lastUnderscoreIndex + 1);
     queryBuilder.orderBy(`sms_logs.${sortField}`, sortOrder.toUpperCase() as 'ASC' | 'DESC');
 
     // 分页

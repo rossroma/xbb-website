@@ -2,6 +2,9 @@
  * 合作伙伴查询 — 三方 API 配置
  *
  * 钉钉云外部链接 API 配置，所有敏感信息集中管理，不散落在业务代码中。
+ *
+ * 注意：本文件为模块级常量，直接读取 process.env（由 ConfigModule.forRoot 加载 .env 注入）。
+ * 在 NestJS 服务中，应优先使用 EnvConfig（src/common/config/env.config.ts）替代 process.env。
  */
 function requireEnv(key: string): string {
   const value = process.env[key];

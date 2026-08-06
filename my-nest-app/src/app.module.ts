@@ -6,6 +6,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CommonModule } from './common/common.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ArticleModule } from './modules/article/article.module';
 import { CategoryModule } from './modules/category/category.module';
@@ -20,6 +21,8 @@ import { PartnerModule } from './modules/partner/partner.module';
 
 @Module({
   imports: [
+    // 全局公共模块（EnvConfig 等）
+    CommonModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',

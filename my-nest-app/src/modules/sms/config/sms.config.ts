@@ -3,6 +3,9 @@
  *
  * 生产环境敏感信息应从环境变量读取，避免硬编码。
  * 当前配置继承自旧版 CodeIgniter 项目 app/config/sms_config.php
+ *
+ * 注意：本文件为模块级常量，直接读取 process.env（由 ConfigModule.forRoot 加载 .env 注入）。
+ * 在 NestJS 服务中，应优先使用 EnvConfig（src/common/config/env.config.ts）替代 process.env。
  */
 function requireEnv(key: string): string {
   const value = process.env[key];

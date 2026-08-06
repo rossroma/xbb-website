@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
@@ -9,9 +7,13 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { ValidationPipe } from './common/pipes/validation.pipe';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { PermissionsGuard } from './modules/auth/guards/permissions.guard';
+import { EnvConfig } from './common/config/env.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // 通过 DI 容器获取统一环境变量配置（替代散落的 process.env 调用）
+  const env = app.get(EnvConfig);
 
   // 全局异常过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
@@ -34,9 +36,7 @@ async function bootstrap() {
 
   // 启用 CORS（仅允许白名单来源）
   app.enableCors({
-    origin: process.env.CORS_ORIGINS
-      ? process.env.CORS_ORIGINS.split(',')
-      : ['http://localhost:5173', 'http://localhost:3000'],
+    origin: env.corsOrigins,
     credentials: true,
   });
 
@@ -46,7 +46,8 @@ async function bootstrap() {
   console.log('🛡️  Global filters, interceptors, and pipes registered');
   console.log('🔐 JWT authentication configured');
 
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`🌟 Application is running on: http://localhost:${process.env.PORT ?? 3000}`);
+  const port = env.port;
+  await app.listen(port);
+  console.log(`🌟 Application is running on: http://localhost:${port}`);
 }
 bootstrap();
