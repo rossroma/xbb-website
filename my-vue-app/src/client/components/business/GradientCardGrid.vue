@@ -42,7 +42,6 @@
           gradientClass(card.gradient),
           shadowClass(card.gradient),
         ]"
-        :style="{ minHeight: props.cardMinHeight }"
         role="button"
         tabindex="0"
         :aria-label="`查看 ${card.title} 详情`"
@@ -84,11 +83,16 @@
         </p>
 
         <!-- 前景图 / Slot（slot 优先，保证向后兼容） -->
-        <div
-          class="relative mt-auto pt-5 z-10"
-          :style="{ height: props.visualHeight }"
-        >
-          <slot name="visual" :card="card" :index="cards.indexOf(card)">
+        <div class="relative mt-auto pt-5 z-10">
+          <template v-if="preferImage && card.image">
+            <img
+              :src="card.image"
+              :alt="card.imageAlt ?? card.title"
+              class="w-full h-auto rounded-xl"
+              loading="lazy"
+            />
+          </template>
+          <slot v-else name="visual" :card="card" :index="cards.indexOf(card)">
             <img
               v-if="card.image"
               :src="card.image"
@@ -145,24 +149,15 @@ import CardGrid from '@/client/components/ui/CardGrid.vue'
 /** 卡片渐变主题 */
 type CardGradient = 'purple' | 'blue' | 'teal' | 'green' | 'orange'
 
-const props = withDefaults(
-  defineProps<{
-    title: string
-    /** 标题栏前置图标（IconPark 组件） */
-    titleIcon?: Component
-    /** 标题栏前置文字（如 "AI"，与 titleIcon 互斥） */
-    titlePrefix?: string
-    cards: T[]
-    /** 单个卡片最小高度 */
-    cardMinHeight?: string
-    /** 前景图区域高度，用于承载 absolute 插槽内容 */
-    visualHeight?: string
-  }>(),
-  {
-    cardMinHeight: '360px',
-    visualHeight: '200px',
-  },
-)
+defineProps<{
+  title: string
+  /** 标题栏前置图标（IconPark 组件） */
+  titleIcon?: Component
+  /** 标题栏前置文字（如 "AI"，与 titleIcon 互斥） */
+  titlePrefix?: string
+  cards: T[]
+  preferImage?: boolean
+}>()
 
 defineEmits<{
   titleClick: []
