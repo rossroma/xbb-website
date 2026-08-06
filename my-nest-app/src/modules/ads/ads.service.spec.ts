@@ -64,6 +64,7 @@ describe('AdsService', () => {
     save: jest.fn(),
     findOne: jest.fn(),
     find: jest.fn(),
+    findAndCount: jest.fn(),
     remove: jest.fn(),
   };
 
@@ -249,16 +250,17 @@ describe('AdsService', () => {
 
   describe('findAllAdsTypes', () => {
     it('should return all ads types', async () => {
-      mockAdsTypeRepository.find.mockResolvedValue([mockAdsType]);
+      mockAdsTypeRepository.findAndCount.mockResolvedValue([
+        [mockAdsType],
+        1,
+      ]);
 
       const result = await service.findAllAdsTypes();
 
-      expect(result).toHaveLength(1);
-      expect(result[0].title).toBe('首页Banner');
-      expect(mockAdsTypeRepository.find).toHaveBeenCalledWith({
-        where: { is_show: 1 },
-        order: { ord: 'ASC', id: 'DESC' },
-      });
+      expect(result.items).toHaveLength(1);
+      expect(result.items[0].title).toBe('首页Banner');
+      expect(result.total).toBe(1);
+      expect(mockAdsTypeRepository.findAndCount).toHaveBeenCalled();
     });
   });
 

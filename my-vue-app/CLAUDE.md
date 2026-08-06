@@ -101,7 +101,7 @@ pnpm check-docs           # 文档一致性检查
 
 ## 自动化验证
 
-- **CI 流水线**：`.github/workflows/ci.yml` — push/PR 自动运行类型检查、lint、文档一致性、单元测试、构建
+- **CI/CD 流水线**：`.github/workflows/deploy.yml` — push 到 develop 自动构建 Docker 镜像 + 部署测试环境
 - **Pre-commit**：Husky + lint-staged 自动执行 ESLint 修复 + Prettier 格式化
 
 ## 访问地址

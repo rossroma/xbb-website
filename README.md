@@ -132,3 +132,21 @@ pnpm test
 # 代码检查
 pnpm lint
 ```
+
+## CI/CD 部署
+
+部署流水线由 [GitHub Actions](.github/workflows/deploy.yml) 驱动：
+
+| 分支 | 触发方式 | 行为 |
+|------|---------|------|
+| `develop` | 自动 | 构建镜像 → 推送 ghcr.io → 部署测试环境 |
+| `main` | 手动 | 构建镜像 → 推送 ghcr.io → 部署生产环境 |
+
+**镜像仓库**：`ghcr.io/rossroma/xbb-website`
+
+**测试环境手动部署**（无需 self-hosted runner）：
+```bash
+docker pull ghcr.io/rossroma/xbb-website/xbb-backend:latest
+docker pull ghcr.io/rossroma/xbb-website/xbb-frontend:latest
+bash deploy.test.sh
+```

@@ -225,3 +225,4 @@ OSS_ACCESS_KEY_SECRET=your-access-key-secret
 | `README.md` | 技术栈、快速开始、环境配置 |
 | 前端 `CLAUDE.md` | 前端开发规范（双端协同参考） |
 | 前端 `DESIGN.md` | 设计规范（全项目共享） |
+| `.github/workflows/deploy.yml` | GitHub Actions 部署流水线 |
