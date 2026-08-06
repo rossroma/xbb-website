@@ -172,7 +172,7 @@ async function loadVoices() {
 
   try {
     const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: string } = {
+    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } = {
       page: currentPage.value,
       limit: pageSize.value,
       rootBid: VOICE_ROOT_BID,

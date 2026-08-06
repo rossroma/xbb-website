@@ -170,7 +170,7 @@ async function loadCases() {
 
   try {
     const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: string } = {
+    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } = {
       page: currentPage.value,
       limit: pageSize.value,
       rootBid: CASE_ROOT_BID,

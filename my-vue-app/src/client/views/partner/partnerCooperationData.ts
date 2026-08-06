@@ -45,7 +45,7 @@ export const heroBannerSlide = {
   desc: '',
   primaryCta: heroSection.primaryCta,
   primaryHref: heroSection.primaryHref,
-  secondaryCta: heroSection.secondaryCta,
+  secondaryCta: undefined,
   bg: heroSection.bg,
   line: 'rgba(124, 92, 255, 0.16)',
   accent: '#7c5cff',
