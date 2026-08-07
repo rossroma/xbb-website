@@ -1,11 +1,9 @@
 # ============================================
-# Stage 1: Builder — 安装依赖 + 构建（含预渲染）
+# Stage 1: Builder — 安装依赖 + Vite SSG 构建
 # ============================================
-# 使用 Puppeteer 官方镜像，内置 Node.js + Chromium + 所有依赖
-FROM ghcr.io/puppeteer/puppeteer:latest AS builder
+FROM node:22-alpine AS builder
 
-# 安装 pnpm（Puppeteer 镜像默认非 root 用户，需切回 root）
-USER root
+# 安装 pnpm
 RUN npm install -g pnpm@10.33.0 --registry https://registry.npmmirror.com || \
     npm install -g pnpm@10.33.0 --registry https://registry.npmjs.org
 
@@ -30,7 +28,7 @@ COPY my-vue-app/ my-vue-app/
 ARG VITE_API_BASE_URL=
 ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
-# 构建 Vue 项目
+# 构建 Vue 项目（vite-ssg 预渲染，无需 Chrome/Puppeteer）
 RUN pnpm -C my-vue-app build
 
 # ============================================

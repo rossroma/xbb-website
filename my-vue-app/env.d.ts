@@ -2,10 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string
-}
-
-interface ImportMeta {
-  readonly env: ImportMetaEnv
+  // SSR 由 vite/client 提供，此处仅为补全自定义变量
 }
 
 declare module '@wangeditor/editor-for-vue' {

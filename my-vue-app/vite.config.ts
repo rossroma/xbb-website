@@ -45,5 +45,33 @@ export default defineConfig(({ mode }) => {
         },
       },
     },
+    ssgOptions: {
+      // 预渲染的静态路由列表（与旧 prerender.mjs 的 ROUTES 保持一致）
+      includedRoutes: () => [
+        '/',
+        '/chanpin',
+        '/kehuguanli',
+        '/xiaoshouguanli',
+        '/shichangguanli',
+        '/bi',
+        '/ai',
+        '/paas',
+        '/dingtalk',
+        '/feishubanben',
+        '/qiweibanben',
+        '/gongsidongtai',
+        '/hangyeanli',
+        '/yonghuxinsheng',
+        '/zhishiwenda',
+        '/gongsijianjie',
+        '/lianxiwomen',
+        '/mianfeishiyong',
+        '/liuzi',
+        '/huobanhezuo',
+        '/jianzheyoufen',
+        '/youzhifuwu',
+        '/xiazaizhongxin',
+      ],
+    },
   }
 })

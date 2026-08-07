@@ -28,6 +28,9 @@ export interface SemData {
  * 与旧版 page.php 中 setSemParams() 的调用时机一致。
  */
 export function captureSemData(): void {
+  // SSG 构建时跳过（无浏览器环境）
+  if (import.meta.env.SSR) return
+
   try {
     const params = new URLSearchParams(window.location.search)
 

@@ -37,7 +37,10 @@ export function useAds(position: number) {
     }
   }
 
-  onMounted(fetch)
+  // SSG 构建时跳过（无 API 环境），客户端 mount 后 fetch
+  if (!import.meta.env.SSR) {
+    onMounted(fetch)
+  }
 
   return { items, loading, refetch: fetch }
 }
