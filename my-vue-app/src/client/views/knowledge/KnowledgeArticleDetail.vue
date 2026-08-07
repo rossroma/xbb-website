@@ -1,9 +1,57 @@
 <template>
   <div class="knowledge-article-detail-page">
-    <SectionBlock spacing="none" paddingBottom="default" width="default">
-      <EmptyState v-if="!article" message="文章不存在或已下线" class="knowledge-detail-empty" />
+    <!-- ===== 加载态 ===== -->
+    <SectionBlock v-if="isLoading" spacing="none" width="default">
+      <span class="sr-only" role="status">文章加载中...</span>
 
-      <template v-else>
+      <!-- 面包屑骨架 -->
+      <div class="flex items-center gap-1.5 py-4" aria-hidden="true">
+        <div class="h-4 w-12 animate-skeleton rounded-inner" />
+        <div class="h-4 w-4 animate-skeleton rounded-inner" />
+        <div class="h-4 w-16 animate-skeleton rounded-inner" />
+        <div class="h-4 w-4 animate-skeleton rounded-inner" />
+        <div class="h-4 w-28 animate-skeleton rounded-inner" />
+      </div>
+
+      <!-- 文章头部骨架 -->
+      <header class="mt-10 pb-6 border-b border-border-subtle" aria-hidden="true">
+        <div class="h-9 w-3/4 animate-skeleton rounded-inner mb-3" />
+        <div class="h-5 w-2/3 animate-skeleton rounded-inner mb-4" />
+        <div class="flex items-center gap-3">
+          <div class="h-4 w-24 animate-skeleton rounded-inner" />
+          <div class="h-4 w-16 animate-skeleton rounded-inner" />
+          <div class="h-4 w-20 animate-skeleton rounded-inner" />
+        </div>
+      </header>
+
+      <!-- 文章正文骨架 -->
+      <div class="mt-8 space-y-4" aria-hidden="true">
+        <div class="h-4 w-full animate-skeleton rounded-inner" />
+        <div class="h-4 w-full animate-skeleton rounded-inner" />
+        <div class="h-4 w-5/6 animate-skeleton rounded-inner" />
+        <div class="h-4 w-full animate-skeleton rounded-inner" />
+        <div class="h-4 w-4/5 animate-skeleton rounded-inner" />
+        <div class="h-4 w-full animate-skeleton rounded-inner" />
+        <div class="h-4 w-3/4 animate-skeleton rounded-inner" />
+        <div class="h-4 w-full animate-skeleton rounded-inner" />
+        <div class="h-4 w-2/3 animate-skeleton rounded-inner" />
+      </div>
+    </SectionBlock>
+
+    <!-- ===== 错误态 ===== -->
+    <ErrorState
+      v-else-if="errorMessage"
+      :message="errorMessage"
+      class="mt-24"
+      @retry="loadArticle"
+    />
+
+    <!-- ===== 空态 ===== -->
+    <EmptyState v-else-if="!article" message="文章不存在或已下线" class="mt-24" />
+
+    <!-- ===== 文章详情 ===== -->
+    <template v-else>
+      <SectionBlock spacing="none" paddingBottom="default" width="default">
         <Breadcrumb :items="breadcrumbItems" show-home-icon />
 
         <div class="knowledge-article-layout">
@@ -13,60 +61,33 @@
                 <h1 class="knowledge-detail-title">{{ article.title }}</h1>
 
                 <div class="knowledge-detail-meta">
-                  <span>{{ article.author }} · 编辑于 {{ article.updatedAt }}</span>
+                  <span v-if="formattedTime">{{ formattedTime }}</span>
+                  <span v-if="article.author">作者：{{ article.author }}</span>
                   <RouterLink to="/message" class="knowledge-detail-consult">微信咨询</RouterLink>
                 </div>
 
-                <div class="knowledge-detail-summary">
-                  {{ article.summary }}
+                <div v-if="article.descs" class="knowledge-detail-summary">
+                  {{ article.descs }}
                 </div>
               </header>
 
-              <div class="article-content">
-                <template v-for="(block, blockIndex) in article.blocks" :key="blockIndex">
-                  <h2
-                    v-if="block.type === 'heading'"
-                    :id="getBlockAnchor(blockIndex)"
-                    class="article-heading"
-                  >
-                    {{ block.text }}
-                  </h2>
+              <!-- 文章正文 -->
+              <div class="article-content rich-text" v-html="article.content" />
 
-                  <h3 v-else-if="block.type === 'subheading'" class="article-subheading">
-                    {{ block.text }}
-                  </h3>
+              <!-- 上下篇导航 -->
+              <PageNav
+                :prev-link="prevLink"
+                :prev-title="prevArticle?.title"
+                :next-link="nextLink"
+                :next-title="nextArticle?.title"
+              />
 
-                  <p v-else-if="block.type === 'paragraph'" class="article-paragraph">
-                    <strong v-if="block.strongLead">{{ block.strongLead }}</strong
-                    >{{ block.text }}
-                  </p>
-
-                  <div v-else-if="block.type === 'table'" class="article-table-wrap">
-                    <table class="article-table">
-                      <thead>
-                        <tr>
-                          <th v-for="header in block.headers" :key="header">
-                            {{ header }}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(row, rowIndex) in block.rows" :key="rowIndex">
-                          <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-                            {{ cell }}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </template>
-              </div>
-
-              <div v-if="article.faqItems?.length" :id="faqAnchorId" class="knowledge-faq-shell">
+              <!-- FAQ 区域 -->
+              <div v-if="knowledgeQnAFaqItems.length" :id="faqAnchorId" class="knowledge-faq-shell">
                 <FaqList
                   title="本文相关FAQs"
-                  :categories="article.faqCategories ?? knowledgeQnAFaqCategories"
-                  :items="article.faqItems"
+                  :categories="knowledgeQnAFaqCategories"
+                  :items="knowledgeQnAFaqItems"
                   expand-mode="single"
                   :show-categories="false"
                   :show-search="false"
@@ -90,8 +111,8 @@
             />
           </aside>
         </div>
-      </template>
-    </SectionBlock>
+      </SectionBlock>
+    </template>
   </div>
 </template>
 
@@ -104,13 +125,20 @@ import type { ArticleSidebarTocItem } from '@/client/components/business/Article
 import FaqList from '@/client/components/business/FaqList.vue'
 import Breadcrumb from '@/client/components/layout/Breadcrumb.vue'
 import type { BreadcrumbItem } from '@/client/components/layout/Breadcrumb.vue'
+import PageNav from '@/client/components/layout/PageNav.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
+import ErrorState from '@/client/components/ui/ErrorState.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import UiButton from '@/client/components/ui/Button.vue'
 import { toPagePath } from '@/client/data/routePaths'
 import {
-  getKnowledgeArticleBySlug,
+  getClientArticleDetail,
+  type ArticleDetail as ArticleDetailData,
+  type ArticleNavInfo,
+} from '@/shared/api/article'
+import {
   knowledgeQnAFaqCategories,
+  knowledgeQnAFaqItems,
   knowledgeQnASeo,
   knowledgeQnASidebarBanners,
 } from './knowledgeQnAData'
@@ -118,35 +146,82 @@ import {
 const route = useRoute()
 const trialPagePath = toPagePath('single_mfsy')
 const faqAnchorId = 'knowledge-faqs'
-const getBlockAnchor = (blockIndex: number) => `knowledge-section-${blockIndex}`
 
-const article = computed(() => {
-  const slug = String(route.params.slug ?? '')
-  return getKnowledgeArticleBySlug(slug)
+// ==================== 状态 ====================
+
+const isLoading = ref(true)
+const errorMessage = ref<string | null>(null)
+const article = ref<ArticleDetailData | null>(null)
+const prevArticle = ref<ArticleNavInfo | null>(null)
+const nextArticle = ref<ArticleNavInfo | null>(null)
+
+// ==================== 计算属性 ====================
+
+/** 格式化时间戳为日期字符串 */
+const formattedTime = computed(() => {
+  const ts = article.value?.addtime
+  if (!ts) return ''
+  const date = new Date(ts * 1000)
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 })
 
+/** 面包屑数据 */
 const breadcrumbItems = computed<BreadcrumbItem[]>(() => [
   { label: '首页', to: '/' },
   { label: '知识问答', to: '/zhishiwenda' },
   { label: article.value?.title ?? '文章详情' },
 ])
 
+/** 上一篇链接 */
+const prevLink = computed(() => {
+  if (!prevArticle.value) return undefined
+  return `/zhishiwenda/${prevArticle.value.id}`
+})
+
+/** 下一篇链接 */
+const nextLink = computed(() => {
+  if (!nextArticle.value) return undefined
+  return `/zhishiwenda/${nextArticle.value.id}`
+})
+
+/** 从 HTML 内容中提取标题作为 TOC 目录项 */
 const knowledgeDetailTocItems = computed<ArticleSidebarTocItem[]>(() => {
-  if (!article.value) return []
+  const items: ArticleSidebarTocItem[] = []
+  if (!article.value?.content) return items
 
-  const headingItems = article.value.blocks.flatMap((block, blockIndex) =>
-    block.type === 'heading' ? [{ id: getBlockAnchor(blockIndex), title: block.text }] : [],
-  )
+  // 解析 HTML 中的 h2/h3 标签，提取 id 和文本
+  const headingRegex = /<h([23])\b[^>]*?(?:id="([^"]*)")?[^>]*>([\s\S]*?)<\/h[23]>/gi
+  let match: RegExpExecArray | null
+  let index = 0
 
-  if (article.value.faqItems?.length) {
-    headingItems.push({ id: faqAnchorId, title: '本文相关FAQs' })
+  while ((match = headingRegex.exec(article.value.content)) !== null) {
+    const level = match[1]
+    const id = match[2] || `knowledge-heading-${index}`
+    const text = (match[3] ?? '').replace(/<[^>]+>/g, '').trim()
+    if (text) {
+      items.push({
+        id,
+        title: level === '2' ? text : `· ${text}`,
+      })
+      index++
+    }
   }
 
-  return headingItems
+  // 添加 FAQ 锚点
+  if (knowledgeQnAFaqItems.length) {
+    items.push({ id: faqAnchorId, title: '本文相关FAQs' })
+  }
+
+  return items
 })
 
 const activeTocId = ref('')
 let tocObserver: IntersectionObserver | null = null
+
+// ==================== TOC 滚动监听 ====================
 
 async function observeTocAnchors() {
   tocObserver?.disconnect()
@@ -181,21 +256,7 @@ async function observeTocAnchors() {
   anchorElements.forEach((element) => tocObserver?.observe(element))
 }
 
-onMounted(() => {
-  observeTocAnchors()
-})
-
-watch(
-  () => route.params.slug,
-  () => {
-    observeTocAnchors()
-  },
-)
-
-onBeforeUnmount(() => {
-  tocObserver?.disconnect()
-  tocObserver = null
-})
+// ==================== SEO ====================
 
 useHead(() => {
   if (!article.value) {
@@ -205,14 +266,65 @@ useHead(() => {
   }
 
   return {
-    title: `${article.value.title} - 知识问答 - 销帮帮 CRM`,
+    title: article.value.seoTitle || `${article.value.title} - 知识问答 - 销帮帮 CRM`,
     meta: [
       {
         name: 'description',
-        content: article.value.summary,
+        content: article.value.setDescription || article.value.descs || '',
+      },
+      {
+        name: 'keywords',
+        content: article.value.seoKeyword || '',
       },
     ],
   }
+})
+
+// ==================== 数据加载 ====================
+
+async function loadArticle() {
+  const id = Number(route.params.id)
+  if (!id || isNaN(id)) {
+    errorMessage.value = '无效的文章 ID'
+    isLoading.value = false
+    return
+  }
+
+  isLoading.value = true
+  errorMessage.value = null
+
+  try {
+    const result = await getClientArticleDetail(id)
+    article.value = result.article
+    prevArticle.value = result.prev
+    nextArticle.value = result.next
+
+    // 等待 DOM 更新后建立 TOC 监听
+    await nextTick()
+    observeTocAnchors()
+  } catch (err) {
+    errorMessage.value = err instanceof Error ? err.message : '加载文章失败，请稍后重试'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// ==================== 生命周期 ====================
+
+onMounted(() => {
+  loadArticle()
+})
+
+watch(
+  () => route.params.id,
+  () => {
+    loadArticle()
+  },
+)
+
+onBeforeUnmount(() => {
+  tocObserver?.disconnect()
+  tocObserver = null
 })
 </script>
 
@@ -244,10 +356,35 @@ useHead(() => {
   justify-self: end;
 }
 
-.knowledge-detail-empty {
-  margin-top: 80px;
+/* ===== 骨架屏 ===== */
+.animate-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
 
+@keyframes skeleton-pulse {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ===== 文章头部 ===== */
 .knowledge-detail-header {
   margin-bottom: 38px;
 }
@@ -306,77 +443,120 @@ useHead(() => {
   line-height: 1.7;
 }
 
-.article-content {
+/* ===== 富文本内容样式 ===== */
+.rich-text {
   color: var(--color-text-primary);
   line-height: 1.85;
   font-size: 16px;
 }
 
-.article-paragraph {
+.rich-text :deep(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-inner);
+  margin: 24px 0;
+}
+
+.rich-text :deep(p) {
   margin-bottom: 16px;
 }
 
-.article-paragraph strong {
-  color: var(--color-text-primary);
+.rich-text :deep(h1),
+.rich-text :deep(h2),
+.rich-text :deep(h3),
+.rich-text :deep(h4) {
   font-weight: 700;
-}
-
-.article-heading {
-  margin-top: 34px;
+  color: var(--color-text-primary);
+  margin-top: 32px;
   margin-bottom: 16px;
   scroll-margin-top: calc(var(--client-header-height, 76px) + 28px);
-  color: var(--color-text-primary);
+}
+
+.rich-text :deep(h1) {
   font-size: 24px;
-  font-weight: 700;
   line-height: 1.32;
 }
 
-.article-heading::before {
-  position: relative;
-  top: -2px;
-  display: inline-block;
-  width: 4px;
-  height: 25px;
-  margin-right: 16px;
-  border-radius: 2px;
-  background: linear-gradient(180deg, #5b61ff 0%, #7fd6ff 100%);
-  content: '';
-  vertical-align: middle;
-}
-
-.article-subheading {
-  margin-top: 28px;
-  margin-bottom: 14px;
-  color: var(--color-text-primary);
-  font-size: 18px;
-  font-weight: 700;
+.rich-text :deep(h2) {
+  font-size: 20px;
   line-height: 1.5;
 }
 
-.article-table {
+.rich-text :deep(h3) {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.rich-text :deep(a) {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+  transition: color var(--transition-duration-fast);
+}
+
+.rich-text :deep(a:hover) {
+  color: var(--color-brand-primary-hover);
+}
+
+.rich-text :deep(ul),
+.rich-text :deep(ol) {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.rich-text :deep(li) {
+  margin-bottom: 8px;
+}
+
+.rich-text :deep(blockquote) {
+  border-left: 3px solid var(--color-brand-primary);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: var(--color-surface-secondary);
+  border-radius: 0 var(--radius-inner) var(--radius-inner) 0;
+  color: var(--color-text-secondary);
+}
+
+.rich-text :deep(table) {
   width: 100%;
   border-collapse: collapse;
+  margin: 20px 0;
   font-size: 14px;
 }
 
-.article-table th,
-.article-table td {
+.rich-text :deep(th),
+.rich-text :deep(td) {
   border: 1px solid var(--color-border-default);
   padding: 10px 14px;
   text-align: left;
-  vertical-align: top;
 }
 
-.article-table th {
+.rich-text :deep(th) {
   background: var(--color-surface-secondary);
   font-weight: 600;
 }
 
-.article-table-wrap {
+.rich-text :deep(code) {
+  background: var(--color-surface-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+}
+
+.rich-text :deep(pre) {
+  background: var(--color-surface-secondary);
+  padding: 16px 20px;
+  border-radius: var(--radius-inner);
   overflow-x: auto;
   margin: 20px 0;
 }
 
+.rich-text :deep(pre code) {
+  background: none;
+  padding: 0;
+}
+
+/* ===== FAQ 区域 ===== */
 .knowledge-faq-shell {
   margin-top: 46px;
   scroll-margin-top: calc(var(--client-header-height, 76px) + 28px);
