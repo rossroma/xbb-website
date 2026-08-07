@@ -178,6 +178,12 @@ const router = createRouter({
           component: () => import('@/admin/views/logs/LoginLogs.vue'),
           meta: { title: '登录日志', icon: 'User', requiresAuth: true },
         },
+        {
+          path: 'sms',
+          name: 'SmsLogs',
+          component: () => import('@/admin/views/logs/SmsLogs.vue'),
+          meta: { title: '短信日志', icon: 'ChatDotSquare', requiresAuth: true },
+        },
       ],
     },
 
@@ -240,6 +246,10 @@ const canAccessAdminRoute = (path: string, admin: any) => {
     [
       path.startsWith('/logs/logins'),
       hasMenuPermission(admin, PERMISSION_TOKENS.loginLogs as MenuPermissionMeta),
+    ],
+    [
+      path.startsWith('/logs/sms'),
+      hasMenuPermission(admin, PERMISSION_TOKENS.smsLogs as MenuPermissionMeta),
     ],
       ]
 

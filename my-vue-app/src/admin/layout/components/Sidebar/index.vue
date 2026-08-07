@@ -151,6 +151,7 @@ const routes = computed(() =>
           ...PERMISSION_TOKENS.groupManagement.ruleTokens,
           ...PERMISSION_TOKENS.operationLogs.ruleTokens,
           ...PERMISSION_TOKENS.loginLogs.ruleTokens,
+          ...PERMISSION_TOKENS.smsLogs.ruleTokens,
         ],
       },
       children: [
@@ -173,6 +174,11 @@ const routes = computed(() =>
           path: '/logs/logins',
           meta: { title: '登录日志', icon: 'User' },
           permission: PERMISSION_TOKENS.loginLogs,
+        },
+        {
+          path: '/logs/sms',
+          meta: { title: '短信日志', icon: 'ChatDotSquare' },
+          permission: PERMISSION_TOKENS.smsLogs,
         },
       ],
     },

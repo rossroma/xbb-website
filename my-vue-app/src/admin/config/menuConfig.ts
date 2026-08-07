@@ -24,6 +24,8 @@ export const PERMISSION_TOKENS = {
   operationLogs: { ruleTokens: ['operation_logs.view'] },
   /** 登录日志 */
   loginLogs: { ruleTokens: ['login_logs.view'] },
+  /** 短信日志 */
+  smsLogs: { ruleTokens: ['sms_manage.view'] },
   /** 留言管理 */
   message: {
     1: { ruleTokens: ['message_manage.view', 'message_manage.edit', 'message_manage.delete'] },

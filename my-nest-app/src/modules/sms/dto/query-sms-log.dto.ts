@@ -25,6 +25,7 @@ export class QuerySmsLogDto {
 
   /** 发送状态：success / failed */
   @IsOptional()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   @IsString()
   @IsIn(['success', 'failed'])
   status?: string;
