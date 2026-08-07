@@ -18,6 +18,7 @@ import { LogsModule } from './modules/logs/logs.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { CaseModule } from './modules/case/case.module';
 import { PartnerModule } from './modules/partner/partner.module';
+import { SsrModule } from './modules/ssr/ssr.module';
 
 @Module({
   imports: [
@@ -50,6 +51,10 @@ import { PartnerModule } from './modules/partner/partner.module';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
+        charset: 'utf8mb4', // 支持 emoji 等 4 字节 UTF-8 字符
+        extra: {
+          charset: 'utf8mb4',
+        },
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         connectTimeout: 30000, // MySQL 握手超时，避免 DNS 反解导致超时
         synchronize: false, // 生产环境设为false
@@ -69,6 +74,7 @@ import { PartnerModule } from './modules/partner/partner.module';
     UploadModule,
     CaseModule,
     PartnerModule,
+    SsrModule,
   ],
   controllers: [AppController],
   providers: [
