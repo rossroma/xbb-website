@@ -59,6 +59,5 @@ pids
 uploads/
 **/uploads/
 
-# Database backups
-db_xbb_www.*.sql
-local_backup_*.sql
+# Database
+*.sql
