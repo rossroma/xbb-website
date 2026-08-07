@@ -10,7 +10,7 @@ import { useSiteSettingsStore } from './stores/siteSettings'
  * - 统计代码注入
  * - 动态 favicon 设置
  */
-export async function setupClient(app: App) {
+export async function setupClient(_app: App) {
   const store = useSiteSettingsStore()
 
   // 5 秒超时保护，防止 API 卡住导致白屏
