@@ -44,6 +44,7 @@ export const verifySms = async (data: {
 
 /** 短信日志查询参数 */
 export interface SmsLogQueryParams {
+  [key: string]: unknown
   page?: number
   limit?: number
   phone?: string
