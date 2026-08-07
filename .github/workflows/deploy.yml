@@ -64,7 +64,7 @@ jobs:
           echo "::endgroup::"
 
           echo "::group::🔍 前端类型检查"
-          pnpm -C my-vue-app exec vue-tsc --noEmit
+          pnpm -C my-vue-app exec vue-tsc --build --noEmit
           if [ $? -ne 0 ]; then FAILED=1; echo "❌ 前端类型检查失败"; else echo "✅ 前端类型检查"; fi
           echo "::endgroup::"
 
