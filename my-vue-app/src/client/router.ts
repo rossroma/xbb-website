@@ -128,7 +128,7 @@ export const routes: RouteRecordRaw[] = [
         component: () => import('@/client/views/knowledge/KnowledgeQnA.vue'),
       },
       {
-        path: 'zhishiwenda/:slug',
+        path: 'zhishiwenda/:id',
         name: 'KnowledgeQnADetail',
         component: () => import('@/client/views/knowledge/KnowledgeArticleDetail.vue'),
       },
