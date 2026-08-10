@@ -49,13 +49,15 @@ DB_DATABASE="${DB_DATABASE:-}" \
 DEPLOY_PATH="${DEPLOY_PATH}" \
 docker compose -f "${COMPOSE_FILE}" up -d --wait mysql
 
-# 运行迁移脚本（连接到宿主机 127.0.0.1:3306 的 MySQL 容器）
+# 运行迁移脚本（使用 docker compose exec 连接已有的 MySQL 容器，无需额外拉镜像）
 echo "📦 运行数据库迁移..."
 MIGRATE_SCRIPT="${DEPLOY_PATH}/database/migrate.sh"
 if [ -f "${MIGRATE_SCRIPT}" ]; then
-  DB_HOST="${DB_HOST:-127.0.0.1}" \
-  DB_PORT="${DB_PORT:-3306}" \
-  DB_USERNAME="${DB_USERNAME:-root}" \
+  cd "${DEPLOY_PATH}"
+  MYSQL_USE_COMPOSE=1 \
+  DB_HOST=127.0.0.1 \
+  DB_PORT=3306 \
+  DB_USERNAME=root \
   DB_PASSWORD="${DB_PASSWORD}" \
   DB_DATABASE="${DB_DATABASE}" \
   bash "${MIGRATE_SCRIPT}"
