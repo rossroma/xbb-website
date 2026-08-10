@@ -87,7 +87,7 @@ export class ArticleService {
   }
 
   async findAllForClient(queryDto: QueryArticleDto): Promise<ArticleListResponseDto> {
-    const { page = 1, limit = 10, title, bid, isRecommended, sortBy = 'addtime_desc' } = queryDto;
+    const { page = 1, limit = 10, title, bid, bids, isRecommended, sortBy = 'addtime_desc' } = queryDto;
 
     const queryBuilder = this.articleRepository.createQueryBuilder('article');
 
@@ -100,6 +100,12 @@ export class ArticleService {
     }
     if (bid !== undefined) {
       queryBuilder.andWhere('article.bid = :bid', { bid });
+    }
+    if (bids) {
+      const bidArray = bids.split(',').map(Number).filter((n) => !isNaN(n));
+      if (bidArray.length > 0) {
+        queryBuilder.andWhere('article.bid IN (:...bids)', { bids: bidArray });
+      }
     }
     if (isRecommended !== undefined) {
       if (isRecommended === 1) {

@@ -52,6 +52,8 @@ export interface ClientArticleQuery {
   limit?: number
   /** 栏目 ID（分类过滤） */
   bid?: number
+  /** 多栏目 ID（逗号分隔，与 bid 互斥） */
+  bids?: string
   /** 推荐筛选：1=仅推荐，0=非推荐 */
   isRecommended?: number
   /** 排序方式：addtime_desc（默认）| addtime_asc | hit_desc | hit_asc | ord_asc | ord_desc */

@@ -25,6 +25,10 @@ export class QueryArticleDto {
   bid?: number;
 
   @IsOptional()
+  @IsString({ message: '多栏目ID必须是字符串（逗号分隔）' })
+  bids?: string;
+
+  @IsOptional()
   @Type(() => Number)
   @IsNumber({}, { message: '状态必须是数字' })
   status?: number;
