@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Component } from 'vue'
-import { CheckSmall } from '@icon-park/vue-next'
+import { CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 
 /** 图标颜色主题 */
@@ -85,7 +85,7 @@ export type IconTheme = 'brand' | 'accent' | 'gradient' | 'neutral'
 
 /** 列表项：文字 + 可选图标前缀 */
 export interface SplitSectionItem {
-  /** 图标前缀（IconPark 组件），不传则使用默认 CheckSmall 图标 */
+  /** 图标前缀（Remix 组件），不传则使用默认 CheckSmall 图标 */
   icon?: Component
   /** 列表项文字 */
   text: string

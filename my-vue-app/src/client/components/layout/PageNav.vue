@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { Left, Right } from '@icon-park/vue-next'
+import { Left, Right } from '@/client/components/ui/remixIcons'
 
 // ==================== 类型 ====================
 

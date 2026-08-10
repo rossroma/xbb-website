@@ -203,7 +203,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { Search, Down, CloseSmall } from '@icon-park/vue-next'
+import { Search, Down, CloseSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 

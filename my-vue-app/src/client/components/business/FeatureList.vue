@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { CheckSmall } from '@icon-park/vue-next'
+import { CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 import { type Theme, THEME_PRIMARY_COLOR } from './theme'
@@ -96,7 +96,7 @@ export interface FeatureListItem {
   features?: string[]
   /** 单段描述文本（与 features 二选一，正文渲染为纯文本，不影响标题 badgeIcon） */
   description?: string
-  /** 标题前 Badge 图标（IconPark 组件，选填） */
+  /** 标题前 Badge 图标（remix组件，选填） */
   badgeIcon?: Component
   /** 标题胶囊主题色，仅 variant="title-pill" 时生效 */
   theme?: Theme

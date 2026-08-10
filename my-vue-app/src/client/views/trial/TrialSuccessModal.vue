@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { CheckOne } from '@icon-park/vue-next'
+import { CheckOne } from '@/client/components/ui/remixIcons'
 
 interface Props {
   visible: boolean

@@ -204,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { Rocket, Fire, Star, Heart } from '@icon-park/vue-next'
+import { Rocket, Fire, Star, Heart } from '@/client/components/ui/remixIcons'
 import Card from '@/client/components/ui/Card.vue'
 import Badge from '@/client/components/ui/Badge.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'

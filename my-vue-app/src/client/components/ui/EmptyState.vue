@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { Inbox } from '@icon-park/vue-next'
+import { Inbox } from '@/client/components/ui/remixIcons'
 
 interface EmptyStateProps {
   message?: string

@@ -77,9 +77,7 @@
       title="展开侧边栏"
       @click="collapsed = false"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
+      <Hamburger :size="16" aria-hidden="true" />
     </button>
 
     <!-- ====== Collapse Toggle（侧边栏展开时固定在左上角）===== -->
@@ -89,15 +87,7 @@
       title="折叠侧边栏"
       @click="collapsed = true"
     >
-      <svg
-        class="w-3.5 h-3.5"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        viewBox="0 0 24 24"
-      >
-        <path d="M11 19l-7-7 7-7M18 19l-7-7 7-7" />
-      </svg>
+      <Left :size="14" aria-hidden="true" />
     </button>
 
     <!-- ====== Main Content ====== -->
@@ -114,6 +104,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { Hamburger, Left } from '@/client/components/ui/remixIcons'
 import { sections, categoryMeta, categoryBySectionId, type CategoryId } from './registry'
 
 interface CategoryItem {

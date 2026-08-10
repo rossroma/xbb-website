@@ -99,7 +99,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Left, Right } from '@icon-park/vue-next'
+import { Left, Right } from '@/client/components/ui/remixIcons'
 
 // ==================== Props ====================
 

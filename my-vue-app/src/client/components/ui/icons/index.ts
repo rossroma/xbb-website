@@ -1,1 +1,1 @@
-export { default as WechatVideo } from './WechatVideo'
+export { WechatVideo } from '@/client/components/ui/remixIcons'

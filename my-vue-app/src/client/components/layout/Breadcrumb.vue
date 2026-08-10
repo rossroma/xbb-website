@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { Home } from '@icon-park/vue-next'
+import { Home } from '@/client/components/ui/remixIcons'
 
 // ==================== 类型 ====================
 

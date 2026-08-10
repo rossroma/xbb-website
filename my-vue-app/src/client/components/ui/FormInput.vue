@@ -56,17 +56,7 @@
       @click="handleClear"
       @mousedown.prevent
     >
-      <svg
-        class="w-3.5 h-3.5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-      >
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
+      <CloseSmall class="w-3.5 h-3.5" aria-hidden="true" />
     </button>
 
     <!-- 后缀插槽（支持交互元素，如验证码按钮） -->
@@ -86,6 +76,7 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
+import { CloseSmall } from '@/client/components/ui/remixIcons'
 import { FormInjectionKey } from './Form.vue'
 
 interface FormInputProps {
