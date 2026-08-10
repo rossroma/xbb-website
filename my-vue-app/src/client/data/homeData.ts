@@ -274,7 +274,7 @@ export const solutionCards = [
     image: solutionCardImprove,
     icon: Trend,
     points: ['提升线索转化率', '提升销售成交率', '提升客户跟进效率', '缩短成交周期'],
-    linkHref: '/features/sales-growth',
+    linkHref: '/liuzi',
   },
   {
     title: '销售管理',
@@ -282,7 +282,7 @@ export const solutionCards = [
     image: solutionCardProcess,
     icon: Branch,
     points: ['销售过程透明化', '销售行为可量化', '销售动作可追踪', '销售风险可预警'],
-    linkHref: '/features/sales-management',
+    linkHref: '/liuzi',
   },
   {
     title: 'AI 业务赋能',
@@ -290,7 +290,7 @@ export const solutionCards = [
     image: solutionCardAiDriven,
     icon: Robot,
     points: ['AI 自动分析客户', 'AI 辅助销售沟通', 'AI 自动生成话术', 'AI 智能复盘质检'],
-    linkHref: '/features/ai-empowerment',
+    linkHref: '/liuzi',
   },
   {
     title: '组织升级',
@@ -298,7 +298,7 @@ export const solutionCards = [
     image: solutionCardOrganization,
     icon: People,
     points: ['销售 SOP 沉淀', '销售经验资产化', '新人成长标准化', 'AI 持续训练组织'],
-    linkHref: '/features/org-upgrade',
+    linkHref: '/liuzi',
   },
 ]
 
