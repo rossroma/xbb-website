@@ -66,8 +66,8 @@
                   <RouterLink to="/message" class="knowledge-detail-consult">微信咨询</RouterLink>
                 </div>
 
-                <div v-if="article.descs" class="knowledge-detail-summary">
-                  {{ article.descs }}
+                <div v-if="summaryText" class="knowledge-detail-summary">
+                  {{ summaryText }}
                 </div>
               </header>
 
@@ -83,11 +83,11 @@
               />
 
               <!-- FAQ 区域 -->
-              <div v-if="knowledgeQnAFaqItems.length" :id="faqAnchorId" class="knowledge-faq-shell">
+              <div v-if="faqItems.length" :id="faqAnchorId" class="knowledge-faq-shell">
                 <FaqList
                   title="本文相关FAQs"
-                  :categories="knowledgeQnAFaqCategories"
-                  :items="knowledgeQnAFaqItems"
+                  :categories="[{ key: 'all', label: '全部' }]"
+                  :items="faqItems"
                   expand-mode="single"
                   :show-categories="false"
                   :show-search="false"
@@ -133,15 +133,12 @@ import UiButton from '@/client/components/ui/Button.vue'
 import { toPagePath } from '@/client/data/routePaths'
 import {
   getClientArticleDetail,
+  getClientArticles,
   type ArticleDetail as ArticleDetailData,
   type ArticleNavInfo,
 } from '@/shared/api/article'
-import {
-  knowledgeQnAFaqCategories,
-  knowledgeQnAFaqItems,
-  knowledgeQnASeo,
-  knowledgeQnASidebarBanners,
-} from './knowledgeQnAData'
+import type { FaqItem } from '@/client/components/business/FaqList.vue'
+import { knowledgeQnASeo, knowledgeQnASidebarBanners } from './knowledgeQnAData'
 
 const route = useRoute()
 const trialPagePath = toPagePath('single_mfsy')
@@ -154,8 +151,20 @@ const errorMessage = ref<string | null>(null)
 const article = ref<ArticleDetailData | null>(null)
 const prevArticle = ref<ArticleNavInfo | null>(null)
 const nextArticle = ref<ArticleNavInfo | null>(null)
+const faqItems = ref<FaqItem[]>([])
+
+const KNOWLEDGE_QNA_BID = 190
+const FAQ_PAGE_SIZE = 3
 
 // ==================== 计算属性 ====================
+
+/** 摘要：优先使用 descs，否则从正文内容截取 */
+const summaryText = computed(() => {
+  if (article.value?.descs) return article.value.descs
+  if (!article.value?.content) return ''
+  const text = article.value.content.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim()
+  return text.length > 200 ? text.slice(0, 200) + '…' : text
+})
 
 /** 格式化时间戳为日期字符串 */
 const formattedTime = computed(() => {
@@ -211,7 +220,7 @@ const knowledgeDetailTocItems = computed<ArticleSidebarTocItem[]>(() => {
   }
 
   // 添加 FAQ 锚点
-  if (knowledgeQnAFaqItems.length) {
+  if (faqItems.length) {
     items.push({ id: faqAnchorId, title: '本文相关FAQs' })
   }
 
@@ -270,7 +279,7 @@ useHead(() => {
     meta: [
       {
         name: 'description',
-        content: article.value.setDescription || article.value.descs || '',
+        content: article.value.setDescription || summaryText.value || '',
       },
       {
         name: 'keywords',
@@ -281,6 +290,26 @@ useHead(() => {
 })
 
 // ==================== 数据加载 ====================
+
+/** 加载 FAQ 数据（同栏目文章） */
+async function loadFaqArticles() {
+  try {
+    const result = await getClientArticles({
+      bid: KNOWLEDGE_QNA_BID,
+      page: 1,
+      limit: FAQ_PAGE_SIZE,
+    })
+    faqItems.value = result.items.map((item) => ({
+      id: item.id,
+      question: item.title,
+      answer: item.content || item.descs || '',
+      category: 'all',
+    }))
+  } catch {
+    // FAQ 非关键数据，静默失败
+    faqItems.value = []
+  }
+}
 
 async function loadArticle() {
   const id = Number(route.params.id)
@@ -294,7 +323,10 @@ async function loadArticle() {
   errorMessage.value = null
 
   try {
-    const result = await getClientArticleDetail(id)
+    const [result] = await Promise.all([
+      getClientArticleDetail(id),
+      loadFaqArticles(),
+    ])
     article.value = result.article
     prevArticle.value = result.prev
     nextArticle.value = result.next
