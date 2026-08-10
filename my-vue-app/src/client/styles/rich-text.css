@@ -1,0 +1,150 @@
+/* ====== 富文本内容样式 ======
+ * 适用于 v-html 渲染的富文本内容，配合 .rich-text 类使用。
+ * 被 KnowledgeArticleDetail / ArticleDetail / CaseDetail 共享。
+ * 所有选择器使用 :deep() 穿透 scoped 隔离，此处仅定义样式规则，
+ * 实际由各组件 .rich-text :deep() 包装引用。
+ */
+.rich-text {
+  color: var(--color-text-primary);
+  line-height: 1.85;
+  font-size: 16px;
+}
+
+/* ===== 图片 ===== */
+.rich-text img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-inner);
+  margin: 24px 0;
+}
+
+/* ===== 段落 ===== */
+.rich-text p {
+  margin-bottom: 16px;
+}
+
+/* ===== 标题层级 ===== */
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4 {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  scroll-margin-top: calc(var(--client-header-height, 76px) + 28px);
+}
+
+.rich-text h1 {
+  font-size: 24px;
+  line-height: 1.32;
+  margin-top: 32px;
+  margin-bottom: 16px;
+}
+
+.rich-text h2 {
+  margin-top: 34px;
+  margin-bottom: 16px;
+  font-size: 24px;
+  line-height: 1.32;
+}
+
+/* h2 紫色渐变装饰条 */
+.rich-text h2::before {
+  position: relative;
+  top: -2px;
+  display: inline-block;
+  width: 4px;
+  height: 25px;
+  margin-right: 14px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #5b61ff 0%, #7fd6ff 100%);
+  content: '';
+  vertical-align: middle;
+}
+
+.rich-text h3 {
+  margin-top: 28px;
+  margin-bottom: 14px;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.rich-text h4 {
+  margin-top: 24px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* ===== 链接 ===== */
+.rich-text a {
+  color: var(--color-brand-primary);
+  text-decoration: underline;
+  transition: color var(--transition-duration-fast);
+}
+
+.rich-text a:hover {
+  color: var(--color-brand-primary-hover);
+}
+
+/* ===== 列表 ===== */
+.rich-text ul,
+.rich-text ol {
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.rich-text li {
+  margin-bottom: 8px;
+}
+
+/* ===== 引用块 ===== */
+.rich-text blockquote {
+  border-left: 3px solid var(--color-brand-primary);
+  padding: 12px 20px;
+  margin: 20px 0;
+  background: var(--color-surface-secondary);
+  border-radius: 0 var(--radius-inner) var(--radius-inner) 0;
+  color: var(--color-text-secondary);
+}
+
+/* ===== 表格 ===== */
+.rich-text table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 14px;
+}
+
+.rich-text th,
+.rich-text td {
+  border: 1px solid var(--color-border-default);
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.rich-text th {
+  background: var(--color-surface-secondary);
+  font-weight: 600;
+}
+
+/* ===== 代码 ===== */
+.rich-text code {
+  background: var(--color-surface-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+}
+
+.rich-text pre {
+  background: var(--color-surface-secondary);
+  padding: 16px 20px;
+  border-radius: var(--radius-inner);
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.rich-text pre code {
+  background: none;
+  padding: 0;
+}
