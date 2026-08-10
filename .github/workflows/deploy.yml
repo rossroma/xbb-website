@@ -256,6 +256,8 @@ jobs:
             # 运行数据库迁移
             echo "📦 运行数据库迁移..."
             chmod +x ${{ secrets.TEST_DEPLOY_PATH }}/database/migrate.sh
+            cd ${{ secrets.TEST_DEPLOY_PATH }}
+            MYSQL_USE_COMPOSE=1 \
             DB_HOST=127.0.0.1 \
             DB_PORT=3306 \
             DB_USERNAME=root \

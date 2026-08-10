@@ -31,37 +31,47 @@ MIGRATIONS_DIR="${SCRIPT_DIR}/migrations"
 # --------------------------------------------
 # mysql 客户端选择
 # --------------------------------------------
-MYSQL_CLIENT=""
-
-# 尝试宿主机 mysql CLI
-if command -v mysql &>/dev/null; then
+# 优先级：
+#   1. MYSQL_USE_DOCKER_EXEC=1  → docker exec（生产环境，MySQL 容器已在运行）
+#   2. MYSQL_USE_COMPOSE=1      → docker compose exec（测试环境，MySQL 在 docker-compose 中）
+#   3. 宿主机有 mysql CLI        → 直接使用
+#   4. 有 docker                → docker run mysql:8（兜底，需网络连通）
+# 注：容器名称可通过 MYSQL_CONTAINER_NAME 环境变量覆盖，默认 xbb-mysql
+if [ -n "${MYSQL_USE_DOCKER_EXEC:-}" ]; then
+  CONTAINER="${MYSQL_CONTAINER_NAME:-xbb-mysql}"
+  echo "🔌 使用 docker exec ${CONTAINER} mysql"
+  MYSQL_CLIENT="docker exec -i ${CONTAINER} mysql"
+elif [ -n "${MYSQL_USE_COMPOSE:-}" ]; then
+  echo "🔌 使用 docker compose exec mysql"
+  MYSQL_CLIENT="docker compose exec -T mysql mysql"
+elif command -v mysql &>/dev/null; then
   MYSQL_CLIENT="mysql"
   echo "🔌 使用宿主机 mysql CLI"
-else
-  # 尝试 docker run mysql:8
-  if command -v docker &>/dev/null && docker image inspect mysql:8 &>/dev/null 2>&1; then
-    MYSQL_CLIENT="docker run --rm --network host -i mysql:8 mysql"
-    echo "🔌 使用 docker mysql:8"
-  elif command -v docker &>/dev/null; then
-    echo "🐳 拉取 mysql:8 镜像..."
-    docker pull mysql:8 --quiet
-    MYSQL_CLIENT="docker run --rm --network host -i mysql:8 mysql"
-    echo "🔌 使用 docker mysql:8"
+elif command -v docker &>/dev/null; then
+  # 检查 mysql:8 是否已拉取
+  if docker image inspect mysql:8 &>/dev/null 2>&1; then
+    echo "🔌 使用 docker mysql:8（已缓存）"
   else
-    echo "❌ 未找到 mysql CLI，请安装 mysql 客户端或确保 Docker 可用"
-    echo "   macOS: brew install mysql-client"
-    echo "   Ubuntu: apt install mysql-client"
-    exit 1
+    echo "🐳 正在拉取 mysql:8 镜像（约 500MB，首次可能需要几分钟）..."
+    docker pull mysql:8
+    echo "  ✅ 拉取完成"
   fi
+  MYSQL_CLIENT="docker run --rm --network host -i mysql:8 mysql"
+else
+  echo "❌ 未找到 mysql CLI，请安装 mysql 客户端或确保 Docker 可用"
+  echo "   macOS: brew install mysql-client"
+  echo "   Ubuntu: apt install mysql-client"
+  exit 1
 fi
 
 # mysql 执行封装（自动注入连接参数）
+# 使用 -p 参数传递密码，兼容宿主机 CLI、docker run、docker compose exec 三种场景
 mysql_exec() {
-  # 使用 MYSQL_PWD 环境变量避免密码在命令行中暴露
-  MYSQL_PWD="${MYSQL_PASS}" ${MYSQL_CLIENT} \
+  ${MYSQL_CLIENT} \
     -h"${MYSQL_HOST}" \
     -P"${MYSQL_PORT}" \
     -u"${MYSQL_USER}" \
+    -p"${MYSQL_PASS}" \
     "${MYSQL_DB}" \
     "$@"
 }

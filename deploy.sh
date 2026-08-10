@@ -33,6 +33,7 @@ docker pull "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest"
 echo "📦 运行数据库迁移..."
 MIGRATE_SCRIPT="${DEPLOY_PATH}/database/migrate.sh"
 if [ -f "${MIGRATE_SCRIPT}" ]; then
+  MYSQL_USE_DOCKER_EXEC=1 \
   DB_HOST="${DB_HOST}" \
   DB_PORT="${DB_PORT:-3306}" \
   DB_USERNAME="${DB_USERNAME}" \
