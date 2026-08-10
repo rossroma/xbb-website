@@ -44,9 +44,16 @@ export default defineConfig(({ mode }) => {
           admin: path.resolve(__dirname, 'admin.html'),
         },
         output: {
-          manualChunks: {
-            'vue-vendor': ['vue', 'vue-router', 'pinia'],
-            'head-vendor': ['@vueuse/head'],
+          manualChunks(id) {
+            // 仅对 node_modules 中的模块分包（vite-ssg 将 vue 标记为 external，不能用对象形式）
+            if (id.includes('node_modules')) {
+              if (id.includes('vue-router') || id.includes('pinia') || id.includes('@vue')) {
+                return 'vue-vendor'
+              }
+              if (id.includes('@vueuse/head') || id.includes('unhead')) {
+                return 'head-vendor'
+              }
+            }
           },
         },
       },
