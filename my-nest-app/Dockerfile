@@ -26,6 +26,9 @@ RUN pnpm install --filter my-nest-app --frozen-lockfile --registry https://regis
 # 复制后端源码
 COPY my-nest-app/src/ my-nest-app/src/
 
+# 复制构建脚本（prebuild 用）
+COPY my-nest-app/scripts/ my-nest-app/scripts/
+
 # 构建 NestJS 项目
 RUN pnpm -C my-nest-app build
 
