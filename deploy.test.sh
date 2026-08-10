@@ -41,11 +41,32 @@ cd "${DEPLOY_PATH}"
 docker compose -f "${COMPOSE_FILE}" down --timeout 30 || true
 
 # ==========================================
-# 3. 启动新服务
+# 3. 启动 MySQL 并运行数据库迁移
 # ==========================================
-echo "🚀 启动新服务..."
+echo "🐬 启动 MySQL..."
 DB_PASSWORD="${DB_PASSWORD:-}" \
 DB_DATABASE="${DB_DATABASE:-}" \
+DEPLOY_PATH="${DEPLOY_PATH}" \
+docker compose -f "${COMPOSE_FILE}" up -d --wait mysql
+
+# 运行迁移脚本（连接到宿主机 127.0.0.1:3306 的 MySQL 容器）
+echo "📦 运行数据库迁移..."
+MIGRATE_SCRIPT="${DEPLOY_PATH}/database/migrate.sh"
+if [ -f "${MIGRATE_SCRIPT}" ]; then
+  DB_HOST="${DB_HOST:-127.0.0.1}" \
+  DB_PORT="${DB_PORT:-3306}" \
+  DB_USERNAME="${DB_USERNAME:-root}" \
+  DB_PASSWORD="${DB_PASSWORD}" \
+  DB_DATABASE="${DB_DATABASE}" \
+  bash "${MIGRATE_SCRIPT}"
+else
+  echo "  ⚠️  迁移脚本 ${MIGRATE_SCRIPT} 不存在，跳过迁移"
+fi
+
+# ==========================================
+# 4. 启动后端和前端服务
+# ==========================================
+echo "🚀 启动后端和前端服务..."
 JWT_SECRET="${JWT_SECRET:-}" \
 OSS_REGION="${OSS_REGION:-}" \
 OSS_BUCKET="${OSS_BUCKET:-}" \
@@ -55,7 +76,7 @@ DEPLOY_PATH="${DEPLOY_PATH}" \
 docker compose -f "${COMPOSE_FILE}" up -d --wait
 
 # ==========================================
-# 4. 验证
+# 5. 验证
 # ==========================================
 echo "🔍 验证服务..."
 
@@ -78,7 +99,7 @@ done
 curl -sf http://localhost/ > /dev/null 2>&1 && echo "  ✅ 前端" || { echo "  ❌ 前端"; exit 1; }
 
 # ==========================================
-# 5. 清理
+# 6. 清理
 # ==========================================
 echo "🧹 清理旧镜像..."
 docker image prune -f
