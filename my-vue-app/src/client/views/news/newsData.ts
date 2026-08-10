@@ -40,10 +40,16 @@ export interface NewsCategoryTab {
   bid: number | null
 }
 
-/** 默认分类 Tab 列表（bid 从 API 动态获取） */
+/** 新闻动态父栏目 ID（bid=8，其下子类目为 11/12/13） */
+export const NEWS_PARENT_BID = 8
+
+/** 新闻动态子类目 ID 列表（公司动态 11、行业动态 12、媒体报道 13） */
+export const NEWS_CHILD_BIDS = [11, 12, 13]
+
+/** 默认分类 Tab 列表（bid 已确认，无需动态获取） */
 export const DEFAULT_CATEGORY_TABS: NewsCategoryTab[] = [
   { key: 'all', label: '全部', slug: '', bid: null },
-  { key: 'company', label: '公司动态', slug: 'gongsidongtai', bid: null },
-  { key: 'industry', label: '行业动态', slug: 'hangyedongtai', bid: null },
-  { key: 'media', label: '媒体报道', slug: 'meitibaodao', bid: null },
+  { key: 'company', label: '公司动态', slug: 'gongsidongtai', bid: 11 },
+  { key: 'industry', label: '行业动态', slug: 'hangyedongtai', bid: 12 },
+  { key: 'media', label: '媒体报道', slug: 'meitibaodao', bid: 13 },
 ]

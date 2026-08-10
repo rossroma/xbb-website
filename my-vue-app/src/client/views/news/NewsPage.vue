@@ -80,9 +80,7 @@ import Pagination from '@/client/components/ui/Pagination.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 import { getClientArticles, type ClientArticleListResponse } from '@/shared/api/article'
-import { getClientCategories, type ClientCategoryListResponse } from '@/shared/api/category'
-import type { Category } from '@/shared/api/category'
-import { newsBannerSlide, DEFAULT_CATEGORY_TABS } from './newsData'
+import { newsBannerSlide, DEFAULT_CATEGORY_TABS, NEWS_CHILD_BIDS } from './newsData'
 
 // ==================== SEO ====================
 
@@ -93,14 +91,9 @@ usePageSEO()
 const isLoading = ref(false)
 const errorMessage = ref<string | null>(null)
 
-/** 分类 Tab 列表（含动态获取的 bid） */
+/** 分类 Tab 列表 */
 const categoryTabs = ref<{ key: string; label: string }[]>(
   DEFAULT_CATEGORY_TABS.map((t) => ({ key: t.key, label: t.label })),
-)
-
-/** 内部分类映射表：key → slug/bid */
-const categoryMap = ref<Map<string, { slug: string; bid: number | null }>>(
-  new Map(DEFAULT_CATEGORY_TABS.map((t) => [t.key, { slug: t.slug, bid: t.bid }])),
 )
 
 /** 当前选中的 Tab key */
@@ -146,22 +139,26 @@ function formatTimestamp(ts: number): string {
 
 /** 根据 bid 获取分类标签名 */
 function getCategoryTag(bid: number): string {
-  for (const [, info] of categoryMap.value) {
-    if (info.bid === bid) {
-      for (const tab of DEFAULT_CATEGORY_TABS) {
-        if (tab.bid === bid) return tab.label
-      }
-    }
-  }
-  return ''
+  const tab = DEFAULT_CATEGORY_TABS.find((t) => t.bid === bid)
+  return tab?.label ?? ''
 }
 
 // ==================== 数据加载 ====================
 
-/** 获取当前选中 Tab 的 bid */
-function getActiveBid(): number | null {
-  const info = categoryMap.value.get(activeTabKey.value)
-  return info?.bid ?? null
+/** 获取当前 Tab 对应的查询参数 */
+function getActiveQueryParams(): { page: number; limit: number; bid?: number; bids?: string } {
+  const tab = DEFAULT_CATEGORY_TABS.find((t) => t.key === activeTabKey.value)
+  const params: { page: number; limit: number; bid?: number; bids?: string } = {
+    page: currentPage.value,
+    limit: pageSize.value,
+  }
+  if (tab?.key === 'all') {
+    // 「全部」标签：展示 bid=8 下所有子类目的文章
+    params.bids = NEWS_CHILD_BIDS.join(',')
+  } else if (tab?.bid !== null) {
+    params.bid = tab!.bid
+  }
+  return params
 }
 
 /** 加载文章列表 */
@@ -170,15 +167,7 @@ async function loadArticles() {
   errorMessage.value = null
 
   try {
-    const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number } = {
-      page: currentPage.value,
-      limit: pageSize.value,
-    }
-    if (bid !== null) {
-      params.bid = bid
-    }
-    articleList.value = await getClientArticles(params)
+    articleList.value = await getClientArticles(getActiveQueryParams())
   } catch (err) {
     errorMessage.value = err instanceof Error ? err.message : '加载文章列表失败，请稍后重试'
   } finally {
@@ -186,32 +175,9 @@ async function loadArticles() {
   }
 }
 
-/** 加载分类列表并匹配 Tab */
-async function loadCategories() {
-  try {
-    const result: ClientCategoryListResponse = await getClientCategories(true)
-    const categories: Category[] = result.items
-
-    // 遍历 Tab 配置，根据 slug 匹配栏目 ID
-    for (const tab of DEFAULT_CATEGORY_TABS) {
-      if (!tab.slug) continue // 跳过「全部」
-      const matched = categories.find((c) => c.english === tab.slug && c.status === 1)
-      if (matched) {
-        categoryMap.value.set(tab.key, { slug: tab.slug, bid: matched.id })
-      }
-    }
-  } catch {
-    // 分类加载失败不影响文章列表展示，使用默认配置
-    console.warn('加载分类列表失败，将使用默认配置')
-  }
-}
-
-// ==================== 事件处理 ====================
-
 /** Tab 切换 */
 function handleTabChange(key: string) {
-  if (activeTabKey.value === key && articleList.value) return
-  activeTabKey.value = key
+  // v-model 已更新 activeTabKey，只需重置页码并加载
   currentPage.value = 1
   loadArticles()
 }
@@ -227,7 +193,6 @@ function handlePageChange(page: number) {
 // ==================== 生命周期 ====================
 
 onMounted(async () => {
-  await loadCategories()
   await loadArticles()
 })
 </script>
