@@ -28,20 +28,37 @@ docker pull "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest"
 docker pull "${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest"
 
 # ==========================================
-# 3. 优雅停止旧服务
+# 3. 运行数据库迁移
+# ==========================================
+echo "📦 运行数据库迁移..."
+MIGRATE_SCRIPT="${DEPLOY_PATH}/database/migrate.sh"
+if [ -f "${MIGRATE_SCRIPT}" ]; then
+  DB_HOST="${DB_HOST}" \
+  DB_PORT="${DB_PORT:-3306}" \
+  DB_USERNAME="${DB_USERNAME}" \
+  DB_PASSWORD="${DB_PASSWORD}" \
+  DB_DATABASE="${DB_DATABASE}" \
+  bash "${MIGRATE_SCRIPT}"
+else
+  echo "  ⚠️  迁移脚本 ${MIGRATE_SCRIPT} 不存在，跳过迁移"
+  echo "  请确保已通过部署流水线上传 my-nest-app/database/ 目录到服务器"
+fi
+
+# ==========================================
+# 4. 优雅停止旧服务
 # ==========================================
 echo "🛑 停止旧服务..."
 cd "${DEPLOY_PATH}"
 docker compose -f "${COMPOSE_FILE}" down --timeout 30 || true
 
 # ==========================================
-# 4. 启动新服务
+# 5. 启动新服务
 # ==========================================
 echo "🚀 启动新服务..."
 docker compose -f "${COMPOSE_FILE}" up -d --wait
 
 # ==========================================
-# 5. 验证服务
+# 6. 验证服务
 # ==========================================
 echo "🔍 验证服务..."
 
@@ -67,7 +84,7 @@ else
 fi
 
 # ==========================================
-# 6. 清理旧镜像
+# 7. 清理旧镜像
 # ==========================================
 echo "🧹 清理旧镜像..."
 docker image prune -f
