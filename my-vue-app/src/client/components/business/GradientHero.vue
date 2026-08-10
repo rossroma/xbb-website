@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { Component } from 'vue'
-import { Right } from '@icon-park/vue-next'
+import { Right } from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import {
   type Theme,
@@ -104,7 +104,7 @@ const props = withDefaults(
     image: string
     /** 图片 alt 文本，默认取 title */
     imageAlt?: string
-    /** 标题上方 badge 图标（IconPark 组件），选填 */
+    /** 标题上方 badge 图标（remix 组件），选填 */
     badgeIcon?: Component
     /** 渐变主题：purple（紫）| blue（蓝）| teal（青）| green（绿）| orange（橙） */
     theme?: Theme

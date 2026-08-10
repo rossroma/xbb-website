@@ -74,6 +74,7 @@ export const sections: SectionEntry[] = [
   { id: 'feature-image-card', name: 'FeatureImageCard 图片卡片', category: 'business' },
   { id: 'content-card-grid', name: 'ContentCardGrid 图文卡片', category: 'business' },
   { id: 'ai-crm-feature-grid', name: 'AiCrmFeatureGrid AI+CRM 能力卡片', category: 'business' },
+  { id: 'image-card-grid', name: 'ImageCardGrid 图片卡片网格', category: 'business' },
   { id: 'icon-card-grid', name: 'IconCardGrid 图标卡片', category: 'business' },
   { id: 'gradient-card-grid', name: 'GradientCardGrid 渐变卡片', category: 'business' },
   { id: 'split-section', name: 'SplitSection 图文分栏', category: 'business' },

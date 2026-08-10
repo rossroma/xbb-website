@@ -111,16 +111,7 @@
             class="inline-flex items-center gap-1.5 px-5 py-2 rounded-pill bg-white/90 text-small text-text-primary shadow-default backdrop-blur-sm"
           >
             查看更多
-            <svg
-              class="w-3.5 h-3.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <Right :size="14" aria-hidden="true" />
           </span>
         </div>
       </article>
@@ -143,6 +134,7 @@
   "
 >
 import type { Component } from 'vue'
+import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 
@@ -151,7 +143,7 @@ type CardGradient = 'purple' | 'blue' | 'teal' | 'green' | 'orange'
 
 defineProps<{
   title: string
-  /** 标题栏前置图标（IconPark 组件） */
+  /** 标题栏前置图标（remix 组件） */
   titleIcon?: Component
   /** 标题栏前置文字（如 "AI"，与 titleIcon 互斥） */
   titlePrefix?: string

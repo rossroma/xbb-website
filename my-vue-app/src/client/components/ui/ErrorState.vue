@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { Caution } from '@icon-park/vue-next'
+import { Caution } from '@/client/components/ui/remixIcons'
 import Button from './Button.vue'
 
 interface ErrorStateProps {

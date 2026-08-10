@@ -12,92 +12,92 @@
         {{ heading }}
       </h2>
     </div>
-  </SectionBlock>
 
-  <div class="relative mt-8 w-full overflow-hidden px-7 py-3">
-    <Carousel :total-slides="cards.length" show-arrows @slide-change="onSlideChange">
-      <template #default>
-        <!-- Gradient masks -->
-        <div
-          class="absolute left-0 top-0 bottom-0 w-55 z-10 pointer-events-none bg-case-gradient-left"
-        />
-        <div
-          class="absolute right-0 top-0 bottom-0 w-55 z-10 pointer-events-none bg-case-gradient-right"
-        />
-
-        <div ref="viewportRef" class="overflow-hidden min-w-0 py-3 px-0">
+    <div class="relative mt-8 w-full overflow-hidden px-7 py-3">
+      <Carousel :total-slides="cards.length" show-arrows @slide-change="onSlideChange">
+        <template #default>
+          <!-- Gradient masks -->
           <div
-            class="flex gap-7 transition-transform duration-carousel ease will-change-transform motion-reduce:transition-none"
-            :style="trackStyle"
-          >
-            <article
-              v-for="(card, index) in displayCards"
-              :key="`${card.key}-${index}`"
-              :class="[
-                'shrink-0 box-border p-[22px] rounded-card bg-case-card-gradient border border-case-card-border flex flex-col transition-all duration-glide ease motion-reduce:transition-none',
-                getCardClass(index),
-              ]"
-              :style="{ width: `${cardWidth}px` }"
+            class="absolute left-0 top-3 bottom-3 w-55 z-10 pointer-events-none bg-case-gradient-left"
+          />
+          <div
+            class="absolute right-0 top-3 bottom-3 w-55 z-10 pointer-events-none bg-case-gradient-right"
+          />
+
+          <div ref="viewportRef" class="overflow-hidden min-w-0 py-3 px-0">
+            <div
+              class="flex gap-7 transition-transform duration-carousel ease will-change-transform motion-reduce:transition-none"
+              :style="trackStyle"
             >
-              <div class="mb-4">
-                <div class="text-h2 font-semibold text-center text-text-primary leading-subtitle">
-                  {{ card.industry }}
+              <article
+                v-for="(card, index) in displayCards"
+                :key="`${card.key}-${index}`"
+                :class="[
+                  'industry-carousel-card shrink-0 box-border p-[22px] rounded-card bg-[#f6f6fb] border border-[#f6f6fb] flex flex-col transition-all duration-glide ease motion-reduce:transition-none',
+                  getCardClass(index),
+                ]"
+                :style="{ width: `${cardWidth}px` }"
+              >
+                <div class="mb-4">
+                  <div class="text-h2 font-semibold text-center text-text-primary leading-subtitle">
+                    {{ card.industry }}
+                  </div>
+                  <p class="min-h-12 text-small text-text-secondary leading-body">
+                    {{ card.summary }}
+                  </p>
                 </div>
-                <p class="min-h-12 text-small text-text-secondary leading-body">
-                  {{ card.summary }}
-                </p>
-              </div>
-              <div class="grid grid-cols-3 gap-2.5 flex-1">
-                <div
-                  v-for="logo in card.logos"
-                  :key="logo.name"
-                  class="h-[78px] rounded-badge border border-case-logo-border bg-surface-primary/92 p-4 flex justify-center items-center transition-all duration-normal hover:border-brand-accent-ring hover:bg-surface-primary hover:-translate-y-0.5 hover:shadow-case-logo-hover motion-reduce:transition-none motion-reduce:transform-none"
-                >
-                  <img
-                    :src="logo.src"
-                    :alt="logo.name"
-                    class="max-w-full max-h-full object-contain"
-                  />
+                <div class="grid grid-cols-3 gap-2.5 flex-1">
+                  <div
+                    v-for="logo in card.logos"
+                    :key="logo.name"
+                    class="h-[78px] rounded-badge border border-case-logo-border bg-surface-primary/92 p-4 flex justify-center items-center transition-all duration-normal hover:border-brand-accent-ring hover:bg-surface-primary hover:-translate-y-0.5 hover:shadow-case-logo-hover motion-reduce:transition-none motion-reduce:transform-none"
+                  >
+                    <img
+                      :src="logo.src"
+                      :alt="logo.name"
+                      class="max-w-full max-h-full object-contain"
+                    />
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </div>
           </div>
-        </div>
-      </template>
+        </template>
 
-      <template #arrow-left="{ slide: doSlide }">
-        <button
-          class="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:left-2"
-          aria-label="上一个案例"
-          @click="doSlide()"
-        >
-          <Left :size="24" :stroke-width="4" />
-        </button>
-      </template>
+        <template #arrow-left="{ slide: doSlide }">
+          <button
+            class="absolute left-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:left-2"
+            aria-label="上一个案例"
+            @click="doSlide()"
+          >
+            <Left :size="24" :stroke-width="4" />
+          </button>
+        </template>
 
-      <template #arrow-right="{ slide: doSlide }">
-        <button
-          class="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:right-2"
-          aria-label="下一个案例"
-          @click="doSlide()"
-        >
-          <Right :size="24" :stroke-width="4" />
-        </button>
-      </template>
-    </Carousel>
-  </div>
+        <template #arrow-right="{ slide: doSlide }">
+          <button
+            class="absolute right-10 top-1/2 -translate-y-1/2 z-20 w-[42px] h-[42px] rounded-pill border border-case-arrow-border bg-surface-primary/98 flex items-center justify-center p-0 cursor-pointer shadow-case-arrow transition-all duration-normal hover:scale-1.04 hover:shadow-case-arrow-hover motion-reduce:transition-none motion-reduce:transform-none max-md:right-2"
+            aria-label="下一个案例"
+            @click="doSlide()"
+          >
+            <Right :size="24" :stroke-width="4" />
+          </button>
+        </template>
+      </Carousel>
+    </div>
 
-  <!-- CTA -->
-  <div v-if="ctaText" class="flex items-center justify-center w-full h-full mt-[38px]">
-    <Button variant="outline-neutral" size="lg" class="min-h-13 px-5" @click="$emit('ctaClick')">
-      {{ ctaText }}
-    </Button>
-  </div>
+    <!-- CTA -->
+    <div v-if="ctaText" class="flex items-center justify-center w-full h-full mt-[38px]">
+      <Button variant="outline-neutral" size="lg" class="min-h-13 px-5" @click="$emit('ctaClick')">
+        {{ ctaText }}
+      </Button>
+    </div>
+  </SectionBlock>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
-import { Left, Right } from '@icon-park/vue-next'
+import { Left, Right } from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
@@ -160,8 +160,10 @@ const trackStyle = computed(() => {
 
 const getCardClass = (index: number) => {
   const active = currentIdx.value + 1
-  if (index === active) return 'opacity-100 scale-100 shadow-default z-10'
-  if (index === active - 1 || index === active + 1) return 'opacity-50 scale-95 shadow-case-edge'
+  if (index === active) return 'opacity-100 scale-100 industry-carousel-card--active z-10'
+  if (index === active - 1 || index === active + 1) {
+    return 'opacity-50 scale-95 industry-carousel-card--edge'
+  }
   return 'opacity-20 scale-90 shadow-none pointer-events-none'
 }
 

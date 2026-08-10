@@ -19,26 +19,19 @@
         :class="indicatorClasses"
       >
         <!-- 选中：对勾 -->
-        <svg
+        <CheckSmall
           v-if="isChecked && !indeterminate"
           class="w-3 h-3 text-white"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-        >
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
+          :stroke-width="3"
+          aria-hidden="true"
+        />
         <!-- 半选：横线 -->
-        <svg
+        <Subtract
           v-if="indeterminate"
-          class="w-2.5 h-0.5 text-white"
-          viewBox="0 0 10 2"
-          fill="currentColor"
-        >
-          <rect width="10" height="2" rx="1" />
-        </svg>
+          class="w-2.5 h-2.5 text-white"
+          :stroke-width="3"
+          aria-hidden="true"
+        />
       </span>
     </span>
     <span v-if="label || $slots.default" :class="labelClasses">
@@ -49,6 +42,7 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
+import { CheckSmall, Subtract } from '@/client/components/ui/remixIcons'
 import { FormInjectionKey } from './Form.vue'
 
 interface FormCheckboxProps {

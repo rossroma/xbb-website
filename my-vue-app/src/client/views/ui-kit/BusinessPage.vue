@@ -35,13 +35,39 @@
       <p class="text-small text-text-secondary mb-6">
         mode="single" 模式，子页面 Hero 区域，左文案右插图，支持双操作按钮，无轮播。
       </p>
+      <div class="mb-4 flex flex-col items-start gap-2">
+        <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
+          Single Layout
+        </span>
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="layout in heroBannerSingleLayoutOptions"
+            :key="layout"
+            type="button"
+            :class="[
+              'px-4 py-1.5 rounded-pill text-[13px] font-medium transition-all duration-fast',
+              heroBannerSingleLayout === layout
+                ? 'bg-brand-primary text-white'
+                : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
+            ]"
+            @click="setHeroBannerSingleLayout(layout)"
+          >
+            {{ layout }}
+          </button>
+        </div>
+      </div>
       <div class="border border-border-subtle rounded-card overflow-hidden">
-        <HeroBanner mode="single" :slides="[heroBannerDemoSlide]" />
+        <HeroBanner
+          mode="single"
+          :single-layout="heroBannerSingleLayout"
+          :slides="[heroBannerDemoSlide]"
+        />
       </div>
       <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
         <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
         <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
           <li>Props: mode="single", slides: BannerSlide[] (取第一个)</li>
+          <li>singleLayout: horizontal | vertical</li>
           <li>Emits: action(slide, 'primary' | 'secondary')</li>
           <li>全宽通栏，grid-cols-[1fr_1fr]，移动端堆叠</li>
         </ul>
@@ -320,7 +346,53 @@
       </div>
     </Card>
 
-    <!-- ===== IconCardGrid ===== -->
+    <!-- ===== ImageCardGrid（标题高亮按钮：取当前标题末两字） ===== -->
+    <PlaygroundShell
+      section-id="image-card-grid"
+      title="ImageCardGrid 图片卡片网格"
+      description="图片卡片网格组件，支持原 image-card 图文卡片和大卡片 feature-panel 两种视觉风格。"
+      code-tag="ImageCardGrid"
+      code-self-closing
+      :code-extra-props="imageCardGridCodeExtra"
+      :controls="imageCardGridControls"
+      :initial-props="imageCardGridDefaults"
+      :usage-notes="[
+        'Props: title, cards（必需）；titleHighlight?, subtitle?, columns?, variant?, colorScheme?',
+        '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
+        'variant: image-card（标题 + 描述 + 图片）| feature-panel（序号 + 模块 + 标题 + 描述 + 底部图片大卡片）',
+        'colorScheme: brand | accent | mint | neutral | clean',
+        'columns: 2 | 3 | 4，移动端自动 1 列',
+        'ImageCardGridItem 字段：title（必需）；description?, image?, imageAlt?, number?, module?',
+      ]"
+      v-slot="icgProps"
+    >
+      <!-- 标题高亮演示：将当前 title 的最后两个字传给 title-highlight -->
+      <div class="mb-4 flex justify-start">
+        <button
+          type="button"
+          :class="[
+            'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
+            imageCardGridTitleHighlightEnabled
+              ? 'bg-brand-primary text-white'
+              : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
+          ]"
+          @click="toggleImageCardGridTitleHighlight"
+        >
+          {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
+        </button>
+      </div>
+      <ImageCardGrid
+        v-bind="icgProps as any"
+        :title-highlight="
+          imageCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(icgProps.title) : undefined
+        "
+        :cards="
+          icgProps.variant === 'feature-panel' ? imagePanelDemoCards : imageCardDemoFeatures
+        "
+      />
+    </PlaygroundShell>
+
+    <!-- ===== IconCardGrid（标题高亮按钮：取当前标题末两字） ===== -->
     <PlaygroundShell
       section-id="icon-card-grid"
       title="IconCardGrid 能力卡片网格"
@@ -331,15 +403,34 @@
       :controls="featureCardGridControls"
       :initial-props="featureCardGridDefaults"
       :usage-notes="[
-        'Props: title, features（必需）；subtitle?, topImages?, columns?, variant?, colorScheme?',
+        'Props: title, features（必需）；titleHighlight?, subtitle?, topImages?, columns?, variant?, colorScheme?',
+        '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
         'variant: plain（默认）| icon-badge（图标徽章行内）| icon-badge-protruding（凸出）| accent-strip（顶部强调线）| icon-tile（图标方块 + 标题下置）',
         'colorScheme: brand（品牌橙）| accent（蓝紫）| neutral（中性灰）| clean（icon-tile 无底色/无阴影/小图标）',
         'columns: 2 | 3 | 4 | 5 | 7（默认 4），移动端自动 1 列',
       ]"
       v-slot="fgProps"
     >
+      <!-- 标题高亮演示：将当前 title 的最后两个字传给 title-highlight -->
+      <div class="mb-4 flex justify-start">
+        <button
+          type="button"
+          :class="[
+            'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
+            iconCardGridTitleHighlightEnabled
+              ? 'bg-brand-primary text-white'
+              : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
+          ]"
+          @click="toggleIconCardGridTitleHighlight"
+        >
+          {{ iconCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
+        </button>
+      </div>
       <IconCardGrid
         v-bind="fgProps as any"
+        :title-highlight="
+          iconCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(fgProps.title) : undefined
+        "
         :features="
           fgProps.variant === 'icon-badge-protruding' ? ecoConnectCards : featureCardDemoFeatures
         "
@@ -391,7 +482,7 @@
       :usage-notes="[
         'Props: heading, description?, image, imageAlt?, reverse?, items?, iconTheme?',
         'iconTheme: brand（品牌橙，默认）| accent（蓝紫）| gradient（渐变圆底+白色图标）| neutral（中性灰）',
-        'items: SplitSectionItem[]，每项含 icon?（IconPark 组件，不传默认 CheckSmall）+ text',
+        'items: SplitSectionItem[]，每项含 icon?（图标组件，不传默认 CheckSmall）+ text',
         'items 和 description 互斥：提供 items 时优先渲染列表，否则回退到 description',
         '建议图片比例 16:10 或 4:3，推荐宽度 600–800px',
         '文字区域高度以图片区域为准，超出部分将被截断',
@@ -541,7 +632,7 @@
         'Props: title, steps（必需）；description?, variant?',
         'Step 字段：title（必需）；description?, icon?, image?, imageAlt?（可选）',
         'variant: simple（默认，简约模式：Badge 图标 + 标题）| rich（丰富模式：序号 + 标题 + 大图标/图片 + 描述）',
-        'icon 和 image 互斥：icon 为 IconPark 组件，image 为图片 URL',
+        'icon 和 image 互斥：icon 为图标组件，image 为图片 URL',
         'Badge 颜色按索引循环使用 bg-fs-icon-* 渐变类（蓝/绿/橙/紫/青）',
         '丰富模式序号圆标使用 bg-brand-primary-gradient 品牌色渐变',
         '步骤间用连接线串联，桌面端横向排列，移动端纵向堆叠',
@@ -552,7 +643,7 @@
       <FlowSteps v-bind="fsProps as any" :steps="flowDemoSteps" />
     </PlaygroundShell>
 
-    <!-- ===== TabShowcase ===== -->
+    <!-- ===== TabShowcase（标题高亮按钮：取当前标题末两字） ===== -->
     <PlaygroundShell
       section-id="tab-showcase"
       title="TabShowcase Tab 展示"
@@ -563,18 +654,37 @@
       :controls="tabShowcaseControls"
       :initial-props="tabShowcaseDefaults"
       :usage-notes="[
-        'Props: title, tabs: TabShowcaseItem[], layout?, theme?, TabShowcaseItem.badgeIcon?',
+        'Props: title, tabs: TabShowcaseItem[], titleHighlight?, layout?, theme?, TabShowcaseItem.badgeIcon?',
+        '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
         '鼠标悬停（mouseenter）即触发切换，点击和键盘也支持',
         '描述区 grid 动画展开/收起，固定 min-height 保证高度一致',
         '图片区域 min-h-[420px] 撑开组件，避免 Tab 切换时高度跳动',
         '右侧图片切换带 opacity + translateY 过渡动画',
-        'layout 控制 Tab 和图片的左右位置，theme 控制渐变背景色',
-        'TabShowcaseItem.badgeIcon 选填（IconPark 组件），不填则不显示',
+        'layout 控制 Tab 和图片的左右位置，theme 仅控制左侧选中 Tab 的色系',
+        'TabShowcaseItem.badgeIcon 选填（图标组件），不填则不显示',
       ]"
       v-slot="tsProps"
     >
+      <!-- 标题高亮演示：将当前 title 的最后两个字传给 title-highlight -->
+      <div class="mb-4 flex justify-start">
+        <button
+          type="button"
+          :class="[
+            'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
+            tabShowcaseTitleHighlightEnabled
+              ? 'bg-brand-primary text-white'
+              : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
+          ]"
+          @click="toggleTabShowcaseTitleHighlight"
+        >
+          {{ tabShowcaseTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
+        </button>
+      </div>
       <TabShowcase
         v-bind="tsProps as any"
+        :title-highlight="
+          tabShowcaseTitleHighlightEnabled ? getLastTwoTitleHighlight(tsProps.title) : undefined
+        "
         :tabs="tsProps.showBadgeIcon === 'hide' ? tabFeatureDemoTabsNoBadge : tabFeatureDemoTabs"
       />
     </PlaygroundShell>
@@ -710,7 +820,7 @@
     <PlaygroundShell
       section-id="process-steps"
       title="ProcessSteps 流程步骤卡片"
-      description="多步骤流程展示，每个步骤由上卡片（序号+标题+描述+特性列表）和下卡片（总结标题）组成，步骤间由 SVG 箭头连接。每个步骤支持独立主题色，箭头方向支持翻转。"
+      description="多步骤流程展示，每个步骤由上卡片（序号+标题+描述+特性列表）和下卡片（总结标题）组成，步骤间由 Remix 图标箭头连接。每个步骤支持独立主题色，箭头方向支持翻转。"
       code-tag="ProcessSteps"
       code-self-closing
       :code-extra-props="processStepsCodeExtra"
@@ -775,7 +885,7 @@
         'Props: title, cards（必需）；subtitle?, columns?',
         'ReviewCard 字段：logo, industry, content, username, rating（必需）；logoAlt?（可选）',
         'columns: 1（单列）| 2（双列，默认），移动端自动切换为 1 列',
-        'rating: 1-5 的星级评分，使用 IconPark Star 图标',
+        'rating: 1-5 的星级评分，使用 Remix Star 图标',
         '评价内容默认截断 3 行，超过 120 字符时显示「展开全部」按钮',
         '双列布局使用 CSS Grid 自然流式布局，展开卡片不影响同行其他卡片对齐',
         '卡片 hover 上浮 1px + 阴影增强，支持 motion-reduce 禁用动效',
@@ -859,6 +969,9 @@
 </template>
 <script setup lang="ts">
 import {
+  AllApplication,
+  Calendar,
+  ChartHistogram,
   Check,
   Shield,
   SettingConfig,
@@ -866,15 +979,20 @@ import {
   Star,
   LinkCloud,
   Wechat,
+  Dingding,
+  Download,
+  Robot,
+  Search,
   SendOne,
   ApiApp,
   User,
+  UserBusiness,
   FolderPlus,
   ClickTap,
   CheckOne,
   Thunderbolt,
   Peoples,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import { computed, ref } from 'vue'
 import Card from '@/client/components/ui/Card.vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
@@ -897,6 +1015,7 @@ import FlowSteps from '@/client/components/business/FlowSteps.vue'
 import FeatureList from '@/client/components/business/FeatureList.vue'
 import AiCrmFeatureGrid from '@/client/components/business/AiCrmFeatureGrid.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
+import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
 import FaqList from '@/client/components/business/FaqList.vue'
@@ -1014,6 +1133,57 @@ const featureCardDemoFeatures = [
   },
 ] as const
 
+const imageCardDemoFeatures = [
+  {
+    title: '视频',
+    description: '无需跳转，即可直接播放来自西瓜视频、抖音、优酷视频、哔哩哔哩等视频',
+    image: '/images/liuzi/ability-1.png',
+    imageAlt: '视频能力展示',
+  },
+  {
+    title: '画板',
+    description: '嵌在文档的图形创作工具，让你轻松画出好看的流程图、规划图和示意图',
+    image: '/images/liuzi/ability-2.png',
+    imageAlt: '画板能力展示',
+  },
+  {
+    title: '思维导图',
+    description: '无需其他思维导图应用，在文档里就能用可视化的方式梳理、呈现思路',
+    image: '/images/liuzi/ability-3.png',
+    imageAlt: '思维导图能力展示',
+  },
+] as const
+
+const imagePanelDemoCards = [
+  {
+    number: '01',
+    module: '客户协作',
+    title: '客户资料同步，团队信息同频',
+    description:
+      '客户、联系人、跟进记录和业务动态集中沉淀，团队成员无需反复询问即可获取完整上下文。',
+    image: '/images/customer/tab-unified-new.png',
+    imageAlt: '客户资料同步展示',
+  },
+  {
+    number: '02',
+    module: '过程管理',
+    title: '销售动作可视，推进节奏更稳',
+    description:
+      '围绕客户跟进、任务提醒和阶段推进建立标准动作，让管理者及时发现卡点并推动协作。',
+    image: '/images/customer/tab-tracking-new.png',
+    imageAlt: '销售动作可视展示',
+  },
+  {
+    number: '03',
+    module: '智能运营',
+    title: '数据洞察沉淀，决策更有依据',
+    description:
+      '将客户行为、销售过程和转化结果汇聚到统一视图，帮助团队持续优化运营策略。',
+    image: '/images/customer/tab-collaboration-new.png',
+    imageAlt: '数据洞察展示',
+  },
+] as const
+
 const heroBannerDemoSlide = {
   key: 'demo-hero',
   mediaType: 'image' as const,
@@ -1023,14 +1193,21 @@ const heroBannerDemoSlide = {
   desc: '',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
-  bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
+  bg: "url('/images/customer/customer.png') center / cover no-repeat",
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
   orb: 'rgba(127, 214, 255, 0.22)',
   showVisual: true,
-  visualImage: '/images/customer/hero.svg',
+  visualImage: '/images/customer/product-intro.png',
   visualImageAlt: '客户管理产品展示',
+}
+
+const heroBannerSingleLayout = ref<'horizontal' | 'vertical'>('vertical')
+const heroBannerSingleLayoutOptions = ['horizontal', 'vertical'] as const
+
+function setHeroBannerSingleLayout(layout: (typeof heroBannerSingleLayoutOptions)[number]): void {
+  heroBannerSingleLayout.value = layout
 }
 
 const showcaseCarouselLayout = ref<'text-left' | 'text-right'>('text-left')
@@ -1046,6 +1223,27 @@ const showcaseCarouselSlides = computed(() =>
 
 function setShowcaseCarouselLayout(layout: (typeof showcaseCarouselLayoutOptions)[number]): void {
   showcaseCarouselLayout.value = layout
+}
+
+const tabShowcaseTitleHighlightEnabled = ref(false)
+const imageCardGridTitleHighlightEnabled = ref(false)
+const iconCardGridTitleHighlightEnabled = ref(false)
+
+function getLastTwoTitleHighlight(title: unknown): string | undefined {
+  const text = String(title ?? '').trim()
+  return text ? text.slice(-2) : undefined
+}
+
+function toggleTabShowcaseTitleHighlight(): void {
+  tabShowcaseTitleHighlightEnabled.value = !tabShowcaseTitleHighlightEnabled.value
+}
+
+function toggleImageCardGridTitleHighlight(): void {
+  imageCardGridTitleHighlightEnabled.value = !imageCardGridTitleHighlightEnabled.value
+}
+
+function toggleIconCardGridTitleHighlight(): void {
+  iconCardGridTitleHighlightEnabled.value = !iconCardGridTitleHighlightEnabled.value
 }
 
 const managementShowcaseLeftSlides = [
@@ -1134,7 +1332,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'sesame-customer',
     title: '芝麻找客助手',
-    titleIcon: '/images/liuzi/2-1.png',
+    titleIcon: Search,
     image: '/images/liuzi/findCustomer.png',
     imageAlt: '芝麻找客助手',
     description:
@@ -1164,7 +1362,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'sesame-bidding',
     title: '芝麻标讯助手',
-    titleIcon: '/images/liuzi/2-1.png',
+    titleIcon: Search,
     image: '/images/liuzi/biddingInfo.png',
     imageAlt: '芝麻标讯助手',
     description: '任何重要投标机会。',
@@ -1189,7 +1387,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'schedule',
     title: '日程助手',
-    titleIcon: '/images/liuzi/2-3.png',
+    titleIcon: Calendar,
     image: '/images/liuzi/schedule.png',
     imageAlt: '日程助手',
     items: [
@@ -1210,7 +1408,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'train-partner',
     title: '陪练助手',
-    titleIcon: '/images/liuzi/2-4.png',
+    titleIcon: UserBusiness,
     image: '/images/liuzi/trainPartner.png',
     imageAlt: '陪练助手',
     items: [
@@ -1231,7 +1429,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'analysis',
     title: '分析师',
-    titleIcon: '/images/liuzi/2-5.png',
+    titleIcon: ChartHistogram,
     image: '/images/liuzi/analysis.png',
     imageAlt: '分析师',
     items: [
@@ -1252,7 +1450,7 @@ const managementShowcaseRightSlides = [
   {
     key: 'follow-up',
     title: '跟进助手',
-    titleIcon: '/images/liuzi/2-6.png',
+    titleIcon: SendOne,
     image: '/images/liuzi/followUp.png',
     imageAlt: '跟进助手',
     items: [
@@ -1304,7 +1502,46 @@ const promoCarouselDemoSlides = [
   },
 ]
 
-// ===== IconCardGrid 交互式控件 =====
+// ===== ImageCardGrid 交互式控件（含标题高亮按钮开关） =====
+const imageCardGridControls = [
+  {
+    label: 'Variant',
+    prop: 'variant',
+    options: [
+      { label: 'image-card', value: 'image-card' },
+      { label: 'feature-panel', value: 'feature-panel' },
+    ],
+  },
+  {
+    label: 'Color Scheme',
+    prop: 'color-scheme',
+    options: [
+      { label: 'brand', value: 'brand' },
+      { label: 'accent', value: 'accent' },
+      { label: 'mint', value: 'mint' },
+      { label: 'neutral', value: 'neutral' },
+      { label: 'clean', value: 'clean' },
+    ],
+  },
+  {
+    label: 'Columns',
+    prop: 'columns',
+    options: [
+      { label: '2', value: 2 },
+      { label: '3', value: 3 },
+      { label: '4', value: 4 },
+    ],
+  },
+]
+
+const imageCardGridDefaults = {
+  variant: 'feature-panel',
+  'color-scheme': 'mint',
+  columns: 3,
+  title: '解锁你的工作新方式',
+}
+
+// ===== IconCardGrid 交互式控件（含标题高亮按钮开关） =====
 const featureCardGridControls = [
   {
     label: 'Variant',
@@ -1342,9 +1579,9 @@ const featureCardGridControls = [
 
 const featureCardGridDefaults = {
   variant: 'icon-badge',
-  'color-scheme': 'brand',
-  columns: 2,
-  title: '数据干净，销售决策才可靠',
+  'color-scheme': 'accent',
+  columns: 3,
+  title: '内容创作能力，协同效率更高',
 }
 
 // ===== CTASection 交互式控件 =====
@@ -1526,7 +1763,7 @@ const articleSidebarCodeExtra = {
   variant: '"toc"',
 }
 
-// ===== TabShowcase 交互式控件 =====
+// ===== TabShowcase 交互式控件（含标题高亮按钮开关） =====
 const tabShowcaseControls = [
   {
     label: 'Layout',
@@ -1570,7 +1807,20 @@ const tabShowcaseDefaults = {
 }
 
 // ===== Code Extra Props =====
-const featureCardGridCodeExtra = { ':features': 'features', title: '"数据干净，销售决策才可靠"' }
+const imageCardGridCodeExtra = {
+  ':cards': 'cards',
+  title: '"解锁你的工作新方式"',
+  variant: '"feature-panel"',
+  'color-scheme': '"mint"',
+  columns: '3',
+}
+const featureCardGridCodeExtra = {
+  ':features': 'features',
+  title: '"内容创作能力，协同效率更高"',
+  variant: '"icon-badge"',
+  'color-scheme': '"accent"',
+  columns: '3',
+}
 const finalCtaCodeExtra = {
   title: '"让增长，从这里开始"',
   subtitle: '"免费试用7天，体验AI驱动的新一代CRM平台"',
@@ -2201,9 +2451,9 @@ const demoProductCards = [
 const aiCrmDemoCards = [
   {
     image: '/images/liuzi/1.png',
-    icon: '/images/liuzi/aiFindCust.png',
+    icon: Search,
     iconAlt: 'AI找客助手图标',
-    sideImage: '/images/liuzi/aiFindCustIcon.png',
+    sideIcon: Search,
     sideImageAlt: '',
     title: 'AI找客助手',
     description: '快速锁定优质成交客户',
@@ -2217,9 +2467,9 @@ const aiCrmDemoCards = [
   },
   {
     image: '/images/liuzi/2.png',
-    icon: '/images/liuzi/aiSales.png',
+    icon: Robot,
     iconAlt: 'AI销售陪练图标',
-    sideImage: '/images/liuzi/aiSalesIcon.png',
+    sideIcon: Robot,
     sideImageAlt: '',
     title: 'AI销售陪练',
     description: '全员具备销冠实力',
@@ -2233,9 +2483,9 @@ const aiCrmDemoCards = [
   },
   {
     image: '/images/liuzi/3.png',
-    icon: '/images/liuzi/aiBusiness.png',
+    icon: ChartHistogram,
     iconAlt: 'AI业务分析图标',
-    sideImage: '/images/liuzi/aiBusinessIcon.png',
+    sideIcon: ChartHistogram,
     sideImageAlt: '',
     title: 'AI业务分析',
     description: '数据诊问题，AI 挖机会',
@@ -2516,27 +2766,27 @@ const demoFeatureSingleCards = [
 const platformDownloadCards = [
   {
     name: '钉钉',
-    icon: '/images/customer/tab-unified.svg',
+    iconComponent: Dingding,
     qrCode: '/images/customer/tab-unified.svg',
   },
   {
     name: '飞书',
-    icon: '/images/customer/tab-tracking.svg',
+    iconComponent: AllApplication,
     qrCode: '/images/customer/tab-tracking.svg',
   },
   {
     name: '企业微信',
-    icon: '/images/customer/tab-retention.svg',
+    iconComponent: Wechat,
     qrCode: '/images/customer/tab-retention.svg',
   },
   {
     name: '独立版',
-    icon: '/images/customer/tab-collaboration.svg',
+    iconComponent: Download,
     qrCode: '/images/customer/tab-collaboration.svg',
   },
   {
     name: 'AI助手',
-    icon: '/images/customer/hero.svg',
+    iconComponent: Robot,
     qrCode: '/images/customer/hero.svg',
   },
 ]

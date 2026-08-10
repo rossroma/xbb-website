@@ -26,7 +26,7 @@ const colsMap: Record<number, string> = {
   7: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7',
 }
 
-const gapMap: Record<string, string> = { default: 'gap-[2.5%]', loose: 'gap-10', tight: 'gap-5' }
+const gapMap: Record<string, string> = { default: 'gap-[2.5%]', loose: 'gap-16', tight: 'gap-5' }
 
 const gridClasses = computed(() => ['grid', colsMap[props.cols], gapMap[props.gap]])
 </script>

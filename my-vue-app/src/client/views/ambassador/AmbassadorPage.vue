@@ -68,7 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import { PhoneTelephone } from '@icon-park/vue-next'
+import { PhoneTelephone } from '@/client/components/ui/remixIcons'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'

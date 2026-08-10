@@ -34,19 +34,7 @@
         <div
           class="flex items-center justify-center size-[60px] rounded-full bg-white/70 backdrop-blur-sm shadow-subtle transition-transform duration-fast ease group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
         >
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 32 32"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="ml-0.5"
-          >
-            <path
-              d="M11.333 6.275c-1.16-.67-2.61.165-2.61 1.503v16.444c0 1.338 1.45 2.173 2.61 1.503l14.222-8.222c1.16-.67 1.16-2.337 0-3.007L11.333 6.275Z"
-              fill="#ff6400"
-            />
-          </svg>
+          <Play :size="26" color="#ff6400" class="ml-0.5" aria-hidden="true" />
         </div>
       </div>
     </div>
@@ -73,6 +61,8 @@
 </template>
 
 <script setup lang="ts">
+import { Play } from '@/client/components/ui/remixIcons'
+
 withDefaults(
   defineProps<{
     /** 封面图 URL */

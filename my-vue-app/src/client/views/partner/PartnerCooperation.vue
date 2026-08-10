@@ -238,7 +238,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import { PhoneTelephone, Search } from '@icon-park/vue-next'
+import { PhoneTelephone, Search } from '@/client/components/ui/remixIcons'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import FeatureList from '@/client/components/business/FeatureList.vue'

@@ -235,7 +235,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { Right } from '@icon-park/vue-next'
+import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 

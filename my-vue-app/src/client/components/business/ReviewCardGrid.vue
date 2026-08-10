@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Star, Down, Up } from '@icon-park/vue-next'
+import { Star, Down, Up } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 

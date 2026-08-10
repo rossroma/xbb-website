@@ -15,15 +15,7 @@
           :aria-label="ariaPrevLabel"
           @click="slide(-1)"
         >
-          <svg
-            class="w-[22px] h-[22px]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
+          <Left :size="22" aria-hidden="true" />
         </button>
       </slot>
       <slot name="arrow-right" :slide="() => slide(1)">
@@ -32,15 +24,7 @@
           :aria-label="ariaNextLabel"
           @click="slide(1)"
         >
-          <svg
-            class="w-[22px] h-[22px]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
+          <Right :size="22" aria-hidden="true" />
         </button>
       </slot>
     </template>
@@ -71,6 +55,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { Left, Right } from '@/client/components/ui/remixIcons'
 
 const props = withDefaults(
   defineProps<{

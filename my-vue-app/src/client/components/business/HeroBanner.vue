@@ -2,8 +2,11 @@
   <!-- 单页模式：无轮播，简化布局，适合子页面 Hero -->
   <section
     v-if="mode === 'single' && singleSlide"
-    class="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] min-h-125 max-lg:min-h-115 max-md:min-h-100 flex items-center border-t border-b overflow-x-hidden"
-    :class="{ 'hero-banner-single--form-background': singleVariant === 'form-background' }"
+    class="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] min-h-125 max-lg:min-h-115 max-md:min-h-100 flex items-center border-t overflow-x-hidden"
+    :class="{
+      'hero-banner-single--form-background': singleVariant === 'form-background',
+      'hero-banner-single--vertical': singleLayout === 'vertical',
+    }"
     :style="{
       background: singleSlide.bg,
       borderTopColor: singleSlide.line ?? 'rgba(116, 129, 255, 0.16)',
@@ -11,37 +14,61 @@
     }"
   >
     <div
-      class="w-[min(1200px,calc(100%-48px))] mx-auto grid grid-cols-[1.15fr_0.85fr] gap-9 max-lg:gap-6 items-center py-16 max-lg:py-12 max-md:py-8 max-lg:grid-cols-1 max-lg:text-center"
-      :class="{ 'hero-banner-single__inner--form-background': singleVariant === 'form-background' }"
+      :class="[
+        'w-[min(1200px,calc(100%-48px))] mx-auto grid gap-9 max-lg:gap-6 items-center py-16 max-lg:py-12 max-md:py-8',
+        singleLayout === 'vertical'
+          ? 'grid-cols-1 text-center'
+          : 'grid-cols-[1.15fr_0.85fr] max-lg:grid-cols-1 max-lg:text-center',
+        {
+          'hero-banner-single__inner--form-background': singleVariant === 'form-background',
+          'hero-banner-single__inner--vertical': singleLayout === 'vertical',
+          'hero-banner-single__inner--visual-image':
+            singleLayout !== 'vertical' && !$slots['single-visual'] && !!singleSlide.visualImage,
+        },
+      ]"
     >
       <!-- 左侧文案 -->
-      <div class="flex flex-col justify-center">
+      <div
+        :class="[
+          'flex flex-col justify-center ',
+          singleLayout === 'vertical'
+            ? 'items-center text-center'
+            : 'max-lg:ml-0 max-lg:items-center max-lg:text-center',
+        ]"
+      >
         <h1
           v-if="singleSlide.title"
-          class="text-display font-bold text-hero-title leading-display max-lg:text-h1 max-md:text-h2"
+          class="text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-md:text-h2"
         >
           {{ singleSlide.title }}
         </h1>
         <p
           v-if="singleSlide.subtitle"
-          class="mt-4 max-md:mt-3 text-h2 font-semibold text-hero-subtitle leading-heading max-lg:text-h3 max-md:text-body"
+          class="mt-2 max-md:mt-3 text-h2 font-semibold text-hero-subtitle leading-heading whitespace-pre-line max-lg:text-h3 max-md:text-body"
         >
           {{ singleSlide.subtitle }}
         </p>
         <p
           v-if="singleSlide.desc"
-          class="mt-6 max-w-135 text-body text-hero-desc leading-body whitespace-pre-line max-lg:mx-auto max-md:mt-4"
+          :class="[
+            'mt-6 max-w-135 text-body !text-[#646566] leading-body whitespace-pre-line max-md:mt-4',
+            singleLayout === 'vertical' ? 'mx-auto' : 'max-lg:mx-auto',
+          ]"
         >
           {{ singleSlide.desc }}
         </p>
         <div
           v-if="singleSlide.primaryCta || singleSlide.secondaryCta"
-          class="flex gap-3 mt-10 max-lg:mt-8 max-md:mt-6 max-lg:justify-center max-sm:flex-col max-sm:items-center"
+          :class="[
+            'flex gap-4 mt-10 max-lg:mt-8 max-md:mt-6 max-sm:flex-col max-sm:items-center',
+            singleLayout === 'vertical' ? 'justify-center' : 'max-lg:justify-center',
+          ]"
         >
           <Button
             v-if="singleSlide.primaryCta"
             variant="hero"
             size="lg"
+            class="!h-[49px] !w-[144px] !rounded-[99px] !px-9 !py-3 !text-[18px]"
             @click="handleSingleAction(singleSlide, 'primary')"
             >{{ singleSlide.primaryCta }}</Button
           >
@@ -49,6 +76,7 @@
             v-if="singleSlide.secondaryCta"
             variant="hero-outline"
             size="lg"
+            class="!h-[49px] !w-[144px] !rounded-[99px] !px-9 !py-3 !text-[18px]"
             @click="handleSingleAction(singleSlide, 'secondary')"
             >{{ singleSlide.secondaryCta }}</Button
           >
@@ -60,7 +88,14 @@
         v-if="$slots['single-visual'] || singleSlide.visualImage"
         :class="[
           'flex items-center justify-center',
-          $slots['single-visual'] ? '' : 'max-lg:hidden',
+          singleLayout === 'vertical'
+            ? 'w-full'
+            : $slots['single-visual']
+              ? ''
+              : 'max-lg:w-full max-lg:mt-2',
+          singleLayout !== 'vertical' && !$slots['single-visual'] && singleSlide.visualImage
+            ? 'hero-banner-single__visual--image'
+            : '',
         ]"
       >
         <slot name="single-visual" :slide="singleSlide">
@@ -68,7 +103,12 @@
             v-if="singleSlide.visualImage"
             :src="singleSlide.visualImage"
             :alt="singleSlide.visualImageAlt ?? singleSlide.title"
-            class="max-w-full h-auto max-h-105 max-lg:max-h-85 rounded-large shadow-hero-video object-contain"
+            :class="[
+              'hero-banner-single__visual-image max-w-full h-auto rounded-large object-contain',
+              singleLayout === 'vertical'
+                ? 'w-[min(100%,980px)] max-h-none'
+                : 'max-h-105 max-lg:max-h-85',
+            ]"
           />
         </slot>
       </div>
@@ -156,14 +196,20 @@
                         <div class="hangye_bottom management-showcase__actions">
                           <a
                             v-if="slide.primaryCta"
-                            :href="slide.primaryHref ?? 'javascript:void(0)'"
+                            :href="
+                              getActionHref(slide.primaryCta, slide.primaryHref) ??
+                              'javascript:void(0)'
+                            "
                             class="btn"
                           >
                             {{ slide.primaryCta }}
                           </a>
                           <a
                             v-if="slide.secondaryCta"
-                            :href="slide.secondaryHref ?? 'javascript:void(0)'"
+                            :href="
+                              getActionHref(slide.secondaryCta, slide.secondaryHref) ??
+                              'javascript:void(0)'
+                            "
                             class="btn btn-show"
                           >
                             {{ slide.secondaryCta }}
@@ -193,10 +239,18 @@
                     <div class="row__content--text">
                       <p class="row__title management-showcase__item-title">
                         <img
-                          v-if="slide.titleIcon"
+                          v-if="isImageSource(slide.titleIcon)"
                           :src="slide.titleIcon"
                           :alt="slide.titleIconAlt ?? ''"
+                          class="management-showcase__item-title-icon"
                           loading="lazy"
+                        />
+                        <component
+                          :is="slide.titleIcon"
+                          v-else-if="slide.titleIcon"
+                          :size="36"
+                          class="management-showcase__item-title-icon text-brand-primary"
+                          aria-hidden="true"
                         />
                         <span class="management-showcase__item-title-text">{{ slide.title }}</span>
                       </p>
@@ -234,14 +288,20 @@
                       <div class="hangye_bottom management-showcase__actions">
                         <a
                           v-if="slide.primaryCta"
-                          :href="slide.primaryHref ?? 'javascript:void(0)'"
+                          :href="
+                            getActionHref(slide.primaryCta, slide.primaryHref) ??
+                            'javascript:void(0)'
+                          "
                           class="btn btn-show"
                         >
                           {{ slide.primaryCta }}
                         </a>
                         <a
                           v-if="slide.secondaryCta"
-                          :href="slide.secondaryHref ?? 'javascript:void(0)'"
+                          :href="
+                            getActionHref(slide.secondaryCta, slide.secondaryHref) ??
+                            'javascript:void(0)'
+                          "
                           class="btn"
                         >
                           {{ slide.secondaryCta }}
@@ -283,10 +343,10 @@
   <!-- 轮播模式：多 Slide 轮播，适合首页 -->
   <section v-else class="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)]">
     <Carousel
+      class="hero-banner-carousel"
       :total-slides="slides.length"
       :auto-play="true"
       :interval="5000"
-      show-arrows
       show-dots
       aria-label="Banner 轮播"
     >
@@ -308,7 +368,7 @@
             >
               <div
                 :class="[
-                  'relative min-h-140 max-lg:min-h-130 max-md:min-h-115 grid gap-9 max-lg:gap-6 items-center px-0 z-10 w-[min(80%,calc(100%-48px))] mx-auto',
+                  'relative min-h-140 max-lg:min-h-130 max-md:min-h-115 grid gap-9 max-lg:gap-6 items-center px-0 z-10 w-[min(1200px,calc(100%-48px))] mx-auto',
                   slide.showVisual === false
                     ? 'grid-cols-[1fr]'
                     : 'grid-cols-[0.35fr_0.65fr] max-lg:grid-cols-1',
@@ -317,14 +377,10 @@
                 <!-- Copy -->
                 <div
                   :class="[
-                    'flex flex-col justify-start self-stretch relative z-10 pt-23 max-lg:pt-12 max-md:pt-8 max-lg:items-center max-lg:text-center',
+                    'flex  flex-col justify-center self-stretch relative z-10  max-lg:pt-12 max-md:pt-8 max-lg:items-center max-lg:text-center',
                     slide.showVisual === false ? 'max-w-180' : '',
                   ]"
                 >
-                  <span
-                    class="self-start px-[18px] max-md:px-3.5 py-2.5 max-md:py-2 text-h2 text-hero-eyebrow bg-surface-primary/76 border border-hero-eyebrow-border rounded-badge shadow-hero-eyebrow backdrop-blur-[16px] tracking-wider max-lg:self-center max-lg:text-h3 max-md:text-body"
-                    >{{ slide.eyebrow }}</span
-                  >
                   <h2
                     class="mt-9 max-md:mt-6 text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-lg:mt-6 max-md:text-h2"
                   >
@@ -332,25 +388,30 @@
                   </h2>
                   <h3
                     v-if="slide.subtitle"
-                    class="mt-2.5 text-h2 font-semibold text-hero-subtitle leading-heading max-lg:text-h3 max-md:text-body"
+                    class="mt-2.5 text-h2 font-semibold text-hero-subtitle leading-heading whitespace-pre-line max-lg:text-h3 max-md:text-body"
                   >
                     {{ slide.subtitle }}
                   </h3>
                   <p
-                    class="mt-12 max-w-110 text-body text-hero-desc leading-body whitespace-pre-line max-lg:mt-8 max-md:mt-6 max-lg:max-w-full"
+                    class="mt-4 max-w-110 text-body text-hero-desc leading-body whitespace-pre-line max-lg:mt-8 max-md:mt-6 max-lg:max-w-full"
                   >
                     {{ slide.desc }}
                   </p>
                   <div
-                    class="flex gap-3 mt-8 max-lg:mt-6 max-lg:justify-center max-sm:flex-col max-sm:items-center"
+                    class="flex gap-3 mt-10 max-lg:mt-6 max-lg:justify-center max-sm:flex-col max-sm:items-center"
                   >
-                    <Button variant="hero" size="lg" @click="$emit('action', slide, 'primary')">{{
-                      slide.primaryCta
-                    }}</Button>
+                    <Button
+                      variant="hero"
+                      size="lg"
+                      class="!text-[18px]"
+                      @click="$emit('action', slide, 'primary')"
+                      >{{ slide.primaryCta }}</Button
+                    >
                     <Button
                       v-if="slide.secondaryCta"
                       variant="hero-outline"
                       size="lg"
+                      class="!text-[18px]"
                       @click="$emit('action', slide, 'secondary')"
                       >{{ slide.secondaryCta }}</Button
                     >
@@ -381,39 +442,19 @@
         </div>
       </template>
 
-      <template #arrow-left="{ slide: doSlide }">
+      <template #dots="{ currentIndex, goTo, total }">
         <button
-          class="absolute left-15 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-[50px] h-[50px] rounded-pill border border-hero-arrow-border bg-surface-primary/88 text-hero-arrow text-h2 leading-none shadow-hero-arrow backdrop-blur-[14px] pointer-events-auto cursor-pointer transition-all duration-normal hover:text-hero-arrow-hover hover:border-hero-arrow-border-hover hover:bg-surface-primary/96 hover:shadow-hero-arrow-hover motion-reduce:transition-none max-lg:left-8 max-md:left-4 max-sm:left-2 max-sm:w-10 max-sm:h-10"
-          aria-label="上一张"
-          @click="doSlide()"
+          v-for="i in total"
+          :key="i"
+          type="button"
+          :class="[
+            'hero-banner-progress-dot',
+            currentIndex === i - 1 ? 'hero-banner-progress-dot--active' : '',
+          ]"
+          :aria-label="`第 ${i} 张`"
+          @click="goTo(i - 1)"
         >
-          <svg
-            class="w-[22px] h-[22px] max-sm:w-[18px] max-sm:h-[18px]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-      </template>
-
-      <template #arrow-right="{ slide: doSlide }">
-        <button
-          class="absolute right-15 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-[50px] h-[50px] rounded-pill border border-hero-arrow-border bg-surface-primary/88 text-hero-arrow text-h2 leading-none shadow-hero-arrow backdrop-blur-[14px] pointer-events-auto cursor-pointer transition-all duration-normal hover:text-hero-arrow-hover hover:border-hero-arrow-border-hover hover:bg-surface-primary/96 hover:shadow-hero-arrow-hover motion-reduce:transition-none max-lg:right-8 max-md:right-4 max-sm:right-2 max-sm:w-10 max-sm:h-10"
-          aria-label="下一张"
-          @click="doSlide()"
-        >
-          <svg
-            class="w-[22px] h-[22px] max-sm:w-[18px] max-sm:h-[18px]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M9 18l6-6-6-6" />
-          </svg>
+          <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
         </button>
       </template>
     </Carousel>
@@ -421,11 +462,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import { useRouter } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
 import type { BannerSlide } from '@/client/data/homeData'
+import { toPagePath } from '@/client/data/routePaths'
 
 export interface HeroShowcaseItem {
   title?: string
@@ -437,7 +479,7 @@ export interface HeroShowcaseSlide {
   key: string
   title: string
   description?: string
-  titleIcon?: string
+  titleIcon?: string | Component
   titleIconAlt?: string
   image: string
   imageAlt?: string
@@ -456,6 +498,7 @@ const props = withDefaults(
     brandVideo?: string
     /** 单页 Hero 变体：form-background 用于整张背景图右侧表单场景 */
     singleVariant?: 'default' | 'form-background'
+    singleLayout?: 'horizontal' | 'vertical'
     /** 展示轮播标题 */
     showcaseTitle?: string
     /** 展示轮播布局：text-left 对应第四模块，text-right 对应第五模块 */
@@ -467,6 +510,7 @@ const props = withDefaults(
     mode: 'carousel',
     slides: () => [],
     singleVariant: 'default',
+    singleLayout: 'horizontal',
     showcaseTitle: '',
     showcaseLayout: 'text-left',
     showcaseSlides: () => [],
@@ -479,15 +523,31 @@ const emit = defineEmits<{
 
 /** 单页模式下的 Slide 数据 */
 const router = useRouter()
+const trialPagePath = toPagePath('single_mfsy')
+const trialCtaTexts = new Set(['免费试用', '立即免费试用', '立即咨询', 'CRM免费试用', '免费使用'])
 
 const singleSlide = computed(() => props.slides[0] ?? null)
+
+function isImageSource(value: HeroShowcaseSlide['titleIcon']): value is string {
+  return typeof value === 'string'
+}
 
 function isInternalLink(href?: string): href is string {
   return !!href && href.startsWith('/') && !href.startsWith('//')
 }
 
+function getDefaultHrefByText(text?: string) {
+  return text && trialCtaTexts.has(text.trim()) ? trialPagePath : undefined
+}
+
+function getActionHref(text?: string, href?: string) {
+  return getDefaultHrefByText(text) ?? href
+}
+
 function handleSingleAction(slide: BannerSlide, action: 'primary' | 'secondary') {
-  const href = action === 'primary' ? slide.primaryHref : slide.secondaryHref
+  const text = action === 'primary' ? slide.primaryCta : slide.secondaryCta
+  const configuredHref = action === 'primary' ? slide.primaryHref : slide.secondaryHref
+  const href = getActionHref(text, configuredHref)
   const target = action === 'primary' ? slide.primaryTarget : slide.secondaryTarget
 
   if (isInternalLink(href)) {
@@ -523,6 +583,65 @@ function splitShowcaseLines(text: string): string[] {
 </script>
 
 <style scoped>
+.hero-banner-single__inner--visual-image {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.hero-banner-single__visual--image {
+  min-height: 440px;
+  justify-content: flex-end;
+  overflow: visible;
+}
+
+.hero-banner-single__visual--image .hero-banner-single__visual-image {
+  width: min(136%, 700px);
+  max-width: none;
+  max-height: 500px;
+  transform: translateX(56px) scale(1.08);
+  transform-origin: center right;
+}
+
+.hero-banner-progress-dot {
+  position: relative;
+  display: block;
+  width: 44px;
+  height: 6px;
+  padding: 0;
+  overflow: hidden;
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(139, 166, 204, 0.24);
+}
+
+.hero-banner-progress-dot__fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 0;
+  border-radius: inherit;
+  background: #1687ff;
+}
+
+.hero-banner-progress-dot--active .hero-banner-progress-dot__fill {
+  animation: hero-banner-progress-fill 5000ms linear forwards;
+}
+
+.hero-banner-carousel:hover .hero-banner-progress-dot--active .hero-banner-progress-dot__fill {
+  animation-play-state: paused;
+}
+
+@keyframes hero-banner-progress-fill {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
 .hero-banner-single__inner--form-background {
   width: min(1600px, calc(100% - 80px));
   grid-template-columns: minmax(0, 1fr) 500px;
@@ -635,7 +754,8 @@ function splitShowcaseLines(text: string): string[] {
   gap: 15px;
 }
 
-.management-showcase__item-title img {
+.management-showcase__item-title img,
+.management-showcase__item-title-icon {
   flex: 0 0 auto;
   padding-right: 0;
 }
@@ -821,12 +941,14 @@ function splitShowcaseLines(text: string): string[] {
   padding: 40px;
 }
 
-.management-showcase--plain [data-slide-key='analysis'] .management-showcase__item-title img {
+.management-showcase--plain [data-slide-key='analysis'] .management-showcase__item-title img,
+.management-showcase--plain [data-slide-key='analysis'] .management-showcase__item-title-icon {
   width: 64px;
 }
 
 .management-showcase--plain [data-slide-key='follow-up'] .management-showcase__image,
-.management-showcase--plain [data-slide-key='follow-up'] .management-showcase__item-title img {
+.management-showcase--plain [data-slide-key='follow-up'] .management-showcase__item-title img,
+.management-showcase--plain [data-slide-key='follow-up'] .management-showcase__item-title-icon {
   max-width: 85%;
 }
 
@@ -922,6 +1044,11 @@ function splitShowcaseLines(text: string): string[] {
 }
 
 @media (max-width: 1200px) {
+  .hero-banner-single__visual--image .hero-banner-single__visual-image {
+    width: min(126%, 680px);
+    transform: translateX(24px) scale(1.04);
+  }
+
   .hero-banner-single__inner--form-background {
     width: min(1000px, calc(100% - 48px));
     grid-template-columns: minmax(0, 1fr);
@@ -948,6 +1075,31 @@ function splitShowcaseLines(text: string): string[] {
 
   .management-showcase--featured .management-showcase__panel-body .row__content--text {
     padding: 25px 25px 25px 150px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .hero-banner-single__inner--visual-image {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-banner-single__visual--image {
+    min-height: 0;
+    justify-content: center;
+  }
+
+  .hero-banner-single__visual--image .hero-banner-single__visual-image {
+    width: min(100%, 720px);
+    max-width: 100%;
+    max-height: 380px;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-banner-single__visual--image .hero-banner-single__visual-image {
+    width: min(100%, 520px);
+    max-height: 280px;
   }
 }
 

@@ -35,7 +35,7 @@ const iconSizeMap: Record<Size, string> = {
   lg: 'w-6 h-6',
 }
 
-/** 图标字号：IconPark SVG 使用 width="1em"，必须通过 font-size 控制实际渲染尺寸 */
+/** 图标字号：Remix 图标使用 width="1em"，必须通过 font-size 控制实际渲染尺寸 */
 const fontSizeMap: Record<Size, string> = {
   sm: 'text-caption',
   md: 'text-body',
@@ -51,8 +51,8 @@ const variantMap: Record<Variant, string> = {
 
 const badgeClasses = computed(() => [
   'inline-flex shrink-0 items-center justify-center rounded-full',
-  'leading-[0]', // 消除 line-height 导致的 SVG 垂直偏移
-  fontSizeMap[props.size], // IconPark SVG 使用 1em，必须通过 font-size 控制实际尺寸
+  'leading-[0]', // 消除 line-height 导致的图标垂直偏移
+  fontSizeMap[props.size], // Remix 图标使用 1em，必须通过 font-size 控制实际尺寸
   sizeMap[props.size],
   variantMap[props.variant],
 ])

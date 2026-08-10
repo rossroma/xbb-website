@@ -9,7 +9,7 @@ import {
   Info,
   Help,
   FileSettings,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 
 // ========== 图片 paths ==========
 const serviceSystemConsultant = '/images/consultant.png'
@@ -21,6 +21,7 @@ const solutionCardOrganization = '/images/2-4.png'
 const custChoiseImg = '/images/cust-choise.png'
 const heroBanner2 = '/images/banner2.png'
 const heroBanner3 = '/images/banner3.png'
+const heroBanner4 = '/images/banner4.png'
 
 // ========== 图标别名 ==========
 const BurnlifeNotimeOutlined = Fire
@@ -62,7 +63,6 @@ export interface BannerSlide {
   /** 轮播顺序（来自 Ads 数据），用于 CTA 路由映射 */
   ord?: number
   mediaType: 'video' | 'image'
-  eyebrow: string
   title: string
   subtitle?: string
   desc: string
@@ -99,7 +99,6 @@ export const bannerSlides: BannerSlide[] = [
   {
     key: 'hero-video',
     mediaType: 'video',
-    eyebrow: '销帮帮 AI CRM',
     title: '懂客户，更懂增长',
     desc: '专注于客户数字化\n让增长不再是靠感觉，而是靠系统',
     primaryCta: '了解更多',
@@ -118,9 +117,8 @@ export const bannerSlides: BannerSlide[] = [
   {
     key: 'hero-interaction',
     mediaType: 'image',
-    eyebrow: 'AI 驱动的新一代智能 CRM',
     title: '让每一次客户互动\n都转化为增长',
-    desc: '从获客到成交复购，AI 帮你看准每一个商机，不浪费任何一个潜在机会。',
+    desc: '从获客到成交复购，AI 帮你看准每一个商机\n不浪费任何一个潜在机会。',
     primaryCta: '了解更多',
     buttonStyle: 'hero-button--violet',
     secondaryButtonStyle: 'hero-button--ghost-indigo',
@@ -135,7 +133,6 @@ export const bannerSlides: BannerSlide[] = [
   {
     key: 'hero-proof',
     mediaType: 'image',
-    eyebrow: '40万+企业信赖的选择',
     title: '数据说话\n见证企业增长奇迹',
     desc: '覆盖科技、教育、医疗、建筑等30+行业',
     primaryCta: '查看客户案例',
@@ -148,11 +145,11 @@ export const bannerSlides: BannerSlide[] = [
     glow: 'rgba(75, 116, 255, 0.18)',
     orb: 'rgba(122, 207, 255, 0.18)',
     visualTheme: 'proof',
+
   },
   {
     key: 'hero-trial',
     mediaType: 'image',
-    eyebrow: '新客专享 · 限时体验',
     title: '现在注册',
     subtitle: '立享七天免费试用',
     desc: '0元试用 · 全功能开放 · 预约专属顾问1对1服务',
@@ -160,7 +157,7 @@ export const bannerSlides: BannerSlide[] = [
     secondaryCta: '预约产品演示',
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
-    bg: 'linear-gradient(135deg, #f9fbff 0%, #f1f6ff 46%, #f7f1ff 100%)',
+    bg: `url(${heroBanner4}) center / cover no-repeat`,
     line: 'rgba(101, 112, 255, 0.15)',
     accent: '#6b63ff',
     glow: 'rgba(107, 99, 255, 0.16)',
@@ -277,7 +274,7 @@ export const solutionCards = [
     image: solutionCardImprove,
     icon: Trend,
     points: ['提升线索转化率', '提升销售成交率', '提升客户跟进效率', '缩短成交周期'],
-    linkHref: '/features/sales-growth',
+    linkHref: '/liuzi',
   },
   {
     title: '销售管理',
@@ -285,7 +282,7 @@ export const solutionCards = [
     image: solutionCardProcess,
     icon: Branch,
     points: ['销售过程透明化', '销售行为可量化', '销售动作可追踪', '销售风险可预警'],
-    linkHref: '/features/sales-management',
+    linkHref: '/liuzi',
   },
   {
     title: 'AI 业务赋能',
@@ -293,7 +290,7 @@ export const solutionCards = [
     image: solutionCardAiDriven,
     icon: Robot,
     points: ['AI 自动分析客户', 'AI 辅助销售沟通', 'AI 自动生成话术', 'AI 智能复盘质检'],
-    linkHref: '/features/ai-empowerment',
+    linkHref: '/liuzi',
   },
   {
     title: '组织升级',
@@ -301,7 +298,7 @@ export const solutionCards = [
     image: solutionCardOrganization,
     icon: People,
     points: ['销售 SOP 沉淀', '销售经验资产化', '新人成长标准化', 'AI 持续训练组织'],
-    linkHref: '/features/org-upgrade',
+    linkHref: '/liuzi',
   },
 ]
 
@@ -562,10 +559,11 @@ const slideVisualByOrd: Record<number, Partial<BannerSlide>> = {
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
     visualTheme: 'proof' as const,
+    showVisual: false,
   },
   4: {
     mediaType: 'image' as const,
-    bg: 'linear-gradient(135deg, #f9fbff 0%, #f1f6ff 46%, #f7f1ff 100%)',
+    bg: `url(${heroBanner4}) center / cover no-repeat`,
     line: 'rgba(101, 112, 255, 0.15)',
     accent: '#6b63ff',
     glow: 'rgba(107, 99, 255, 0.16)',

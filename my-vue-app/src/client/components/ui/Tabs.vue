@@ -144,7 +144,7 @@ interface LayoutConfig {
   padding: string
   gap: string
   text: string
-  /** IconPark 图标使用 width="1em"，通过 font-size 控制实际尺寸 */
+  /** Remix 图标使用 width="1em"，通过 font-size 控制实际尺寸 */
   iconSize: string
 }
 

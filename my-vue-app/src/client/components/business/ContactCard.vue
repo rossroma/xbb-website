@@ -113,7 +113,7 @@
 </template>
 
 <script setup lang="ts">
-import { Phone, Mail, ShareSys } from '@icon-park/vue-next'
+import { Phone, Mail, ShareSys } from '@/client/components/ui/remixIcons'
 import type { SocialItem } from '@/client/data/siteFooterData'
 import SocialIcons from './_ContactCardSocialIcons.vue'
 

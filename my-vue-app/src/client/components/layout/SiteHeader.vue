@@ -3,11 +3,11 @@
     class="sticky top-0 z-100 backdrop-blur-[18px] bg-white/78 border-b border-border-default"
   >
     <div
-      class="flex items-center justify-between min-h-19 gap-5 w-[min(80%,calc(100%-48px))] mx-auto"
+      class="flex items-center justify-between min-h-16 gap-10 w-[min(95%,calc(100%-48px))] mx-auto"
     >
       <!-- Logo -->
       <RouterLink to="/" class="shrink-0">
-        <img :src="store.logo" alt="销帮帮" class="h-8 lg:h-9 w-auto object-contain" />
+        <img :src="store.logo" alt="销帮帮" class="h-8 lg:h-8 w-auto object-contain" />
       </RouterLink>
 
       <!-- Desktop Nav -->
@@ -31,16 +31,12 @@
               ]"
             >
               {{ item.label }}
-              <svg
+              <Down
                 class="w-3 h-3 transition-transform duration-fast motion-reduce:transition-none"
                 :class="{ 'rotate-180': activeMenu === item.label }"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                viewBox="0 0 24 24"
-              >
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+                :stroke-width="2.5"
+                aria-hidden="true"
+              />
             </span>
 
             <!-- 无子菜单的项：正常路由跳转 -->
@@ -174,46 +170,53 @@
 
       <!-- Right Actions -->
       <div class="flex items-center gap-3 shrink-0">
-        <a
+        <div class="hidden lg:inline-flex items-center gap-2.5">
+          <a
+            :href="`tel:${displayHotline}`"
+            class="group relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary shadow-header-phone-icon no-underline"
+            :aria-label="`客服电话 ${displayHotline}`"
+          >
+            <PhoneTelephone :size="16" class="text-white" aria-hidden="true" />
+            <span
+              class="pointer-events-none absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-inner bg-text-primary px-3 py-1.5 text-caption font-semibold text-white opacity-0 shadow-default transition-opacity duration-fast group-hover:opacity-100 group-focus-visible:opacity-100"
+            >
+              {{ displayHotline }}
+            </span>
+          </a>
+          <RouterLink
+            :to="downloadRoute"
+            class="text-small font-semibold text-text-primary hover:text-brand-primary transition-colors duration-fast motion-reduce:transition-none no-underline whitespace-nowrap"
+          >
+            下载销帮帮
+          </RouterLink>
+        </div>
+        <Button
           href="https://appwebfront.xbongbong.com/stand-alone-login.html#/"
           target="_blank"
-          rel="noopener noreferrer"
-          class="hidden lg:inline-flex px-5 py-2 rounded-pill text-small font-semibold text-brand-primary border border-brand-primary hover:bg-brand-primary-soft transition-colors duration-fast motion-reduce:transition-none no-underline"
+          variant="outline"
+          size="md"
+          radius="lg"
+          class="hidden lg:inline-flex"
         >
           登录
-        </a>
-        <RouterLink
+        </Button>
+        <Button
           :to="trialRoute"
-          class="hidden lg:inline-flex px-5 py-2 rounded-pill text-small font-semibold text-white bg-brand-primary hover:bg-brand-primary-hover transition-colors duration-fast motion-reduce:transition-none no-underline"
+          variant="primary"
+          size="md"
+          radius="lg"
+          class="hidden lg:inline-flex"
         >
           免费试用
-        </RouterLink>
-        <a
-          :href="`tel:${displayHotline}`"
-          class="hidden lg:inline-flex items-center gap-2.5 text-small font-semibold text-text-primary no-underline"
-        >
-          <span
-            class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary shadow-header-phone-icon"
-          >
-            <img src="/nnn_tel_ico.png" alt="电话图标" class="w-4 h-4 object-contain" />
-          </span>
-          {{ displayHotline }}
-        </a>
+        </Button>
+
         <button
           type="button"
           class="lg:hidden p-2 rounded-inner hover:bg-surface-secondary transition-colors duration-fast motion-reduce:transition-none"
           @click="mobileMenuOpen = true"
           aria-label="打开菜单"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M3 12h18M3 6h18M3 18h18" />
-          </svg>
+          <Hamburger :size="20" aria-hidden="true" />
         </button>
       </div>
     </div>
@@ -237,15 +240,7 @@
             @click="mobileMenuOpen = false"
             aria-label="关闭菜单"
           >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+            <CloseSmall :size="20" aria-hidden="true" />
           </button>
         </div>
         <nav class="p-4">
@@ -295,13 +290,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import Button from '@/client/components/ui/Button.vue'
+import { CloseSmall, Down, Hamburger, PhoneTelephone } from '@/client/components/ui/remixIcons'
 import type { HeaderNavItem, HeaderNavNode } from '@/client/data/siteNavData'
+import { toPagePath } from '@/client/data/routePaths'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 const activeMenu = ref('')
 const store = useSiteSettingsStore()
+const downloadRoute = toPagePath('single_download')
 
 const props = withDefaults(
   defineProps<{

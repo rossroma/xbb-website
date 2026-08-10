@@ -16,13 +16,12 @@ import {
   Edit,
   Filter,
   Comment,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
-const liuziPagePath = '/liuzi'
 
 
 // ========== Hero 区域 ==========
@@ -31,11 +30,11 @@ export const heroSection = {
   subtitle: '精细化销售管理助力业绩增长',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
-  secondaryHref: liuziPagePath,
+  secondaryHref: trialPagePath,
   primaryHref: trialPagePath,
   image: '/images/sales/hero.png',
   imageAlt: '销售管理产品展示',
-  bg: 'linear-gradient(135deg, #fef9f3 0%, #fef5eb 52%, #f8f5fb 100%)',
+  bg: "url('/images/sales/hero-banner.png') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
@@ -55,8 +54,8 @@ export const heroBannerSlide = {
   accent: '#ff6400',
   glow: 'rgba(255, 100, 0, 0.18)',
   orb: 'rgba(255, 154, 77, 0.22)',
-  showVisual: true,
-  visualImage: heroSection.image,
+  showVisual: false,
+  visualImage: '',
   visualImageAlt: heroSection.imageAlt,
 }
 

@@ -2,7 +2,21 @@
   <SectionBlock spacing="default">
     <div class="flex flex-col items-center text-center">
       <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
+        <template v-if="titleParts">
+          {{ titleParts.before
+          }}<span
+            :class="[
+              'business-section-title-highlight',
+              titleParts.isShort ? 'business-section-title-highlight--short' : '',
+            ]"
+            :data-text="titleParts.highlight"
+          >
+            {{ titleParts.highlight }}</span
+          >{{ titleParts.after }}
+        </template>
+        <template v-else>
+          {{ title }}
+        </template>
       </h2>
       <p
         v-if="subtitle"
@@ -68,7 +82,9 @@
             />
           </div>
         </div>
-        <h3 class="mt-6 text-h2 text-text-primary leading-subtitle max-lg:text-h3">
+        <h3
+          class="mt-6 text-h2 text-text-primary leading-subtitle whitespace-pre-line max-lg:text-h3"
+        >
           {{ feature.title }}
         </h3>
         <p
@@ -103,7 +119,7 @@
             :stroke-width="3"
           />
         </div>
-        <h3 class="text-h3 text-text-primary leading-subtitle max-lg:text-body">
+        <h3 class="text-h3 text-text-primary leading-subtitle whitespace-pre-line max-lg:text-body">
           {{ feature.title }}
         </h3>
         <p class="mt-2 text-small text-text-secondary leading-small">
@@ -138,13 +154,18 @@
                 :stroke-width="2.2"
               />
             </IconBadge>
-            <h3 class="text-h3 text-text-primary leading-subtitle max-lg:text-body">
+            <h3
+              class="text-h3 text-text-primary leading-subtitle whitespace-pre-line max-lg:text-body"
+            >
               {{ feature.title }}
             </h3>
           </div>
 
           <!-- 变体：纯文字标题（默认 / icon-badge 无图标时回退） -->
-          <h3 v-else class="text-h3 text-text-primary leading-subtitle max-lg:text-body">
+          <h3
+            v-else
+            class="text-h3 text-text-primary leading-subtitle whitespace-pre-line max-lg:text-body"
+          >
             {{ feature.title }}
           </h3>
 
@@ -181,9 +202,9 @@ import UiButton from '@/client/components/ui/Button.vue'
 export interface FeatureItem {
   title: string
   description: string
-  /** IconPark 图标组件（IconCardGrid variant="icon-badge" | "icon-badge-protruding" 时使用） */
+  /** 图标组件（IconCardGrid variant="icon-badge" | "icon-badge-protruding" 时使用） */
   icon?: Component
-  /** 图片图标路径（IconCardGrid variant="icon-tile" 时使用） */
+  /** 图片路径（IconCardGrid variant="icon-tile" 时使用） */
   image?: string
   /** 图片图标 alt 文本 */
   imageAlt?: string
@@ -205,6 +226,7 @@ type ColorScheme = 'brand' | 'accent' | 'neutral' | 'clean'
 const props = withDefaults(
   defineProps<{
     title: string
+    titleHighlight?: string
     subtitle?: string
     topImages?: readonly TopImage[]
     features: readonly FeatureItem[]
@@ -234,6 +256,21 @@ const themeColor = computed(() => {
     clean: '#ff6400',
   }
   return map[props.colorScheme]
+})
+
+const titleParts = computed(() => {
+  const highlight = props.titleHighlight?.trim()
+  if (!highlight) return null
+
+  const index = props.title.indexOf(highlight)
+  if (index < 0) return null
+
+  return {
+    before: props.title.slice(0, index),
+    highlight,
+    after: props.title.slice(index + highlight.length),
+    isShort: highlight.length <= 2,
+  }
 })
 
 /** IconBadge 变体（来自 colorScheme 映射） */

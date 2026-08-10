@@ -14,17 +14,7 @@
         title="在全屏视口中预览组件"
         @click="openPreview"
       >
-        <svg
-          class="w-3.5 h-3.5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"
-          />
-        </svg>
+        <Fullscreen class="w-3.5 h-3.5" aria-hidden="true" />
         全屏预览
       </button>
     </div>
@@ -95,15 +85,7 @@
           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-pill text-[13px] font-medium text-text-secondary border border-border-default hover:text-text-primary hover:border-text-tertiary transition-all duration-fast"
           @click="closePreview"
         >
-          <svg
-            class="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <CloseSmall class="w-3.5 h-3.5" aria-hidden="true" />
           退出预览
         </button>
       </div>
@@ -117,6 +99,7 @@
 
 <script setup lang="ts">
 import { reactive, computed, ref, watch, onUnmounted } from 'vue'
+import { CloseSmall, Fullscreen } from '@/client/components/ui/remixIcons'
 import CodeSnippet from './CodeSnippet.vue'
 
 interface PlaygroundControl {

@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { Right, Down } from '@icon-park/vue-next'
+import { Right, Down } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 
 /** 单个流程步骤数据 */
@@ -147,7 +147,7 @@ interface FlowStep {
   title: string
   /** 步骤描述（丰富模式使用） */
   description?: string
-  /** Badge 图标（IconPark 组件），与 image 互斥 */
+  /** Badge 图标（remix组件），与 image 互斥 */
   icon?: Component
   /** 图片 URL（丰富模式使用），与 icon 互斥 */
   image?: string
