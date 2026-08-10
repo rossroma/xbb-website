@@ -573,13 +573,13 @@
       <p class="text-small text-text-secondary mb-6">
         基于
         <a
-          href="https://iconpark.oceanengine.com"
+          href="https://remixicon.com"
           target="_blank"
           class="text-brand-primary hover:underline"
-          >IconPark（字节跳动）</a
+          >Remix Icon</a
         >
-        — 2,600+ 高质量图标，支持 4 种主题样式。项目使用
-        <code>@icon-park/vue-next</code> 按需导入。
+        — 开源矢量图标库。项目使用
+        <code>@/client/components/ui/remixIcons</code> 按需导入，并通过统一封装兼容常用图标属性。
       </p>
 
       <!-- 使用方式 -->
@@ -587,57 +587,51 @@
         <h4 class="text-small font-semibold text-text-primary mb-2">使用方式</h4>
         <div class="bg-white rounded-inner p-4 border border-border-subtle">
           <code class="text-[13px] text-text-primary"
-            >import { Home, Wechat, Search } from '@icon-park/vue-next'</code
+            >import { Home, Wechat, Search } from '@/client/components/ui/remixIcons'</code
           >
           <div class="mt-2 text-[13px] text-text-secondary">
-            &lt;Home theme="outline" size="24" /&gt;
+            &lt;Home size="24" color="#ff6400" /&gt;
           </div>
           <p class="mt-2 text-caption text-text-tertiary">
-            支持 4
-            种主题：<code>outline</code>（线性）、<code>filled</code>（填充）、<code>two-tone</code>（双色）、<code>multi-color</code>（多彩）
+            支持 <code>size</code>、<code>color</code>、<code>fill</code>、<code>class</code> 等常用属性，页面内统一从本地封装导入。
           </p>
         </div>
       </div>
 
-      <!-- 主题选择 -->
+      <!-- 颜色选择 -->
       <div class="flex flex-wrap gap-2 mb-4">
         <button
-          v-for="t in iconThemes"
+          v-for="t in iconColorSchemes"
           :key="t.key"
           :class="[
             'px-4 py-2 rounded-pill text-[13px] font-medium transition-all duration-fast',
-            iconTheme === t.key
+            iconColor === t.key
               ? 'bg-brand-primary text-white'
               : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
           ]"
-          @click="iconTheme = t.key"
+          @click="iconColor = t.key"
         >
           {{ t.label }}
         </button>
       </div>
 
-      <!-- 主题展示卡片 -->
+      <!-- 颜色展示卡片 -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <div
-          v-for="t in iconThemes"
+          v-for="t in iconColorSchemes"
           :key="t.key"
           :class="[
             'p-4 rounded-inner border text-center cursor-pointer transition-all duration-fast',
-            iconTheme === t.key
+            iconColor === t.key
               ? 'border-brand-primary bg-brand-primary-soft'
               : 'border-border-subtle bg-white hover:border-border-default',
           ]"
-          @click="iconTheme = t.key"
+          @click="iconColor = t.key"
         >
           <component
-            :is="iconThemeSample"
-            :theme="t.key"
+            :is="iconColorSample"
             :size="32"
-            :fill="
-              t.key === 'filled' || t.key === 'two-tone' || t.key === 'multi-color'
-                ? ['#ff6400', '#ff9d42']
-                : undefined
-            "
+            :color="t.color"
           />
           <p class="mt-2 text-caption font-medium text-text-primary">{{ t.label }}</p>
           <p class="text-[11px] text-text-tertiary">{{ t.desc }}</p>
@@ -648,7 +642,6 @@
       <div class="relative flex-1 mb-4">
         <Search
           class="absolute left-3 top-1/2 -translate-y-1/2 text-text-tertiary"
-          theme="outline"
           size="18"
         />
         <input
@@ -661,8 +654,8 @@
 
       <!-- 图标网格 -->
       <div class="border border-border-subtle rounded-card overflow-hidden">
-        <div v-if="filteredIconParkIcons.length === 0" class="p-10 text-center">
-          <Search class="text-text-tertiary mx-auto mb-3" theme="outline" size="40" />
+        <div v-if="filteredRemixIcons.length === 0" class="p-10 text-center">
+          <Search class="text-text-tertiary mx-auto mb-3" size="40" />
           <p class="text-small text-text-tertiary">未找到匹配的图标</p>
         </div>
         <div
@@ -670,7 +663,7 @@
           class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-px bg-border-subtle"
         >
           <button
-            v-for="ic in filteredIconParkIcons.slice(0, iconDisplayLimit)"
+            v-for="ic in filteredRemixIcons.slice(0, iconDisplayLimit)"
             :key="ic.name"
             :class="[
               'flex flex-col items-center justify-center gap-2 p-3 bg-white hover:bg-surface-secondary transition-colors duration-[120ms] cursor-pointer group',
@@ -681,8 +674,8 @@
           >
             <component
               :is="ic.component"
-              :theme="iconTheme"
               :size="22"
+              :color="copiedIcon === ic.name ? '#ff6400' : selectedIconColor"
               :class="copiedIcon === ic.name ? 'text-brand-primary' : 'text-text-primary'"
             />
             <span
@@ -696,11 +689,11 @@
 
       <!-- 加载更多 -->
       <button
-        v-if="filteredIconParkIcons.length > iconDisplayLimit"
+        v-if="filteredRemixIcons.length > iconDisplayLimit"
         class="mt-4 mx-auto block px-6 py-2 rounded-pill border border-border-default text-[13px] font-medium text-text-secondary hover:text-brand-primary hover:border-brand-primary transition-all duration-fast"
         @click="iconDisplayLimit += 96"
       >
-        显示更多（{{ filteredIconParkIcons.length - iconDisplayLimit }} 个剩余）
+        显示更多（{{ filteredRemixIcons.length - iconDisplayLimit }} 个剩余）
       </button>
 
       <!-- 品牌图标 -->
@@ -712,7 +705,12 @@
             :key="b.name"
             class="flex flex-col items-center gap-2 p-3 bg-white rounded-inner border border-border-subtle"
           >
-            <component :is="b.component" :theme="iconTheme" :size="28" class="text-text-primary" />
+            <component
+              :is="b.component"
+              :size="28"
+              :color="selectedIconColor"
+              class="text-text-primary"
+            />
             <span class="text-[11px] text-text-tertiary">{{ b.name }}</span>
           </div>
         </div>
@@ -736,6 +734,7 @@ import {
   Phone,
   Rocket,
   Fire,
+  Magic,
   People,
   Robot,
   Trend,
@@ -765,7 +764,7 @@ import {
   Edit,
   Info,
   Copy,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import Card from '@/client/components/ui/Card.vue'
 import Badge from '@/client/components/ui/Badge.vue'
 
@@ -1020,17 +1019,20 @@ const carouselIdx = ref(0)
 const reducedMotion = ref(false)
 
 // ===== Icon 图标库 =====
-const iconTheme = ref<'outline' | 'filled' | 'two-tone' | 'multi-color'>('outline')
-const iconThemes = [
-  { key: 'outline', label: '线性 Outline', desc: '单色描边，最常用' },
-  { key: 'filled', label: '填充 Filled', desc: '纯色填充，强调状态' },
-  { key: 'two-tone', label: '双色 Two-tone', desc: '双色叠加，层次感' },
-  { key: 'multi-color', label: '多彩 Multi-color', desc: '多色绘制，品牌感强' },
+const iconColor = ref<'default' | 'brand' | 'accent' | 'success'>('default')
+const iconColorSchemes = [
+  { key: 'default', label: '默认 Default', desc: '继承正文颜色', color: 'currentColor' },
+  { key: 'brand', label: '品牌 Brand', desc: '品牌橙强调', color: '#ff6400' },
+  { key: 'accent', label: '辅助 Accent', desc: '蓝紫辅助色', color: '#5b61ff' },
+  { key: 'success', label: '成功 Success', desc: '正向状态色', color: '#16a34a' },
 ] as const
 
-const iconThemeSample = Home
+const iconColorSample = Home
+const selectedIconColor = computed(
+  () => iconColorSchemes.find((item) => item.key === iconColor.value)?.color ?? 'currentColor',
+)
 
-const iconParkIcons = [
+const remixIconItems = [
   { name: 'Home', component: Home },
   { name: 'Inbox', component: Inbox },
   { name: 'Search', component: Search },
@@ -1062,7 +1064,7 @@ const iconParkIcons = [
   { name: 'FileSettings', component: FileSettings },
   { name: 'Fire', component: Fire },
   { name: 'Rocket', component: Rocket },
-  { name: 'Magic', component: undefined as unknown as typeof Home },
+  { name: 'Magic', component: Magic },
   { name: 'Help', component: Help },
   { name: 'Round', component: Round },
   { name: 'Monitor', component: Monitor },
@@ -1077,10 +1079,10 @@ const iconSearch = ref('')
 const iconDisplayLimit = ref(96)
 const copiedIcon = ref('')
 
-const filteredIconParkIcons = computed(() => {
-  if (!iconSearch.value.trim()) return iconParkIcons
+const filteredRemixIcons = computed(() => {
+  if (!iconSearch.value.trim()) return remixIconItems
   const q = iconSearch.value.toLowerCase()
-  return iconParkIcons.filter((ic) => ic.name.toLowerCase().includes(q))
+  return remixIconItems.filter((ic) => ic.name.toLowerCase().includes(q))
 })
 
 const brandIcons = [
@@ -1093,7 +1095,7 @@ const brandIcons = [
 
 async function copyIcon(name: string) {
   try {
-    const importStr = `import { ${name} } from '@icon-park/vue-next'`
+    const importStr = `import { ${name} } from '@/client/components/ui/remixIcons'`
     await navigator.clipboard.writeText(importStr)
     copiedIcon.value = name
     setTimeout(() => {

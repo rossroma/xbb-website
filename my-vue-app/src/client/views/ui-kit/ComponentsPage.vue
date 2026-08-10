@@ -431,7 +431,7 @@
           <li><strong>v-model</strong> 绑定当前激活 tab 的 <code>key</code></li>
           <li>支持键盘导航：← → 切换，Home/End 跳转首/尾</li>
           <li>
-            图标通过 <code>tab.icon</code> 传入 IconPark 组件；<code>badge</code> 显示数字/文字徽章
+            图标通过 <code>tab.icon</code> 传入Remix组件；<code>badge</code> 显示数字/文字徽章
           </li>
         </ul>
       </div>
@@ -848,7 +848,7 @@
           </li>
           <li><strong>multiple</strong> 多选模式，modelValue 为数组类型</li>
           <li><strong>clearable</strong> 选中值后显示清空按钮，多选模式下清空整个数组</li>
-          <li>下拉箭头使用内联 SVG，无额外图标依赖</li>
+          <li>下拉箭头使用 Remix 图标组件</li>
         </ul>
       </div>
     </Card>
@@ -915,7 +915,7 @@
             <code>value</code> 标识
           </li>
           <li><strong>indeterminate</strong>：用于"全选/半选"场景（如表格全选）</li>
-          <li>选中态使用品牌色填充 + 白色对勾 SVG</li>
+          <li>选中态使用品牌色填充 + 白色对勾图标</li>
         </ul>
       </div>
     </Card>
@@ -1352,7 +1352,7 @@ import {
   Setting,
   Message,
   People,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import Card from '@/client/components/ui/Card.vue'
 import VideoCard from '@/client/components/ui/VideoCard.vue'
