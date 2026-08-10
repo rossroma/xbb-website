@@ -11,6 +11,7 @@ import App from './client/App.vue'
 import { routes } from './client/router'
 import './client/styles/tailwind.css'
 import './client/styles/global.css'
+import './client/styles/rich-text.css'
 
 export const createApp = ViteSSG(
   App,
