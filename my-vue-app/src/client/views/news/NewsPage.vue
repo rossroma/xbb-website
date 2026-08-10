@@ -176,7 +176,7 @@ async function loadArticles() {
 }
 
 /** Tab 切换 */
-function handleTabChange(key: string) {
+function handleTabChange() {
   // v-model 已更新 activeTabKey，只需重置页码并加载
   currentPage.value = 1
   loadArticles()
