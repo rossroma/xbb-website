@@ -13,7 +13,12 @@
   >
     <Loading v-if="loading" :class="spinnerClasses" aria-hidden="true" />
     <span v-if="loading" class="sr-only">加载中</span>
-    <span :class="{ 'opacity-0': loading }">
+    <span
+      :class="[
+        'inline-flex items-center justify-center leading-none whitespace-nowrap',
+        { 'opacity-0': loading },
+      ]"
+    >
       <slot />
     </span>
   </component>
@@ -22,7 +27,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { Loading } from '@icon-park/vue-next'
+import { Loading } from '@/client/components/ui/remixIcons'
 
 interface ButtonProps {
   variant?:
@@ -36,6 +41,7 @@ interface ButtonProps {
     | 'outline-fill'
   color?: 'brand' | 'accent'
   size?: 'lg' | 'md' | 'sm' | 'xs'
+  radius?: 'pill' | 'lg'
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
   loading?: boolean
@@ -51,7 +57,8 @@ interface ButtonProps {
 const props = withDefaults(defineProps<ButtonProps>(), {
   variant: 'primary',
   color: 'brand',
-  size: 'md',
+  size: 'lg',
+  radius: 'pill',
   type: 'button',
   disabled: false,
   loading: false,
@@ -88,9 +95,6 @@ type ColorScheme = {
   heroOutlineText: string
   heroOutlineBorder: string
   heroOutlineHoverBorder: string
-  shadow: string
-  heroShadow: string
-  hoverShadow: string
   focusOutline: string
   fillHoverBg: string
 }
@@ -102,14 +106,11 @@ const colorSchemes: Record<'brand' | 'accent', ColorScheme> = {
     soft: 'bg-brand-primary-soft',
     text: 'text-brand-primary',
     border: 'border-brand-primary',
-    gradient: 'bg-brand-primary-gradient',
-    heroGradient: 'bg-brand-primary-hero-gradient',
+    gradient: 'bg-[#FF6A00]',
+    heroGradient: 'bg-[#FF6A00]',
     heroOutlineText: 'text-brand-primary',
     heroOutlineBorder: 'border-brand-primary-ring',
     heroOutlineHoverBorder: 'hover:border-brand-primary-ring-hover',
-    shadow: 'shadow-button-brand',
-    heroShadow: 'shadow-hero-button',
-    hoverShadow: 'hover:shadow-button-brand-hover',
     focusOutline: 'focus-visible:outline-brand-primary',
     fillHoverBg: 'hover:bg-brand-primary',
   },
@@ -124,19 +125,21 @@ const colorSchemes: Record<'brand' | 'accent', ColorScheme> = {
     heroOutlineText: 'text-brand-accent',
     heroOutlineBorder: 'border-brand-accent-ring',
     heroOutlineHoverBorder: 'hover:border-brand-accent-ring-hover',
-    shadow: 'shadow-button-accent',
-    heroShadow: 'shadow-button-accent-hero',
-    hoverShadow: 'hover:shadow-button-accent-hover',
     focusOutline: 'focus-visible:outline-brand-accent',
     fillHoverBg: 'hover:bg-brand-accent',
   },
 }
 
 const sizeClasses: Record<'lg' | 'md' | 'sm' | 'xs', string> = {
-  lg: 'h-12 px-6 text-body gap-2.5',
+  lg: 'h-[49px] px-9 py-3 text-body gap-3',
   md: 'h-9 px-3.5 text-small gap-1.5',
   sm: 'h-8 px-3 text-caption gap-1.5',
   xs: 'h-6 px-2 text-caption gap-1',
+}
+
+const radiusClasses: Record<'pill' | 'lg', string> = {
+  pill: 'rounded-[99px]',
+  lg: 'rounded-lg',
 }
 
 const iconSizeClasses: Record<'lg' | 'md' | 'sm' | 'xs', string> = {
@@ -149,7 +152,7 @@ const iconSizeClasses: Record<'lg' | 'md' | 'sm' | 'xs', string> = {
 const buttonClasses = computed(() => {
   const cs = colorSchemes[props.color]
   const classes = [
-    'inline-flex items-center justify-center font-semibold',
+    'static left-0 top-0 inline-flex flex-row items-center justify-center opacity-100 font-semibold',
     'transition-all duration-normal ease-in-out',
     cs.focusOutline,
     'focus-visible:outline-2 focus-visible:outline-offset-2',
@@ -162,9 +165,9 @@ const buttonClasses = computed(() => {
     // Icon button still uses the variant for background/border color
     const v = props.variant
     if (v === 'primary' || v === 'hero') {
-      classes.push(cs.gradient, 'text-white', 'border-none', cs.shadow)
+      classes.push(cs.gradient, 'text-white', 'border border-transparent')
     } else if (v === 'outline' || v === 'hero-outline') {
-      classes.push('bg-white/88', cs.text, 'border border-border-default', 'backdrop-blur-[14px]')
+      classes.push('bg-white', cs.text, 'border border-[#FF6A00]')
     } else if (v === 'outline-neutral') {
       classes.push('bg-surface-primary', 'text-heading', 'border border-heading')
     } else {
@@ -175,20 +178,20 @@ const buttonClasses = computed(() => {
     // Standard button
     if (props.block) {
       classes.push('w-full')
-    } else {
-      classes.push('w-full sm:w-auto')
+    } else if (props.size === 'lg') {
+      
     }
-    classes.push('rounded-pill', sizeClasses[props.size])
+    classes.push(radiusClasses[props.radius], sizeClasses[props.size])
 
     // Variant styles
     const v = props.variant
     if (v === 'primary') {
-      classes.push(cs.gradient, 'text-white', 'border-none', cs.shadow)
-      classes.push('hover:translate-y-[-1px]', cs.hoverShadow)
-      classes.push('active:translate-y-0', 'active:shadow-button-pressed')
+      classes.push(cs.gradient, 'text-white', 'border border-transparent')
+      classes.push('hover:translate-y-[-1px]')
+      classes.push('active:translate-y-0')
     } else if (v === 'outline') {
-      classes.push('bg-surface-primary', cs.text, 'border border-border-default')
-      classes.push('hover:translate-y-[-1px]', cs.border)
+      classes.push('bg-white', cs.text, 'border border-[#FF6A00]')
+      classes.push('hover:translate-y-[-1px]', 'hover:border-[#FF6A00]')
       classes.push('active:translate-y-0')
     } else if (v === 'outline-neutral') {
       classes.push('bg-surface-primary', 'text-heading', 'border border-heading')
@@ -198,23 +201,17 @@ const buttonClasses = computed(() => {
       classes.push('bg-transparent', cs.text, 'border-none', 'p-0')
       classes.push('hover:opacity-80')
     } else if (v === 'hero') {
-      classes.push(cs.heroGradient, 'text-white', 'border-none', cs.heroShadow)
-      classes.push('hover:translate-y-[-1px]', 'hover:shadow-button-hero-hover')
-      classes.push('active:translate-y-0', 'active:shadow-button-pressed')
+      classes.push(cs.heroGradient, 'text-white', 'border border-transparent')
+      classes.push('hover:translate-y-[-1px]')
+      classes.push('active:translate-y-0')
     } else if (v === 'hero-outline') {
-      classes.push(
-        'bg-white/88',
-        cs.heroOutlineText,
-        'border',
-        cs.heroOutlineBorder,
-        'backdrop-blur-[14px]',
-      )
-      classes.push('hover:translate-y-[-1px]', 'hover:bg-white/92', cs.heroOutlineHoverBorder)
+      classes.push('bg-white', cs.heroOutlineText, 'border', 'border-[#FF6A00]')
+      classes.push('hover:translate-y-[-1px]', 'hover:bg-white', 'hover:border-[#FF6A00]')
       classes.push('active:translate-y-0')
     } else if (v === 'ghost-white') {
-      classes.push('bg-white/74', 'text-heading', 'border border-heading/78', 'rounded-pill')
+      classes.push('bg-white/74', 'text-heading', 'border border-heading/78')
       classes.push('text-body font-medium')
-      classes.push('hover:translate-y-[-1px]', 'hover:bg-white/92', 'hover:shadow-case-cta-hover')
+      classes.push('hover:translate-y-[-1px]', 'hover:bg-white/92')
       classes.push('active:translate-y-0')
     } else if (v === 'outline-fill') {
       classes.push('bg-transparent', cs.text, 'border', cs.border)
