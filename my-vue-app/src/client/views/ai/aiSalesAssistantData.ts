@@ -9,7 +9,7 @@ import {
   Peoples,
   Robot,
   Trend,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'

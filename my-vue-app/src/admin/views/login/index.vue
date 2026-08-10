@@ -55,7 +55,7 @@
             >
               <template #suffix>
                 <el-icon class="password-icon" @click="showPassword">
-                  <component :is="passwordType === 'password' ? View : Hide" />
+                  <component :is="passwordType === 'password' ? Eyes : Hide" />
                 </el-icon>
               </template>
             </el-input>
@@ -105,7 +105,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock, View, Hide } from '@element-plus/icons-vue'
+import { User, Lock, Eyes, Hide } from '@/client/components/ui/remixIcons'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getAdminCaptcha } from '@/shared/api/auth'
 import { useAuthStore } from '@/admin/stores/auth'

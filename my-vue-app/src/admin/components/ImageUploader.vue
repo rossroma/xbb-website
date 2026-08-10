@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Delete, Upload, Plus } from '@element-plus/icons-vue'
+import { Delete, Upload, Plus } from '@/client/components/ui/remixIcons'
 import { getToken } from '@/shared/utils/token'
 
 const props = withDefaults(defineProps<{

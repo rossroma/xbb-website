@@ -5,7 +5,7 @@
         <el-card class="stat-card">
           <div class="stat-content">
             <div class="stat-icon" style="background: #409eff">
-              <el-icon :size="32"><Document /></el-icon>
+              <el-icon :size="32"><DocDetail /></el-icon>
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ stats.totalArticles }}</div>
@@ -33,7 +33,7 @@
         <el-card class="stat-card">
           <div class="stat-content">
             <div class="stat-icon" style="background: #e6a23c">
-              <el-icon :size="32"><View /></el-icon>
+              <el-icon :size="32"><Eyes /></el-icon>
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ stats.totalViews }}</div>
@@ -70,7 +70,7 @@
             <el-button type="primary" :icon="Plus" @click="$router.push('/content/create')">
               创建文章
             </el-button>
-            <el-button type="success" :icon="List" @click="$router.push('/content')">
+            <el-button type="success" :icon="Checklist" @click="$router.push('/content')">
               内容管理
             </el-button>
             <el-button type="warning" :icon="Folder" @click="$router.push('/category/list')">
@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Document, Folder, View, Edit, Plus, List } from '@element-plus/icons-vue'
+import { DocDetail, Folder, Eyes, Edit, Plus, Checklist } from '@/client/components/ui/remixIcons'
 import { getArticles, getCategories } from '@/shared/api/admin'
 
 const stats = ref({

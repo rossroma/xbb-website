@@ -14,7 +14,7 @@ import {
   SalesReport,
   Trend,
   UserBusiness,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import type { FeatureListItem } from '@/client/components/business/FeatureList.vue'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'

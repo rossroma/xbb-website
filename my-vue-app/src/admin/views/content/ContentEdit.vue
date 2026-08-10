@@ -2,7 +2,7 @@
   <div class="content-edit">
     <div class="page-header">
       <div class="header-left">
-        <el-button :icon="ArrowLeft" @click="goBack">返回</el-button>
+        <el-button :icon="Left" @click="goBack">返回</el-button>
         <h2>{{ isEdit ? '编辑文章' : '新增文章' }} - {{ categoryTitle }}</h2>
       </div>
       <div class="header-actions">
@@ -177,7 +177,7 @@
 import { ref, reactive, computed, onMounted, onBeforeUnmount, shallowRef, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue'
+import { Left } from '@/client/components/ui/remixIcons'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import { getAdminCategories } from '@/shared/api/category'

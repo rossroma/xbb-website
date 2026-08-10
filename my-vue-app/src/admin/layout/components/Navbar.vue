@@ -6,7 +6,7 @@
     <div class="right-menu">
       <div class="quick-actions">
         <a class="quick-action" href="/" target="_blank" rel="noopener noreferrer">
-          <el-icon><View /></el-icon>
+          <el-icon><Eyes /></el-icon>
           <span>查看前台</span>
         </a>
       </div>
@@ -19,12 +19,12 @@
             <span class="username">{{ username }}</span>
             <span v-if="groupTitle" class="group-title">{{ groupTitle }}</span>
           </div>
-          <el-icon class="el-icon--right"><CaretBottom /></el-icon>
+          <el-icon class="el-icon--right"><Down /></el-icon>
         </div>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item divided @click="handleLogout">
-              <el-icon><SwitchButton /></el-icon>
+              <el-icon><Logout /></el-icon>
               退出登录
             </el-dropdown-item>
           </el-dropdown-menu>
@@ -38,7 +38,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { User, CaretBottom, SwitchButton, View } from '@element-plus/icons-vue'
+import { User, Down, Logout, Eyes } from '@/client/components/ui/remixIcons'
 import { getAllSettings } from '@/shared/api/settings'
 import { useAuthStore } from '@/admin/stores/auth'
 

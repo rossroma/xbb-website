@@ -1,5 +1,5 @@
 // ========== 销帮帮 X 企业微信页面 SEO 配置 ==========
-import { Branch, ChartHistogram, Filter, Peoples, Trend } from '@icon-park/vue-next'
+import { Branch, ChartHistogram, Filter, Peoples, Trend } from '@/client/components/ui/remixIcons'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { Theme } from '@/client/components/business/theme'
 

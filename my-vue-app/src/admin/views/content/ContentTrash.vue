@@ -3,7 +3,7 @@
     <!-- 顶部工具栏 -->
     <div class="toolbar">
       <div class="toolbar-left">
-        <el-button :icon="ArrowLeft" @click="goBack">返回内容管理</el-button>
+        <el-button :icon="Left" @click="goBack">返回内容管理</el-button>
         <h2>回收站</h2>
       </div>
       <div class="toolbar-right">
@@ -77,7 +77,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue'
+import { Left } from '@/client/components/ui/remixIcons'
 import { getAdminArticles } from '@/shared/api/article'
 import {
   restoreArticle,

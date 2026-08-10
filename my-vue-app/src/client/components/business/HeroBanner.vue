@@ -68,7 +68,7 @@
             v-if="singleSlide.primaryCta"
             variant="hero"
             size="lg"
-            class="!h-[49px] !w-[144px] !rounded-[99px] !px-9 !py-3 !text-[18px]"
+            class="!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]"
             @click="handleSingleAction(singleSlide, 'primary')"
             >{{ singleSlide.primaryCta }}</Button
           >
@@ -76,7 +76,7 @@
             v-if="singleSlide.secondaryCta"
             variant="hero-outline"
             size="lg"
-            class="!h-[49px] !w-[144px] !rounded-[99px] !px-9 !py-3 !text-[18px]"
+            class="!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]"
             @click="handleSingleAction(singleSlide, 'secondary')"
             >{{ singleSlide.secondaryCta }}</Button
           >

@@ -14,7 +14,6 @@ import type { ImageCardGridItem } from '@/client/components/business/ImageCardGr
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
-const liuziPagePath = '/liuzi'
 const customerHeroBg = '/images/customer/customer.png'
 const customerLifecycleImage = '/images/customer/product-intro.png'
 
@@ -46,9 +45,6 @@ export const heroBannerSlide = {
   secondaryCta: heroSection.secondaryCta,
   secondaryHref: heroSection.secondaryHref,
   bg: heroSection.bg,
-  backgroundRepeat: heroSection.backgroundRepeat,
-  backgroundSize: heroSection.backgroundSize,
-  backgroundPosition: heroSection.backgroundPosition,
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
