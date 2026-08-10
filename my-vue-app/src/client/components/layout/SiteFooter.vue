@@ -194,7 +194,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { Down, Download, PhoneTelephone, Up } from '@/client/components/ui/remixIcons'
+import { Down, PhoneTelephone, Up } from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import type { FooterColumn, SocialItem } from '@/client/data/siteFooterData'
 import { toPagePath } from '@/client/data/routePaths'
@@ -250,8 +250,6 @@ const openMobileFooterColumn = ref(props.footerColumns[0]?.title ?? null)
 
 const getCtaHref = (text?: string, href?: string) =>
   text && trialCtaTexts.has(text.trim()) ? trialPagePath : href
-
-const footerActionIcon = (text: string) => (text.includes('下载') ? Download : PhoneTelephone)
 
 const isMobileFooterColumnOpen = (title: string) => openMobileFooterColumn.value === title
 
