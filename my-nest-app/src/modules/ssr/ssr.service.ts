@@ -2,10 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as Handlebars from 'handlebars';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { Article } from '../article/entities/article.entity';
 import { Case } from '../case/entities/case.entity';
+import { ArticleTemplate, CaseTemplate } from './templates';
 
 /**
  * SSR 渲染服务
@@ -26,14 +25,9 @@ export class SsrService {
     @InjectRepository(Case)
     private readonly caseRepo: Repository<Case>,
   ) {
-    // 编译 Handlebars 模板
-    const templatesDir = join(__dirname, 'templates');
-    this.articleTemplate = Handlebars.compile(
-      readFileSync(join(templatesDir, 'article.hbs'), 'utf-8'),
-    );
-    this.caseTemplate = Handlebars.compile(
-      readFileSync(join(templatesDir, 'case.hbs'), 'utf-8'),
-    );
+    // 模板在构建时已内嵌到 JS 产物中，无需运行时读取文件
+    this.articleTemplate = Handlebars.compile(ArticleTemplate);
+    this.caseTemplate = Handlebars.compile(CaseTemplate);
     this.baseUrl = process.env.OSS_BASE_URL || 'https://www.xbongbong.com';
   }
 
