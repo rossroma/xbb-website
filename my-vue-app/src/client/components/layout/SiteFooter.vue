@@ -1,12 +1,47 @@
 <template>
-  <footer class="pt-6 pb-6 border-t border-footer-border-strong bg-footer-gradient">
+  <footer class="pt-10 pb-16 border-t border-footer-border-strong bg-footer-gradient">
     <div class="w-[min(1280px,calc(100%-48px))] mx-auto">
+      <section class="flex flex-col items-center text-center pt-6">
+        <div>
+          <h2 class="text-h2 font-bold leading-heading text-heading max-md:text-h3">
+            {{ displayCtaSection.title }}
+          </h2>
+          <p
+            v-if="displayCtaSection.subtitle"
+            class="mt-2 text-body leading-body text-text-secondary max-md:text-small"
+          >
+            {{ displayCtaSection.subtitle }}
+          </p>
+        </div>
+        <div class="mt-6 flex flex-wrap justify-center gap-3 max-md:w-full max-md:flex-col">
+          <Button
+            v-if="displayCtaSection.primaryCta"
+            :to="getCtaHref(displayCtaSection.primaryCta, displayCtaSection.primaryHref)"
+            variant="primary"
+            color="brand"
+            size="lg"
+            class="max-md:w-full"
+          >
+            {{ displayCtaSection.primaryCta }}
+          </Button>
+          <Button
+            v-if="displayCtaSection.secondaryCta"
+            :to="getCtaHref(displayCtaSection.secondaryCta, displayCtaSection.secondaryHref)"
+            variant="outline"
+            color="brand"
+            size="lg"
+            class="max-md:w-full"
+          >
+            {{ displayCtaSection.secondaryCta }}
+          </Button>
+        </div>
+      </section>
       <!-- 导航网格 -->
       <div
-        class="grid grid-cols-6 max-lg:grid-cols-3 max-md:grid-cols-2 gap-x-12 gap-y-5 items-start"
+        class="grid mt-32 grid-cols-5 max-lg:grid-cols-3 max-md:hidden gap-x-12 gap-y-5 items-start"
       >
         <!-- 导航列 -->
-        <div v-for="col in footerColumns" :key="col.title" class="min-w-0">
+        <div v-for="col in footerColumns" :key="col.title" class="min-w-0 mx-auto">
           <h4 class="text-body font-semibold text-heading mb-4">{{ col.title }}</h4>
           <ul class="flex flex-col gap-2.5">
             <li v-for="link in col.links" :key="link.text">
@@ -17,25 +52,69 @@
               >
             </li>
           </ul>
-          <div v-if="col.actions && col.actions.length > 0" class="flex flex-col gap-3 mt-4">
-            <Button
-              v-for="action in col.actions"
-              :key="action.text"
-              variant="primary"
-              size="xs"
-              :href="action.href"
-              >{{ action.text }}</Button
-            >
+          <div
+            v-if="col.actions && col.actions.length > 0"
+            class="flex flex-col items-start gap-3 mt-4"
+          >
+            
           </div>
         </div>
       </div>
 
+      <div class="hidden max-md:mt-10 max-md:flex max-md:flex-col max-md:gap-1">
+        <section
+          v-for="(col, colIndex) in footerColumns"
+          :key="`mobile-${col.title}`"
+          class="w-full"
+        >
+          <button
+            type="button"
+            class="flex h-14 w-full items-center justify-between rounded-lg px-5 text-left text-h3 font-semibold leading-none text-heading transition-colors duration-fast"
+            :class="isMobileFooterColumnOpen(col.title) ? 'bg-[#f0f1f3]' : 'bg-transparent'"
+            :aria-expanded="isMobileFooterColumnOpen(col.title)"
+            :aria-controls="`footer-mobile-panel-${colIndex}`"
+            @click="toggleMobileFooterColumn(col.title)"
+          >
+            <span>{{ col.title }}</span>
+            <component
+              :is="isMobileFooterColumnOpen(col.title) ? Up : Down"
+              :size="22"
+              :stroke-width="4"
+              theme="outline"
+              aria-hidden="true"
+            />
+          </button>
+          <div
+            v-show="isMobileFooterColumnOpen(col.title)"
+            :id="`footer-mobile-panel-${colIndex}`"
+            class="flex flex-col gap-5 px-10 py-4"
+          >
+            <a
+              v-for="link in col.links"
+              :key="link.text"
+              :href="link.href"
+              class="text-body font-semibold leading-body text-text-secondary no-underline"
+            >
+              {{ link.text }}
+            </a>
+            <a
+              v-for="action in col.actions ?? []"
+              :key="action.text"
+              :href="action.href"
+              class="text-body font-semibold leading-body text-text-secondary no-underline"
+            >
+              {{ action.text }}
+            </a>
+          </div>
+        </section>
+      </div>
+
       <!-- 分割线 + 底部信息栏 -->
       <div
-        class="flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-footer-border max-md:flex-col max-md:items-start"
+        class="flex flex-wrap items-center justify-between gap-4 mt-16 pt-6 border-t border-footer-border max-md:mt-7 max-md:flex-col max-md:items-stretch max-md:gap-6 max-md:border-t-0 max-md:pt-0"
       >
-        <div class="flex flex-wrap items-center gap-6">
-          <div class="flex gap-3">
+        <div class="flex flex-wrap items-center gap-6 max-md:order-2 max-md:w-full max-md:justify-center max-md:border-t max-md:border-footer-border max-md:pt-7">
+          <div class="flex gap-3 max-md:justify-center">
             <!-- 社交图标 — group 模式实现 QR hover -->
             <div
               v-for="social in socials"
@@ -67,12 +146,24 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center gap-6">
-          <a :href="`tel:${displayHotline}`" class="flex flex-col gap-1 no-underline">
-            <span class="text-caption text-text-tertiary">服务热线</span>
-            <span class="text-body text-heading">{{ displayHotline }}</span>
+        <div class="flex items-center gap-6 max-md:order-1 max-md:w-full max-md:flex-col max-md:items-start max-md:gap-3">
+          <a
+            :href="`tel:${displayHotline}`"
+            class="flex flex-col gap-1 no-underline max-md:flex-row max-md:items-center max-md:gap-3 max-md:px-5"
+          >
+            <PhoneTelephone
+              class="hidden max-md:block text-text-secondary"
+              :size="22"
+              :stroke-width="4"
+              theme="outline"
+              aria-hidden="true"
+            />
+            <span class="text-caption text-text-tertiary max-md:hidden">服务热线</span>
+            <span class="text-body text-heading max-md:text-h3 max-md:font-semibold max-md:leading-none max-md:text-text-secondary">
+              {{ displayHotline }}
+            </span>
           </a>
-          <a :href="`mailto:${displayEmail}`" class="flex flex-col gap-1 no-underline">
+          <a :href="`mailto:${displayEmail}`" class="flex flex-col gap-1 no-underline max-md:hidden">
             <span class="text-caption text-text-tertiary">企业邮箱</span>
             <span class="text-body text-heading">{{ displayEmail }}</span>
           </a>
@@ -80,7 +171,7 @@
       </div>
 
       <!-- 版权信息 -->
-      <div class="mt-4 pt-3 border-t border-footer-border-light text-center">
+      <div class="mt-4 pt-3 border-footer-border-light text-center">
         <p class="text-small text-text-tertiary leading-relaxed">
           <span class="text-small">COPYRIGHT</span> ©<span class="text-small" v-html="displayCopyright"></span>&nbsp;&nbsp;&nbsp;<a
               href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010802003191"
@@ -102,15 +193,39 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { Down, Download, PhoneTelephone, Up } from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import type { FooterColumn, SocialItem } from '@/client/data/siteFooterData'
+import { toPagePath } from '@/client/data/routePaths'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
+interface FooterCtaSection {
+  title: string
+  subtitle?: string
+  primaryCta?: string
+  primaryHref?: string
+  secondaryCta?: string
+  secondaryHref?: string
+}
+
 const store = useSiteSettingsStore()
+const trialPagePath = toPagePath('single_mfsy')
+const liuziPagePath = '/liuzi'
+const trialCtaTexts = new Set(['免费试用', '立即免费试用', '立即咨询', 'CRM免费试用', '免费使用'])
+
+const defaultCtaSection: FooterCtaSection = {
+  title: '让增长，从这里开始',
+  subtitle: '免费试用7天，体验AI驱动的新一代CRM平台',
+  primaryCta: '立即免费试用',
+  primaryHref: trialPagePath,
+  secondaryCta: '预约产品演示',
+  secondaryHref: liuziPagePath,
+}
 
 const props = withDefaults(
   defineProps<{
+    ctaSection?: FooterCtaSection
     footerColumns?: readonly FooterColumn[]
     socials?: readonly SocialItem[]
     hotline?: string
@@ -130,4 +245,17 @@ const props = withDefaults(
 const displayHotline = computed(() => store.tel || props.hotline)
 const displayEmail = computed(() => store.email || props.email)
 const displayCopyright = computed(() => store.copyright || props.copyright)
+const displayCtaSection = computed(() => props.ctaSection ?? defaultCtaSection)
+const openMobileFooterColumn = ref(props.footerColumns[0]?.title ?? null)
+
+const getCtaHref = (text?: string, href?: string) =>
+  text && trialCtaTexts.has(text.trim()) ? trialPagePath : href
+
+const footerActionIcon = (text: string) => (text.includes('下载') ? Download : PhoneTelephone)
+
+const isMobileFooterColumnOpen = (title: string) => openMobileFooterColumn.value === title
+
+const toggleMobileFooterColumn = (title: string) => {
+  openMobileFooterColumn.value = isMobileFooterColumnOpen(title) ? null : title
+}
 </script>

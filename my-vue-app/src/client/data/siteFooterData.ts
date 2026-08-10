@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import { Wechat, Tiktok } from '@icon-park/vue-next'
+import { Wechat, Tiktok } from '@/client/components/ui/remixIcons'
 import { WechatVideo } from '@/client/components/ui/icons'
 import { toPagePath } from '@/client/data/routePaths'
 
@@ -75,16 +75,6 @@ export const footerColumns: FooterColumn[] = [
     ],
   },
   {
-    title: '下载中心',
-    links: [
-      { text: '钉钉版', href: toPagePath('single_download') },
-      { text: '企微版', href: toPagePath('single_download') },
-      { text: '飞书版', href: toPagePath('single_download') },
-      { text: '独立版', href: toPagePath('single_download') },
-      { text: 'AI 助理', href: toPagePath('single_download') },
-    ],
-  },
-  {
     title: '关于我们',
     links: [
       { text: '公司介绍', href: '/gongsijianjie' },
@@ -99,8 +89,8 @@ export const footerColumns: FooterColumn[] = [
       { text: '推广大使', href: toPagePath('channel_cooperation') },
     ],
     actions: [
-      { text: '下载销帮帮AI CRM', href: toPagePath('single_download'), variant: 'primary' },
-      { text: '联系您的专属顾问', href: toPagePath('single_mfsy'), variant: 'outline' },
+      { text: '下载销帮帮', href: toPagePath('single_download'), variant: 'primary' },
+      { text: '联系顾问', href: toPagePath('single_mfsy'), variant: 'outline' },
     ],
   },
 ]
