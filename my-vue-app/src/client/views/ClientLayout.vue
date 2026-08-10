@@ -8,6 +8,14 @@
         </transition>
       </RouterView>
     </main>
+    <FloatingToolbar
+      :top-service="{
+        icon: floatingToolbarData.serviceIcon,
+        label: '在线客服',
+        link: floatingToolbarData.customerServiceLink,
+      }"
+      :items="floatingToolbarData.items"
+    />
     <SiteFooter
       v-if="!route.meta.hideStickyFormBar"
       :footer-columns="footerColumns"
@@ -23,10 +31,12 @@
 <script setup lang="ts">
 import { nextTick, onMounted, watch } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
+import FloatingToolbar from '@/client/components/layout/FloatingToolbar.vue'
 import StickyFormBar from '@/client/components/layout/StickyFormBar.vue'
 import SiteFooter from '@/client/components/layout/SiteFooter.vue'
 import SiteHeader from '@/client/components/layout/SiteHeader.vue'
 import { siteNavItems, trialRoute, siteHotline } from '@/client/data/siteNavData'
+import { floatingToolbarData } from '@/client/data/siteConfigData'
 import {
   footerColumns,
   socials,
