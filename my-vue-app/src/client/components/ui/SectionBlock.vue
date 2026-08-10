@@ -30,24 +30,24 @@ const props = withDefaults(
 
 const spacingMap: Record<Spacing, string> = {
   default:
-    'pt-[60px] max-lg:pt-[40px] max-md:pt-[30px] pb-[60px] max-lg:pb-[40px] max-md:pb-[30px]',
-  loose: 'pt-[70px] max-lg:pt-[50px] max-md:pt-[40px] pb-[70px] max-lg:pb-[50px] max-md:pb-[40px]',
+    'pt-[64px] max-lg:pt-[40px] max-md:pt-[30px] pb-[64px] max-lg:pb-[40px] max-md:pb-[30px]',
+  loose: 'pt-[64px] max-lg:pt-[50px] max-md:pt-[40px] pb-[64px] max-lg:pb-[50px] max-md:pb-[40px]',
   compact:
-    'pt-[34px] max-lg:pt-[28px] max-md:pt-[20px] pb-[34px] max-lg:pb-[28px] max-md:pb-[20px]',
+    'pt-[64px] max-lg:pt-[28px] max-md:pt-[20px] pb-[64px] max-lg:pb-[28px] max-md:pb-[20px]',
   none: '',
 }
 
 const widthMap: Record<Width, string> = {
   default: 'w-[min(1200px,calc(100%-48px))] mx-auto',
-  narrow: 'w-[min(1200px,calc(100%-48px))] mx-auto max-w-[920px]',
+  narrow: 'w-[min(1200px,calc(100%-48px))] mx-auto',
   wide: 'w-[min(1200px,calc(100%-48px))] mx-auto max-w-[1136px]',
   full: '',
 }
 
 const paddingBottomMap: Record<Spacing, string> = {
-  default: 'pb-[60px] max-lg:pb-[40px] max-md:pb-[30px]',
-  loose: 'pb-[70px] max-lg:pb-[50px] max-md:pb-[40px]',
-  compact: 'pb-[34px] max-lg:pb-[28px] max-md:pb-[20px]',
+  default: 'pb-[64px] max-lg:pb-[40px] max-md:pb-[30px]',
+  loose: 'pb-[64px] max-lg:pb-[50px] max-md:pb-[40px]',
+  compact: 'pb-[64px] max-lg:pb-[28px] max-md:pb-[20px]',
   none: '',
 }
 
