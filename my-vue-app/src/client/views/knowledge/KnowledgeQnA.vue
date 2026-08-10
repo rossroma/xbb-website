@@ -10,35 +10,22 @@
             <p>精选 CRM 选型、客户管理和数字化经营相关内容，帮助企业快速理解落地方法。</p>
           </header>
 
-          <!-- 加载态 -->
-          <div v-if="isLoading" class="mt-6 space-y-4">
-            <div
-              v-for="i in 5"
-              :key="i"
-              class="flex items-center gap-4 border-b border-border-subtle py-4"
-            >
-              <div class="skeleton h-4 w-24 rounded" />
-              <div class="skeleton h-4 flex-1 rounded" />
-              <div class="skeleton h-4 w-12 rounded" />
-            </div>
-          </div>
-
-          <!-- 错误态 -->
+          <!-- 错误态（仅初始加载出错时显示） -->
           <ErrorState
-            v-else-if="errorMessage"
+            v-if="errorMessage && !articleList"
             :message="errorMessage"
             class="mt-6"
             @retry="loadArticles"
           />
 
-          <!-- 空态 -->
+          <!-- 空态（已加载但无数据） -->
           <EmptyState
-            v-else-if="!isLoading && articleItems.length === 0"
+            v-else-if="!isLoading && !errorMessage && articleList && articleItems.length === 0"
             message="暂无知识问答文章"
             class="mt-6"
           />
 
-          <!-- 文章列表 -->
+          <!-- 文章列表（始终渲染，翻页时 ContentList 保持挂载） -->
           <ContentList
             v-else
             title=""
@@ -46,8 +33,10 @@
             variant="article-row"
             hide-header
             show-pagination
+            :loading="isLoading && !articleList"
             v-model:current-page="currentPage"
-            :total-pages="totalPages"
+            :total="articleList?.total ?? 0"
+            :page-size="pageSize"
             @page-change="handlePageChange"
           />
         </main>
@@ -95,8 +84,6 @@ const isLoading = ref(false)
 const errorMessage = ref<string | null>(null)
 const articleList = ref<ClientArticleListResponse | null>(null)
 const currentPage = ref(1)
-
-const totalPages = computed(() => articleList.value?.totalPages ?? 0)
 
 /** Unix 时间戳转日期字符串 */
 function formatTimestamp(ts: number): string {
@@ -203,22 +190,6 @@ onMounted(() => {
   width: 100%;
   max-width: 300px;
   justify-self: end;
-}
-
-/* 骨架屏 */
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: skeleton-pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes skeleton-pulse {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }
 
 @media (max-width: 1199px) {

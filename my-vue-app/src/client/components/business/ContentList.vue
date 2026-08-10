@@ -214,104 +214,108 @@
       v-if="variant === 'article-row'"
       :class="['content-list-article-row', hideHeader ? 'mt-0' : 'mt-14 max-lg:mt-10 max-md:mt-8']"
     >
-      <div v-for="item in items" :key="item.title" class="content-list-article-row__item">
-        <div class="content-list-article-row__media">
-          <component
-            v-if="item.image"
-            :is="getLinkComponent(item.linkHref)"
-            :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
-            :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
-            class="content-list-article-row__media-link"
-            :aria-label="item.linkHref ? `查看文章：${item.title}` : undefined"
-          >
-            <img :src="item.image" :alt="item.imageAlt ?? item.title" loading="lazy" />
-          </component>
-        </div>
-
-        <div class="content-list-article-row__body">
-          <h3 class="content-list-article-row__title">
-            <component
-              :is="getLinkComponent(item.linkHref, 'span')"
-              :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
-              :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
-              class="content-list-article-row__text-link"
-            >
-              {{ item.title }}
-            </component>
-          </h3>
-          <p v-if="item.summary || item.description" class="content-list-article-row__description">
-            <component
-              :is="getLinkComponent(item.linkHref, 'span')"
-              :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
-              :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
-              class="content-list-article-row__summary-link"
-            >
-              {{ item.summary || item.description }}
-            </component>
-          </p>
-
-          <div class="content-list-article-row__meta">
-            <time :datetime="item.updatedAt ?? item.publishDate">{{
-              item.updatedAt ?? item.publishDate
-            }}</time>
-            <span v-if="item.author" aria-hidden="true">|</span>
-            <span v-if="item.author">{{ item.author }}</span>
+      <!-- 初始加载骨架屏（仅 loading 且无数据时显示） -->
+      <div
+        v-if="loading && items.length === 0"
+        class="content-list-article-row__skeleton"
+      >
+        <div
+          v-for="i in 5"
+          :key="i"
+          class="content-list-article-row__skeleton-item"
+        >
+          <div class="content-list-article-row__skeleton-media" />
+          <div class="content-list-article-row__skeleton-body">
+            <div class="content-list-article-row__skeleton-line skeleton-line--short" />
+            <div class="content-list-article-row__skeleton-line skeleton-line--medium" />
+            <div class="content-list-article-row__skeleton-line skeleton-line--long" />
           </div>
         </div>
       </div>
 
-      <nav
-        v-if="showPagination && totalPages >= 1"
-        class="content-list-article-row__pagination"
-        aria-label="文章分页"
+      <!-- 数据列表（翻页时保持挂载，通过 Transition 切换） -->
+      <div
+        v-else
+        class="content-list-article-row__items"
       >
-        <span class="content-list-article-row__page-summary">
-          共{{ formattedTotalPages }}页 第{{ normalizedCurrentPage }}页
-        </span>
-        <template v-for="pageItem in articlePaginationItems" :key="pageItem">
-          <button
-            v-if="typeof pageItem === 'number'"
-            type="button"
-            :class="[
-              'content-list-article-row__page-button',
-              pageItem === normalizedCurrentPage
-                ? 'content-list-article-row__page-button--active'
-                : '',
-            ]"
-            :aria-current="pageItem === normalizedCurrentPage ? 'page' : undefined"
-            @click="goToArticlePage(pageItem)"
-          >
-            {{ pageItem }}
-          </button>
-          <span v-else class="content-list-article-row__page-ellipsis">...</span>
-        </template>
-        <button
-          type="button"
-          class="content-list-article-row__page-button"
-          :disabled="normalizedCurrentPage >= totalPages"
-          aria-label="下一页"
-          @click="goToArticlePage(normalizedCurrentPage + 1)"
-        >
-          »
-        </button>
-        <button
-          type="button"
-          class="content-list-article-row__page-button content-list-article-row__page-button--tail"
-          :disabled="normalizedCurrentPage >= totalPages"
-          @click="goToArticlePage(totalPages)"
-        >
-          尾页
-        </button>
-      </nav>
+        <Transition name="list-fade" mode="out-in">
+          <div :key="currentPage" class="content-list-article-row__items-inner">
+            <div
+              v-for="item in items"
+              :key="item.title"
+              class="content-list-article-row__item"
+            >
+              <div class="content-list-article-row__media">
+                <component
+                  v-if="item.image"
+                  :is="getLinkComponent(item.linkHref)"
+                  :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
+                  :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
+                  class="content-list-article-row__media-link"
+                  :aria-label="item.linkHref ? `查看文章：${item.title}` : undefined"
+                >
+                  <img :src="item.image" :alt="item.imageAlt ?? item.title" loading="lazy" class="content-list-article-row__media-img" />
+                </component>
+              </div>
+
+              <div class="content-list-article-row__body">
+                <h3 class="content-list-article-row__title">
+                  <component
+                    :is="getLinkComponent(item.linkHref, 'span')"
+                    :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
+                    :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
+                    class="content-list-article-row__text-link"
+                  >
+                    {{ item.title }}
+                  </component>
+                </h3>
+                <p v-if="item.summary || item.description" class="content-list-article-row__description">
+                  <component
+                    :is="getLinkComponent(item.linkHref, 'span')"
+                    :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
+                    :href="isInternalLink(item.linkHref) ? undefined : item.linkHref"
+                    class="content-list-article-row__summary-link"
+                  >
+                    {{ item.summary || item.description }}
+                  </component>
+                </p>
+
+                <div class="content-list-article-row__meta">
+                  <time :datetime="item.updatedAt ?? item.publishDate">{{
+                    item.updatedAt ?? item.publishDate
+                  }}</time>
+                  <span v-if="item.author" aria-hidden="true">|</span>
+                  <span v-if="item.author">{{ item.author }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+
+      <div
+        v-if="showPagination && total > 0"
+        class="flex justify-center mt-6"
+      >
+        <Pagination
+          :current-page="currentPage"
+          :total="total"
+          :page-size="pageSize"
+          :show-total="false"
+          :show-size-changer="false"
+          :show-quick-jumper="false"
+          @update:current-page="handlePaginationChange"
+        />
+      </div>
     </div>
   </component>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Right } from '@icon-park/vue-next'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import Pagination from '@/client/components/ui/Pagination.vue'
 
 /** 内容卡片数据 */
 export interface ContentCard {
@@ -340,8 +344,6 @@ export interface ContentCard {
 /** 内容展示形态 */
 type ContentVariant = 'card' | 'compact' | 'list' | 'article-row'
 
-type ArticlePageItem = number | 'ellipsis-start' | 'ellipsis-end'
-
 const props = withDefaults(
   defineProps<{
     /** 区块标题 */
@@ -362,10 +364,16 @@ const props = withDefaults(
     showPagination?: boolean
     /** article-row 模式当前页码 */
     currentPage?: number
-    /** article-row 模式总页数 */
+    /** article-row 模式数据总条数（Pagination 组件使用） */
+    total?: number
+    /** article-row 模式每页条数 */
+    pageSize?: number
+    /** （已废弃，请使用 total）article-row 模式总页数 */
     totalPages?: number
     /** 隐藏发布日期（card/compact 变体生效） */
     hideDate?: boolean
+    /** 加载中状态（article-row 模式：初始加载时显示骨架屏，翻页时保持现有列表） */
+    loading?: boolean
   }>(),
   {
     variant: 'card',
@@ -373,8 +381,11 @@ const props = withDefaults(
     rounded: true,
     showPagination: false,
     currentPage: 1,
+    total: 0,
+    pageSize: 10,
     totalPages: 0,
     hideDate: false,
+    loading: false,
   },
 )
 
@@ -390,58 +401,6 @@ const emit = defineEmits<{
   /** article-row 分页器 v-model 当前页 */
   'update:currentPage': [page: number]
 }>()
-
-const normalizedCurrentPage = computed(() => {
-  if (props.totalPages <= 0) return 1
-  return Math.min(Math.max(props.currentPage, 1), props.totalPages)
-})
-
-const formattedTotalPages = computed(() => {
-  return props.totalPages.toLocaleString('zh-CN')
-})
-
-const articlePaginationItems = computed<ArticlePageItem[]>(() => {
-  const total = props.totalPages
-  if (total <= 0) return []
-  if (total <= 8) {
-    return Array.from({ length: total }, (_, index) => index + 1)
-  }
-
-  const current = normalizedCurrentPage.value
-
-  if (current <= 5) {
-    const frontPages = [1, 2, 3, 4, 5].filter((page) => page <= total)
-    const milestonePages = [10, 20, 30].filter((page) => page <= total && page > 5)
-    const result: ArticlePageItem[] = [...frontPages]
-
-    if (milestonePages.length > 0) {
-      result.push('ellipsis-start', ...milestonePages)
-    }
-
-    const visiblePages = [...frontPages, ...milestonePages]
-    const lastVisiblePage = visiblePages[visiblePages.length - 1]
-    if (lastVisiblePage && lastVisiblePage < total) {
-      result.push('ellipsis-end')
-    }
-
-    return result
-  }
-
-  if (current >= total - 4) {
-    return [1, 'ellipsis-start', ...Array.from({ length: 5 }, (_, index) => total - 4 + index)]
-  }
-
-  return [
-    1,
-    'ellipsis-start',
-    current - 2,
-    current - 1,
-    current,
-    current + 1,
-    current + 2,
-    'ellipsis-end',
-  ]
-})
 
 /** 判断是否为内部链接（以 / 开头且非 // 开头） */
 function isInternalLink(href?: string): boolean {
@@ -472,19 +431,102 @@ function handleListKeydown(e: KeyboardEvent, item: ContentCard): void {
   }
 }
 
-function goToArticlePage(page: number): void {
-  if (props.totalPages <= 0) return
-  const nextPage = Math.min(Math.max(page, 1), props.totalPages)
-  if (nextPage === normalizedCurrentPage.value) return
-
-  emit('update:currentPage', nextPage)
-  emit('pageChange', nextPage)
+/** Pagination 组件翻页回调 */
+function handlePaginationChange(page: number): void {
+  emit('update:currentPage', page)
+  emit('pageChange', page)
 }
 </script>
 
 <style scoped>
 .content-list-article-row {
   border-top: 1px solid #e5e7eb;
+}
+
+/* ===== 初始加载骨架屏 ===== */
+.content-list-article-row__skeleton {
+  padding-top: 0;
+}
+
+.content-list-article-row__skeleton-item {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 50px 0;
+  border-bottom: 1px solid #d9dee7;
+}
+
+.content-list-article-row__skeleton-media {
+  flex: 0 0 300px;
+  width: 300px;
+  aspect-ratio: 300 / 152;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: content-list-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.content-list-article-row__skeleton-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.content-list-article-row__skeleton-line {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: content-list-skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-line--short {
+  width: 40%;
+}
+
+.skeleton-line--medium {
+  width: 65%;
+}
+
+.skeleton-line--long {
+  width: 85%;
+}
+
+@keyframes content-list-skeleton-pulse {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.content-list-article-row__items {
+  position: relative;
+}
+
+.content-list-article-row__items-inner {
+  will-change: opacity;
+}
+
+/* 列表翻页过渡动画 — 仅透明度过渡，不改变容器高度 */
+.list-fade-enter-active,
+.list-fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.list-fade-enter-from,
+.list-fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list-fade-enter-active,
+  .list-fade-leave-active {
+    transition: none;
+  }
+
+  .list-fade-enter-from,
+  .list-fade-leave-to {
+    opacity: 1;
+  }
 }
 
 .content-list-article-row__item {
@@ -496,7 +538,6 @@ function goToArticlePage(page: number): void {
   border-bottom: 1px solid #d9dee7;
   color: inherit;
   text-decoration: none;
-  transition: opacity 0.2s ease;
 }
 
 .content-list-article-row__media {
@@ -506,6 +547,7 @@ function goToArticlePage(page: number): void {
   overflow: hidden;
   border-radius: 4px;
   background: #f4f6f9;
+  cursor: pointer;
 }
 
 .content-list-article-row__media-link {
@@ -516,11 +558,38 @@ function goToArticlePage(page: number): void {
   text-decoration: none;
 }
 
-.content-list-article-row__media img {
+.content-list-article-row__media-img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-list-article-row__media-img {
+    transition: none;
+  }
+}
+
+.content-list-article-row__media:hover .content-list-article-row__media-img {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-list-article-row__media:hover .content-list-article-row__media-img {
+    transform: none;
+  }
+}
+
+.content-list-article-row__media:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-list-article-row__media:hover {
+    box-shadow: none;
+  }
 }
 
 .content-list-article-row__body {
@@ -541,6 +610,12 @@ function goToArticlePage(page: number): void {
 .content-list-article-row__summary-link {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-break: break-word;
   transition: color 0.2s ease;
 }
 
@@ -578,71 +653,6 @@ function goToArticlePage(page: number): void {
   line-height: 1.5;
 }
 
-.content-list-article-row__pagination {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 100%;
-  gap: 3px;
-  margin-top: 24px;
-}
-
-.content-list-article-row__page-summary,
-.content-list-article-row__page-button,
-.content-list-article-row__page-ellipsis {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 34px;
-  height: 34px;
-  padding: 0 10px;
-  border: 1px solid #d8dee8;
-  border-radius: 7px;
-  background: #ffffff;
-  color: #344052;
-  font-size: 13px;
-  line-height: 1;
-}
-
-.content-list-article-row__page-summary {
-  min-width: 122px;
-  justify-content: flex-start;
-  white-space: nowrap;
-}
-
-.content-list-article-row__page-button {
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background-color 0.2s ease,
-    color 0.2s ease;
-}
-
-.content-list-article-row__page-button:hover:not(:disabled) {
-  border-color: #ff7a1a;
-  color: #ff7a1a;
-}
-
-.content-list-article-row__page-button--active {
-  border-color: #ff7a1a;
-  background: #ff7a1a;
-  color: #ffffff;
-}
-
-.content-list-article-row__page-button:disabled {
-  cursor: default;
-  opacity: 0.45;
-}
-
-.content-list-article-row__page-ellipsis {
-  min-width: 34px;
-}
-
-.content-list-article-row__page-button--tail {
-  min-width: 48px;
-}
-
 @media (max-width: 900px) {
   .content-list-article-row__item {
     align-items: flex-start;
@@ -662,6 +672,16 @@ function goToArticlePage(page: number): void {
   .content-list-article-row__description {
     font-size: 15px;
   }
+
+  .content-list-article-row__skeleton-item {
+    gap: 20px;
+    padding: 34px 0;
+  }
+
+  .content-list-article-row__skeleton-media {
+    flex-basis: 240px;
+    width: 240px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -674,21 +694,14 @@ function goToArticlePage(page: number): void {
     flex-basis: auto;
   }
 
-  .content-list-article-row__pagination {
-    gap: 3px;
+  .content-list-article-row__skeleton-item {
+    flex-direction: column;
   }
 
-  .content-list-article-row__page-summary,
-  .content-list-article-row__page-button,
-  .content-list-article-row__page-ellipsis {
-    min-width: 32px;
-    height: 32px;
-    padding: 0 8px;
-    font-size: 12px;
-  }
-
-  .content-list-article-row__page-summary {
+  .content-list-article-row__skeleton-media {
     width: 100%;
+    flex-basis: auto;
+    aspect-ratio: 300 / 152;
   }
 }
 </style>

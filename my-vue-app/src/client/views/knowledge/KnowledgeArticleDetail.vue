@@ -396,6 +396,8 @@ onBeforeUnmount(() => {
   font-size: 36px;
   font-weight: 500;
   line-height: 1.22;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .knowledge-detail-meta {

@@ -2307,7 +2307,8 @@ const articleListDefaults = {
   rounded: true,
   'show-pagination': true,
   'current-page': 1,
-  'total-pages': 1709,
+  total: 17090,
+  'page-size': 10,
   title: '最新文章',
 }
 
