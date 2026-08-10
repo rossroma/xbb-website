@@ -83,13 +83,6 @@
           <p class="mt-2 line-clamp-2 text-body text-text-secondary leading-body">
             {{ item.description }}
           </p>
-          <time
-            v-if="!hideDate"
-            :datetime="item.publishDate"
-            class="mt-auto pt-4 text-caption text-text-tertiary"
-          >
-            {{ item.publishDate }}
-          </time>
         </div>
       </component>
     </div>
@@ -310,7 +303,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { Right } from '@icon-park/vue-next'
+import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 
 /** 内容卡片数据 */
