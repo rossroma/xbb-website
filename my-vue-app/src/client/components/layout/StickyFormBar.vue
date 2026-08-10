@@ -91,13 +91,17 @@
                 </template>
               </FormInput>
             </div>
-            <button
+            <Button
               type="submit"
-              class="w-22 h-9 shrink-0 border-0 rounded-lg bg-trial-submit-gradient text-white text-small font-medium cursor-pointer shadow-trial-submit px-4 py-2 disabled:cursor-default disabled:opacity-70"
+              variant="primary"
+              color="accent"
+              size="md"
+              radius="lg"
+              class="!w-22 shrink-0"
               :disabled="submitting"
             >
               {{ submitting ? '提交中' : submitText }}
-            </button>
+            </Button>
           </Form>
         </div>
       </div>
@@ -118,6 +122,7 @@ import { ref } from 'vue'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 import Form from '@/client/components/ui/Form.vue'
 import FormInput from '@/client/components/ui/FormInput.vue'
+import Button from '@/client/components/ui/Button.vue'
 import CaptchaModal from '@/client/components/business/CaptchaModal.vue'
 import { useStickyFormSubmit } from '@/client/composables/useStickyFormSubmit'
 
