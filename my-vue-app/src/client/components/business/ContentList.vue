@@ -335,7 +335,7 @@ export interface ContentCard {
 /** 内容展示形态 */
 type ContentVariant = 'card' | 'compact' | 'list' | 'article-row'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     /** 区块标题 */
     title: string

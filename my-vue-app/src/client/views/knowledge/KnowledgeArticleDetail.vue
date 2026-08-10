@@ -220,7 +220,7 @@ const knowledgeDetailTocItems = computed<ArticleSidebarTocItem[]>(() => {
   }
 
   // 添加 FAQ 锚点
-  if (faqItems.length) {
+  if (faqItems.value.length) {
     items.push({ id: faqAnchorId, title: '本文相关FAQs' })
   }
 
