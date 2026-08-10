@@ -17,6 +17,7 @@
     <GradientCardGrid
       :title="aiFeatureCardsSection.title"
       :cards="aiFeatureCardsSection.cards"
+      prefer-image
       @card-click="(title: string) => navigateToClientPage(aiFeatureCardsSection.routeMap[title]!)"
     >
       <template #visual="{ card }">
@@ -158,14 +159,6 @@
 
     <SplitCardLayout :heading="serviceCardsSection.heading" :cards="serviceCardsSection.cards" />
 
-    <FloatingToolbar
-      :top-service="{
-        icon: floatingToolbarData.serviceIcon,
-        label: '在线客服',
-        link: floatingToolbarData.customerServiceLink,
-      }"
-      :items="floatingToolbarData.items"
-    />
   </div>
 </template>
 
@@ -183,7 +176,6 @@ import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
 import PromoBanner from '@/client/components/business/PromoBanner.vue'
 import IndustryCarousel from '@/client/components/business/IndustryCarousel.vue'
 import SplitCardLayout from '@/client/components/business/SplitCardLayout.vue'
-import FloatingToolbar from '@/client/components/layout/FloatingToolbar.vue'
 import {
   heroBannerSection,
   solutionCardsSection,
@@ -196,12 +188,12 @@ import {
   heroBrandVideo,
   adsToBannerSlides,
 } from '@/client/data/homeData'
-import { floatingToolbarData } from '@/client/data/siteConfigData'
 import type { BannerSlide } from '@/client/data/homeData'
 
 usePageSEO()
 
 const router = useRouter()
+const trialCtaTexts = new Set(['免费试用', '立即免费试用', '立即咨询', 'CRM免费试用', '免费使用'])
 
 // 首页 Banner 轮播 — 优先使用后台广告数据，API 不可用时回退到硬编码
 const { items: bannerAds } = useAds(AD_POSITION.HOME_BANNER)
@@ -221,6 +213,12 @@ const navigateToClientPage = async (pageKey: string) => {
 }
 
 const handleHeroAction = async (slide: BannerSlide, action: 'primary' | 'secondary') => {
+  const text = action === 'primary' ? slide.primaryCta : slide.secondaryCta
+  if (text && trialCtaTexts.has(text.trim())) {
+    await navigateToClientPage('single_mfsy')
+    return
+  }
+
   // 优先按 ord 查找路由（广告数据），fallback 按 key 查找（硬编码数据）
   const target =
     routeActionsByOrd[slide.ord ?? 0]?.[action] ||
