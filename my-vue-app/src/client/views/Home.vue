@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <!-- SEO: 首页核心主题，视觉隐藏，仅搜索引擎和屏幕阅读器可见 -->
+    <h1 class="sr-only">销帮帮AI CRM — 懂客户，更懂增长</h1>
+
     <HeroBanner
       :slides="heroSlides"
       :brand-video="heroBrandVideo"

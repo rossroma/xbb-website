@@ -38,6 +38,18 @@ export function usePageSEO(): void {
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:type', content: 'website' },
+      { property: 'og:url', content: `https://www.xbongbong.com${route.path}` },
+      { property: 'og:site_name', content: '销帮帮CRM' },
+      { property: 'og:locale', content: 'zh_CN' },
+      { property: 'og:image', content: 'https://www.xbongbong.com/og-image.png' },
+      // Twitter Card
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: title },
+      { name: 'twitter:description', content: description },
+      { name: 'twitter:image', content: 'https://www.xbongbong.com/og-image.png' },
+    ],
+    link: [
+      { rel: 'canonical', href: `https://www.xbongbong.com${route.path}` },
     ],
     // @vueuse/head 的 Script 类型有 index signature 约束，JSON-LD 对象结构兼容
     script: jsonLdScripts.length > 0 ? (jsonLdScripts as Array<{ type: string; children: string }>) : undefined,

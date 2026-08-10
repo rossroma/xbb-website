@@ -51,7 +51,7 @@ const BREADCRUMB_PARENTS: Record<string, string> = {
 }
 
 /** 站点基础信息 — 用于 Organization / WebSite JSON-LD */
-const SITE_URL = 'https://www.xiaobangbang.com'
+const SITE_URL = 'https://www.xbongbong.com'
 const SITE_NAME = '销帮帮CRM'
 const SITE_DESCRIPTION = '销帮帮CRM是专业的客户关系管理系统，提供客户管理、销售管理、市场管理、BI分析等一站式数字化销售解决方案。'
 
