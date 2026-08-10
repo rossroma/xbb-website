@@ -1,5 +1,5 @@
 import type { Component } from 'vue'
-import { Wechat, Phone, Rocket, User } from '@/client/components/ui/remixIcons'
+import { Wechat, Phone, Rocket } from '@/client/components/ui/remixIcons'
 
 const floatingServiceIcon = '/images/cservice.png'
 const floatingQrCode = '/images/sdr_contact_me_qr.png'

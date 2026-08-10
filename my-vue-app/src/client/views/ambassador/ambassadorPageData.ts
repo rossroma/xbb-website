@@ -1,5 +1,5 @@
 // ========== 推广大使页面 SEO 配置 ==========
-import { Audit, Edit, Gift, ShoppingCart } from '@icon-park/vue-next'
+import { Audit, Edit, Gift, ShoppingCart } from '@/client/components/ui/remixIcons'
 import type { BannerSlide } from '@/client/data/homeData'
 import type { FaqCategory, FaqItem } from '@/client/components/business/FaqList.vue'
 

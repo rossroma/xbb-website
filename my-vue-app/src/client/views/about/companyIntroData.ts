@@ -1,5 +1,5 @@
 // ========== 公司介绍页面 SEO 配置 ==========
-import { BookOpen, ChartHistogram, Rocket } from '@icon-park/vue-next'
+import { BookOpen, ChartHistogram, Rocket } from '@/client/components/ui/remixIcons'
 import {
   ecosystemAbility1,
   ecosystemAbility2,

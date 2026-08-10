@@ -969,7 +969,6 @@
 </template>
 <script setup lang="ts">
 import {
-  AllApplication,
   Calendar,
   ChartHistogram,
   Check,
@@ -979,9 +978,6 @@ import {
   Star,
   LinkCloud,
   Wechat,
-  Dingding,
-  Download,
-  Robot,
   Search,
   SendOne,
   ApiApp,
@@ -2451,9 +2447,9 @@ const demoProductCards = [
 const aiCrmDemoCards = [
   {
     image: '/images/liuzi/1.png',
-    icon: Search,
+    icon: '/images/liuzi/aiFindCust.png',
     iconAlt: 'AI找客助手图标',
-    sideIcon: Search,
+    sideIcon: '/images/liuzi/aiFindCustIcon.png',
     sideImageAlt: '',
     title: 'AI找客助手',
     description: '快速锁定优质成交客户',
@@ -2467,9 +2463,9 @@ const aiCrmDemoCards = [
   },
   {
     image: '/images/liuzi/2.png',
-    icon: Robot,
+    icon: '/images/liuzi/aiSales.png',
     iconAlt: 'AI销售陪练图标',
-    sideIcon: Robot,
+    sideIcon: '/images/liuzi/aiSalesIcon.png',
     sideImageAlt: '',
     title: 'AI销售陪练',
     description: '全员具备销冠实力',
@@ -2483,9 +2479,9 @@ const aiCrmDemoCards = [
   },
   {
     image: '/images/liuzi/3.png',
-    icon: ChartHistogram,
+    icon: '/images/liuzi/aiBusiness.png',
     iconAlt: 'AI业务分析图标',
-    sideIcon: ChartHistogram,
+    sideIcon: '/images/liuzi/aiBusinessIcon.png',
     sideImageAlt: '',
     title: 'AI业务分析',
     description: '数据诊问题，AI 挖机会',
@@ -2766,27 +2762,27 @@ const demoFeatureSingleCards = [
 const platformDownloadCards = [
   {
     name: '钉钉',
-    iconComponent: Dingding,
+    icon: '/ecosystem/ability-1.svg',
     qrCode: '/images/customer/tab-unified.svg',
   },
   {
     name: '飞书',
-    iconComponent: AllApplication,
+    icon: '/ecosystem/ability-3.svg',
     qrCode: '/images/customer/tab-tracking.svg',
   },
   {
     name: '企业微信',
-    iconComponent: Wechat,
+    icon: '/ecosystem/ability-2.svg',
     qrCode: '/images/customer/tab-retention.svg',
   },
   {
     name: '独立版',
-    iconComponent: Download,
+    icon: '/ecosystem/1688.png',
     qrCode: '/images/customer/tab-collaboration.svg',
   },
   {
     name: 'AI助手',
-    iconComponent: Robot,
+    icon: '/images/liuzi/aiBusiness.png',
     qrCode: '/images/customer/hero.svg',
   },
 ]

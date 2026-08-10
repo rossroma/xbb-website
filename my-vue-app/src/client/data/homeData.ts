@@ -63,6 +63,7 @@ export interface BannerSlide {
   /** 轮播顺序（来自 Ads 数据），用于 CTA 路由映射 */
   ord?: number
   mediaType: 'video' | 'image'
+  eyebrow?: string
   title: string
   subtitle?: string
   desc: string

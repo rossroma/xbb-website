@@ -31,7 +31,7 @@
                 v-for="(card, index) in displayCards"
                 :key="`${card.key}-${index}`"
                 :class="[
-                  'industry-carousel-card shrink-0 box-border p-[22px] rounded-card bg-[#f6f6fb] border border-[#f6f6fb] flex flex-col transition-all duration-glide ease motion-reduce:transition-none',
+                  'industry-carousel-card shrink-0 box-border p-[22px] rounded-card bg-surface-secondary border border-surface-secondary flex flex-col transition-all duration-glide ease motion-reduce:transition-none',
                   getCardClass(index),
                 ]"
                 :style="{ width: `${cardWidth}px` }"

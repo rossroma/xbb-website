@@ -33,6 +33,7 @@ import {
   RiEditLine,
   RiErrorWarningLine,
   RiEyeLine,
+  RiEyeOffLine,
   RiFileCopyLine,
   RiFileEditLine,
   RiFileList3Line,
@@ -43,6 +44,7 @@ import {
   RiFireLine,
   RiFlashlightLine,
   RiFolderAddLine,
+  RiFolderLine,
   RiForbidLine,
   RiFullscreenLine,
   RiGiftLine,
@@ -55,6 +57,7 @@ import {
   RiLineChartLine,
   RiLoader4Line,
   RiLockLine,
+  RiLogoutBoxLine,
   RiLoopRightLine,
   RiMagicLine,
   RiMailLine,
@@ -84,6 +87,7 @@ import {
   RiTiktokLine,
   RiTimeLine,
   RiTodoLine,
+  RiUpload2Line,
   RiUserLine,
   RiUserStarLine,
   RiVideoLine,
@@ -131,6 +135,7 @@ const remixIcons = {
   RiEditLine,
   RiErrorWarningLine,
   RiEyeLine,
+  RiEyeOffLine,
   RiFileCopyLine,
   RiFileEditLine,
   RiFileList3Line,
@@ -141,6 +146,7 @@ const remixIcons = {
   RiFireLine,
   RiFlashlightLine,
   RiFolderAddLine,
+  RiFolderLine,
   RiForbidLine,
   RiFullscreenLine,
   RiGiftLine,
@@ -153,6 +159,7 @@ const remixIcons = {
   RiLineChartLine,
   RiLoader4Line,
   RiLockLine,
+  RiLogoutBoxLine,
   RiLoopRightLine,
   RiMagicLine,
   RiMailLine,
@@ -182,6 +189,7 @@ const remixIcons = {
   RiTiktokLine,
   RiTimeLine,
   RiTodoLine,
+  RiUpload2Line,
   RiUserLine,
   RiUserStarLine,
   RiVideoLine,
@@ -357,3 +365,7 @@ export const Vip = createIcon('RiVipCrownLine')
 export const Wechat = createIcon('RiWechatLine')
 export const WechatVideo = createIcon('RiWechatChannelsLine')
 export const Weibo = createIcon('RiWeiboLine')
+export const Upload = createIcon('RiUpload2Line')
+export const Logout = createIcon('RiLogoutBoxLine')
+export const Hide = createIcon('RiEyeOffLine')
+export const Folder = createIcon('RiFolderLine')

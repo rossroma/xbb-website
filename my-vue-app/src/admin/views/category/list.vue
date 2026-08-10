@@ -217,7 +217,7 @@
 import { computed, onBeforeUnmount, onMounted, reactive, ref, shallowRef } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { Check, Close, Plus } from '@element-plus/icons-vue'
+import { Check, Close, Plus } from '@/client/components/ui/remixIcons'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import '@wangeditor/editor/dist/css/style.css'
 import ImageUploader from '@/admin/components/ImageUploader.vue'

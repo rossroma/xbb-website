@@ -8,7 +8,7 @@ import {
   Time,
   VideoOne,
   Vip,
-} from '@icon-park/vue-next'
+} from '@/client/components/ui/remixIcons'
 import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
 import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
