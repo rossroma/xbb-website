@@ -16,15 +16,28 @@
     <GradientCardGrid
       :title="aiFeatureCardsSection.title"
       :cards="aiFeatureCardsSection.cards"
+      title-prefix="AI"
       prefer-image
       @card-click="() => navigateToLiuziPage()"
     />
 
-    <MetricsPanel :title="metricsPanelSection.title" :metrics="metricsPanelSection.metrics" />
+    <MetricsPanel
+      :title="metricsPanelSection.title"
+      :metrics="metricsPanelSection.metrics"
+    />
 
     <PartnerGrid
       :heading="ecosystemPartnersSection.heading"
       :items="ecosystemPartnersSection.items"
+    />
+
+    
+
+    <IndustryCarousel
+      :heading="caseCarouselSection.heading"
+      :cards="caseCarouselSection.cards"
+      :cta-text="caseCarouselSection.ctaText"
+      @cta-click="navigateToClientPage(caseCarouselSection.ctaPageKey)"
     />
 
     <PromoBanner
@@ -35,14 +48,10 @@
       @cta-click="navigateToClientPage(enterpriseVideoSection.ctaPageKey)"
     />
 
-    <IndustryCarousel
-      :heading="caseCarouselSection.heading"
-      :cards="caseCarouselSection.cards"
-      :cta-text="caseCarouselSection.ctaText"
-      @cta-click="navigateToClientPage(caseCarouselSection.ctaPageKey)"
+    <SplitCardLayout
+      :heading="serviceCardsSection.heading"
+      :cards="serviceCardsSection.cards"
     />
-
-    <SplitCardLayout :heading="serviceCardsSection.heading" :cards="serviceCardsSection.cards" />
 
   </div>
 </template>
