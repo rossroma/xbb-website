@@ -76,7 +76,7 @@
 | **Repository Secrets** | GitHub Settings → Secrets and variables → Secrets | 跨环境共享的敏感信息 | `ACR_PASSWORD`、`OSS_ACCESS_KEY_SECRET` |
 | **Repository Variables** | GitHub Settings → Secrets and variables → Variables | 跨环境共享的非敏感配置 | `ACR_REGISTRY`、`OSS_REGION` |
 | **Environment Secrets** | Settings → Environments → `test` / `production` → Secrets | 环境特定的敏感信息 | `SSH_PRIVATE_KEY`、`DB_PASSWORD`、`JWT_SECRET` |
-| **Environment Variables** | Settings → Environments → `test` / `production` → Variables | 环境特定的非敏感配置 | `DEPLOY_PATH`、`DB_HOST`、`VITE_API_BASE_URL` |
+| **Environment Variables** | Settings → Environments → `test` / `production` → Variables | 环境特定的非敏感配置 | `DEPLOY_PATH`、`DB_HOST` |
 
 ### 2.3 变量流转示意
 
@@ -146,7 +146,6 @@
 | `DB_USERNAME` | 数据库用户名 | `root` |
 | `DB_DATABASE` | 数据库名 | `db_xbb_www_test` |
 | `JWT_EXPIRES_IN` | JWT 过期时间 | `7d` |
-| `VITE_API_BASE_URL` | 前端 API 地址 | `https://test.xbongbong.com` |
 | `SMS_USERNAME` | 短信服务用户名 | `xbkjy` |
 | `OSS_BASE_URL` | OSS 自定义域名 | `https://xbbwww.xbongbong.com` |
 
@@ -185,7 +184,6 @@
 | `DB_USERNAME` | `xbb_admin` |
 | `DB_DATABASE` | `db_xbb_www` |
 | `JWT_EXPIRES_IN` | `7d` |
-| `VITE_API_BASE_URL` | `https://www.xbongbong.com` |
 | `SMS_USERNAME` | `xbkjy` |
 | `OSS_BASE_URL` | `https://xbbwww.xbongbong.com` |
 
