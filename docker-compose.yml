@@ -1,29 +1,52 @@
 # ==========================================
-# 生产环境 — 使用阿里云 RDS + ACR 镜像
+# 统一部署配置 — 同时支持测试和生产环境
+# 通过 DEPLOY_ENV 环境变量区分（默认 prod）
+# 数据库均使用阿里云 RDS（外部）
 # ==========================================
 
 services:
   backend:
-    image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest
+    image: ${BACKEND_IMAGE:-${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest}
     container_name: xbb-backend
     restart: unless-stopped
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:${BACKEND_PORT:-3000}:3000"
     environment:
+      # 运行环境
       NODE_ENV: production
       PORT: 3000
+      # 数据库（阿里云 RDS）
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT:-3306}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_DATABASE: ${DB_DATABASE}
+      # JWT
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      # CORS
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      # 阿里云 OSS
       OSS_REGION: ${OSS_REGION}
       OSS_BUCKET: ${OSS_BUCKET}
       OSS_ACCESS_KEY_ID: ${OSS_ACCESS_KEY_ID}
       OSS_ACCESS_KEY_SECRET: ${OSS_ACCESS_KEY_SECRET}
       OSS_BASE_URL: ${OSS_BASE_URL:-}
+      # 短信服务
+      SMS_API_URL: ${SMS_API_URL:-https://api.mix2.zthysms.com/v2/sendSmsTp}
+      SMS_USERNAME: ${SMS_USERNAME}
+      SMS_PASSWORD: ${SMS_PASSWORD}
+      SMS_TEMPLATE_ID: ${SMS_TEMPLATE_ID:-44556}
+      SMS_SIGNATURE: ${SMS_SIGNATURE:-【销帮帮】}
+      # 验证码
+      CAPTCHA_JWT_SECRET: ${CAPTCHA_JWT_SECRET}
+      # 合作伙伴
+      PARTNER_API_TOKEN: ${PARTNER_API_TOKEN}
+      # 数据中心
+      DATACENTER_TOKEN: ${DATACENTER_TOKEN}
+      DATACENTER_CORPID: ${DATACENTER_CORPID:-dinge3fa697f86d461d2}
+      DATACENTER_USER_ID: ${DATACENTER_USER_ID:-02415643151585}
+      DATACENTER_FORM_ID: ${DATACENTER_FORM_ID:-2795678}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/v1/health"]
       interval: 30s
@@ -43,11 +66,11 @@ services:
         max-file: "3"
 
   frontend:
-    image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest
+    image: ${FRONTEND_IMAGE:-${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest}
     container_name: xbb-frontend
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "${FRONTEND_PORT:-80}:80"
     volumes:
       - ${DEPLOY_PATH:-/opt/xbb-website}/Uploads:/usr/share/nginx/html/Uploads:ro
     depends_on:

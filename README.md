@@ -146,9 +146,12 @@ pnpm lint
 
 **手动部署**：
 ```bash
-ACR_REGISTRY=xxx ACR_NAMESPACE=xxx ACR_USERNAME=xxx ACR_PASSWORD=xxx \
-DB_PASSWORD=xxx DB_DATABASE=xxx JWT_SECRET=xxx \
-bash deploy.test.sh
+# 测试环境：先 source 环境变量，再执行部署脚本
+set -a; source .env; set +a
+bash deploy.sh --test
+
+# 生产环境
+bash deploy.sh
 ```
 
 **GitHub Secrets 配置**：
@@ -176,4 +179,3 @@ bash deploy.test.sh
 | 短信 | `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
 | 回调 | `DATACENTER_TOKEN` | 数据中心回调 Token |
 | 合作 | `PARTNER_API_TOKEN` | 合作伙伴 API Token |
-| 构建 | `VITE_API_BASE_URL` | 前端 API 地址 |

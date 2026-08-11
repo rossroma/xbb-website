@@ -179,7 +179,7 @@ jobs:
 
   # ==========================================
   # 部署测试环境（develop 分支 → 自动触发）
-  # 变量由 Environment: test 提供，与生产环境使用相同变量名，不同值
+  # 使用阿里云 RDS（与生产架构一致），变量由 Environment: test 提供
   # ==========================================
   deploy-test:
     if: github.ref == 'refs/heads/develop'
@@ -190,7 +190,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 上传 docker-compose 文件、部署脚本和验证脚本到服务器
+      # 上传统一部署文件到服务器
       - name: 上传部署文件到服务器
         shell: bash
         run: |
@@ -212,11 +212,7 @@ jobs:
 
           $SCP_CMD \
             docker-compose.yml \
-            docker-compose.test.yml \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
-
-          $SCP_CMD \
-            deploy.test.sh \
+            deploy.sh \
             scripts/verify-deploy.sh \
             "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
 
@@ -231,27 +227,24 @@ jobs:
             set -e
             echo "🚀 开始测试环境部署..."
 
-            # 登录 ACR（Repository 级共享变量）
+            # 登录 ACR
             echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
 
-            # 从 ACR 拉取
+            # 拉取镜像（统一 compose 使用 ACR 完整路径，无需 docker tag）
             docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest xbb-backend:latest
-
             docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
-            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest xbb-frontend:latest
 
             # 停止旧服务
             cd ${{ vars.DEPLOY_PATH }}
-            docker compose -f docker-compose.test.yml down --timeout 30 || true
+            docker compose -f docker-compose.yml down --timeout 30 || true
 
-            # 启动 MySQL 容器
+            # 启动服务（数据库使用阿里云 RDS，无需本地 MySQL 容器）
+            echo "🚀 启动后端和前端服务..."
+            export DB_HOST="${{ vars.DB_HOST }}"
+            export DB_PORT="${{ vars.DB_PORT || 3306 }}"
+            export DB_USERNAME="${{ vars.DB_USERNAME }}"
             export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
             export DB_DATABASE="${{ vars.DB_DATABASE }}"
-            docker compose -f docker-compose.test.yml up -d --wait mysql
-
-            # 启动后端 + 前端
-            echo "🚀 启动后端和前端服务..."
             export JWT_SECRET="${{ secrets.JWT_SECRET }}"
             export OSS_REGION="${{ vars.OSS_REGION }}"
             export OSS_BUCKET="${{ vars.OSS_BUCKET }}"
@@ -262,7 +255,7 @@ jobs:
             export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
             export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
             export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
-            docker compose -f docker-compose.test.yml up -d --wait
+            docker compose -f docker-compose.yml up -d --wait
 
             # 健康检查
             for i in $(seq 1 10); do
@@ -346,8 +339,23 @@ jobs:
             cd ${{ vars.DEPLOY_PATH }}
             docker compose -f docker-compose.yml down --timeout 30 || true
 
-            # 启动新服务
+            # 启动新服务（动态注入环境变量，不留 .env 文件在服务器）
             echo "🚀 启动新服务..."
+            export DB_HOST="${{ vars.DB_HOST }}"
+            export DB_PORT="${{ vars.DB_PORT || 3306 }}"
+            export DB_USERNAME="${{ vars.DB_USERNAME }}"
+            export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            export DB_DATABASE="${{ vars.DB_DATABASE }}"
+            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+            export OSS_REGION="${{ vars.OSS_REGION }}"
+            export OSS_BUCKET="${{ vars.OSS_BUCKET }}"
+            export OSS_ACCESS_KEY_ID="${{ vars.OSS_ACCESS_KEY_ID }}"
+            export OSS_ACCESS_KEY_SECRET="${{ secrets.OSS_ACCESS_KEY_SECRET }}"
+            export SMS_USERNAME="${{ vars.SMS_USERNAME }}"
+            export SMS_PASSWORD="${{ secrets.SMS_PASSWORD }}"
+            export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
+            export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
+            export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
             docker compose -f docker-compose.yml up -d --wait
 
             # 健康检查
