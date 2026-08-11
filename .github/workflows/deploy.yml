@@ -7,7 +7,7 @@
 # ==========================================
 # 镜像策略：
 #   构建阶段 → 双推 ghcr.io（层缓存） + ACR（国内拉取）
-#   部署阶段 → 测试/生产服务器从 ACR 拉取
+#   部署阶段 → 测试/生产服务器从 ACR 拉取固定版本（github.sha）
 # ==========================================
 
 name: Deploy
@@ -107,7 +107,7 @@ jobs:
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送 ghcr.io
+      - name: 构建并推送 ghcr.io（:sha + :latest）
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -120,11 +120,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: 同步到 ACR（国内加速）
-        continue-on-error: true
         shell: bash
         run: |
           ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend"
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
+          printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
           docker pull ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
@@ -153,7 +152,7 @@ jobs:
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送 ghcr.io
+      - name: 构建并推送 ghcr.io（:sha + :latest）
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -166,11 +165,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: 同步到 ACR（国内加速）
-        continue-on-error: true
         shell: bash
         run: |
           ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend"
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
+          printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
           docker pull ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
@@ -178,45 +176,44 @@ jobs:
           docker push ${ACR_IMAGE}:latest
 
   # ==========================================
-  # 部署测试环境（develop 分支 → 自动触发）
-  # 使用阿里云 RDS（与生产架构一致），变量由 Environment: test 提供
+  # 部署（根据分支自动选择环境）
+  #   develop → 测试环境（environment: test）
+  #   main    → 生产环境（environment: production）
   # ==========================================
-  deploy-test:
-    if: github.ref == 'refs/heads/develop'
+  deploy:
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
-    environment:
-      name: test
+    environment: ${{ github.ref_name == 'main' && 'production' || 'test' }}
     steps:
       - uses: actions/checkout@v4
 
-      # 上传统一部署文件到服务器
+      # ---- 创建部署目录 + 上传部署文件 ----
+      - name: 创建部署目录
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            mkdir -p ${{ vars.DEPLOY_PATH }}/scripts
+
       - name: 上传部署文件到服务器
-        shell: bash
-        run: |
-          SSH_HOST="${{ secrets.SSH_HOST }}"
-          SSH_PORT="${{ vars.SSH_PORT || 22 }}"
-          SSH_USER="${{ secrets.SSH_USER }}"
-          SSH_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
-          DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: docker-compose.yml,scripts/verify-deploy.sh
+          target: ${{ vars.DEPLOY_PATH }}
+          strip_components: 0
 
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
-          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-
-          SCP_CMD="scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -P $SSH_PORT"
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p $SSH_PORT $SSH_USER@$SSH_HOST"
-          $SSH_CMD "mkdir -p $DEPLOY_PATH"
-
-          $SCP_CMD \
-            docker-compose.yml \
-            deploy.sh \
-            scripts/verify-deploy.sh \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
-
-      - name: SSH 部署到测试服务器
+      # ---- SSH 远程部署 ----
+      - name: SSH 远程部署
+        id: deploy
+        continue-on-error: true
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -225,121 +222,51 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
-            echo "🚀 开始测试环境部署..."
+            echo "🚀 开始 ${{ github.ref_name == 'main' && '生产' || '测试' }}环境部署..."
 
             # 登录 ACR
-            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
+            printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
 
-            # 拉取镜像（统一 compose 使用 ACR 完整路径，无需 docker tag）
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+            # 保存当前镜像版本（从 RepoTags 提取 sha 标签，用于回滚）
+            echo "📦 保存当前镜像版本..."
+            BACKEND_PREV_TAG=$(docker image inspect \
+              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest \
+              --format '{{range .RepoTags}}{{.}}{{"\n"}}{{end}}' 2>/dev/null \
+              | grep -oE ':[a-f0-9]{7,40}$' | head -1 | tr -d ':')
+            FRONTEND_PREV_TAG=$(docker image inspect \
+              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest \
+              --format '{{range .RepoTags}}{{.}}{{"\n"}}{{end}}' 2>/dev/null \
+              | grep -oE ':[a-f0-9]{7,40}$' | head -1 | tr -d ':')
+            if [ -n "$BACKEND_PREV_TAG" ]; then
+              echo "  当前后端: $BACKEND_PREV_TAG"
+              echo "$BACKEND_PREV_TAG" > /tmp/rollback-backend.tag
+            else
+              echo "  无上一版本可保存"
+              rm -f /tmp/rollback-backend.tag
+            fi
+            if [ -n "$FRONTEND_PREV_TAG" ]; then
+              echo "  当前前端: $FRONTEND_PREV_TAG"
+              echo "$FRONTEND_PREV_TAG" > /tmp/rollback-frontend.tag
+            else
+              echo "  无上一版本可保存"
+              rm -f /tmp/rollback-frontend.tag
+            fi
+
+            # 拉取新镜像（固定版本）
+            echo "📥 拉取新镜像 (${{ github.sha }})..."
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
+
+            # 更新 latest 标签（docker-compose 引用 latest）
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}  ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }} ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
 
             # 停止旧服务
+            echo "🛑 停止旧服务..."
             cd ${{ vars.DEPLOY_PATH }}
             docker compose -f docker-compose.yml down --timeout 30 || true
 
-            # 启动服务（数据库使用阿里云 RDS，无需本地 MySQL 容器）
-            echo "🚀 启动后端和前端服务..."
-            export DB_HOST="${{ vars.DB_HOST }}"
-            export DB_PORT="${{ vars.DB_PORT || 3306 }}"
-            export DB_USERNAME="${{ vars.DB_USERNAME }}"
-            export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
-            export DB_DATABASE="${{ vars.DB_DATABASE }}"
-            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
-            export OSS_REGION="${{ vars.OSS_REGION }}"
-            export OSS_BUCKET="${{ vars.OSS_BUCKET }}"
-            export OSS_ACCESS_KEY_ID="${{ vars.OSS_ACCESS_KEY_ID }}"
-            export OSS_ACCESS_KEY_SECRET="${{ secrets.OSS_ACCESS_KEY_SECRET }}"
-            export SMS_USERNAME="${{ vars.SMS_USERNAME }}"
-            export SMS_PASSWORD="${{ secrets.SMS_PASSWORD }}"
-            export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
-            export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
-            export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
-            docker compose -f docker-compose.yml up -d --wait
-
-            # 健康检查
-            for i in $(seq 1 10); do
-              curl -sf http://localhost:3000/v1/health && break
-              [ "$i" -eq 10 ] && { echo "❌ 后端启动超时"; exit 1; }
-              sleep 3
-            done
-            echo "✅ 后端正常"
-
-            curl -sf http://localhost/ && echo "✅ 前端正常" || { echo "❌ 前端异常"; exit 1; }
-
-            # 部署后验证
-            echo ""
-            echo "📋 运行部署后验证..."
-            chmod +x ${{ vars.DEPLOY_PATH }}/verify-deploy.sh
-            bash ${{ vars.DEPLOY_PATH }}/verify-deploy.sh --test || true
-
-            docker image prune -f
-            echo "✅ 测试环境部署完成"
-
-  # ==========================================
-  # 部署生产环境（main 分支 → 手动触发）
-  # ==========================================
-  deploy-prod:
-    if: github.ref == 'refs/heads/main'
-    needs: [build-backend, build-frontend]
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-    steps:
-      - uses: actions/checkout@v4
-
-      # 上传 docker-compose 文件、部署脚本和验证脚本到服务器
-      - name: 上传部署文件到服务器
-        shell: bash
-        run: |
-          SSH_HOST="${{ secrets.SSH_HOST }}"
-          SSH_PORT="${{ vars.SSH_PORT || 22 }}"
-          SSH_USER="${{ secrets.SSH_USER }}"
-          SSH_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
-          DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
-
-          mkdir -p ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-
-          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
-
-          SCP_CMD="scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -P $SSH_PORT"
-          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p $SSH_PORT $SSH_USER@$SSH_HOST"
-          $SSH_CMD "mkdir -p $DEPLOY_PATH"
-
-          # 上传 docker-compose 文件
-          $SCP_CMD \
-            docker-compose.yml \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
-
-          # 上传部署脚本和验证脚本
-          $SCP_CMD \
-            deploy.sh \
-            scripts/verify-deploy.sh \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
-
-      - name: SSH 部署到生产服务器
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ vars.SSH_PORT || 22 }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            set -e
-            echo "🚀 开始生产环境部署..."
-
-            # 登录 ACR 并拉取镜像
-            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
-
-            # 停止旧服务
-            cd ${{ vars.DEPLOY_PATH }}
-            docker compose -f docker-compose.yml down --timeout 30 || true
-
-            # 启动新服务（动态注入环境变量，不留 .env 文件在服务器）
+            # 注入环境变量，启动新服务
             echo "🚀 启动新服务..."
             export DB_HOST="${{ vars.DB_HOST }}"
             export DB_PORT="${{ vars.DB_PORT || 3306 }}"
@@ -359,20 +286,86 @@ jobs:
             docker compose -f docker-compose.yml up -d --wait
 
             # 健康检查
+            echo "🔍 健康检查..."
             for i in $(seq 1 10); do
-              curl -sf http://localhost:3000/v1/health && break
-              [ "$i" -eq 10 ] && { echo "❌ 后端启动超时"; exit 1; }
+              if curl -sf http://localhost:3000/v1/health > /dev/null 2>&1; then
+                echo "  ✅ 后端正常"
+                break
+              fi
+              if [ "$i" -eq 10 ]; then
+                echo "  ❌ 健康检查失败，执行回滚..."
+                if [ -f /tmp/rollback-backend.tag ]; then
+                  PREV_TAG=$(cat /tmp/rollback-backend.tag)
+                  docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:$PREV_TAG 2>/dev/null || true
+                  docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:$PREV_TAG  ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+                fi
+                if [ -f /tmp/rollback-frontend.tag ]; then
+                  PREV_TAG=$(cat /tmp/rollback-frontend.tag)
+                  docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:$PREV_TAG 2>/dev/null || true
+                  docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:$PREV_TAG ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+                fi
+                docker compose -f docker-compose.yml up -d --wait
+                echo "  ↩️  已回滚至上一版本"
+                exit 1
+              fi
               sleep 3
             done
-            echo "✅ 后端正常"
 
-            curl -sf http://localhost/ && echo "✅ 前端正常" || { echo "❌ 前端异常"; exit 1; }
+            if curl -sf http://localhost/ > /dev/null 2>&1; then
+              echo "  ✅ 前端正常"
+            else
+              echo "  ⚠️  前端响应异常（可能 nginx 尚未就绪）"
+            fi
 
             # 部署后验证
             echo ""
             echo "📋 运行部署后验证..."
-            chmod +x ${{ vars.DEPLOY_PATH }}/verify-deploy.sh
-            bash ${{ vars.DEPLOY_PATH }}/verify-deploy.sh --prod || true
+            if [ -f ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ]; then
+              chmod +x ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh
+              bash ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ${{ github.ref_name == 'main' && '--prod' || '--test' }}
+            fi
 
             docker image prune -f
-            echo "✅ 生产环境部署完成"
+            echo "✅ 部署完成"
+
+      # ---- 回滚判断 ----
+      - name: 回滚判断
+        if: steps.deploy.outcome == 'failure'
+        shell: bash
+        run: |
+          ENV="${{ github.ref_name == 'main' && '生产' || '测试' }}"
+          echo "❌ ${ENV}环境部署失败，已自动回滚至上一版本"
+          exit 1
+
+      # ---- 部署后延迟健康检查（捕获启动后崩溃） ----
+      - name: 部署后延迟健康检查
+        if: steps.deploy.outcome == 'success'
+        shell: bash
+        run: |
+          echo "⏳ 等待 30 秒后再次确认服务状态..."
+          sleep 30
+          if curl -sf http://localhost:3000/v1/health > /dev/null 2>&1; then
+            echo "✅ 部署后确认：后端正常"
+          else
+            echo "⚠️  部署后 30 秒健康检查异常，请手动检查"
+          fi
+
+      # ---- 部署通知 ----
+      - name: 更新 GitHub Commit Status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ steps.deploy.outcome }}';
+            const env = '${{ github.ref_name == 'main' && 'production' || 'test' }}';
+            const state = status === 'success' ? 'success' : 'failure';
+            const desc = status === 'success'
+              ? `✅ ${env} 部署成功 (${process.env.GITHUB_SHA?.substring(0, 7)})`
+              : `❌ ${env} 部署失败，已自动回滚`;
+
+            await github.rest.repos.createCommitStatus({
+              ...context.repo,
+              sha: context.sha,
+              state: state,
+              context: `Deploy (${env})`,
+              description: desc,
+            });
