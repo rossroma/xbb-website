@@ -8,6 +8,24 @@ import tailwindcss from '@tailwindcss/vite'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+/**
+ * 从 node_modules 模块路径中提取包名，用于 manualChunks 精确匹配。
+ *
+ * 支持的路径格式：
+ * - pnpm: node_modules/.pnpm/vue-router@5.0.3/node_modules/vue-router/dist/...
+ * - pnpm scoped: node_modules/.pnpm/@unhead+vue@1.11.20/node_modules/@unhead/vue/dist/...
+ * - 标准: node_modules/vue-router/dist/...
+ *
+ * 返回包名（如 'vue-router'、'@unhead/vue'），非 node_modules 模块返回 null。
+ */
+function extractPackageName(id: string): string | null {
+  // 匹配 node_modules/ 后的包名部分
+  // pnpm 结构: node_modules/.pnpm/<encoded>.../node_modules/<actual-pkg-name>
+  // 标准结构: node_modules/<pkg-name>
+  const match = id.match(/node_modules\/(?:\.pnpm\/[^/]+\/node_modules\/)?(@?[^/]+(?:\/[^/]+)?)/)
+  return match ? match[1] : null
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const apiTarget = env.VITE_API_BASE_URL || 'http://localhost:3000'
@@ -45,14 +63,18 @@ export default defineConfig(({ mode }) => {
         },
         output: {
           manualChunks(id) {
-            // 仅对 node_modules 中的模块分包（vite-ssg 将 vue 标记为 external，不能用对象形式）
-            if (id.includes('node_modules')) {
-              if (id.includes('vue-router') || id.includes('pinia') || id.includes('@vue')) {
-                return 'vue-vendor'
-              }
-              if (id.includes('@vueuse/head') || id.includes('unhead')) {
-                return 'head-vendor'
-              }
+            // 从 node_modules 路径中提取包名，精确匹配避免子串误伤
+            // 支持 pnpm 结构（.pnpm/pkg@version/node_modules/pkg-name）和标准结构
+            const pkg = extractPackageName(id)
+            if (!pkg) return
+
+            // Vue 运行时核心：vue-router、pinia、@vue/runtime-core 等
+            if (pkg === 'vue-router' || pkg === 'pinia' || pkg.startsWith('@vue/')) {
+              return 'vue-vendor'
+            }
+            // Head 管理：@vueuse/head + @unhead/* + unhead
+            if (pkg === '@vueuse/head' || pkg.startsWith('@unhead/') || pkg === 'unhead') {
+              return 'head-vendor'
             }
           },
         },
