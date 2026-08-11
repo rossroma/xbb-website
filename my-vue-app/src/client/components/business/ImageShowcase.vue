@@ -12,20 +12,13 @@
           :style="{ backgroundColor: accentColor }"
           aria-hidden="true"
         />
-        <h2
-          :class="[
-            titleClass,
-            'mt-6 text-h1 font-semibold leading-heading whitespace-pre-line max-lg:text-h2 max-md:text-h3',
-          ]"
-        >
-          {{ title }}
-        </h2>
-        <p
-          class="mt-4 max-w-120 text-body text-text-secondary leading-body whitespace-pre-line max-lg:max-w-full"
-        >
-          {{ subtitle }}
-        </p>
-        <div v-if="ctaText" class="mt-8">
+        <SectionHeading
+          :title="title"
+          :subtitle="subtitle"
+          align="left"
+          heading-class="mt-6 font-semibold whitespace-pre-line"
+        />
+        <div v-if="ctaText" class="mt-12">
           <Button variant="hero" size="lg" @click="$emit('ctaClick')">
             {{ ctaText }}
           </Button>
@@ -50,12 +43,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Button from '@/client/components/ui/Button.vue'
 import {
   type Theme,
   THEME_BG_CLASS,
   THEME_PRIMARY_COLOR,
-  THEME_TITLE_GRADIENT_CLASS,
 } from './theme'
 
 const props = withDefaults(
@@ -82,7 +75,6 @@ defineEmits<{
 
 const isTextRight = computed(() => props.layout === 'text-right')
 const bgClass = computed(() => THEME_BG_CLASS[props.theme])
-const titleClass = computed(() => THEME_TITLE_GRADIENT_CLASS[props.theme])
 const accentColor = computed(() => THEME_PRIMARY_COLOR[props.theme])
 const containerClass = computed(() => [
   'grid gap-0 rounded-card border border-border-subtle shadow-subtle overflow-hidden max-lg:grid-cols-1 max-lg:border-0 max-lg:shadow-none max-lg:overflow-visible',

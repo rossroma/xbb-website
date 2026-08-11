@@ -1,10 +1,8 @@
 <template>
   <SectionBlock spacing="default">
-    <p v-if="title" class="feature-overview__title-main">
-      {{ title }}
-    </p>
+    <SectionHeading v-if="title" :title="title" align="center" />
 
-    <div class="feature-overview__grid">
+    <div class="feature-overview__grid mt-12">
       <div
         v-for="(card, index) in cards"
         :key="card.title"
@@ -50,6 +48,7 @@
 <script setup lang="ts">
 import type { CSSProperties } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import UiButton from '@/client/components/ui/Button.vue'
 
 export interface AiCrmFeatureCard {
@@ -86,16 +85,6 @@ function sideImageClass(index: number): string {
 </script>
 
 <style scoped>
-.feature-overview__title-main {
-  margin-bottom: 64px;
-  text-align: center;
-  position: relative;
-  font-size: 37px;
-  font-weight: 600;
-  line-height: 1.32;
-  color: #333;
-}
-
 .feature-overview__grid {
   display: flex;
   justify-content: center;
@@ -219,11 +208,6 @@ function sideImageClass(index: number): string {
 }
 
 @media (max-width: 768px) {
-  .feature-overview__title-main {
-    margin-bottom: 48px;
-    font-size: 26px;
-  }
-
   .feature-overview__card {
     width: min(306px, 100%);
     padding: 28px 24px;
@@ -247,8 +231,5 @@ function sideImageClass(index: number): string {
 }
 
 @media (max-width: 450px) {
-  .feature-overview__title-main {
-    font-size: 24px;
-  }
 }
 </style>

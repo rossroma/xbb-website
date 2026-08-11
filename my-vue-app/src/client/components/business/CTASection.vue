@@ -4,19 +4,15 @@
       :class="!image ? bgClass : ''"
       class="rounded-large py-16 px-8 flex flex-col items-center text-center max-md:py-12 max-md:px-6"
     >
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p
-        v-if="subtitle"
-        class="mt-4 text-body text-text-secondary leading-body max-w-140 max-md:mt-3"
-      >
-        {{ subtitle }}
-      </p>
+      <SectionHeading
+        :title="title"
+        :subtitle="subtitle"
+        align="center"
+      />
 
       <div
         v-if="actionPlacement === 'under-title' && hasActions"
-        class="flex gap-4 mt-6 flex-wrap justify-center max-md:flex-col max-md:items-center"
+        class="flex gap-4 mt-12 flex-wrap justify-center max-md:flex-col max-md:items-center"
       >
         <Button v-if="primaryCta" variant="hero" size="lg" @click="handleAction('primary')">
           {{ primaryCta }}
@@ -38,13 +34,13 @@
         :alt="imageAlt ?? title"
         :class="[
           'max-w-230 w-full h-auto rounded-card shadow-subtle max-lg:mt-8',
-          actionPlacement === 'under-title' ? 'mt-8' : 'mt-10',
+          actionPlacement === 'under-title' ? 'mt-12' : 'mt-12',
         ]"
       />
 
       <div
         v-if="actionPlacement === 'default' && hasActions"
-        class="flex gap-4 mt-8 flex-wrap justify-center max-md:flex-col max-md:items-center max-md:mt-6"
+        class="flex gap-4 mt-12 flex-wrap justify-center max-md:flex-col max-md:items-center max-md:mt-6"
       >
         <Button v-if="primaryCta" variant="hero" size="lg" @click="handleAction('primary')">
           {{ primaryCta }}
@@ -66,6 +62,7 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Button from '@/client/components/ui/Button.vue'
 import { toPagePath } from '@/client/data/routePaths'
 
@@ -76,7 +73,9 @@ type ActionPlacement = 'default' | 'under-title'
 const trialPagePath = toPagePath('single_mfsy')
 const liuziPagePath = '/liuzi'
 const defaultHrefByCtaText: Record<string, string> = {
+  免费试用: trialPagePath,
   立即免费试用: trialPagePath,
+  立即咨询: trialPagePath,
   预约产品演示: liuziPagePath,
 }
 
@@ -126,7 +125,7 @@ function getActionHref(action: ActionType) {
   const href = action === 'primary' ? props.primaryHref : props.secondaryHref
   const text = action === 'primary' ? props.primaryCta : props.secondaryCta
 
-  return href ?? getDefaultHrefByText(text)
+  return getDefaultHrefByText(text) ?? href
 }
 
 function handleAction(action: ActionType) {

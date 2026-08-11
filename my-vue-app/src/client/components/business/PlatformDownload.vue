@@ -5,14 +5,7 @@
 <template>
   <SectionBlock spacing="default">
     <!-- 标题区 -->
-    <div v-if="title" class="text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p v-if="subtitle" class="mt-4 max-w-180 mx-auto text-body text-text-secondary leading-body">
-        {{ subtitle }}
-      </p>
-    </div>
+    <SectionHeading v-if="title" :title="title" :subtitle="subtitle" align="center" />
 
     <!-- 平台卡片网格 -->
     <div :class="[gridColsClass, 'grid gap-6', title ? 'mt-12 max-lg:mt-8' : '']">
@@ -67,6 +60,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 
 /** 平台下载卡片 */
 export interface PlatformDownloadCard {

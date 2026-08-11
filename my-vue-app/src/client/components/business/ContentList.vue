@@ -11,14 +11,11 @@
   <component :is="hideHeader ? 'div' : SectionBlock" :spacing="hideHeader ? undefined : 'default'">
     <!-- 标题区：左侧标题 + 右侧「查看全部」 -->
     <div v-if="!hideHeader" class="flex items-end justify-between gap-6">
-      <div>
-        <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-          {{ title }}
-        </h2>
-        <p v-if="subtitle" class="mt-4 text-body text-text-secondary leading-body">
-          {{ subtitle }}
-        </p>
-      </div>
+      <SectionHeading
+        :title="title"
+        :subtitle="subtitle"
+        align="left"
+      />
       <component
         v-if="variant !== 'article-row'"
         :is="viewAllLink ? 'a' : 'button'"
@@ -36,7 +33,7 @@
       v-if="variant === 'card'"
       :class="[
         'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-md:gap-4',
-        hideHeader ? 'mt-0' : 'mt-14 max-lg:mt-10 max-md:mt-8',
+        hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
       ]"
     >
       <component
@@ -92,7 +89,7 @@
       v-if="variant === 'compact'"
       :class="[
         'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-md:gap-4',
-        hideHeader ? 'mt-0' : 'mt-14 max-lg:mt-10 max-md:mt-8',
+        hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
       ]"
     >
       <component
@@ -155,7 +152,7 @@
     </div>
 
     <!-- ===== 变体：list — 纯文本列表 ===== -->
-    <div v-if="variant === 'list'" :class="hideHeader ? 'mt-0' : 'mt-14 max-lg:mt-10 max-md:mt-8'">
+    <div v-if="variant === 'list'" :class="hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8'">
       <div
         v-for="item in items"
         :key="item.title"
@@ -205,7 +202,7 @@
     <!-- ===== 变体：article-row — 横向文章列表 ===== -->
     <div
       v-if="variant === 'article-row'"
-      :class="['content-list-article-row', hideHeader ? 'mt-0' : 'mt-14 max-lg:mt-10 max-md:mt-8']"
+      :class="['content-list-article-row', hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8']"
     >
       <div v-for="item in items" :key="item.title" class="content-list-article-row__item">
         <div class="content-list-article-row__media">
@@ -305,6 +302,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 
 /** 内容卡片数据 */
 export interface ContentCard {

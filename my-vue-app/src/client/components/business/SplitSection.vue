@@ -16,14 +16,14 @@
         ]"
       >
         <!-- 标题 -->
-        <h2
-          class="text-h1 font-semibold text-text-primary leading-title whitespace-pre-line max-lg:text-h2 max-md:text-h3"
-        >
-          {{ heading }}
-        </h2>
+        <SectionHeading
+          :title="heading"
+          align="left"
+          heading-class="font-semibold leading-title whitespace-pre-line max-lg:text-h2 max-md:text-h3"
+        />
 
         <!-- 列表项（优先于 description） -->
-        <ul v-if="items && items.length > 0" class="mt-10 space-y-4 max-lg:mt-6">
+        <ul v-if="items && items.length > 0" class="mt-12 space-y-4 max-lg:mt-8">
           <li v-for="(item, index) in items" :key="index" class="flex items-start gap-3">
             <!-- gradient 主题：迷你渐变圆底 + 白色图标 -->
             <span
@@ -51,7 +51,7 @@
         <!-- 段落描述（向后兼容回退） -->
         <p
           v-else-if="description"
-          class="mt-10 text-body text-text-secondary leading-body whitespace-pre-line max-lg:mt-6"
+          class="mt-12 text-body text-text-secondary leading-body whitespace-pre-line max-lg:mt-8"
         >
           {{ description }}
         </p>
@@ -79,6 +79,7 @@ import { computed } from 'vue'
 import type { Component } from 'vue'
 import { CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 
 /** 图标颜色主题 */
 export type IconTheme = 'brand' | 'accent' | 'gradient' | 'neutral'

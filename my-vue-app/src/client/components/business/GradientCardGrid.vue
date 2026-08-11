@@ -1,14 +1,7 @@
 <template>
   <SectionBlock spacing="loose">
     <!-- 标题栏 -->
-    <div
-      class="flex items-center gap-4 mb-[34px] cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-6"
-      role="button"
-      tabindex="0"
-      @click="$emit('titleClick')"
-      @keydown.enter="$emit('titleClick')"
-      @keydown.space.prevent="$emit('titleClick')"
-    >
+    <div class="flex items-center gap-4 mb-12">
       <!-- 标题栏图标前缀 -->
       <span
         v-if="titleIcon"
@@ -24,14 +17,15 @@
         aria-hidden="true"
         >{{ titlePrefix }}</span
       >
-      <span
-        class="text-h1 font-extrabold text-text-primary leading-display max-lg:text-h2 max-md:text-h3"
-        >{{ title }}</span
-      >
+      <SectionHeading
+        :title="title"
+        align="left"
+        @click="$emit('titleClick')"
+      />
     </div>
 
     <!-- 卡片网格 -->
-    <CardGrid :cols="4" gap="default">
+    <CardGrid :cols="4" gap="default" :class="'mt-14'">
       <article
         v-for="card in cards"
         :key="card.title"
@@ -136,6 +130,7 @@
 import type { Component } from 'vue'
 import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 
 /** 卡片渐变主题 */

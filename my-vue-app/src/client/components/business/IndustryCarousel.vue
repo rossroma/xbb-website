@@ -1,19 +1,17 @@
 <template>
   <SectionBlock spacing="default">
     <div
-      class="flex justify-center cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-6"
-      role="button"
-      tabindex="0"
-      @click="$emit('headingClick')"
-      @keydown.enter="$emit('headingClick')"
-      @keydown.space.prevent="$emit('headingClick')"
+      class="flex justify-center"
     >
-      <h2 class="text-h1 text-text-primary max-lg:text-h2 max-md:text-h3">
-        {{ heading }}
-      </h2>
+      <SectionHeading
+        :title="heading"
+        align="center"
+        :heading-class="headingClass"
+        @click="$emit('headingClick')"
+      />
     </div>
 
-    <div class="relative mt-8 w-full overflow-hidden px-7 py-3">
+    <div class="relative mt-12 w-full overflow-hidden px-7">
       <Carousel :total-slides="cards.length" show-arrows @slide-change="onSlideChange">
         <template #default>
           <!-- Gradient masks -->
@@ -24,7 +22,7 @@
             class="absolute right-0 top-3 bottom-3 w-55 z-10 pointer-events-none bg-case-gradient-right"
           />
 
-          <div ref="viewportRef" class="overflow-hidden min-w-0 py-3 px-0">
+          <div ref="viewportRef" class="overflow-hidden min-w-0 px-0">
             <div
               class="flex gap-7 transition-transform duration-carousel ease will-change-transform motion-reduce:transition-none"
               :style="trackStyle"
@@ -100,6 +98,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { Left, Right } from '@/client/components/ui/remixIcons'
 import Button from '@/client/components/ui/Button.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
 
 interface LogoItem {
@@ -118,6 +117,7 @@ const props = defineProps<{
   heading: string
   cards: readonly IndustryCarouselCard[]
   ctaText?: string
+  headingClass?: string
 }>()
 
 defineEmits<{
