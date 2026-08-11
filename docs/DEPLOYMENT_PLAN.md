@@ -89,7 +89,7 @@ GitHub Actions Runner        阿里云 ACR           外部生产服务器（公
 ### 3. 前端 Dockerfile（`my-vue-app/Dockerfile`）
 
 多阶段构建：
-- **Stage 1 (builder)**：`node:22-alpine`，安装 pnpm，复制 workspace 根文件 + 前端源码，`VITE_API_BASE_URL` 作为 `ARG` 传入，`pnpm install --filter` + `vite build`
+- **Stage 1 (builder)**：`node:22-alpine`，安装 pnpm，复制 workspace 根文件 + 前端源码，`VITE_API_BASE_URL` 作为可选的 `ARG` 传入（默认空字符串，前端使用相对路径，由 nginx 代理 API 请求），`pnpm install --filter` + `vite build`
 - **Stage 2 (production)**：`nginx:1.27-alpine`，复制 `dist/` 到 `/usr/share/nginx/html`，复制自定义 `nginx.conf`，暴露 80
 
 ### 4. nginx 配置（`my-vue-app/nginx.conf`）
@@ -153,7 +153,6 @@ GitHub Actions Runner        阿里云 ACR           外部生产服务器（公
 | `ACR_REGISTRY` | ACR 注册中心地址 | `registry.cn-hangzhou.aliyuncs.com` |
 | `ACR_NAMESPACE` | ACR 命名空间 | `xbb-website` |
 | `ACR_USERNAME` | ACR 用户名（非敏感，不包含密码） | `your-acr-username` |
-| `VITE_API_BASE_URL` | 前端构建时的 API 基础地址（构建时编译，跨环境共享） | `https://www.xbongbong.com/api` |
 | `OSS_REGION` | OSS 区域 | `oss-cn-hangzhou` |
 | `OSS_BUCKET` | OSS Bucket 名称 | `xbbwww` |
 | `OSS_ACCESS_KEY_ID` | OSS AccessKey ID（非敏感，仅标识） | `LTAI5t...` |

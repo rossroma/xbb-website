@@ -159,8 +159,6 @@ jobs:
           context: .
           file: my-vue-app/Dockerfile
           push: true
-          build-args: |
-            VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}
           tags: |
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:latest
