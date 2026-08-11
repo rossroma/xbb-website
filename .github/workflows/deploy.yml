@@ -6,7 +6,7 @@
 #   main 分支   → 手动触发 + 部署生产环境
 # ==========================================
 # 镜像策略：
-#   构建阶段 → 双推 ghcr.io（层缓存） + ACR（国内拉取）
+#   构建阶段 → 直接推送 ACR（国内拉取加速）
 #   部署阶段 → 测试/生产服务器从 ACR 拉取固定版本（github.sha）
 # ==========================================
 
@@ -16,11 +16,6 @@ on:
   push:
     branches: [develop, main]
   workflow_dispatch:
-
-env:
-  GHCR: ghcr.io
-  IMAGE_BACKEND: ${{ github.repository }}/xbb-backend
-  IMAGE_FRONTEND: ${{ github.repository }}/xbb-frontend
 
 jobs:
   # ==========================================
@@ -47,7 +42,7 @@ jobs:
             my-vue-app/.tsbuildinfo
             my-vue-app/tsconfig.tsbuildinfo
             my-nest-app/tsconfig.tsbuildinfo
-          key: tsbuildinfo-${{ github.ref_name }}-${{ github.sha }}
+          key: tsbuildinfo-${{ github.ref_name }}-${{ hashFiles('my-vue-app/tsconfig.json', 'my-vue-app/tsconfig.app.json', 'my-nest-app/tsconfig.json') }}
           restore-keys: |
             tsbuildinfo-${{ github.ref_name }}-
 
@@ -86,94 +81,66 @@ jobs:
           echo "✅ 全部预检通过"
 
   # ==========================================
-  # 构建后端镜像 → 双推 ghcr.io + ACR
+  # 构建后端镜像 → 推送 ACR（国内拉取加速）
   # ==========================================
   build-backend:
     needs: check
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: 登录 ghcr.io
+      - name: 登录 ACR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.GHCR }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.ACR_REGISTRY }}
+          username: ${{ vars.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送 ghcr.io（:sha + :latest）
+      - name: 构建并推送 ACR（:sha + :latest）
         uses: docker/build-push-action@v6
         with:
           context: .
           file: my-nest-app/Dockerfile
           push: true
           tags: |
-            ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
-            ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:latest
+            ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
+            ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: 同步到 ACR（国内加速）
-        shell: bash
-        run: |
-          ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend"
-          printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
-          docker pull ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
-          docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
-          docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
-          docker push ${ACR_IMAGE}:${{ github.sha }}
-          docker push ${ACR_IMAGE}:latest
+          cache-to: type=gha,mode=min
 
   # ==========================================
-  # 构建前端镜像 → 双推 ghcr.io + ACR
+  # 构建前端镜像 → 推送 ACR（国内拉取加速）
   # ==========================================
   build-frontend:
     needs: check
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: 登录 ghcr.io
+      - name: 登录 ACR
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.GHCR }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ vars.ACR_REGISTRY }}
+          username: ${{ vars.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: 设置 BuildKit
         uses: docker/setup-buildx-action@v3
 
-      - name: 构建并推送 ghcr.io（:sha + :latest）
+      - name: 构建并推送 ACR（:sha + :latest）
         uses: docker/build-push-action@v6
         with:
           context: .
           file: my-vue-app/Dockerfile
           push: true
           tags: |
-            ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
-            ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:latest
+            ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
+            ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: 同步到 ACR（国内加速）
-        shell: bash
-        run: |
-          ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend"
-          printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
-          docker pull ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
-          docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
-          docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
-          docker push ${ACR_IMAGE}:${{ github.sha }}
-          docker push ${ACR_IMAGE}:latest
+          cache-to: type=gha,mode=min
 
   # ==========================================
   # 部署（根据分支自动选择环境）
@@ -257,9 +224,11 @@ jobs:
             docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
             docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
 
-            # 更新 latest 标签（docker-compose 引用 latest）
+            # 更新 latest 标签（docker-compose 引用 latest）并推回 ACR
             docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}  ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
             docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }} ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
 
             # 停止旧服务
             echo "🛑 停止旧服务..."
@@ -285,48 +254,34 @@ jobs:
             export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
             docker compose -f docker-compose.yml up -d --wait
 
-            # 健康检查
-            echo "🔍 健康检查..."
-            for i in $(seq 1 10); do
-              if curl -sf http://localhost:3000/v1/health > /dev/null 2>&1; then
-                echo "  ✅ 后端正常"
-                break
-              fi
-              if [ "$i" -eq 10 ]; then
-                echo "  ❌ 健康检查失败，执行回滚..."
-                if [ -f /tmp/rollback-backend.tag ]; then
-                  PREV_TAG=$(cat /tmp/rollback-backend.tag)
-                  docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:$PREV_TAG 2>/dev/null || true
-                  docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:$PREV_TAG  ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-                fi
-                if [ -f /tmp/rollback-frontend.tag ]; then
-                  PREV_TAG=$(cat /tmp/rollback-frontend.tag)
-                  docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:$PREV_TAG 2>/dev/null || true
-                  docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:$PREV_TAG ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
-                fi
-                docker compose -f docker-compose.yml up -d --wait
-                echo "  ↩️  已回滚至上一版本"
-                exit 1
-              fi
-              sleep 3
-            done
+            echo "  ✅ 服务启动正常（docker compose 健康检查通过）"
 
-            if curl -sf http://localhost/ > /dev/null 2>&1; then
-              echo "  ✅ 前端正常"
-            else
-              echo "  ⚠️  前端响应异常（可能 nginx 尚未就绪）"
-            fi
+            docker image prune -f --filter "until=24h" || true
 
-            # 部署后验证
-            echo ""
-            echo "📋 运行部署后验证..."
+            # 持久化当前部署版本
+            echo "${{ github.sha }}" > ${{ vars.DEPLOY_PATH }}/current-version.txt
+            echo "  💾 部署版本已持久化: ${{ github.sha }}"
+
+            echo "✅ 部署完成"
+
+      # ---- 部署后验证（after_script，不阻断部署） ----
+      - name: 部署后验证
+        continue-on-error: true
+        if: always()
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "📋 运行部署后验证（SEO/安全头/SSR 检查）..."
             if [ -f ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ]; then
               chmod +x ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh
               bash ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ${{ github.ref_name == 'main' && '--prod' || '--test' }}
+            else
+              echo "⚠️  验证脚本不存在，跳过"
             fi
-
-            docker image prune -f
-            echo "✅ 部署完成"
 
       # ---- 回滚判断 ----
       - name: 回滚判断
@@ -344,14 +299,24 @@ jobs:
         run: |
           echo "⏳ 等待 30 秒后再次确认服务状态..."
           sleep 30
+
+          echo "🔍 后端检查..."
           if curl -sf http://localhost:3000/v1/health > /dev/null 2>&1; then
-            echo "✅ 部署后确认：后端正常"
+            echo "  ✅ 后端正常"
           else
-            echo "⚠️  部署后 30 秒健康检查异常，请手动检查"
+            echo "  ⚠️  后端异常，请手动检查"
+          fi
+
+          echo "🔍 前端检查..."
+          if curl -sf http://localhost:${{ vars.FRONTEND_PORT || 80 }}/ > /dev/null 2>&1; then
+            echo "  ✅ 前端正常"
+          else
+            echo "  ⚠️  前端响应异常，请手动检查 nginx 状态"
           fi
 
       # ---- 部署通知 ----
       - name: 更新 GitHub Commit Status
+        if: always()
         uses: actions/github-script@v7
         with:
           script: |
