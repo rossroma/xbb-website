@@ -1,37 +1,39 @@
 # 部署方案设计：双环境自动化部署（测试 + 生产）
 
+> ⚠️ 本文档已存档，实际部署以 `.github/workflows/deploy.yml` 为准。
+> 当前主力 CI 为 **GitHub Actions**，`.gitlab-ci.yml` 已移除。
+
 ## Context
 
-当前项目是 pnpm monorepo（NestJS 后端 + Vue 前端），代码托管在**内网 GitLab**，需要实现：
+当前项目是 pnpm monorepo（NestJS 后端 + Vue 前端），代码托管在**内网 GitLab**，CI 使用 **GitHub Actions**，需要实现：
 
-- **`develop` 分支** → 自动部署到公网测试服务器（Docker MySQL + SSH 管道传输镜像）
+- **`develop` 分支** → 自动部署到公网测试服务器（Docker MySQL + ACR 镜像分发）
 - **`main` 分支** → 手动触发部署到公网生产服务器（阿里云 RDS + ACR 镜像分发）
 
 核心约束与已知信息：
 - 外部服务器已有 Docker + Docker Compose
-- 内网 GitLab 已有可用的 GitLab Runner
-- 内网 GitLab Runner 可出站访问公网（ACR、SSH），但**公网无法反向访问内网 GitLab**
 - 生产环境使用阿里云 RDS（MySQL），测试环境使用 Docker MySQL 容器
-- 生产环境使用阿里云 ACR 分发镜像，测试环境通过 SSH 管道直接传输镜像（不走任何 Registry）
+- 生产环境使用阿里云 ACR 分发镜像
 
 ## 整体架构
 
 ### 测试环境（develop 分支 → 自动触发）
 
 ```
-内网 GitLab Runner                              测试服务器（公网）
-┌──────────────────────┐    SSH 管道传输镜像     ┌──────────────────────────┐
-│ 1. docker build      │ ────────────────────→  │ docker compose up -d      │
-│ 2. docker save | gzip│                        │  backend:3000             │
-│ 3. scp tar.gz        │                        │  frontend:80              │
-│ 4. SSH 远程执行部署   │                        │  mysql:3306 ← Docker 容器  │
-└──────────────────────┘                        └──────────────────────────┘
+GitHub Actions Runner                   测试服务器（公网）
+┌──────────────────────┐   ACR 拉取     ┌──────────────────────────┐
+│ 1. 构建镜像          │ ←──────────── │ docker compose up -d      │
+│ 2. 推送到 ghcr.io    │               │  backend:3000             │
+│ 3. 同步到 ACR        │               │  frontend:80              │
+│ 4. SCP 部署文件       │               │  mysql:3306 ← Docker 容器  │
+│ 5. SSH 远程执行部署   │               └──────────────────────────┘
+└──────────────────────┘
 ```
 
 ### 生产环境（main 分支 → 手动触发）
 
 ```
-内网 GitLab Runner        阿里云 ACR           外部生产服务器（公网）
+GitHub Actions Runner        阿里云 ACR           外部生产服务器（公网）
 ┌──────────────────┐ push ┌──────────────┐ pull ┌──────────────────┐
 │ build-backend    │ ────→│ xbb-backend  │ ←─── │ docker compose   │
 │ build-frontend   │ ────→│ xbb-frontend │ ←─── │  backend:3000    │
@@ -42,7 +44,7 @@
          └─────────────────────────────────────────→
 ```
 
-**关键设计决策**：内网 GitLab Runner 构建镜像后推送到阿里云 ACR（公网可达），外部服务器从 ACR 拉取镜像。外部服务器永远不需要访问内网 GitLab。
+**关键设计决策**：GitHub Actions Runner 构建镜像后推送到 ghcr.io 并同步到阿里云 ACR（国内加速），外部服务器从 ACR 拉取镜像。
 
 ## 新增文件清单
 
@@ -133,52 +135,90 @@
 4. 验证 MySQL、后端、前端是否正常响应
 5. 清理旧镜像
 
-## 需要配置的 GitLab CI/CD Variables
+## 需要配置的 GitHub Actions Secrets & Variables
 
-在 GitLab 项目 `Settings → CI/CD → Variables` 中配置：
+在 GitHub 项目 `Settings → Secrets and variables → Actions` 中配置：
 
-### 公共变量
+### Repository Secrets（跨环境共享的敏感信息）
 
-| 变量名 | 说明 | 类型 |
-|--------|------|------|
-| `VITE_API_BASE_URL` | 生产环境前端 API 地址（留空，由 nginx 反向代理） | Variable |
+| 变量名 | 说明 |
+|--------|------|
+| `ACR_PASSWORD` | 阿里云 ACR 密码 |
+| `OSS_ACCESS_KEY_SECRET` | 阿里云 OSS AccessKey Secret |
 
-### 生产环境变量
+### Repository Variables（跨环境共享的非敏感信息）
 
-| 变量名 | 说明 | 类型 |
-|--------|------|------|
-| `ACR_REGISTRY` | 阿里云 ACR 地址（如 `registry.cn-shenzhen.aliyuncs.com`） | Variable |
-| `ACR_NAMESPACE` | ACR 命名空间（如 `xbb-fe`） | Variable |
-| `ACR_USERNAME` | ACR 用户名 | Variable |
-| `ACR_PASSWORD` | ACR 密码 | Masked |
-| `SSH_PRIVATE_KEY` | 生产服务器 SSH 私钥 | Masked |
-| `SSH_KNOWN_HOSTS` | 生产服务器 SSH known_hosts（`ssh-keyscan` 输出） | File |
-| `DEPLOY_HOST` | 生产服务器 IP/域名 | Variable |
-| `DEPLOY_PORT` | SSH 端口（默认 22） | Variable |
-| `DEPLOY_USER` | SSH 用户名 | Variable |
-| `DEPLOY_PATH` | 部署目录（如 `/opt/xbb-website`） | Variable |
-| `DB_HOST` | 阿里云 RDS MySQL 地址 | Variable |
-| `DB_PORT` | MySQL 端口（默认 3306） | Variable |
-| `DB_USERNAME` | 数据库用户名 | Variable |
-| `DB_PASSWORD` | 数据库密码 | Masked |
-| `DB_DATABASE` | 数据库名 | Variable |
-| `JWT_SECRET` | JWT 签名密钥 | Masked |
-| `JWT_EXPIRES_IN` | JWT 过期时间（如 `7d`） | Variable |
+| 变量名 | 说明 | 示例值 |
+|--------|------|--------|
+| `ACR_REGISTRY` | ACR 注册中心地址 | `registry.cn-hangzhou.aliyuncs.com` |
+| `ACR_NAMESPACE` | ACR 命名空间 | `xbb-website` |
+| `ACR_USERNAME` | ACR 用户名（非敏感，不包含密码） | `your-acr-username` |
+| `VITE_API_BASE_URL` | 前端构建时的 API 基础地址（构建时编译，跨环境共享） | `https://www.xbongbong.com/api` |
+| `OSS_REGION` | OSS 区域 | `oss-cn-hangzhou` |
+| `OSS_BUCKET` | OSS Bucket 名称 | `xbbwww` |
+| `OSS_ACCESS_KEY_ID` | OSS AccessKey ID（非敏感，仅标识） | `LTAI5t...` |
 
-### 测试环境变量
+### 测试环境变量（Environment: test）
 
-| 变量名 | 说明 | 类型 |
-|--------|------|------|
-| `TEST_SSH_PRIVATE_KEY` | 测试服务器 SSH 私钥 | Masked |
-| `TEST_SSH_KNOWN_HOSTS` | 测试服务器 SSH known_hosts | File |
-| `TEST_DEPLOY_HOST` | 测试服务器 IP/域名 | Variable |
-| `TEST_DEPLOY_PORT` | SSH 端口（默认 22） | Variable |
-| `TEST_DEPLOY_USER` | SSH 用户名 | Variable |
-| `TEST_DEPLOY_PATH` | 部署目录（如 `/opt/xbb-website-test`） | Variable |
-| `TEST_DB_PASSWORD` | 测试 MySQL root 密码 | Masked |
-| `TEST_DB_DATABASE` | 测试数据库名 | Variable |
-| `TEST_JWT_SECRET` | 测试环境 JWT 密钥 | Masked |
-| `TEST_VITE_API_BASE_URL` | 测试环境前端 API 地址（如 `https://test.xbongbong.com`） | Variable |
+通过 GitHub Environments 配置，在 `Settings → Environments → test` 中设置：
+
+**注意**：变量名与生产环境一致，不添加 `TEST_` 前缀。环境隔离由 GitHub Environments 机制保证。
+
+**Environment secrets**（敏感信息）：
+
+| 变量名 | 说明 |
+|--------|------|
+| `SSH_HOST` | 测试服务器 IP/域名 |
+| `SSH_USER` | SSH 用户名 |
+| `SSH_PRIVATE_KEY` | SSH 私钥 |
+| `DB_PASSWORD` | 测试 MySQL root 密码 |
+| `JWT_SECRET` | 测试环境 JWT 密钥 |
+| `SMS_PASSWORD` | 短信服务密码 |
+| `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
+| `DATACENTER_TOKEN` | 数据中心 Token |
+| `PARTNER_API_TOKEN` | 合作伙伴 API Token |
+
+**Environment variables**（非敏感）：
+
+| 变量名 | 说明 | 示例值 |
+|--------|------|--------|
+| `SSH_PORT` | SSH 端口 | `22` |
+| `DEPLOY_PATH` | 部署目录 | `/opt/xbb-website-test` |
+| `DB_DATABASE` | 数据库名 | `db_xbb_www_test` |
+| `SMS_USERNAME` | 短信服务用户名 | `xbkjy` |
+| `OSS_BASE_URL` | OSS 自定义域名 | `https://xbbwww.xbongbong.com` |
+
+### 生产环境变量（Environment: production）
+
+通过 GitHub Environments 配置，在 `Settings → Environments → production` 中设置：
+
+**Environment secrets**（敏感信息）：
+
+| 变量名 | 说明 |
+|--------|------|
+| `SSH_HOST` | 生产服务器 IP/域名 |
+| `SSH_USER` | SSH 用户名 |
+| `SSH_PRIVATE_KEY` | SSH 私钥 |
+| `DB_PASSWORD` | 数据库密码 |
+| `JWT_SECRET` | JWT 签名密钥 |
+| `SMS_PASSWORD` | 短信服务密码 |
+| `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
+| `DATACENTER_TOKEN` | 数据中心 Token |
+| `PARTNER_API_TOKEN` | 合作伙伴 API Token |
+
+**Environment variables**（非敏感）：
+
+| 变量名 | 说明 | 示例值 |
+|--------|------|--------|
+| `SSH_PORT` | SSH 端口 | `22` |
+| `DEPLOY_PATH` | 部署目录 | `/opt/xbb-website` |
+| `DB_HOST` | 阿里云 RDS MySQL 地址 | `your-rds-host.mysql.rds.aliyuncs.com` |
+| `DB_PORT` | MySQL 端口 | `3306` |
+| `DB_USERNAME` | 数据库用户名 | `xbb_admin` |
+| `DB_DATABASE` | 数据库名 | `db_xbb_www` |
+| `JWT_EXPIRES_IN` | JWT 过期时间 | `7d` |
+| `SMS_USERNAME` | 短信服务用户名 | `xbkjy` |
+| `OSS_BASE_URL` | OSS 自定义域名 | `https://xbbwww.xbongbong.com` |
 
 ## 外部服务器前置准备（一次性）
 
@@ -195,15 +235,15 @@
    ```
 
 3. **配置 SSH 密钥对**
-   - 在 GitLab Runner 或本地生成：`ssh-keygen -t ed25519 -f deploy_key`
+   - 在本地生成：`ssh-keygen -t ed25519 -f deploy_key`
    - 公钥 `deploy_key.pub` 追加到服务器 `~/.ssh/authorized_keys`
-   - 私钥内容配置到 GitLab CI/CD Variable `SSH_PRIVATE_KEY`
+   - 私钥内容配置到 GitHub Secrets `SSH_PRIVATE_KEY`（Environment: production）
 
-4. **获取 SSH known_hosts**
+4. **确保 docker 和 docker compose 可用**
    ```bash
-   ssh-keyscan -p <SSH_PORT> <DEPLOY_HOST>
+   docker --version
+   docker compose version
    ```
-   输出配置到 GitLab CI/CD Variable `SSH_KNOWN_HOSTS`
 
 5. **创建阿里云 ACR 镜像仓库**
    - 创建命名空间（如 `xbb-fe`）
@@ -218,19 +258,19 @@
 
 2. **创建部署目录**
    ```bash
-   mkdir -p /opt/xbb-website-test/images
+   mkdir -p /opt/xbb-website-test
    ```
 
 3. **配置 SSH 密钥对**（使用独立的密钥对，与生产环境隔离）
    - 生成：`ssh-keygen -t ed25519 -f deploy_test_key`
    - 公钥追加到服务器 `~/.ssh/authorized_keys`
-   - 私钥配置到 GitLab CI/CD Variable `TEST_SSH_PRIVATE_KEY`
+   - 私钥配置到 GitHub Secrets → Environment: test → `SSH_PRIVATE_KEY`
 
-4. **获取 SSH known_hosts**
+4. **确保 docker 和 docker compose 可用**
    ```bash
-   ssh-keyscan -p <SSH_PORT> <TEST_DEPLOY_HOST>
+   docker --version
+   docker compose version
    ```
-   输出配置到 GitLab CI/CD Variable `TEST_SSH_KNOWN_HOSTS`
 
 ## 部署流程
 
@@ -239,20 +279,22 @@ develop 分支 push                    main 分支 merge
      │                                │
      ▼                                ▼
 ┌──────────────┐              ┌──────────────────┐
-│  build-test   │              │  build-backend    │──→ push ACR
-│  (构建+导出)  │              │  build-frontend   │──→ push ACR
+│  build-test   │              │  build-backend    │──→ push ghcr.io + ACR
+│  (构建镜像)   │              │  build-frontend   │──→ push ghcr.io + ACR
 └──────┬───────┘              └────────┬─────────┘
        │                               │
        ▼                               ▼
 ┌──────────────┐              ┌──────────────────┐
 │  deploy-test  │ 自动触发     │  deploy-prod      │ 手动触发
-│  scp + SSH   │              │  scp + SSH        │
+│  SCP + SSH   │              │  SCP + SSH        │
 └──────────────┘              └──────────────────┘
        │                               │
        ▼                               ▼
   测试服务器                        生产服务器
   Docker MySQL                    阿里云 RDS
 ```
+
+> 数据库迁移脚本已移除，数据库 schema 变更通过 TypeORM 迁移（开发阶段手动执行）或直接 SQL 管理。
 
 ## SEO 预渲染说明
 
@@ -283,7 +325,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ## 环境变量管理
 
 - **本地开发**：使用 `.env` 文件（`my-nest-app/.env`、`my-vue-app/.env`）
-- **CI/CD 构建**：敏感信息通过 GitLab CI/CD Variables 传入，不落盘
+- **CI/CD 构建**：敏感信息通过 GitHub Actions Secrets/Variables 传入，不落盘
 - **生产服务器**：通过 `docker compose` 的 `environment` 字段注入，**不使用 `.env` 文件**
 - **测试服务器**：通过 `docker compose` 的 `environment` 字段注入，**不使用 `.env` 文件**
 
@@ -300,7 +342,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ### 测试环境验证
 
 1. push 代码到 `develop` 分支
-2. 检查 GitLab CI/CD Pipeline → `build-test` + `deploy-test` 阶段通过
+2. 检查 GitHub Actions → `check` + `build-backend` + `build-frontend` + `deploy-test` 阶段通过
 3. 服务器验证：
    ```bash
    ssh test-server
@@ -315,7 +357,7 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ### 生产环境验证
 
 1. 合并代码到 `main` 分支
-2. 在 GitLab CI/CD Pipeline 中手动触发 `deploy-prod`
+2. 在 GitHub Actions 中手动触发 `deploy-prod` workflow（或 push 自动触发）
 3. 检查 ACR 控制台是否出现新的镜像版本
 4. 服务器验证：
    ```bash

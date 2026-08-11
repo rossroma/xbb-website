@@ -37,8 +37,7 @@ my-nest-app/dist/
 docs
 
 # CI/CD
-.gitlab-ci.yml
-deploy.yml
+.github
 
 # Docker
 docker-compose.yml

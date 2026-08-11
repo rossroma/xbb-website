@@ -187,7 +187,7 @@ pnpm test:cov               # 测试覆盖率
 pnpm test:e2e               # E2E 测试
 pnpm lint                   # ESLint 检查并修复
 pnpm format                 # Prettier 格式化
-pnpm migration:generate     # 生成迁移文件
+pnpm migration:generate     # 生成迁移文件（TypeORM，开发阶段手动执行）
 pnpm migration:run          # 执行迁移
 pnpm migration:revert       # 回滚迁移
 ```

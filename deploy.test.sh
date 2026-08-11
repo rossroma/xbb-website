@@ -41,29 +41,13 @@ cd "${DEPLOY_PATH}"
 docker compose -f "${COMPOSE_FILE}" down --timeout 30 || true
 
 # ==========================================
-# 3. 启动 MySQL 并运行数据库迁移
+# 3. 启动 MySQL
 # ==========================================
 echo "🐬 启动 MySQL..."
 DB_PASSWORD="${DB_PASSWORD:-}" \
 DB_DATABASE="${DB_DATABASE:-}" \
 DEPLOY_PATH="${DEPLOY_PATH}" \
 docker compose -f "${COMPOSE_FILE}" up -d --wait mysql
-
-# 运行迁移脚本（使用 docker compose exec 连接已有的 MySQL 容器，无需额外拉镜像）
-echo "📦 运行数据库迁移..."
-MIGRATE_SCRIPT="${DEPLOY_PATH}/database/migrate.sh"
-if [ -f "${MIGRATE_SCRIPT}" ]; then
-  cd "${DEPLOY_PATH}"
-  MYSQL_USE_COMPOSE=1 \
-  DB_HOST=127.0.0.1 \
-  DB_PORT=3306 \
-  DB_USERNAME=root \
-  DB_PASSWORD="${DB_PASSWORD}" \
-  DB_DATABASE="${DB_DATABASE}" \
-  bash "${MIGRATE_SCRIPT}"
-else
-  echo "  ⚠️  迁移脚本 ${MIGRATE_SCRIPT} 不存在，跳过迁移"
-fi
 
 # ==========================================
 # 4. 启动后端和前端服务

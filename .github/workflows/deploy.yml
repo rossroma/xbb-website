@@ -7,7 +7,7 @@
 # ==========================================
 # 镜像策略：
 #   构建阶段 → 双推 ghcr.io（层缓存） + ACR（国内拉取）
-#   部署阶段 → 测试服务器从 ACR 拉取
+#   部署阶段 → 测试/生产服务器从 ACR 拉取
 # ==========================================
 
 name: Deploy
@@ -24,7 +24,7 @@ env:
 
 jobs:
   # ==========================================
-  # 预检：类型检查 + Lint（失败阻断构建，节省时间）
+  # 预检：类型检查 + Lint + 单元测试
   # ==========================================
   check:
     runs-on: ubuntu-latest
@@ -123,8 +123,8 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          ACR_IMAGE="${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend"
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_REGISTRY }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend"
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
           docker pull ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_BACKEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
@@ -160,7 +160,7 @@ jobs:
           file: my-vue-app/Dockerfile
           push: true
           build-args: |
-            VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+            VITE_API_BASE_URL=${{ vars.VITE_API_BASE_URL }}
           tags: |
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
             ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:latest
@@ -171,8 +171,8 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          ACR_IMAGE="${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend"
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ secrets.ACR_REGISTRY }}" -u "${{ secrets.ACR_USERNAME }}" --password-stdin
+          ACR_IMAGE="${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend"
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login "${{ vars.ACR_REGISTRY }}" -u "${{ vars.ACR_USERNAME }}" --password-stdin
           docker pull ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:${{ github.sha }}
           docker tag ${{ env.GHCR }}/${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${ACR_IMAGE}:latest
@@ -181,98 +181,85 @@ jobs:
 
   # ==========================================
   # 部署测试环境（develop 分支 → 自动触发）
+  # 变量由 Environment: test 提供，与生产环境使用相同变量名，不同值
   # ==========================================
   deploy-test:
     if: github.ref == 'refs/heads/develop'
     needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
+    environment:
+      name: test
     steps:
       - uses: actions/checkout@v4
 
-      - name: 上传数据库迁移文件到服务器
+      # 上传 docker-compose 文件、部署脚本和验证脚本到服务器
+      - name: 上传部署文件到服务器
         shell: bash
         run: |
-          SSH_HOST="${{ secrets.TEST_SSH_HOST }}"
-          SSH_PORT="${{ secrets.TEST_SSH_PORT || 22 }}"
-          SSH_USER="${{ secrets.TEST_SSH_USER }}"
-          SSH_KEY="${{ secrets.TEST_SSH_PRIVATE_KEY }}"
-          DEPLOY_PATH="${{ secrets.TEST_DEPLOY_PATH }}"
+          SSH_HOST="${{ secrets.SSH_HOST }}"
+          SSH_PORT="${{ vars.SSH_PORT || 22 }}"
+          SSH_USER="${{ secrets.SSH_USER }}"
+          SSH_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
+          DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
 
-          # 写入 SSH key
           mkdir -p ~/.ssh
           printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
 
-          # 添加 known_hosts
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
           SCP_CMD="scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -P $SSH_PORT"
           SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p $SSH_PORT $SSH_USER@$SSH_HOST"
+          $SSH_CMD "mkdir -p $DEPLOY_PATH"
 
-          # 创建远程目录
-          $SSH_CMD "mkdir -p $DEPLOY_PATH/database/migrations"
-
-          # 上传迁移脚本
           $SCP_CMD \
-            my-nest-app/database/migrate.sh \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/database/"
+            docker-compose.yml \
+            docker-compose.test.yml \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
 
-          # 上传迁移 SQL 文件
           $SCP_CMD \
-            my-nest-app/database/migrations/*.sql \
-            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/database/migrations/"
+            deploy.test.sh \
+            scripts/verify-deploy.sh \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
 
       - name: SSH 部署到测试服务器
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.TEST_SSH_HOST }}
-          port: ${{ secrets.TEST_SSH_PORT || 22 }}
-          username: ${{ secrets.TEST_SSH_USER }}
-          key: ${{ secrets.TEST_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             set -e
             echo "🚀 开始测试环境部署..."
 
-            # 登录 ACR
-            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+            # 登录 ACR（Repository 级共享变量）
+            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
 
             # 从 ACR 拉取
-            docker pull ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest
-            docker tag ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-backend:latest xbb-backend:latest
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest xbb-backend:latest
 
-            docker pull ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest
-            docker tag ${{ secrets.ACR_REGISTRY }}/${{ secrets.ACR_NAMESPACE }}/xbb-frontend:latest xbb-frontend:latest
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest xbb-frontend:latest
 
             # 停止旧服务
-            cd ${{ secrets.TEST_DEPLOY_PATH }}
+            cd ${{ vars.DEPLOY_PATH }}
             docker compose -f docker-compose.test.yml down --timeout 30 || true
 
             # 启动 MySQL 容器
-            export DB_PASSWORD="${{ secrets.TEST_DB_PASSWORD }}"
-            export DB_DATABASE="${{ secrets.TEST_DB_DATABASE }}"
-            export DEPLOY_PATH="${{ secrets.TEST_DEPLOY_PATH }}"
+            export DB_PASSWORD="${{ secrets.DB_PASSWORD }}"
+            export DB_DATABASE="${{ vars.DB_DATABASE }}"
             docker compose -f docker-compose.test.yml up -d --wait mysql
-
-            # 运行数据库迁移
-            echo "📦 运行数据库迁移..."
-            chmod +x ${{ secrets.TEST_DEPLOY_PATH }}/database/migrate.sh
-            cd ${{ secrets.TEST_DEPLOY_PATH }}
-            MYSQL_USE_COMPOSE=1 \
-            DB_HOST=127.0.0.1 \
-            DB_PORT=3306 \
-            DB_USERNAME=root \
-            DB_PASSWORD="${{ secrets.TEST_DB_PASSWORD }}" \
-            DB_DATABASE="${{ secrets.TEST_DB_DATABASE }}" \
-            bash ${{ secrets.TEST_DEPLOY_PATH }}/database/migrate.sh
 
             # 启动后端 + 前端
             echo "🚀 启动后端和前端服务..."
-            export JWT_SECRET="${{ secrets.TEST_JWT_SECRET }}"
-            export OSS_REGION="${{ secrets.OSS_REGION }}"
-            export OSS_BUCKET="${{ secrets.OSS_BUCKET }}"
-            export OSS_ACCESS_KEY_ID="${{ secrets.OSS_ACCESS_KEY_ID }}"
+            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+            export OSS_REGION="${{ vars.OSS_REGION }}"
+            export OSS_BUCKET="${{ vars.OSS_BUCKET }}"
+            export OSS_ACCESS_KEY_ID="${{ vars.OSS_ACCESS_KEY_ID }}"
             export OSS_ACCESS_KEY_SECRET="${{ secrets.OSS_ACCESS_KEY_SECRET }}"
-            export SMS_USERNAME="${{ secrets.SMS_USERNAME }}"
+            export SMS_USERNAME="${{ vars.SMS_USERNAME }}"
             export SMS_PASSWORD="${{ secrets.SMS_PASSWORD }}"
             export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
             export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
@@ -289,5 +276,97 @@ jobs:
 
             curl -sf http://localhost/ && echo "✅ 前端正常" || { echo "❌ 前端异常"; exit 1; }
 
+            # 部署后验证
+            echo ""
+            echo "📋 运行部署后验证..."
+            chmod +x ${{ vars.DEPLOY_PATH }}/verify-deploy.sh
+            bash ${{ vars.DEPLOY_PATH }}/verify-deploy.sh --test || true
+
             docker image prune -f
-            echo "✅ 部署完成"
+            echo "✅ 测试环境部署完成"
+
+  # ==========================================
+  # 部署生产环境（main 分支 → 手动触发）
+  # ==========================================
+  deploy-prod:
+    if: github.ref == 'refs/heads/main'
+    needs: [build-backend, build-frontend]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - uses: actions/checkout@v4
+
+      # 上传 docker-compose 文件、部署脚本和验证脚本到服务器
+      - name: 上传部署文件到服务器
+        shell: bash
+        run: |
+          SSH_HOST="${{ secrets.SSH_HOST }}"
+          SSH_PORT="${{ vars.SSH_PORT || 22 }}"
+          SSH_USER="${{ secrets.SSH_USER }}"
+          SSH_KEY="${{ secrets.SSH_PRIVATE_KEY }}"
+          DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
+
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+          SCP_CMD="scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -P $SSH_PORT"
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p $SSH_PORT $SSH_USER@$SSH_HOST"
+          $SSH_CMD "mkdir -p $DEPLOY_PATH"
+
+          # 上传 docker-compose 文件
+          $SCP_CMD \
+            docker-compose.yml \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+          # 上传部署脚本和验证脚本
+          $SCP_CMD \
+            deploy.sh \
+            scripts/verify-deploy.sh \
+            "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+
+      - name: SSH 部署到生产服务器
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "🚀 开始生产环境部署..."
+
+            # 登录 ACR 并拉取镜像
+            echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+
+            # 停止旧服务
+            cd ${{ vars.DEPLOY_PATH }}
+            docker compose -f docker-compose.yml down --timeout 30 || true
+
+            # 启动新服务
+            echo "🚀 启动新服务..."
+            docker compose -f docker-compose.yml up -d --wait
+
+            # 健康检查
+            for i in $(seq 1 10); do
+              curl -sf http://localhost:3000/v1/health && break
+              [ "$i" -eq 10 ] && { echo "❌ 后端启动超时"; exit 1; }
+              sleep 3
+            done
+            echo "✅ 后端正常"
+
+            curl -sf http://localhost/ && echo "✅ 前端正常" || { echo "❌ 前端异常"; exit 1; }
+
+            # 部署后验证
+            echo ""
+            echo "📋 运行部署后验证..."
+            chmod +x ${{ vars.DEPLOY_PATH }}/verify-deploy.sh
+            bash ${{ vars.DEPLOY_PATH }}/verify-deploy.sh --prod || true
+
+            docker image prune -f
+            echo "✅ 生产环境部署完成"
