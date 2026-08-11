@@ -1,9 +1,17 @@
 # ==========================================
-# Docker 构建忽略文件
+# 前端 Docker 构建忽略文件
+# 排除后端源码目录，减少构建上下文体积
 # ==========================================
 
-# 历史上传文件（运行时通过卷挂载提供，不打入镜像）
-my-vue-app/public/Uploads
+# 后端源码目录（前端构建不需要）
+my-nest-app/
+statics/
+
+# 部署脚本
+scripts/
+deploy.yml
+deploy.sh
+deploy.test.sh
 
 # Dependencies
 node_modules
@@ -41,7 +49,7 @@ coverage
 **/__tests__/
 **/__snapshots__/
 
-# Build artifacts (NestJS)
+# Build artifacts
 my-nest-app/dist/
 
 # Docs
@@ -55,5 +63,3 @@ docs
 # Docker
 docker-compose.yml
 docker-compose.test.yml
-deploy.sh
-deploy.test.sh
