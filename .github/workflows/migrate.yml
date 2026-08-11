@@ -1,0 +1,134 @@
+# ==========================================
+# 数据库迁移 — 手动触发 CI 流程
+# ==========================================
+# 用途：
+#   部署后，手动执行数据库迁移（TypeORM）
+#   与部署流程分离，由人确认后再执行
+# ==========================================
+# 使用方式：
+#   1. 在 GitHub Actions 页面手动触发此 workflow
+#   2. 选择目标环境（test / production）
+#   3. 选择操作（show / run / revert）
+# ==========================================
+
+name: Database Migration
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '目标环境'
+        required: true
+        type: choice
+        options:
+          - test
+          - production
+      action:
+        description: '迁移操作'
+        required: true
+        type: choice
+        options:
+          - show       # 查看当前迁移状态（安全，推荐先执行）
+          - run        # 执行未完成的迁移
+          - revert     # 回滚最近一次迁移
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 配置 SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "${{ vars.SSH_PORT || 22 }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 获取迁移状态
+        shell: bash
+        run: |
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p ${{ vars.SSH_PORT || 22 }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+
+          echo "══════════════════════════════════════════"
+          echo " 环境: ${{ inputs.environment }}"
+          echo " 操作: ${{ inputs.action }}"
+          echo " 时间: $(date '+%Y-%m-%d %H:%M:%S')"
+          echo "══════════════════════════════════════════"
+
+          # 检查容器是否运行
+          CONTAINER_RUNNING=$($SSH_CMD "docker ps --filter name=xbb-backend --format '{{.Status}}'" 2>/dev/null)
+          if [ -z "$CONTAINER_RUNNING" ]; then
+            echo ""
+            echo "❌ 后端容器 xbb-backend 未运行"
+            echo "   请先完成部署，再执行迁移"
+            exit 1
+          fi
+          echo "✅ 后端容器状态: $CONTAINER_RUNNING"
+
+          # 查看当前迁移状态
+          echo ""
+          echo "📋 当前迁移状态:"
+          $SSH_CMD "docker exec xbb-backend sh -c 'cd /app && npx typeorm migration:show -d dist/database/data-source-cli.js'" || {
+            echo "   ⚠️ 无法获取迁移状态（可能还没有迁移记录）"
+          }
+
+      - name: 执行迁移操作
+        if: inputs.action != 'show'
+        shell: bash
+        run: |
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p ${{ vars.SSH_PORT || 22 }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+
+          case "${{ inputs.action }}" in
+            run)
+              echo "🚀 执行数据库迁移..."
+              echo "   环境: ${{ inputs.environment }}"
+              echo ""
+
+              MIGRATE_OUTPUT=$($SSH_CMD "docker exec xbb-backend sh -c 'cd /app && npx typeorm migration:run -d dist/database/data-source-cli.js'" 2>&1)
+              MIGRATE_EXIT=$?
+
+              echo "$MIGRATE_OUTPUT"
+
+              if [ $MIGRATE_EXIT -eq 0 ]; then
+                echo ""
+                echo "✅ 迁移执行成功"
+              else
+                echo ""
+                echo "❌ 迁移执行失败（退出码: $MIGRATE_EXIT）"
+                echo "   请检查日志并手动修复数据库状态"
+                exit 1
+              fi
+              ;;
+            revert)
+              echo "↩️  回滚最近一次迁移..."
+              echo "   环境: ${{ inputs.environment }}"
+              echo ""
+
+              REVERT_OUTPUT=$($SSH_CMD "docker exec xbb-backend sh -c 'cd /app && npx typeorm migration:revert -d dist/database/data-source-cli.js'" 2>&1)
+              REVERT_EXIT=$?
+
+              echo "$REVERT_OUTPUT"
+
+              if [ $REVERT_EXIT -eq 0 ]; then
+                echo ""
+                echo "✅ 回滚成功"
+              else
+                echo ""
+                echo "❌ 回滚失败（退出码: $REVERT_EXIT）"
+                echo "   请检查日志"
+                exit 1
+              fi
+              ;;
+          esac
+
+      - name: 迁移后状态确认
+        if: inputs.action != 'show'
+        shell: bash
+        run: |
+          SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes -p ${{ vars.SSH_PORT || 22 }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+
+          echo "📋 迁移后状态:"
+          $SSH_CMD "docker exec xbb-backend sh -c 'cd /app && npx typeorm migration:show -d dist/database/data-source-cli.js'" || true

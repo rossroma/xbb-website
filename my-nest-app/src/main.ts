@@ -35,9 +35,9 @@ async function bootstrap() {
     new PermissionsGuard(reflector),
   );
 
-  // 启用 CORS（仅允许白名单来源）
+  // 启用 CORS（仅允许白名单来源，未配置时拒绝所有跨域请求）
   app.enableCors({
-    origin: env.corsOrigins,
+    origin: env.corsOrigins.length > 0 ? env.corsOrigins : false,
     credentials: true,
   });
 

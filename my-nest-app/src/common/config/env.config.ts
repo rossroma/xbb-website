@@ -54,7 +54,7 @@ export class EnvConfig implements OnModuleInit {
     const origins = this.config.get('CORS_ORIGINS');
     return origins
       ? (origins as string).split(',').map((s) => s.trim())
-      : ['http://localhost:5173', 'http://localhost:3000'];
+      : [];
   }
 
   // ===== 阿里云 OSS（可选，未配置时上传功能不可用但不会阻止启动）=====
