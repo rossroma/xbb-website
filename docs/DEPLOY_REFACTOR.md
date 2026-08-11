@@ -1,6 +1,12 @@
 # 部署体系改造方案
 
-> 目标：将测试/生产两套独立的部署配置合并为一套，通过 GitHub Environments 区分环境。
+> ⚠️ 本文档部分已实施。当前状态：
+> - ✅ `.gitlab-ci.yml` 已删除（GitHub Actions 为主力）
+> - ✅ `.github/workflows/deploy.yml` 已包含测试 + 生产部署
+> - ✅ 数据库迁移脚本（`migrate.sh` + `migrations/`）已移除
+> - ✅ `verify-deploy.sh` 已集成到 CI 流水线
+> - ✅ 变量名统一：测试环境不再使用 `TEST_` 前缀，通过 GitHub Environments 隔离
+> - ⏳ 待实施：统一 docker-compose 文件结构（基础 + 覆盖文件）
 
 ---
 
@@ -34,7 +40,9 @@
 
 ### 1.3 变量命名对照
 
-| 实际含义 | 测试环境变量名 | 生产环境变量名 | 问题 |
+> ✅ 已修复：测试环境与生产环境统一使用相同变量名，通过 GitHub Environments 隔离。
+
+| 实际含义 | 旧测试环境变量名 | 旧生产环境变量名 | 问题 |
 |---|---|---|---|
 | 服务器地址 | `TEST_SSH_HOST` | `SSH_HOST`（GitLab） | 同一含义，不同名字 |
 | 部署路径 | `TEST_DEPLOY_PATH` | `DEPLOY_PATH` | 同上 |
@@ -884,7 +892,7 @@ docker compose version
 改造完成后，逐项验证：
 
 - [ ] **Step 1**：GitHub Settings → Environments 能看到 `test` 和 `production`
-- [ ] **Step 1**：每个 Environment 的 Secrets 和 Variables 已填入正确值
+- [ ] **Step 1**：每个 Environment 的 Secrets 和 Variables 已填入正确值（变量名统一，无 `TEST_` 前缀）
 - [ ] **Step 1**：Repository Secrets 中有 `ACR_PASSWORD`、`OSS_ACCESS_KEY_SECRET`
 - [ ] **Step 1**：Repository Variables 中有 `ACR_REGISTRY`、`ACR_NAMESPACE`、`ACR_USERNAME`、`OSS_*`
 - [ ] **Step 2**：`docker-compose.yml` 包含公共服务定义
