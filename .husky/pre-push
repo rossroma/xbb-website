@@ -7,7 +7,9 @@ while read -r local_ref local_sha remote_ref remote_sha; do
 
   if [ "$branch" = "develop" ] || [ "$branch" = "main" ]; then
     # 检查本次推送是否包含 CI/CD 相关文件变更
-    CI_FILES=$(git diff --name-only "$local_sha" "$remote_sha" 2>/dev/null | grep -E '\.github/|Dockerfile|docker-compose|scripts/' || true)
+    # 对比基准：远程当前状态 → 本地推送的 HEAD
+    # 使用 diff-tree 更准确，避免 merge-base 差异
+    CI_FILES=$(git diff-tree --no-commit-id -r --name-only "$remote_sha".."$local_sha" 2>/dev/null | grep -E '\.github/|Dockerfile|docker-compose|scripts/|\.claude/' || true)
 
     if [ -n "$CI_FILES" ]; then
       echo ""
