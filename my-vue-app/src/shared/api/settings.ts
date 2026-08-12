@@ -2,11 +2,6 @@ import request from './request'
 
 // ==================== 管理端接口 ====================
 
-/** 获取所有配置 */
-export function getAllSettings(): Promise<Record<string, unknown>> {
-  return request.get('/v1/admin/settings')
-}
-
 /** 获取基础信息 */
 export function getBase(): Promise<Record<string, unknown>> {
   return request.get('/v1/admin/settings/base')

@@ -39,7 +39,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { User, Down, Logout, Eyes } from '@/client/components/ui/remixIcons'
-import { getAllSettings } from '@/shared/api/settings'
+import { getSiteInfo } from '@/shared/api/settings'
 import { useAuthStore } from '@/admin/stores/auth'
 
 const router = useRouter()
@@ -55,8 +55,8 @@ const avatarUrl = computed(() => '')
 
 const loadSystemTitle = async () => {
   try {
-    const result = await getAllSettings() as any
-    companyName.value = result?.base?.company || '销帮帮CRM'
+    const result = await getSiteInfo()
+    companyName.value = result?.company || '销帮帮CRM'
   } catch {
     companyName.value = '销帮帮CRM'
   }
