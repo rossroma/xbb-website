@@ -6,7 +6,7 @@
 
 services:
   backend:
-    image: ${BACKEND_IMAGE:-${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:latest}
+    image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-backend:${BACKEND_TAG:-latest}
     container_name: xbb-backend
     restart: unless-stopped
     ports:
@@ -66,7 +66,7 @@ services:
         max-file: "3"
 
   frontend:
-    image: ${FRONTEND_IMAGE:-${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:latest}
+    image: ${ACR_REGISTRY}/${ACR_NAMESPACE}/xbb-frontend:${FRONTEND_TAG:-latest}
     container_name: xbb-frontend
     restart: unless-stopped
     ports:
