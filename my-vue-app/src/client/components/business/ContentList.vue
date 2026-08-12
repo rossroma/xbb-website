@@ -58,7 +58,7 @@
         <!-- 封面图片 -->
         <div class="relative aspect-video overflow-hidden">
           <img
-            :src="item.image"
+            :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
             class="block h-full w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
@@ -114,7 +114,7 @@
         <!-- 封面图片（16:9） -->
         <div class="relative aspect-video overflow-hidden">
           <img
-            :src="item.image"
+            :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
             class="block h-full w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
@@ -244,7 +244,7 @@
                   class="content-list-article-row__media-link"
                   :aria-label="item.linkHref ? `查看文章：${item.title}` : undefined"
                 >
-                  <img :src="item.image" :alt="item.imageAlt ?? item.title" loading="lazy" class="content-list-article-row__media-img" />
+                  <img :src="getOSSImageUrl(item.image, 300)" :alt="item.imageAlt ?? item.title" loading="lazy" class="content-list-article-row__media-img" />
                 </component>
               </div>
 
@@ -307,6 +307,7 @@ import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Pagination from '@/client/components/ui/Pagination.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 /** 内容卡片数据 */
 export interface ContentCard {

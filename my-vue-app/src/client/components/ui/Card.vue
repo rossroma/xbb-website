@@ -10,7 +10,7 @@
   >
     <img
       v-if="variant === 'image' && imageSrc"
-      :src="imageSrc"
+      :src="getOSSImageUrl(imageSrc, 280)"
       :alt="imageAlt ?? ''"
       class="w-full object-cover rounded-t-card"
     />
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 interface CardProps {
   clickable?: boolean

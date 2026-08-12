@@ -14,7 +14,7 @@
       >
         <div class="w-[110px] h-[110px] flex items-center justify-center mb-4">
           <img
-            :src="item.icon"
+            :src="getOSSImageUrl(item.icon, 110)"
             :alt="item.title || item.desc"
             :class="[
               'w-auto object-contain transition duration-normal motion-reduce:transition-none',
@@ -44,6 +44,7 @@
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 interface LogoItem {
   title: string

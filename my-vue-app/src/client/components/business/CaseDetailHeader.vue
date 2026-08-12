@@ -12,7 +12,7 @@
         <!-- ===== 左半部分：案例配图 ===== -->
         <div class="overflow-hidden p-8 max-lg:p-6 max-md:p-5 max-lg:max-h-80">
           <img
-            :src="image"
+            :src="getOSSImageUrl(image, 600)"
             :alt="imageAlt ?? title"
             class="h-full w-full rounded-inner object-cover"
           />
@@ -22,7 +22,7 @@
         <div class="flex flex-col gap-6 p-8 max-lg:p-6 max-md:p-5">
           <!-- 案例 Logo（右对齐） -->
           <img
-            :src="logo"
+            :src="getOSSImageUrl(logo, 160)"
             :alt="logoAlt ?? ''"
             class="ml-auto h-10 w-auto max-w-40 object-contain"
           />
@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Badge from '@/client/components/ui/Badge.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 defineProps<{
   /** 左侧配图 URL */

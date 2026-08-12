@@ -25,7 +25,7 @@
       ]"
     >
       <img
-        :src="image"
+        :src="getOSSImageUrl(image, 272)"
         :alt="title"
         class="block w-full h-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
       />
@@ -62,6 +62,7 @@
 
 <script setup lang="ts">
 import { Play } from '@/client/components/ui/remixIcons'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 withDefaults(
   defineProps<{

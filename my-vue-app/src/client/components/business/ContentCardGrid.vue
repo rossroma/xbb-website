@@ -63,7 +63,7 @@
           ]"
         >
           <img
-            :src="card.image"
+            :src="getOSSImageUrl(card.image, 280)"
             :alt="card.imageAlt ?? card.title"
             :class="[
               'block w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none',
@@ -171,7 +171,7 @@
         <!-- 图片区域 -->
         <div :class="['overflow-hidden aspect-[16/10]', effectiveColumns === 1 ? 'max-h-44' : '']">
           <img
-            :src="card.image"
+            :src="getOSSImageUrl(card.image, 400)"
             :alt="card.imageAlt ?? card.title"
             class="block h-full w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
@@ -238,6 +238,7 @@ import { computed } from 'vue'
 import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 /** 图文内容卡片数据 */
 export interface ContentCard {

@@ -65,7 +65,7 @@
         ]"
       >
         <img
-          :src="image"
+          :src="getOSSImageUrl(image, 600)"
           :alt="imageAlt ?? heading"
           class="max-w-full h-auto rounded-card shadow-subtle"
         />
@@ -80,6 +80,7 @@ import type { Component } from 'vue'
 import { CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 /** 图标颜色主题 */
 export type IconTheme = 'brand' | 'accent' | 'gradient' | 'neutral'
