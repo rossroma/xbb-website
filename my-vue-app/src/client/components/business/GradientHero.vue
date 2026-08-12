@@ -14,7 +14,7 @@
         <!-- 文字区域 -->
         <div :class="reverse ? 'order-2 max-lg:order-none' : 'order-1'">
           <!-- Badge 图标（选填） -->
-          <div v-if="badgeIcon" class="mb-6">
+          <div v-if="badgeIcon" class="mb-4">
             <span
               :class="badgeBgClass"
               class="inline-flex items-center justify-center w-11 h-11 rounded-full"
@@ -27,20 +27,20 @@
           <!-- 标签（选填，来自 CaseCard） -->
           <span
             v-if="tag"
-            class="inline-block px-4 py-1.5 rounded-pill text-small font-medium bg-brand-primary-soft text-brand-primary mb-5"
+            class="inline-block px-4 py-1.5 rounded-pill text-small font-medium bg-brand-primary-soft text-brand-primary mb-4"
           >
             {{ tag }}
           </span>
 
           <!-- 标题（支持换行；titleGradient 为 true 时展示渐变色文字） -->
-          <h2
-            :class="[
-              'text-display lg:text-[44px] lg:leading-1.15 font-extrabold whitespace-pre-line',
-              titleGradient ? titleGradientClass : 'text-text-primary',
-            ]"
-          >
-            {{ title }}
-          </h2>
+          <SectionHeading
+            :title="title"
+            align="left"
+            :heading-class="[
+              'font-extrabold whitespace-pre-line',
+              titleGradient ? titleGradientClass : '',
+            ].filter(Boolean).join(' ')"
+          />
 
           <!-- 描述 -->
           <p class="mt-6 text-body text-text-secondary leading-body max-w-md">
@@ -86,6 +86,7 @@
 import { computed } from 'vue'
 import type { Component } from 'vue'
 import { Right } from '@/client/components/ui/remixIcons'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Button from '@/client/components/ui/Button.vue'
 import {
   type Theme,

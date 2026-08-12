@@ -6,17 +6,14 @@
 <template>
   <SectionBlock spacing="loose">
     <!-- 标题 + 副标题 -->
-    <div class="flex flex-col items-center text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p v-if="subtitle" class="mt-4 max-w-2xl text-body text-text-secondary leading-body">
-        {{ subtitle }}
-      </p>
-    </div>
+    <SectionHeading
+      :title="title"
+      :subtitle="subtitle"
+      align="center"
+    />
 
     <!-- 流程区域 -->
-    <div class="mt-14 max-lg:mt-10">
+    <div class="mt-12 max-lg:mt-10">
       <!-- ===== 桌面端：两行布局 ===== -->
       <div class="hidden lg:block">
         <!-- 上行：上卡片 + 箭头 -->
@@ -184,6 +181,7 @@
 <script setup lang="ts">
 import { ArrowDown, ArrowRight, CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import { type Theme, THEME_ICON_BADGE_CLASS, THEME_PRIMARY_COLOR } from './theme'
 
 /** 单个流程步骤数据 */

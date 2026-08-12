@@ -11,21 +11,14 @@
 <template>
   <SectionBlock spacing="default">
     <!-- 标题区 -->
-    <div v-if="title" class="text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p v-if="subtitle" class="mt-4 text-body text-text-secondary leading-body">
-        {{ subtitle }}
-      </p>
-    </div>
+    <SectionHeading v-if="title" :title="title" :subtitle="subtitle" align="center" />
 
     <!-- 主体：左侧分类 + 右侧内容 -->
     <div
       :class="[
         'flex',
         showCategories ? 'gap-16 max-lg:flex-col max-lg:gap-8' : '',
-        title ? 'mt-14 max-lg:mt-10 max-md:mt-8' : '',
+        title ? 'mt-12 max-lg:mt-10 max-md:mt-8' : '',
       ]"
     >
       <!-- ===== 左侧分类导航 ===== -->
@@ -205,6 +198,7 @@
 import { ref, computed } from 'vue'
 import { Search, Down, CloseSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 
 // ===== 类型定义 =====

@@ -97,7 +97,7 @@
         <RouterLink
           v-else-if="item.type === 'route'"
           :to="item.routeTo ?? '/'"
-          class="group w-full text-center pt-2.5 pb-2 px-0 border-0 bg-transparent cursor-pointer relative block no-underline max-[1199px]:py-1.5"
+          class="group w-full text-center pt-2.5 pb-4.5 px-0 border-0 bg-transparent cursor-pointer relative block no-underline max-[1199px]:py-1.5"
         >
           <div
             class="flex justify-center text-h3 leading-none max-[1199px]:text-body text-toolbar-icon group-hover:text-brand-primary transition-colors duration-fast motion-reduce:transition-none"
@@ -115,7 +115,7 @@
       <!-- 回到顶部 -->
       <button
         type="button"
-        class="w-11 h-11 absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-toolbar-scroll-top shadow-toolbar-scroll-top border-0 cursor-pointer flex items-center justify-center hover:scale-110 transition-transform duration-fast motion-reduce:transition-none motion-reduce:transform-none max-[1199px]:w-8 max-[1199px]:h-8 max-[1199px]:bottom-1.5"
+        class="w-11 h-11 absolute bottom-1 left-1/2 -translate-x-1/2 rounded-full bg-toolbar-scroll-top shadow-toolbar-scroll-top border-0 cursor-pointer flex items-center justify-center hover:scale-110 transition-transform duration-fast motion-reduce:transition-none motion-reduce:transform-none max-[1199px]:w-8 max-[1199px]:h-8 max-[1199px]:bottom-1.5"
         aria-label="回到顶部"
         @click.stop="scrollToTop"
       >

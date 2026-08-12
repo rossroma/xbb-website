@@ -5,18 +5,18 @@
 <template>
   <SectionBlock spacing="compact" :width="variant === 'detail' ? 'default' : 'narrow'">
     <!-- 标题区 -->
-    <h2 class="text-center text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-      {{ title }}
-    </h2>
-    <p v-if="subtitle" class="mt-4 text-center text-body text-text-secondary leading-body">
-      {{ subtitle }}
-    </p>
+    <SectionHeading
+      :title="title"
+      :subtitle="subtitle"
+      align="center"
+      :heading-class="titleClass ? titleClass : ''"
+    />
 
     <!-- 指标卡片网格 -->
     <div
       :class="[
-        'relative mt-7',
-        variant === 'detail' ? 'overflow-visible px-0 py-2' : 'overflow-hidden px-6 py-5',
+        'relative mt-12',
+        variant === 'detail' ? 'overflow-visible px-0 py-2' : 'overflow-hidden px-6',
       ]"
     >
       <div class="relative z-10">
@@ -66,6 +66,7 @@
 
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 import MetricItem from '@/client/components/ui/MetricItem.vue'
 
@@ -88,6 +89,7 @@ withDefaults(
     columns?: 3 | 4
     /** default 为紧凑指标，detail 为大数字 + 标题 + 描述卡片 */
     variant?: 'default' | 'detail'
+    titleClass?: string
   }>(),
   {
     columns: 4,

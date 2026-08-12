@@ -5,14 +5,7 @@
 <template>
   <SectionBlock spacing="default">
     <!-- 标题区 -->
-    <div class="text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p v-if="subtitle" class="mt-4 max-w-180 mx-auto text-body text-text-secondary leading-body">
-        {{ subtitle }}
-      </p>
-    </div>
+    <SectionHeading :title="title" :subtitle="subtitle" align="center" />
 
     <!-- 功能卡片网格 -->
     <CardGrid :cols="columns" gap="tight" class="mt-12 max-lg:mt-8">
@@ -84,6 +77,7 @@
 import type { Component } from 'vue'
 import { CheckSmall } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 import { type Theme, THEME_PRIMARY_COLOR } from './theme'
 

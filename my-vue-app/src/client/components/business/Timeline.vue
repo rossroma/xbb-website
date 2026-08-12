@@ -5,17 +5,14 @@
 <template>
   <SectionBlock spacing="default">
     <!-- 标题区 -->
-    <div class="flex flex-col items-center text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
-        {{ title }}
-      </h2>
-      <p v-if="subtitle" class="mt-4 max-w-2xl text-body text-text-secondary leading-body">
-        {{ subtitle }}
-      </p>
-    </div>
+    <SectionHeading
+      :title="title"
+      :subtitle="subtitle"
+      align="center"
+    />
 
     <!-- 时间线 -->
-    <div class="relative mt-14 max-lg:mt-10">
+    <div class="relative mt-12 max-lg:mt-10">
       <!-- 中央垂直分割线（桌面端）/ 左侧分割线（移动端） -->
       <div
         class="absolute left-1/2 top-2 bottom-2 w-px -translate-x-1/2 bg-border-default max-lg:left-4"
@@ -76,6 +73,7 @@
 
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 
 /** 高亮文本段 */
 interface TimelineSegment {

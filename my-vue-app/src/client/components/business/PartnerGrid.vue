@@ -1,8 +1,11 @@
 <template>
   <SectionBlock spacing="loose"
-    ><h2 class="text-center text-h1 text-text-primary mb-[26px] max-lg:text-h2 max-md:text-h3">
-      {{ heading }}
-    </h2>
+    ><SectionHeading
+      :title="heading"
+      align="center"
+      :heading-class="headingClass"
+      class="mb-12"
+    />
     <CardGrid :cols="4" gap="tight">
       <article
         v-for="item in items"
@@ -39,6 +42,7 @@
 
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import CardGrid from '@/client/components/ui/CardGrid.vue'
 
 interface LogoItem {
@@ -52,5 +56,6 @@ interface LogoItem {
 defineProps<{
   heading: string
   items: LogoItem[]
+  headingClass?: string
 }>()
 </script>

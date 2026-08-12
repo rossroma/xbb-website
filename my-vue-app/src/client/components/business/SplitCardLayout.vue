@@ -1,9 +1,11 @@
 <template>
   <SectionBlock spacing="default"
-    ><div class="flex justify-center mb-[70px] text-center">
-      <h2 class="text-h1 font-semibold whitespace-normal text-center max-lg:text-h2 max-md:text-h3">
-        {{ heading }}
-      </h2>
+    ><div class="flex justify-center mb-12 text-center">
+      <SectionHeading
+        :title="heading"
+        align="center"
+        :heading-class="headingClass"
+      />
     </div>
     <div class="max-w-284 mx-auto flex justify-center gap-4 max-lg:flex-col max-lg:items-center">
       <!-- Left: 2 tall cards -->
@@ -43,6 +45,7 @@
 import { computed } from 'vue'
 import type { Component } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import MediaCard from '@/client/components/ui/MediaCard.vue'
 
 interface SplitCard {
@@ -60,6 +63,7 @@ interface SplitCard {
 const props = defineProps<{
   heading: string
   cards: SplitCard[]
+  headingClass?: string
 }>()
 
 const tallCards = computed(() => props.cards.filter((c) => c.size === 'tall'))
