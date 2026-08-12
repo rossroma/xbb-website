@@ -265,17 +265,19 @@ const canAccessAdminRoute = (path: string, admin: any) => {
 
   if (path.startsWith('/content')) {
     const parts = path.split('/').filter(Boolean)
-    // /content — 超级管理员直接放行，普通管理员检查是否有任何分类权限
+    const { isSuperAdmin, ruleSet, categorySet } = getPermissionContext(admin)
+    const hasContentRule = PERMISSION_TOKENS.content.ruleTokens.some(token => ruleSet.has(token))
+    const hasCategoryAccess = categorySet.size > 0
+
+    // /content — 超级管理员、拥有 content_manage.* 权限、或有分类权限均可访问
     if (parts.length === 1) {
-      const { isSuperAdmin, categorySet } = getPermissionContext(admin)
       if (isSuperAdmin) return true
-      return categorySet.size > 0
+      return hasContentRule || hasCategoryAccess
     }
     // /content/trash — 回收站需要与内容管理相同的权限
     if (parts[1] === 'trash') {
-      const { isSuperAdmin, categorySet } = getPermissionContext(admin)
       if (isSuperAdmin) return true
-      return categorySet.size > 0
+      return hasContentRule || hasCategoryAccess
     }
     // /content/edit/:id 或 /content/create — 允许访问（后端校验）
     return true
