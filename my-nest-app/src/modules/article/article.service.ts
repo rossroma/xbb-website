@@ -33,6 +33,11 @@ export class ArticleService {
 
     const queryBuilder = this.articleRepository.createQueryBuilder('article');
 
+    // 默认排除回收站中的文章（status = -1），除非显式查询回收站状态
+    if (status === undefined) {
+      queryBuilder.andWhere('article.status != :trashStatus', { trashStatus: -1 });
+    }
+
     // 应用过滤条件
     if (title) {
       queryBuilder.andWhere('article.title LIKE :title', { title: `%${title}%` });
@@ -337,6 +342,20 @@ export class ArticleService {
       .set({ status: 1, updatetime: Math.floor(Date.now() / 1000) })
       .where('id IN (:...ids)', { ids })
       .andWhere('status = :status', { status: -1 })
+      .execute();
+
+    return result.affected || 0;
+  }
+
+  /** 批量移入回收站（软删除） */
+  async batchTrash(ids: number[]): Promise<number> {
+    if (!ids.length) return 0;
+
+    const result = await this.articleRepository
+      .createQueryBuilder()
+      .update()
+      .set({ status: -1, updatetime: Math.floor(Date.now() / 1000) })
+      .where('id IN (:...ids)', { ids })
       .execute();
 
     return result.affected || 0;

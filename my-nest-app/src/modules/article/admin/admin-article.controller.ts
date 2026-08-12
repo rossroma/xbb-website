@@ -40,6 +40,14 @@ export class AdminArticleController {
     return ResponseResult.success(count, `成功恢复 ${count} 篇文章`);
   }
 
+  @Delete('batch/trash')
+  @RequirePermissions('content_manage.delete')
+  @OperationLog({ title: '文章', type: 3, titlePrefix: '文章：' })
+  async batchTrash(@Body() dto: BatchArticleDto): Promise<ResponseResult<number>> {
+    const count = await this.articleService.batchTrash(dto.ids);
+    return ResponseResult.success(count, `成功将 ${count} 篇文章移入回收站`);
+  }
+
   @Delete('batch/permanent')
   @RequirePermissions('content_manage.delete')
   @OperationLog({ title: '文章', type: 3, titlePrefix: '文章：' })
