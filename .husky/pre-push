@@ -1,0 +1,35 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# 部署前自检：推送到 develop/main 时，检查 CI/CD 相关文件是否变更
+while read -r local_ref local_sha remote_ref remote_sha; do
+  branch=$(echo "$remote_ref" | sed 's|refs/heads/||')
+
+  if [ "$branch" = "develop" ] || [ "$branch" = "main" ]; then
+    # 检查本次推送是否包含 CI/CD 相关文件变更
+    CI_FILES=$(git diff --name-only "$local_sha" "$remote_sha" 2>/dev/null | grep -E '\.github/|Dockerfile|docker-compose|scripts/' || true)
+
+    if [ -n "$CI_FILES" ]; then
+      echo ""
+      echo "🔍 检测到 CI/CD 相关文件变更，执行部署前自检..."
+      echo "$CI_FILES" | sed 's/^/  📄 /'
+
+      if [ -f scripts/deploy-check.sh ]; then
+        echo ""
+        bash scripts/deploy-check.sh
+        if [ $? -ne 0 ]; then
+          echo ""
+          echo "❌ 部署前自检未通过，推送已取消。"
+          echo "   请修复问题后重新推送，或使用 --no-verify 跳过（不推荐）。"
+          exit 1
+        fi
+        echo ""
+        echo "✅ 部署前自检通过。"
+      else
+        echo "  ⚠️  scripts/deploy-check.sh 不存在，跳过自检"
+      fi
+    fi
+  fi
+done
+
+exit 0
