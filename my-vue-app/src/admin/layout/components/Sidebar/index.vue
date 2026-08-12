@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getAllSettings } from '@/shared/api/settings'
+import { getSiteInfo } from '@/shared/api/settings'
 import { useAuthStore } from '@/admin/stores/auth'
 import { hasMenuPermission, getPermissionContext, type MenuPermissionMeta } from '@/admin/utils/admin-permissions'
 import { PERMISSION_TOKENS } from '@/admin/config/menuConfig'
@@ -43,16 +43,19 @@ const activeMenu = computed(() => route.path)
 
 const loadCompanyName = async () => {
   try {
-    const result = (await getAllSettings()) as any
-    companyName.value = result?.base?.company || '销帮帮CRM'
+    const result = await getSiteInfo()
+    companyName.value = result?.company || '销帮帮CRM'
   } catch {
     companyName.value = '销帮帮CRM'
   }
 }
 
 const contentChildren = computed(() => {
-  const { isSuperAdmin, categorySet } = getPermissionContext(authStore.admin)
-  if (!isSuperAdmin && categorySet.size === 0) return []
+  const { isSuperAdmin, ruleSet, categorySet } = getPermissionContext(authStore.admin)
+  // 内容菜单可见性：超级管理员直接放行，或拥有 content_manage.* 权限，或拥有分类权限
+  const hasContentRule = PERMISSION_TOKENS.content.ruleTokens.some(token => ruleSet.has(token))
+  const hasCategoryAccess = categorySet.size > 0
+  if (!isSuperAdmin && !hasContentRule && !hasCategoryAccess) return []
   return [
     {
       path: '/content',
