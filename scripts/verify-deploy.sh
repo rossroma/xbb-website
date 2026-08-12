@@ -12,7 +12,7 @@ set -euo pipefail
 
 MODE="${1:---test}"
 if [ "$MODE" = "--prod" ]; then
-  BASE_URL="https://www.xbongbong.com"
+  BASE_URL="http://localhost"
   LABEL="生产环境"
 else
   BASE_URL="http://localhost"
