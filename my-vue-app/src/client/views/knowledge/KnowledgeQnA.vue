@@ -1,5 +1,6 @@
 <template>
   <div class="knowledge-qna-page">
+    <h1 class="sr-only">知识问答 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[knowledgeQnAHeroSlide]" />
 
     <SectionBlock spacing="none" paddingBottom="default" width="default">

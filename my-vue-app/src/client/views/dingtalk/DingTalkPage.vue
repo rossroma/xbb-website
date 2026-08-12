@@ -1,5 +1,6 @@
 <template>
   <div class="dingtalk-page">
+    <h1 class="sr-only">销帮帮 X 钉钉 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <IconCardGrid

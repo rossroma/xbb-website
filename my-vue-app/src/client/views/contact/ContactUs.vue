@@ -1,5 +1,6 @@
 <template>
   <div class="contact-us-page">
+    <h1 class="sr-only">联系我们 - 销帮帮AI CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <SectionBlock spacing="default">

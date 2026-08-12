@@ -1,5 +1,6 @@
 <template>
   <div class="company-intro-page">
+    <h1 class="sr-only">公司介绍 - 销帮帮AI CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <SectionBlock spacing="default">

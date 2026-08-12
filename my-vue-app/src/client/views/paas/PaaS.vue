@@ -1,5 +1,6 @@
 <template>
   <div class="paas-page">
+    <h1 class="sr-only">PaaS - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <CTASection

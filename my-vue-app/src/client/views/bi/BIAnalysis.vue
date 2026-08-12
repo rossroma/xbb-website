@@ -1,5 +1,6 @@
 <template>
   <div class="bi-analysis">
+    <h1 class="sr-only">BI 分析 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <CTASection

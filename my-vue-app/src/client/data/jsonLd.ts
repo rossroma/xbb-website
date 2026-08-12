@@ -182,8 +182,8 @@ export function generateJsonLd(
   path: string,
   pageSeo: { title: string; description: string },
   store?: SiteSettings | null,
-): Array<{ type: 'application/ld+json'; children: string }> {
-  const scripts: Array<{ type: 'application/ld+json'; children: string }> = []
+): Array<{ type: 'application/ld+json'; textContent: string }> {
+  const scripts: Array<{ type: 'application/ld+json'; textContent: string }> = []
 
   for (const type of types) {
     let data: Record<string, unknown> | null = null
@@ -208,7 +208,7 @@ export function generateJsonLd(
     if (data) {
       scripts.push({
         type: 'application/ld+json',
-        children: JSON.stringify(data),
+        textContent: JSON.stringify(data),
       })
     }
   }

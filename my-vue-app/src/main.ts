@@ -1,6 +1,5 @@
 import { ViteSSG } from 'vite-ssg'
 import { createPinia } from 'pinia'
-import { createHead } from '@vueuse/head'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
@@ -15,11 +14,9 @@ export const createApp = ViteSSG(
   { routes },
   ({ app, router, isClient }) => {
     const pinia = createPinia()
-    const head = createHead()
 
     app.use(pinia)
     app.use(router)
-    app.use(head)
     app.use(ElementPlus)
 
     // 仅客户端执行的初始化逻辑（统计代码注入、favicon 设置等）

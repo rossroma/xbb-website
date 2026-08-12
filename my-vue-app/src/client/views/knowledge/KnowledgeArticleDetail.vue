@@ -119,7 +119,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { useHead } from '@vueuse/head'
+import { useHead } from '@unhead/vue'
 import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
 import type { ArticleSidebarTocItem } from '@/client/components/business/ArticleSidebar.vue'
 import FaqList from '@/client/components/business/FaqList.vue'

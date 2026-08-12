@@ -1,5 +1,6 @@
 <template>
   <div class="qiwei-page">
+    <h1 class="sr-only">销帮帮 X 企业微信 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <IconCardGrid

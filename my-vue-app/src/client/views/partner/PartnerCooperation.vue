@@ -1,5 +1,6 @@
 <template>
   <div class="partner-cooperation">
+    <h1 class="sr-only">伙伴合作 - 销帮帮AI CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <IconCardGrid

@@ -1,5 +1,6 @@
 <template>
   <div class="customer-management">
+    <h1 class="sr-only">客户管理 - 销帮帮 CRM</h1>
     <div class="customer-management__hero">
       <HeroBanner mode="single" :slides="[heroBannerSlide]" />
     </div>

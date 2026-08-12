@@ -1,5 +1,6 @@
 <template>
   <div class="ambassador-page">
+    <h1 class="sr-only">推广大使 - 销帮帮AI CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <SectionBlock spacing="default">

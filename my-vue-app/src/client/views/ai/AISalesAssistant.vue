@@ -1,5 +1,6 @@
 <template>
   <div class="ai-sales-assistant">
+    <h1 class="sr-only">AI 销售助理 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <TabShowcase

@@ -1,5 +1,6 @@
 <template>
   <div class="news-page">
+    <h1 class="sr-only">新闻动态 - 销帮帮 CRM</h1>
     <!-- ===== Banner 区 ===== -->
     <HeroBanner mode="single" :slides="[newsBannerSlide]" />
 
