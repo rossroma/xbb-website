@@ -139,6 +139,7 @@ import {
 } from '@/shared/api/article'
 import type { FaqItem } from '@/client/components/business/FaqList.vue'
 import { knowledgeQnASeo, knowledgeQnASidebarBanners } from './knowledgeQnAData'
+import { generateJsonLd, type FaqSchemaItem } from '@/client/data/jsonLd'
 
 const route = useRoute()
 const trialPagePath = toPagePath('single_mfsy')
@@ -175,6 +176,14 @@ const formattedTime = computed(() => {
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
+})
+
+/** 将 faqItems 转为 FaqSchemaItem 格式（去除 HTML 标签） */
+const faqSchemaItems = computed<FaqSchemaItem[]>(() => {
+  return faqItems.value.map((item) => ({
+    question: item.question,
+    answer: item.answer.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(),
+  }))
 })
 
 /** 面包屑数据 */
@@ -274,6 +283,17 @@ useHead(() => {
     }
   }
 
+  // 生成 FAQPage JSON-LD 脚本
+  const faqLdScripts = faqSchemaItems.value.length > 0
+    ? generateJsonLd(
+        ['FAQPage'],
+        route.path,
+        { title: article.value.title, description: article.value.setDescription || summaryText.value || '' },
+        undefined,
+        { faqItems: faqSchemaItems.value },
+      )
+    : []
+
   return {
     title: article.value.seoTitle || `${article.value.title} - 知识问答 - 销帮帮 CRM`,
     meta: [
@@ -286,6 +306,7 @@ useHead(() => {
         content: article.value.seoKeyword || '',
       },
     ],
+    script: faqLdScripts.length > 0 ? faqLdScripts : undefined,
   }
 })
 

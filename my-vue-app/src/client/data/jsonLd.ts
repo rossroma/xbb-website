@@ -7,8 +7,9 @@ import type { SiteSettings } from '@/client/stores/siteSettings'
  * - `WebSite` — 网站信息（含搜索框，仅首页）
  * - `BreadcrumbList` — 面包屑导航（每个页面）
  * - `Product` — 产品信息（功能/能力介绍页）
+ * - `FAQPage` — 常见问题（问答页，帮助 AI 引擎提取结构化问答对）
  */
-export type JsonLdType = 'Organization' | 'WebSite' | 'BreadcrumbList' | 'Product'
+export type JsonLdType = 'Organization' | 'WebSite' | 'BreadcrumbList' | 'Product' | 'FAQPage'
 
 /**
  * 按路由 path 定义面包屑名称。
@@ -48,6 +49,14 @@ const BREADCRUMB_PARENTS: Record<string, string> = {
   '/bi': '/chanpin',
   '/ai': '/chanpin',
   '/paas': '/chanpin',
+}
+
+/** FAQ 问答项（用于生成 FAQPage JSON-LD） */
+export interface FaqSchemaItem {
+  /** 问题文本 */
+  question: string
+  /** 答案文本（纯文本，将自动 HTML 净化） */
+  answer: string
 }
 
 /** 站点基础信息 — 用于 Organization / WebSite JSON-LD */
@@ -167,7 +176,35 @@ function buildProduct(pageSeo: { title: string; description: string }): Record<s
   }
 }
 
+/**
+ * 生成 FAQPage JSON-LD（常见问题结构化数据）。
+ * 帮助 AI 引擎（百度 AI 搜索、Google SGE、Perplexity、ChatGPT Search 等）
+ * 直接提取问答对，在搜索结果中展示富媒体摘要。
+ *
+ * @param items - FAQ 问答列表
+ */
+function buildFAQPage(items: FaqSchemaItem[]): Record<string, unknown> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  }
+}
+
 /* ========== 入口函数 ========== */
+
+/** FAQPage 额外参数 */
+export interface FaqPageOptions {
+  /** FAQ 问答列表 */
+  faqItems: FaqSchemaItem[]
+}
 
 /**
  * 根据页面 SEO 配置和路由 path 生成 JSON-LD 脚本数组。
@@ -176,12 +213,14 @@ function buildProduct(pageSeo: { title: string; description: string }): Record<s
  * @param path     - 当前路由 path（用于 BreadcrumbList）
  * @param pageSeo  - 页面 SEO 元数据（用于 Product）
  * @param store    - 站点设置（用于 Organization 中的公司信息）
+ * @param extra    - 额外参数（用于 FAQPage 等需要动态数据的类型）
  */
 export function generateJsonLd(
   types: JsonLdType[],
   path: string,
   pageSeo: { title: string; description: string },
   store?: SiteSettings | null,
+  extra?: FaqPageOptions,
 ): Array<{ type: 'application/ld+json'; textContent: string }> {
   const scripts: Array<{ type: 'application/ld+json'; textContent: string }> = []
 
@@ -202,6 +241,11 @@ export function generateJsonLd(
         break
       case 'Product':
         data = buildProduct(pageSeo)
+        break
+      case 'FAQPage':
+        if (extra?.faqItems?.length) {
+          data = buildFAQPage(extra.faqItems)
+        }
         break
     }
 
