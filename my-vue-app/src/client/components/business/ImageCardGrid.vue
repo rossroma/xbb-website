@@ -50,7 +50,7 @@
         </p>
         <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-visible max-md:-mx-6">
           <img
-            :src="card.image"
+            :src="getOSSImageUrl(card.image, 350)"
             :alt="card.imageAlt ?? card.title"
             class="block w-full max-w-none object-contain transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
@@ -79,7 +79,7 @@
           <p v-if="card.description">{{ card.description }}</p>
         </div>
         <div v-if="card.image" class="image-card-grid-panel__image">
-          <img :src="card.image" :alt="card.imageAlt ?? card.title" loading="lazy" />
+          <img :src="getOSSImageUrl(card.image, 500)" :alt="card.imageAlt ?? card.title" loading="lazy" />
         </div>
       </article>
     </div>
@@ -90,6 +90,7 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 export interface ImageCardGridItem {
   key?: string

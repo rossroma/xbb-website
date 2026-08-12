@@ -24,7 +24,7 @@
         </Button>
       </div>
       <img
-        :src="image"
+        :src="getOSSImageUrl(image, 390)"
         :alt="imageAlt ?? ''"
         class="w-[390px] h-[217px] max-md:w-full max-md:h-45 rounded-card object-cover shrink-0"
       />
@@ -36,6 +36,7 @@
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Button from '@/client/components/ui/Button.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 defineProps<{
   eyebrow: string

@@ -48,7 +48,7 @@
 
                   <!-- 右侧图片 -->
                   <img
-                    :src="slide.image"
+                    :src="getOSSImageUrl(slide.image, 390)"
                     :alt="slide.imageAlt ?? ''"
                     class="w-[390px] h-[217px] max-md:w-full max-md:h-45 rounded-card object-cover shrink-0"
                   />
@@ -65,6 +65,7 @@
 <script setup lang="ts">
 import Carousel from '@/client/components/ui/Carousel.vue'
 import Button from '@/client/components/ui/Button.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 /** PromoBanner 轮播 Slide 数据 */
 export interface PromoBannerSlide {

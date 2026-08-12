@@ -101,7 +101,7 @@
         <slot name="single-visual" :slide="singleSlide">
           <img
             v-if="singleSlide.visualImage"
-            :src="singleSlide.visualImage"
+            :src="getOSSImageUrl(singleSlide.visualImage, 700)"
             :alt="singleSlide.visualImageAlt ?? singleSlide.title"
             :class="[
               'hero-banner-single__visual-image max-w-full h-auto rounded-large object-contain',
@@ -219,7 +219,7 @@
 
                       <div class="row__content--img">
                         <img
-                          :src="slide.image"
+                          :src="getOSSImageUrl(slide.image, 500)"
                           :alt="slide.imageAlt ?? slide.title"
                           loading="lazy"
                         />
@@ -231,7 +231,7 @@
                     <div class="row__content--img">
                       <img
                         class="management-showcase__image"
-                        :src="slide.image"
+                        :src="getOSSImageUrl(slide.image, 500)"
                         :alt="slide.imageAlt ?? slide.title"
                         loading="lazy"
                       />
@@ -466,6 +466,7 @@ import { computed, type Component } from 'vue'
 import { useRouter } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 

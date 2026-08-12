@@ -4,7 +4,7 @@
       <template v-for="banner in banners" :key="banner.key ?? banner.title">
         <RouterLink v-if="banner.to" :to="banner.to" class="article-sidebar__promo">
           <img
-            :src="banner.image"
+            :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
             class="article-sidebar__promo-image"
             loading="lazy"
@@ -18,7 +18,7 @@
           rel="noopener noreferrer"
         >
           <img
-            :src="banner.image"
+            :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
             class="article-sidebar__promo-image"
             loading="lazy"
@@ -26,7 +26,7 @@
         </a>
         <div v-else class="article-sidebar__promo">
           <img
-            :src="banner.image"
+            :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
             class="article-sidebar__promo-image"
             loading="lazy"
@@ -90,6 +90,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 
 export type ArticleSidebarVariant = 'toc' | 'link-tags'
 

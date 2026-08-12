@@ -29,7 +29,7 @@
       <div :class="imagePanelClass">
         <div class="w-full max-w-170 aspect-[680/420] flex items-center justify-center">
           <img
-            :src="image"
+            :src="getOSSImageUrl(image, 680)"
             :alt="imageAlt ?? title"
             class="max-w-full max-h-full w-auto h-auto object-contain rounded-inner shadow-subtle"
             loading="lazy"
@@ -45,6 +45,7 @@ import { computed } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Button from '@/client/components/ui/Button.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 import {
   type Theme,
   THEME_BG_CLASS,
