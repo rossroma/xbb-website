@@ -64,14 +64,24 @@
           <el-button @click="handleReset">重置</el-button>
         </div>
         <div class="toolbar-right">
+          <el-button type="danger" :disabled="!selectedIds.length" @click="handleBatchDelete">
+            批量删除 ({{ selectedIds.length }})
+          </el-button>
           <el-button type="primary" @click="handleCreate">新增</el-button>
           <el-button @click="goToTrash">回收站</el-button>
         </div>
       </div>
 
       <!-- 文章表格 -->
-      <el-table :data="articles" v-loading="loading" border>
-        <el-table-column prop="id" label="ID" width="70" />
+      <el-table
+          :data="articles"
+          v-loading="loading"
+          border
+          @selection-change="handleSelectionChange"
+          row-key="id"
+        >
+          <el-table-column type="selection" width="50" />
+          <el-table-column prop="id" label="ID" width="70" />
         <el-table-column label="标题" min-width="200">
           <template #default="{ row }">
             <el-tag v-if="(row.flag || '').includes('1')" type="warning" size="small" class="rec-badge">推荐</el-tag>
@@ -123,7 +133,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getAdminArticles, getArticleCounts } from '@/shared/api/article'
+import { getAdminArticles, getArticleCounts, batchTrashArticles } from '@/shared/api/article'
 import { getAdminCategories } from '@/shared/api/category'
 import request from '@/shared/api/request'
 import { buildCategoryTree } from '@/shared/utils/categoryTree'
@@ -163,6 +173,7 @@ const handleCategoryClick = (data: any) => {
 
 const loading = ref(false)
 const articles = ref<any[]>([])
+const selectedIds = ref<number[]>([])
 
 const pagination = reactive({ page: 1, limit: 20, total: 0 })
 
@@ -254,6 +265,30 @@ const handleDelete = async (row: any) => {
     })
     await request.delete(`/v1/admin/articles/${row.id}`)
     ElMessage.success('已移入回收站')
+    loadArticleCounts()
+    loadArticles()
+  } catch {
+    // ElMessageBox 取消或 API 错误（全局拦截器已处理）
+  }
+}
+
+/** 多选变化 */
+const handleSelectionChange = (selection: any[]) => {
+  selectedIds.value = selection.map((item) => item.id)
+}
+
+/** 批量删除（移入回收站） */
+const handleBatchDelete = async () => {
+  if (!selectedIds.value.length) return
+  try {
+    await ElMessageBox.confirm(
+      `确定要将选中的 ${selectedIds.value.length} 篇文章移入回收站吗？`,
+      '提示',
+      { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' },
+    )
+    await batchTrashArticles(selectedIds.value)
+    ElMessage.success(`已将 ${selectedIds.value.length} 篇文章移入回收站`)
+    selectedIds.value = []
     loadArticleCounts()
     loadArticles()
   } catch {

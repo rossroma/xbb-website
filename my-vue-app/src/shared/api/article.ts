@@ -123,6 +123,11 @@ export const getClientArticleDetail = (id: number): Promise<ArticleDetailRespons
 
 // ==================== 回收站接口 ====================
 
+/** 批量移入回收站（软删除） */
+export const batchTrashArticles = (ids: number[]): Promise<number> => {
+  return request.delete('/v1/admin/articles/batch/trash', { data: { ids } })
+}
+
 /** 从回收站恢复文章 */
 export const restoreArticle = (id: number): Promise<void> => {
   return request.patch(`/v1/admin/articles/${id}/restore`)
