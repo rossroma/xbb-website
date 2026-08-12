@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,6 +16,8 @@ import * as svgCaptcha from 'svg-captcha';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private jwtService: JwtService,
     @InjectRepository(Admin)
@@ -30,29 +32,40 @@ export class AuthService {
    * 算式结果编码为 JWT Token，5 分钟有效，不依赖内存/Redis/数据库
    */
   generateCaptcha(): { captchaId: string; image: string; expiresIn: number } {
-    const captcha = svgCaptcha.createMathExpr({
-      noise: 2,
-      color: true,
-      background: '#f8f9fa',
-      width: 100,
-      height: 40,
-      fontSize: 34,
-      mathMin: 1,
-      mathMax: 9,
-      mathOperator: '+',
-    });
+    try {
+      const captcha = svgCaptcha.createMathExpr({
+        noise: 2,
+        color: true,
+        background: '#f8f9fa',
+        width: 100,
+        height: 40,
+        fontSize: 34,
+        mathMin: 1,
+        mathMax: 9,
+        mathOperator: '+',
+      });
 
-    const expiresIn = 5 * 60; // 秒
-    const captchaId = this.jwtService.sign(
-      { code: captcha.text.toUpperCase() },
-      { expiresIn },
-    );
+      const expiresIn = 5 * 60; // 秒
+      const captchaId = this.jwtService.sign(
+        { code: captcha.text.toUpperCase() },
+        { expiresIn },
+      );
 
-    return {
-      captchaId,
-      image: `data:image/svg+xml;base64,${Buffer.from(captcha.data).toString('base64')}`,
-      expiresIn: expiresIn * 1000,
-    };
+      return {
+        captchaId,
+        image: `data:image/svg+xml;base64,${Buffer.from(captcha.data).toString('base64')}`,
+        expiresIn: expiresIn * 1000,
+      };
+    } catch (error: any) {
+      this.logger.error(
+        `生成验证码失败: ${error?.message || '未知错误'}`,
+        error?.stack,
+      );
+      throw new BusinessException(
+        RESPONSE_CODE.INTERNAL_SERVER_ERROR,
+        '验证码生成失败，请稍后重试',
+      );
+    }
   }
 
   async login(loginDto: LoginDto, ip: string = '127.0.0.1', userAgent?: string): Promise<LoginResponseDto> {

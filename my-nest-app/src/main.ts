@@ -1,3 +1,9 @@
+// ⚠️ 必须放在所有 import 之前！
+// ConfigModule.forRoot() 只在 NestJS 模块初始化时加载 .env，但 sms.config.ts
+// 等模块级常量在 import 时（NestJS 启动前）就读取 process.env 了。
+// 没有这个 import，应用启动阶段就会因为缺少环境变量而崩溃。
+// 这个 import 和 ConfigModule.forRoot() 是互补关系，不是冗余关系。
+import 'dotenv/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
