@@ -231,8 +231,8 @@ jobs:
               echo 'set -euo pipefail' >> "$RB"
               echo "" >> "$RB"
               echo "PREV_SHA=\"$PREV_SHA\"" >> "$RB"
-              echo "ACR_REGISTRY=\"${{ vars.ACR_REGISTRY }}\"" >> "$RB"
-              echo "ACR_NAMESPACE=\"${{ vars.ACR_NAMESPACE }}\"" >> "$RB"
+              echo "export ACR_REGISTRY=\"${{ vars.ACR_REGISTRY }}\"" >> "$RB"
+              echo "export ACR_NAMESPACE=\"${{ vars.ACR_NAMESPACE }}\"" >> "$RB"
               echo "DEPLOY_PATH=\"${{ vars.DEPLOY_PATH }}\"" >> "$RB"
               echo "" >> "$RB"
               echo 'echo "🔄 执行回滚至版本: $PREV_SHA"' >> "$RB"
@@ -295,6 +295,8 @@ jobs:
             # 注入环境变量（用 SHA 标签，不用 :latest）
             export BACKEND_TAG=${{ github.sha }}
             export FRONTEND_TAG=${{ github.sha }}
+            export ACR_REGISTRY="${{ vars.ACR_REGISTRY }}"
+            export ACR_NAMESPACE="${{ vars.ACR_NAMESPACE }}"
             export DB_HOST="${{ vars.DB_HOST }}"
             export DB_PORT="${{ vars.DB_PORT || 3306 }}"
             export DB_USERNAME="${{ vars.DB_USERNAME }}"
