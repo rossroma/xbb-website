@@ -49,6 +49,9 @@ RUN pnpm install --filter my-nest-app --frozen-lockfile --registry https://regis
 # 复制后端源码
 COPY my-nest-app/src/ my-nest-app/src/
 
+# 复制静态资源（验证码字体等）
+COPY my-nest-app/assets/ my-nest-app/assets/
+
 # 复制构建脚本（prebuild 用）
 COPY my-nest-app/scripts/ my-nest-app/scripts/
 
@@ -74,6 +77,7 @@ WORKDIR /app/my-nest-app
 COPY --from=deps /app/node_modules/ /app/node_modules/
 COPY --from=deps /app/my-nest-app/node_modules/ ./node_modules/
 COPY --from=builder /app/my-nest-app/dist/ ./dist/
+COPY --from=builder /app/my-nest-app/assets/ ./assets/
 
 # 切换到非 root 用户
 USER node
