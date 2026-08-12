@@ -1,5 +1,6 @@
 <template>
   <div class="download-center">
+    <h1 class="sr-only">下载中心 - 销帮帮 CRM</h1>
     <PlatformDownload
       :title="downloadCenterSection.title"
       :subtitle="downloadCenterSection.subtitle"

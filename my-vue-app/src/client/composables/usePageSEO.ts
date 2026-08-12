@@ -1,4 +1,4 @@
-import { useHead } from '@vueuse/head'
+import { useHead } from '@unhead/vue'
 import { useRoute } from 'vue-router'
 import { getPageSeo } from '@/client/data/pageSeoConfig'
 import { generateJsonLd } from '@/client/data/jsonLd'
@@ -30,6 +30,7 @@ export function usePageSEO(): void {
     : []
 
   useHead({
+    htmlAttrs: { lang: 'zh-CN' },
     title,
     meta: [
       { name: 'description', content: description },
@@ -51,7 +52,6 @@ export function usePageSEO(): void {
     link: [
       { rel: 'canonical', href: `https://www.xbongbong.com${route.path}` },
     ],
-    // @vueuse/head 的 Script 类型有 index signature 约束，JSON-LD 对象结构兼容
-    script: jsonLdScripts.length > 0 ? (jsonLdScripts as Array<{ type: string; children: string }>) : undefined,
+    script: jsonLdScripts.length > 0 ? jsonLdScripts : undefined,
   })
 }

@@ -1,5 +1,6 @@
 <template>
   <div class="service-page">
+    <h1 class="sr-only">优质服务 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <IconCardGrid

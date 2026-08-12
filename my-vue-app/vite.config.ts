@@ -72,8 +72,8 @@ export default defineConfig(({ mode }) => {
             if (pkg === 'vue-router' || pkg === 'pinia' || pkg.startsWith('@vue/')) {
               return 'vue-vendor'
             }
-            // Head 管理：@vueuse/head + @unhead/* + unhead
-            if (pkg === '@vueuse/head' || pkg.startsWith('@unhead/') || pkg === 'unhead') {
+            // Head 管理：@unhead/* + unhead
+            if (pkg.startsWith('@unhead/') || pkg === 'unhead') {
               return 'head-vendor'
             }
           },

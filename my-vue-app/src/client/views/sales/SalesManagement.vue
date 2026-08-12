@@ -1,5 +1,6 @@
 <template>
   <div class="sales-management">
+    <h1 class="sr-only">销售管理 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
     <IconCardGrid

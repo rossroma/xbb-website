@@ -5,6 +5,7 @@
 -->
 <template>
   <div class="cases-page">
+    <h1 class="sr-only">行业案例 - 销帮帮 CRM</h1>
     <!-- ===== 轮播 Banner 区 ===== -->
     <PromoBannerCarousel :slides="casePromoSlides" />
 

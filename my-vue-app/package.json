@@ -26,7 +26,7 @@
   "dependencies": {
     "@remixicon/vue": "^4.9.0",
     "@tailwindcss/vite": "^4.3.3",
-    "@vueuse/head": "^2.0.0",
+    "@unhead/vue": "^2.1.17",
     "@wangeditor/editor": "^5.1.23",
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.13.6",

@@ -1,5 +1,6 @@
 <template>
   <div class="product-overview-page">
+    <h1 class="sr-only">产品概述 - 销帮帮AI CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" @action="openModuleCenter" />
 
     <IconCardGrid

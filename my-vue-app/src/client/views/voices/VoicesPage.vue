@@ -5,6 +5,7 @@
 -->
 <template>
   <div class="voices-page">
+    <h1 class="sr-only">用户心声 - 销帮帮 CRM</h1>
     <!-- ===== Banner 区 ===== -->
     <HeroBanner mode="single" :slides="[voicesBannerSlide]" />
 
