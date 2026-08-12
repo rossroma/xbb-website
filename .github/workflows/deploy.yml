@@ -6,8 +6,9 @@
 #   main 分支   → 手动触发 + 部署生产环境
 # ==========================================
 # 镜像策略：
-#   构建阶段 → 直接推送 ACR（国内拉取加速）
-#   部署阶段 → 测试/生产服务器从 ACR 拉取固定版本（github.sha）
+#   构建阶段 → 直接推送 ACR（SHA 标签，不可变）
+#   部署阶段 → 服务器拉取 SHA 标签，通过 BACKEND_TAG/FRONTEND_TAG 环境变量控制版本
+#   回滚策略 → 部署前生成 rollback.sh，失败时自动执行恢复旧版本
 # ==========================================
 
 name: Deploy
@@ -16,6 +17,10 @@ on:
   push:
     branches: [develop, main]
   workflow_dispatch:
+
+permissions:
+  contents: read
+  statuses: write
 
 jobs:
   # ==========================================
@@ -147,6 +152,14 @@ jobs:
   #   develop → 测试环境（environment: test）
   #   main    → 生产环境（environment: production）
   # ==========================================
+  # 部署策略：
+  #   1. 🔒 安全区 — 获取当前版本、生成 rollback.sh、拉取新镜像
+  #      （此时任何步骤失败都不影响运行中的旧容器）
+  #   2. 🚀 Swap — 用新 SHA 标签启动容器（docker compose up -d）
+  #      不用 :latest，不先 down 再 up
+  #   3. ✅ 成功 — 更新 :latest 标签、持久化版本号
+  #   4. ❌ 失败 — 执行 rollback.sh（swap 前生成，恢复旧版本）
+  # ==========================================
   deploy:
     if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
     needs: [build-backend, build-frontend]
@@ -177,8 +190,94 @@ jobs:
           target: ${{ vars.DEPLOY_PATH }}
           strip_components: 0
 
-      # ---- SSH 远程部署 ----
-      - name: SSH 远程部署
+      # ==========================================
+      # Phase 1: 🔒 安全区 — 准备部署
+      # 不碰运行中的容器，任何失败都不影响旧服务
+      # ==========================================
+      - name: 🔒 准备部署（安全区）
+        id: prepare
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "🔒 安全区：准备部署..."
+
+            # 登录 ACR
+            printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
+
+            # ---- 获取当前版本 SHA ----
+            PREV_SHA=""
+            if [ -f ${{ vars.DEPLOY_PATH }}/current-version.txt ]; then
+              PREV_SHA=$(cat ${{ vars.DEPLOY_PATH }}/current-version.txt)
+              echo "  当前版本: $PREV_SHA"
+            else
+              echo "  无上一版本（首次部署，无可回滚目标）"
+            fi
+
+            # ---- 生成 rollback.sh（包含当前版本 SHA，swap 前生成） ----
+            # 用 echo 逐行写入，避免 heredoc 在 YAML 缩进中 delimiter 失效的问题
+            if [ -n "$PREV_SHA" ]; then
+              RB="${{ vars.DEPLOY_PATH }}/scripts/rollback.sh"
+              : > "$RB"  # 清空文件
+              echo '#!/bin/bash' >> "$RB"
+              echo '# ==========================================' >> "$RB"
+              echo '# 自动生成的回滚脚本 — 在 swap 前生成' >> "$RB"
+              echo '# 如果部署失败，执行此脚本恢复旧版本' >> "$RB"
+              echo '# ==========================================' >> "$RB"
+              echo 'set -euo pipefail' >> "$RB"
+              echo "" >> "$RB"
+              echo "PREV_SHA=\"$PREV_SHA\"" >> "$RB"
+              echo "ACR_REGISTRY=\"${{ vars.ACR_REGISTRY }}\"" >> "$RB"
+              echo "ACR_NAMESPACE=\"${{ vars.ACR_NAMESPACE }}\"" >> "$RB"
+              echo "DEPLOY_PATH=\"${{ vars.DEPLOY_PATH }}\"" >> "$RB"
+              echo "" >> "$RB"
+              echo 'echo "🔄 执行回滚至版本: $PREV_SHA"' >> "$RB"
+              echo "" >> "$RB"
+              echo '# 登录 ACR（密码从环境变量读取）' >> "$RB"
+              echo 'echo "$ACR_PASSWORD" | docker login $ACR_REGISTRY -u "$ACR_USERNAME" --password-stdin' >> "$RB"
+              echo "" >> "$RB"
+              echo '# 拉取旧版本镜像' >> "$RB"
+              echo 'echo "📥 拉取旧版本镜像: $PREV_SHA..."' >> "$RB"
+              echo "docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:\$PREV_SHA" >> "$RB"
+              echo "docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:\$PREV_SHA" >> "$RB"
+              echo "" >> "$RB"
+              echo '# 用旧版本启动' >> "$RB"
+              echo 'echo "🚀 启动旧版本: $PREV_SHA..."' >> "$RB"
+              echo 'export BACKEND_TAG=$PREV_SHA' >> "$RB"
+              echo 'export FRONTEND_TAG=$PREV_SHA' >> "$RB"
+              echo 'cd $DEPLOY_PATH && docker compose up -d --wait' >> "$RB"
+              echo "" >> "$RB"
+              echo 'echo "✅ 回滚完成，版本: $PREV_SHA"' >> "$RB"
+              chmod +x "$RB"
+              echo "  ✅ rollback.sh 已生成（版本: $PREV_SHA）"
+            else
+              # 无旧版本，生成一个"无法回滚"的提示脚本
+              RB="${{ vars.DEPLOY_PATH }}/scripts/rollback.sh"
+              echo '#!/bin/bash' > "$RB"
+              echo 'echo "⚠️  无上一版本可回滚，请手动检查"' >> "$RB"
+              echo 'exit 1' >> "$RB"
+              chmod +x "$RB"
+              echo "  ⚠️  无上一版本，rollback.sh 仅提示"
+            fi
+
+            # ---- 拉取新镜像（固定 SHA 版本，不覆盖 :latest） ----
+            echo "📥 拉取新镜像 (${{ github.sha }})..."
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
+            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
+            echo "  ✅ 新镜像就绪"
+
+            echo "🔒 安全区准备完成"
+
+      # ==========================================
+      # Phase 2: 🚀 Swap — 执行部署
+      # 通过 BACKEND_TAG/FRONTEND_TAG 环境变量指定 SHA 版本
+      # 不再先 down 再 up，让 compose 自动替换容器
+      # ==========================================
+      - name: 🚀 执行部署（Swap）
         id: deploy
         continue-on-error: true
         uses: appleboy/ssh-action@v1
@@ -190,53 +289,12 @@ jobs:
           script: |
             set -e
             echo "🚀 开始 ${{ github.ref_name == 'main' && '生产' || '测试' }}环境部署..."
+            echo "  后端版本: ${{ github.sha }}"
+            echo "  前端版本: ${{ github.sha }}"
 
-            # 登录 ACR
-            printf '%s' "${{ secrets.ACR_PASSWORD }}" | docker login ${{ vars.ACR_REGISTRY }} -u ${{ vars.ACR_USERNAME }} --password-stdin
-
-            # 保存当前镜像版本（从 RepoTags 提取 sha 标签，用于回滚）
-            echo "📦 保存当前镜像版本..."
-            BACKEND_PREV_TAG=$(docker image inspect \
-              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest \
-              --format '{{range .RepoTags}}{{.}}{{"\n"}}{{end}}' 2>/dev/null \
-              | grep -oE ':[a-f0-9]{7,40}$' | head -1 | tr -d ':')
-            FRONTEND_PREV_TAG=$(docker image inspect \
-              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest \
-              --format '{{range .RepoTags}}{{.}}{{"\n"}}{{end}}' 2>/dev/null \
-              | grep -oE ':[a-f0-9]{7,40}$' | head -1 | tr -d ':')
-            if [ -n "$BACKEND_PREV_TAG" ]; then
-              echo "  当前后端: $BACKEND_PREV_TAG"
-              echo "$BACKEND_PREV_TAG" > /tmp/rollback-backend.tag
-            else
-              echo "  无上一版本可保存"
-              rm -f /tmp/rollback-backend.tag
-            fi
-            if [ -n "$FRONTEND_PREV_TAG" ]; then
-              echo "  当前前端: $FRONTEND_PREV_TAG"
-              echo "$FRONTEND_PREV_TAG" > /tmp/rollback-frontend.tag
-            else
-              echo "  无上一版本可保存"
-              rm -f /tmp/rollback-frontend.tag
-            fi
-
-            # 拉取新镜像（固定版本）
-            echo "📥 拉取新镜像 (${{ github.sha }})..."
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}
-            docker pull ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }}
-
-            # 更新 latest 标签（docker-compose 引用 latest）并推回 ACR
-            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }}  ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }} ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
-            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
-            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
-
-            # 停止旧服务
-            echo "🛑 停止旧服务..."
-            cd ${{ vars.DEPLOY_PATH }}
-            docker compose -f docker-compose.yml down --timeout 30 || true
-
-            # 注入环境变量，启动新服务
-            echo "🚀 启动新服务..."
+            # 注入环境变量（用 SHA 标签，不用 :latest）
+            export BACKEND_TAG=${{ github.sha }}
+            export FRONTEND_TAG=${{ github.sha }}
             export DB_HOST="${{ vars.DB_HOST }}"
             export DB_PORT="${{ vars.DB_PORT || 3306 }}"
             export DB_USERNAME="${{ vars.DB_USERNAME }}"
@@ -252,19 +310,21 @@ jobs:
             export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
             export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
             export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
-            docker compose -f docker-compose.yml up -d --wait
+
+            # 启动新服务（compose 自动替换容器）
+            cd ${{ vars.DEPLOY_PATH }}
+            docker compose up -d --wait
 
             echo "  ✅ 服务启动正常（docker compose 健康检查通过）"
 
+            # 清理旧镜像（24h 前的镜像）
             docker image prune -f --filter "until=24h" || true
-
-            # 持久化当前部署版本
-            echo "${{ github.sha }}" > ${{ vars.DEPLOY_PATH }}/current-version.txt
-            echo "  💾 部署版本已持久化: ${{ github.sha }}"
 
             echo "✅ 部署完成"
 
-      # ---- 部署后验证（after_script，不阻断部署） ----
+      # ==========================================
+      # 部署后验证（after_script，不阻断部署）
+      # ==========================================
       - name: 部署后验证
         continue-on-error: true
         if: always()
@@ -283,16 +343,73 @@ jobs:
               echo "⚠️  验证脚本不存在，跳过"
             fi
 
-      # ---- 回滚判断 ----
-      - name: 回滚判断
-        if: steps.deploy.outcome == 'failure'
-        shell: bash
-        run: |
-          ENV="${{ github.ref_name == 'main' && '生产' || '测试' }}"
-          echo "❌ ${ENV}环境部署失败，已自动回滚至上一版本"
-          exit 1
+      # ==========================================
+      # Phase 3a: ✅ 成功 — 更新 :latest 标签
+      # 新版本已验证通过，才更新 :latest
+      # ==========================================
+      - name: ✅ 部署成功 — 更新 :latest 标签
+        if: steps.deploy.outcome == 'success'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            echo "📌 部署成功，更新 :latest 标签..."
 
-      # ---- 部署后延迟健康检查（捕获启动后崩溃） ----
+            # 标记新版本为 :latest 并推回 ACR
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:${{ github.sha }} \
+              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker tag ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:${{ github.sha }} \
+              ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-backend:latest
+            docker push ${{ vars.ACR_REGISTRY }}/${{ vars.ACR_NAMESPACE }}/xbb-frontend:latest
+            echo "  ✅ :latest 标签已更新"
+
+            # 持久化部署版本
+            echo "${{ github.sha }}" > ${{ vars.DEPLOY_PATH }}/current-version.txt
+            echo "  💾 部署版本已持久化: ${{ github.sha }}"
+
+            # 清理 rollback.sh（新版本已验证，不再需要旧版本回滚）
+            rm -f ${{ vars.DEPLOY_PATH }}/scripts/rollback.sh
+            echo "  🧹 rollback.sh 已清理"
+
+            echo "✅ 部署成功处理完成"
+
+      # ==========================================
+      # Phase 3b: ❌ 失败 — 执行回滚
+      # 执行 swap 前生成的 rollback.sh，恢复旧版本
+      # ==========================================
+      - name: ❌ 部署失败 — 执行回滚
+        if: steps.deploy.outcome == 'failure'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ vars.SSH_PORT || 22 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "❌ 部署失败，执行回滚..."
+            echo ""
+
+            if [ -f ${{ vars.DEPLOY_PATH }}/scripts/rollback.sh ]; then
+              # 传递 ACR 凭据给 rollback 脚本
+              export ACR_PASSWORD="${{ secrets.ACR_PASSWORD }}"
+              export ACR_USERNAME="${{ vars.ACR_USERNAME }}"
+              bash ${{ vars.DEPLOY_PATH }}/scripts/rollback.sh
+            else
+              echo "⚠️  rollback.sh 不存在，无法自动回滚"
+              echo "   请手动 SSH 到服务器检查状态："
+              echo "   ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
+              echo "   cd ${{ vars.DEPLOY_PATH }} && docker compose ps"
+              exit 1
+            fi
+
+      # ==========================================
+      # 部署后延迟健康检查（捕获启动后崩溃）
+      # ==========================================
       - name: 部署后延迟健康检查
         if: steps.deploy.outcome == 'success'
         shell: bash
@@ -301,20 +418,18 @@ jobs:
           sleep 30
 
           echo "🔍 后端检查..."
-          if curl -sf http://localhost:3000/v1/health > /dev/null 2>&1; then
-            echo "  ✅ 后端正常"
-          else
-            echo "  ⚠️  后端异常，请手动检查"
-          fi
+          ALL_PROXY="" http_proxy="" https_proxy="" curl -sf http://localhost:3000/v1/health > /dev/null 2>&1 \
+            && echo "  ✅ 后端正常" \
+            || echo "  ⚠️  后端异常，请手动检查"
 
           echo "🔍 前端检查..."
-          if curl -sf http://localhost:${{ vars.FRONTEND_PORT || 80 }}/ > /dev/null 2>&1; then
-            echo "  ✅ 前端正常"
-          else
-            echo "  ⚠️  前端响应异常，请手动检查 nginx 状态"
-          fi
+          ALL_PROXY="" http_proxy="" https_proxy="" curl -sf http://localhost:${{ vars.FRONTEND_PORT || 80 }}/ > /dev/null 2>&1 \
+            && echo "  ✅ 前端正常" \
+            || echo "  ⚠️  前端响应异常，请手动检查 nginx 状态"
 
-      # ---- 部署通知 ----
+      # ==========================================
+      # 部署通知 — 更新 GitHub Commit Status
+      # ==========================================
       - name: 更新 GitHub Commit Status
         if: always()
         uses: actions/github-script@v7
