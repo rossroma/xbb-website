@@ -68,7 +68,11 @@ WORKDIR /app/my-nest-app
 
 # 从 deps 复制生产依赖，从 builder 复制构建产物
 # 无需在 production 阶段安装 pnpm，减少镜像体积约 50-80MB
-COPY --from=deps /app/node_modules/ ./node_modules/
+#
+# 注意：pnpm install --filter 把依赖 symlink 放在 my-nest-app/node_modules/ 下，
+# 根 node_modules/ 只有 .pnpm/ 仓库。因此需要同时复制两者。
+COPY --from=deps /app/node_modules/ /app/node_modules/
+COPY --from=deps /app/my-nest-app/node_modules/ ./node_modules/
 COPY --from=builder /app/my-nest-app/dist/ ./dist/
 
 # 切换到非 root 用户
