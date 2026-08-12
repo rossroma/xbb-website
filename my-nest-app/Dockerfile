@@ -18,8 +18,8 @@ COPY package.json ./
 COPY my-nest-app/package.json my-nest-app/
 
 # 仅安装生产依赖（利用 pnpm workspace filter，优先国内镜像，失败回退官方源）
-RUN pnpm install --filter my-nest-app --frozen-lockfile --prod --registry https://registry.npmmirror.com || \
-    pnpm install --filter my-nest-app --frozen-lockfile --prod --registry https://registry.npmjs.org
+RUN pnpm install --filter my-nest-app --frozen-lockfile --prod --ignore-scripts --registry https://registry.npmmirror.com || \
+    pnpm install --filter my-nest-app --frozen-lockfile --prod --ignore-scripts --registry https://registry.npmjs.org
 
 # ============================================
 # Stage 2: Builder — 全量依赖安装 + 构建
