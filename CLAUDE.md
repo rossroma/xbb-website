@@ -37,32 +37,19 @@ ALL_PROXY="" http_proxy="" https_proxy="" curl -s -X POST http://localhost:3000/
 
 ### 触发条件
 
-以下场景在推送至 `develop` 或 `main` 分支时，自动触发检查：
+推送至 `develop` 或 `main` 分支时，如果涉及以下文件变更，自动触发检查：
 
-- 修改 `.github/workflows/` 下的 CI/CD 配置
-- 修改 `Dockerfile`（前端或后端）
-- 修改 `docker-compose.yml`
-- 修改 `scripts/` 目录下的部署/验证脚本
+- `.github/workflows/` 下的 CI/CD 配置
+- `Dockerfile`（前端或后端）
+- `docker-compose.yml`
+- `scripts/` 目录下的部署/验证脚本
 - 新增/修改环境变量
 
 ### 检查机制
 
-1. **pre-push 钩子自动检测**：推送时检测到上述文件变更，自动运行 `scripts/deploy-check.sh`
-2. **自检未通过 → 推送被阻断**，必须在本地修复后重新推送
-3. **紧急情况可跳过**：`git push --no-verify`（不推荐，仅限紧急修复）
+1. **pre-push 钩子自动检测** → 运行 `scripts/deploy-check.sh`，未通过则阻断推送
+2. **紧急情况可跳过**：`git push --no-verify`（不推荐）
 
 ### 核心原则
 
-**任何 CI/CD 相关变更，在推送前必须通过部署前自检。** 自检清单见 `.claude/skills/deploy/SKILL.md`。
-
-### 关键规则速查
-
-| 场景 | 规则 |
-|---|---|
-| 涉及外部服务（ACR/SSH） | 先在服务器上手动验证可用性，再提交 CI 配置 |
-| 新增/修改环境变量 | 在所有引用处同步更新（deploy.yml、docker-compose.yml、部署脚本） |
-| Dockerfile 构建问题 | 一次性检查所有可能的缺失项，列出完整性清单，不要改一个点就推 |
-| 方案变更 | 先做可行性验证 + 评估矩阵，再做一半发现不行就换 |
-| 第 3 次同类修改 | 必须停下来，做反思检查，写设计文档，再提交 |
-| 下午 5 点后 | 禁止提交 CI/CD 大规模变更 |
-| 同类小修改 | 合并为一个提交再推送，不要让 CI 重复跑 |
+**任何 CI/CD 变更，推送前必须通过部署前自检。** 详细检查清单（部署前自检、Dockerfile 完整性、方案评估、部署后验证、反思检查）请参考 `/deploy` 技能或直接查看 `.claude/skills/deploy/SKILL.md`。

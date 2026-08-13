@@ -1,0 +1,15 @@
+{
+  "notifications": {
+    "desktop": true
+  },
+  "hooks": {
+    "pre-commit": [],
+    "post-commit": []
+  },
+  "skills": {
+    "deploy": {
+      "description": "部署流程 — 部署前自检、Dockerfile 完整性检查、方案验证、部署后验证、反思检查",
+      "file": "skills/deploy/SKILL.md"
+    }
+  }
+}
