@@ -19,8 +19,6 @@ const solutionCardProcess = '/images/2-2.png'
 const solutionCardAiDriven = '/images/2-3.png'
 const solutionCardOrganization = '/images/2-4.png'
 const custChoiseImg = '/images/cust-choise.png'
-const heroBanner2 = '/images/banner2.png'
-const heroBanner3 = '/images/banner3.png'
 const heroBanner4 = '/images/banner4.png'
 
 // ========== 图标别名 ==========
