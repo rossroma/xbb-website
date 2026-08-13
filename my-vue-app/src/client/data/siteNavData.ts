@@ -1,8 +1,21 @@
 import { toPagePath } from '@/client/data/routePaths'
+import type { Component } from 'vue'
+import {
+  ApiApp,
+  DataDisplay,
+  Dingding,
+  Message,
+  Peoples,
+  Robot,
+  Rocket,
+  Trend,
+  Wechat,
+} from '@/client/components/ui/remixIcons'
 
 /** 导航菜单图标 */
 interface HeaderMenuIcon {
-  src: string
+  src?: string
+  component?: Component
   width: number
   height: number
   marginRight?: number
@@ -52,55 +65,55 @@ const productFeatures: HeaderNavNode[] = [
     label: '客户管理',
     desc: '客户全生命周期数字化管理',
     to: '/kehuguanli',
-    icon: { src: '/subMenuFull_01.jpg', width: 19, height: 17, marginRight: 7 },
+    icon: { component: Peoples, width: 18, height: 18 },
   },
   {
     label: '销售管理',
     desc: '精细化销售管理助力业绩增长',
     to: '/xiaoshouguanli',
-    icon: { src: '/subMenuFull_02.jpg', width: 16, height: 19, marginRight: 7 },
+    icon: { component: Trend, width: 18, height: 18 },
   },
   {
     label: '市场管理',
     desc: '全渠道营销获客，高效转化',
     to: '/shichangguanli',
-    icon: { src: '/subMenuFull_03.jpg', width: 19, height: 18, marginRight: 7 },
+    icon: { component: Rocket, width: 18, height: 18 },
   },
   {
     label: 'PaaS',
     desc: '底层能力赋能商业个性化需求',
     to: '/paas',
-    icon: { src: '/subMenuFull_04.jpg', width: 19, height: 15, marginRight: 7 },
+    icon: { component: ApiApp, width: 18, height: 18 },
   },
   {
     label: 'AI销售助理',
     desc: '重塑销售作业流程，助力业绩增长',
     to: '/ai',
-    icon: { src: '/ai_icon.png', width: 19, height: 15, marginRight: 7 },
+    icon: { component: Robot, width: 18, height: 18 },
   },
   {
     label: 'BI',
     desc: '数据驱动决策，洞察业务增长',
     to: '/bi',
-    icon: { src: '/subMenuFull_04.jpg', width: 19, height: 15, marginRight: 7 },
+    icon: { component: DataDisplay, width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 钉钉',
     desc: '让进步发生，让业绩提升',
     to: '/dingtalk',
-    icon: { src: '/subMenuFull_06.jpg', width: 17, height: 26, marginRight: 7, marginLeft: 2 },
+    icon: { component: Dingding, width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 飞书',
     desc: '拥抱数字化，拥抱先进',
     to: '/feishubanben',
-    icon: { src: '/subMenuFull_07.jpg', width: 23, height: 18, marginRight: 3 },
+    icon: { component: Message, width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 企业微信',
     desc: '强者结合，绝妙拍档',
     to: '/qiweibanben',
-    icon: { src: '/subMenuFull_08.jpg', width: 22, height: 19, marginRight: 3 },
+    icon: { component: Wechat, width: 18, height: 18 },
   },
 ]
 
