@@ -111,8 +111,14 @@
                       class="flex items-start gap-3 px-3 py-2.5 rounded-inner text-left transition-colors duration-fast motion-reduce:transition-none hover:bg-surface-secondary no-underline"
                       @click="closeMenu"
                     >
+                      <component
+                        :is="entry.icon.component"
+                        v-if="entry.icon?.component"
+                        :size="entry.icon.width"
+                        class="shrink-0 mt-0.5 text-text-tertiary"
+                      />
                       <img
-                        v-if="entry.icon"
+                        v-else-if="entry.icon?.src"
                         :src="entry.icon.src"
                         :style="{
                           width: entry.icon.width + 'px',
@@ -183,12 +189,6 @@
               {{ displayHotline }}
             </span>
           </a>
-          <RouterLink
-            :to="downloadRoute"
-            class="text-small font-semibold text-text-primary hover:text-brand-primary transition-colors duration-fast motion-reduce:transition-none no-underline whitespace-nowrap"
-          >
-            下载销帮帮
-          </RouterLink>
         </div>
         <Button
           href="https://appwebfront.xbongbong.com/stand-alone-login.html#/"

@@ -95,78 +95,6 @@ const makeLogos = (group: number, names: string[]) =>
     src: `/images/logos/${group}-${index + 1}.png`,
   }))
 
-// ========== Banner 轮播数据 ==========
-export const bannerSlides: BannerSlide[] = [
-  {
-    key: 'hero-video',
-    mediaType: 'video',
-    title: '懂客户，更懂增长',
-    desc: '专注于客户数字化\n让增长不再是靠感觉，而是靠系统',
-    primaryCta: '了解更多',
-    secondaryCta: '预约产品演示',
-    secondaryHref: '/liuzi',
-    buttonStyle: 'hero-button--sunset',
-    secondaryButtonStyle: 'hero-button--indigo-soft',
-    bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
-    line: 'rgba(116, 129, 255, 0.16)',
-    accent: '#5b61ff',
-    glow: 'rgba(91, 97, 255, 0.18)',
-    orb: 'rgba(127, 214, 255, 0.22)',
-    visualImage: '',
-    visualImageAlt: '',
-  },
-  {
-    key: 'hero-interaction',
-    mediaType: 'image',
-    title: '让每一次客户互动\n都转化为增长',
-    desc: '从获客到成交复购，AI 帮你看准每一个商机\n不浪费任何一个潜在机会。',
-    primaryCta: '了解更多',
-    buttonStyle: 'hero-button--violet',
-    secondaryButtonStyle: 'hero-button--ghost-indigo',
-    bg: `url(${heroBanner2}) center / cover no-repeat`,
-    line: 'rgba(94, 105, 255, 0.16)',
-    accent: '#6670ff',
-    glow: 'rgba(123, 134, 242, 0.18)',
-    orb: 'rgba(131, 214, 255, 0.18)',
-    visualTheme: 'interaction',
-    showVisual: false,
-  },
-  {
-    key: 'hero-proof',
-    mediaType: 'image',
-    title: '数据说话\n见证企业增长奇迹',
-    desc: '覆盖科技、教育、医疗、建筑等30+行业',
-    primaryCta: '查看客户案例',
-    secondaryCta: '了解更多行业方案',
-    buttonStyle: 'hero-button--sunset',
-    secondaryButtonStyle: 'hero-button--indigo-soft',
-    bg: `url(${heroBanner3}) center / cover no-repeat`,
-    line: 'rgba(85, 126, 255, 0.16)',
-    accent: '#4b74ff',
-    glow: 'rgba(75, 116, 255, 0.18)',
-    orb: 'rgba(122, 207, 255, 0.18)',
-    visualTheme: 'proof',
-
-  },
-  {
-    key: 'hero-trial',
-    mediaType: 'image',
-    title: '现在注册',
-    subtitle: '立享七天免费试用',
-    desc: '0元试用 · 全功能开放 · 预约专属顾问1对1服务',
-    primaryCta: '立即免费注册',
-    secondaryCta: '预约产品演示',
-    buttonStyle: 'hero-button--sunset',
-    secondaryButtonStyle: 'hero-button--indigo-soft',
-    bg: `url(${heroBanner4}) center / cover no-repeat`,
-    line: 'rgba(101, 112, 255, 0.15)',
-    accent: '#6b63ff',
-    glow: 'rgba(107, 99, 255, 0.16)',
-    orb: 'rgba(255, 178, 91, 0.12)',
-    visualTheme: 'trial',
-  },
-]
-
 // ========== 行业案例轮播数据 ==========
 export const industryCards = [
   {
@@ -445,17 +373,6 @@ export const serviceSystemCards = [
 // ====================================================================
 
 
-/** 区域一：Hero Banner */
-export const heroBannerSection = {
-  slides: bannerSlides,
-  routeActions: {
-    'hero-video': { primary: 'channel_products', secondary: 'list_contact' },
-    'hero-interaction': { primary: 'channel_products', secondary: '' },
-    'hero-proof': { primary: 'list_cases', secondary: 'channel_qudao' },
-    'hero-trial': { primary: 'single_mfsy', secondary: 'list_contact' },
-  } as Record<string, { primary: string; secondary: string }>,
-}
-
 /** 区域二：解决方案卡片 */
 export const solutionCardsSection = {
   heading: 'AI CRM，无处不在',
@@ -524,12 +441,28 @@ export const serviceCardsSection = {
 import type { Ads } from '@/shared/api/ads'
 
 /**
+ * 通过 URL 后缀自动判断媒体类型（图片 / 视频）
+ * 支持 .mp4 .webm .mov .avi .mkv 等常见视频格式
+ */
+function detectMediaType(url: string): 'video' | 'image' {
+  const match = url.match(/\.([a-z0-9]+)(?:\?|#|$)/i)
+  if (!match) return 'image'
+  const ext = `.${match[1]!.toLowerCase()}`
+  const videoExts = ['.mp4', '.webm', '.mov', '.avi', '.mkv']
+  return videoExts.includes(ext) ? 'video' : 'image'
+}
+
+/** 将字面量 \\n 转为实际换行符，支持后台存储的 \\n 文本 */
+function normalizeNewlines(text: string): string {
+  return text.replace(/\\n/g, '\n')
+}
+
+/**
  * 每个轮播位（按 ord）的默认视觉样式
- * 广告数据只覆盖图片 + 文案，视觉风格保持前端硬编码
+ * 仅保留前端设计决策（颜色、布局），不包含可从 Ads 数据获取的内容
  */
 const slideVisualByOrd: Record<number, Partial<BannerSlide>> = {
   1: {
-    mediaType: 'video' as const,
     bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
     line: 'rgba(116, 129, 255, 0.16)',
     accent: '#5b61ff',
@@ -537,33 +470,26 @@ const slideVisualByOrd: Record<number, Partial<BannerSlide>> = {
     orb: 'rgba(127, 214, 255, 0.22)',
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
-    visualImage: '',
-    visualImageAlt: '',
   },
   2: {
-    mediaType: 'image' as const,
     line: 'rgba(94, 105, 255, 0.16)',
     accent: '#6670ff',
     glow: 'rgba(123, 134, 242, 0.18)',
     orb: 'rgba(131, 214, 255, 0.18)',
     buttonStyle: 'hero-button--violet',
     secondaryButtonStyle: 'hero-button--ghost-indigo',
-    visualTheme: 'interaction' as const,
     showVisual: false,
   },
   3: {
-    mediaType: 'image' as const,
     line: 'rgba(85, 126, 255, 0.16)',
     accent: '#4b74ff',
     glow: 'rgba(75, 116, 255, 0.18)',
     orb: 'rgba(122, 207, 255, 0.18)',
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
-    visualTheme: 'proof' as const,
     showVisual: false,
   },
   4: {
-    mediaType: 'image' as const,
     bg: `url(${heroBanner4}) center / cover no-repeat`,
     line: 'rgba(101, 112, 255, 0.15)',
     accent: '#6b63ff',
@@ -571,13 +497,11 @@ const slideVisualByOrd: Record<number, Partial<BannerSlide>> = {
     orb: 'rgba(255, 178, 91, 0.12)',
     buttonStyle: 'hero-button--sunset',
     secondaryButtonStyle: 'hero-button--indigo-soft',
-    visualTheme: 'trial' as const,
   },
 }
 
 /** 超出 4 个轮播位时的默认样式 */
 const defaultSlideStyle: Partial<BannerSlide> = {
-  mediaType: 'image' as const,
   bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
@@ -588,26 +512,40 @@ const defaultSlideStyle: Partial<BannerSlide> = {
 
 /**
  * 将 Ads 广告数据转换为首页 Banner 轮播数据
- * API 数据为空时自动回退到硬编码的 bannerSlides
+ * 字段映射规则（不改表）：
+ *   title       → 主标题
+ *   subtitle    → 副标题
+ *   descs       → 描述
+ *   simg        → 背景图（URL）
+ *   simg2       → 前景媒体（图片或视频，自动判断）
+ *   content     → 主按钮文字
+ *   download    → 次按钮文字
+ *   url         → 统一跳转链接（点击整个 Banner 跳转）
+ *   target      → 打开方式
+ *   ord         → 排序
  */
 export function adsToBannerSlides(ads: Ads[]): BannerSlide[] {
-  if (!ads?.length) return bannerSlides
+  if (!ads?.length) return []
 
   return ads
     .slice()
     .sort((a, b) => a.ord - b.ord)
     .map((ad) => {
       const visual = slideVisualByOrd[ad.ord] || defaultSlideStyle
+      const hasForeground = !!ad.simg2
+      const isVideo = hasForeground && detectMediaType(ad.simg2!) === 'video'
+
       return {
         key: `ad-${ad.id}`,
         ord: ad.ord,
-        mediaType: visual.mediaType!,
-        eyebrow: ad.subtitle || '',
-        title: ad.title || '',
-        subtitle: visual.subtitle,
-        desc: ad.descs || '',
-        primaryCta: ad.content || '了解更多',
-        secondaryCta: visual.secondaryCta,
+        mediaType: isVideo ? 'video' : 'image',
+        title: normalizeNewlines(ad.title || ''),
+        subtitle: normalizeNewlines(ad.subtitle || ''),
+        desc: normalizeNewlines(ad.descs || ''),
+        primaryCta: (ad.content || '').trim(),
+        secondaryCta: (ad.download || '').trim(),
+        primaryHref: ad.url || undefined,
+        primaryTarget: (ad.target as '_self' | '_blank') || undefined,
         bg: ad.simg ? `url(${ad.simg}) center / cover no-repeat` : visual.bg!,
         line: visual.line!,
         accent: visual.accent!,
@@ -615,10 +553,10 @@ export function adsToBannerSlides(ads: Ads[]): BannerSlide[] {
         orb: visual.orb!,
         buttonStyle: visual.buttonStyle,
         secondaryButtonStyle: visual.secondaryButtonStyle,
+        showVisual: hasForeground,
+        visualImage: hasForeground ? ad.simg2! : '',
+        visualImageAlt: ad.title || '',
         visualTheme: visual.visualTheme,
-        showVisual: visual.showVisual,
-        visualImage: visual.visualImage,
-        visualImageAlt: visual.visualImageAlt,
       }
     })
 }

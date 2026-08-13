@@ -360,11 +360,17 @@
               v-for="slide in slides"
               :key="slide.key"
               class="relative min-h-140 max-lg:min-h-130 max-md:min-h-115 w-full shrink-0 block p-0 border-t border-b overflow-hidden"
+              :class="{ 'cursor-pointer': !!slide.primaryHref }"
               :style="{
                 background: slide.bg,
                 borderTopColor: slide.line,
                 borderBottomColor: slide.line,
               }"
+              :role="slide.primaryHref ? 'link' : undefined"
+              :tabindex="slide.primaryHref ? 0 : undefined"
+              :aria-label="slide.primaryHref ? slide.title : undefined"
+              @click="handleBannerClick(slide)"
+              @keydown.enter="handleBannerClick(slide)"
             >
               <div
                 :class="[
@@ -398,13 +404,15 @@
                     {{ slide.desc }}
                   </p>
                   <div
+                    v-if="slide.primaryCta || slide.secondaryCta"
                     class="flex gap-3 mt-10 max-lg:mt-6 max-lg:justify-center max-sm:flex-col max-sm:items-center"
                   >
                     <Button
+                      v-if="slide.primaryCta"
                       variant="hero"
                       size="lg"
                       class="!text-[18px]"
-                      @click="$emit('action', slide, 'primary')"
+                      tabindex="-1"
                       >{{ slide.primaryCta }}</Button
                     >
                     <Button
@@ -412,7 +420,7 @@
                       variant="hero-outline"
                       size="lg"
                       class="!text-[18px]"
-                      @click="$emit('action', slide, 'secondary')"
+                      tabindex="-1"
                       >{{ slide.secondaryCta }}</Button
                     >
                   </div>
@@ -429,8 +437,10 @@
                   >
                     <video
                       class="block w-full h-full object-cover"
-                      :src="brandVideo"
-                      controls
+                      :src="slide.visualImage || brandVideo"
+                      muted
+                      autoplay
+                      loop
                       playsinline
                       preload="metadata"
                     />
@@ -443,19 +453,21 @@
       </template>
 
       <template #dots="{ currentIndex, goTo, total }">
-        <button
-          v-for="i in total"
-          :key="i"
-          type="button"
-          :class="[
-            'hero-banner-progress-dot',
-            currentIndex === i - 1 ? 'hero-banner-progress-dot--active' : '',
-          ]"
-          :aria-label="`第 ${i} 张`"
-          @click="goTo(i - 1)"
-        >
-          <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
-        </button>
+        <div class="flex items-center gap-2.5 py-3" @click.stop>
+          <button
+            v-for="i in total"
+            :key="i"
+            type="button"
+            :class="[
+              'hero-banner-progress-dot',
+              currentIndex === i - 1 ? 'hero-banner-progress-dot--active' : '',
+            ]"
+            :aria-label="`第 ${i} 张`"
+            @click="goTo(i - 1)"
+          >
+            <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
+          </button>
+        </div>
       </template>
     </Carousel>
   </section>
@@ -543,6 +555,16 @@ function getDefaultHrefByText(text?: string) {
 
 function getActionHref(text?: string, href?: string) {
   return getDefaultHrefByText(text) ?? href
+}
+
+/** 轮播模式：点击整个 Banner 区域统一跳转 */
+function handleBannerClick(slide: BannerSlide) {
+  if (!slide.primaryHref) return
+  if (slide.primaryTarget === '_blank') {
+    window.open(slide.primaryHref, '_blank', 'noopener,noreferrer')
+  } else {
+    router.push(slide.primaryHref)
+  }
 }
 
 function handleSingleAction(slide: BannerSlide, action: 'primary' | 'secondary') {

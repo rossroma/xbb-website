@@ -1,7 +1,7 @@
 <template>
   <SectionBlock spacing="default">
     <div class="flex flex-col items-center text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
+      <h2 class="text-[36px] text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
         <template v-if="titleParts">
           {{ titleParts.before
           }}<span
@@ -46,7 +46,7 @@
     <!-- ===== 变体：icon-tile（图标方块 + 标题下置） ===== -->
     <div
       v-if="variant === 'icon-tile'"
-      :class="['mt-14 grid gap-6 max-lg:mt-10 max-lg:gap-5', tileGridColsClass]"
+      :class="['mt-12 grid gap-6 max-lg:mt-10 max-lg:gap-5', tileGridColsClass]"
     >
       <div
         v-for="(feature, index) in features"
@@ -99,7 +99,7 @@
     <!-- ===== 变体：icon-badge-protruding（凸出式徽章） ===== -->
     <div
       v-if="variant === 'icon-badge-protruding'"
-      :class="['mt-14 grid gap-8 max-lg:mt-10 max-lg:gap-6', protrudingGridColsClass]"
+      :class="['mt-12 grid gap-8 max-lg:mt-10 max-lg:gap-6', protrudingGridColsClass]"
     >
       <div
         v-for="(feature, index) in features"
@@ -133,7 +133,7 @@
       v-if="variant !== 'icon-badge-protruding' && variant !== 'icon-tile'"
       :cols="columns"
       :gap="columns === 2 ? 'loose' : 'default'"
-      :class="gridMarginClass"
+      class="mt-12"
     >
       <Card v-for="(feature, index) in features" :key="index" variant="default">
         <!-- 变体：彩色顶部强调线 -->
@@ -266,9 +266,12 @@ const titleParts = computed(() => {
   if (index < 0) return null
 
   return {
+    //取高亮文字前面的文字
     before: props.title.slice(0, index),
     highlight,
+    //取高亮后面的文字
     after: props.title.slice(index + highlight.length),
+    //高亮文字是否较短，长度小于等于 2 个字符时使用短下划线样式
     isShort: highlight.length <= 2,
   }
 })
@@ -360,10 +363,6 @@ function getTileStyle(index: number): { backgroundColor: string; color: string }
     color: color.color,
   }
 }
-
-const gridMarginClass = computed(() => {
-  return 'mt-10'
-})
 
 const ctaButtonColor = computed<'brand' | 'accent'>(() => {
   return props.colorScheme === 'accent' ? 'accent' : 'brand'
