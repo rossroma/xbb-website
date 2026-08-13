@@ -111,7 +111,7 @@ const tableRef = ref()
 const articles = ref<any[]>([])
 const selectedIds = ref<number[]>([])
 
-const pagination = reactive({ page: 1, limit: 10, total: 0 })
+const pagination = reactive({ page: 1, limit: 20, total: 0 })
 
 const handleSelectionChange = (rows: any[]) => {
   selectedIds.value = rows.map((r) => r.id)

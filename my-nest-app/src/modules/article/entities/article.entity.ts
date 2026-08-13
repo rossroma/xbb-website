@@ -53,7 +53,7 @@ export class Article {
   @Column({ length: 100, default: '' })
   seoKeyword: string;
 
-  @Column({ length: 100, default: '' })
+  @Column({ type: 'text', nullable: true })
   setDescription: string;
 
   @Column({ type: 'tinyint', default: 1, comment: '状态:显示:1;不显示0:-1回收站' })
