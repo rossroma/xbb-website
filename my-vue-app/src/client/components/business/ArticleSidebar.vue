@@ -46,7 +46,11 @@
         :style="tocListStyle"
       >
         <li v-for="item in tocItems" :key="item.id">
-          <a :href="item.href ?? `#${item.id}`" :class="{ 'is-active': activeTocId === item.id }">
+          <a
+            :href="item.href ?? `#${item.id}`"
+            :class="{ 'is-active': activeTocId === item.id }"
+            @click="handleTocClick(item.id)"
+          >
             {{ item.title }}
           </a>
         </li>
@@ -139,12 +143,20 @@ const props = withDefaults(
   },
 )
 
+const emit = defineEmits<{
+  'toc-click': [id: string]
+}>()
+
 const isExpanded = ref(props.defaultExpanded)
 const shouldShowToggle = computed(() => props.tocItems.length > props.collapsedCount)
 const collapsedHeight = computed(() => `${Math.max(props.collapsedCount, 1) * 38}px`)
 const tocListStyle = computed(() => ({
   '--article-sidebar-collapsed-height': collapsedHeight.value,
 }))
+
+function handleTocClick(id: string) {
+  emit('toc-click', id)
+}
 
 function itemLink(item: ArticleSidebarTocItem): string {
   return item.href ?? `#${item.id}`
@@ -230,6 +242,12 @@ function linkAttrs(href: string) {
   border: 1px solid var(--color-border-subtle);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.98);
+}
+
+.article-sidebar__toc.is-expanded {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
 }
 
 .article-sidebar__toc-title {

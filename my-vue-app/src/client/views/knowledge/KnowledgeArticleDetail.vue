@@ -71,8 +71,8 @@
                 </div>
               </header>
 
-              <!-- 文章正文 -->
-              <div class="article-content rich-text" v-html="article.content" />
+              <!-- 文章正文（使用 processedContent 确保所有标题都有锚点 ID） -->
+              <div class="article-content rich-text" v-html="processedContent" />
 
               <!-- 上下篇导航 -->
               <PageNav
@@ -108,6 +108,7 @@
               :banners="knowledgeQnASidebarBanners"
               :toc-items="knowledgeDetailTocItems"
               :active-toc-id="activeTocId"
+              @toc-click="onTocClick"
             />
           </aside>
         </div>
@@ -117,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import ArticleSidebar from '@/client/components/business/ArticleSidebar.vue'
@@ -205,26 +206,45 @@ const nextLink = computed(() => {
   return `/zhishiwenda/${nextArticle.value.id}`
 })
 
-/** 从 HTML 内容中提取标题作为 TOC 目录项 */
+const HEADING_SCROLL_MARGIN = 'calc(var(--client-header-height, 76px) + 28px)'
+
+/** 为文章正文中缺少 id 的 h2/h3 注入锚点 ID 和 scroll-margin-top */
+const processedContent = computed(() => {
+  if (!article.value?.content) return ''
+  let index = 0
+  return article.value.content.replace(
+    /<h([23])(\b[^>]*?)>/gi,
+    (match, _level, attrs) => {
+      // 已有 id 的不处理
+      if (/id\s*=\s*["']/i.test(attrs)) return match
+      const id = `knowledge-heading-${index++}`
+      return `<h${_level}${attrs} id="${id}" style="scroll-margin-top:${HEADING_SCROLL_MARGIN}">`
+    },
+  )
+})
+
+/** 从 HTML 内容中提取标题作为 TOC 目录项（基于 processedContent 确保 ID 完整） */
 const knowledgeDetailTocItems = computed<ArticleSidebarTocItem[]>(() => {
   const items: ArticleSidebarTocItem[] = []
-  if (!article.value?.content) return items
+  if (!processedContent.value) return items
 
   // 解析 HTML 中的 h2/h3 标签，提取 id 和文本
-  const headingRegex = /<h([23])\b[^>]*?(?:id="([^"]*)")?[^>]*>([\s\S]*?)<\/h[23]>/gi
+  // 注意：不能用 (?:id="...")? 方式捕获 id，因为非贪婪匹配的 [^>]*? 会跳过 id 捕获
+  // 改用 [^>]* 捕获完整属性串，再从中提取 id
+  const headingRegex = /<h([23])([^>]*)>([\s\S]*?)<\/h[23]>/gi
   let match: RegExpExecArray | null
-  let index = 0
 
-  while ((match = headingRegex.exec(article.value.content)) !== null) {
+  while ((match = headingRegex.exec(processedContent.value)) !== null) {
     const level = match[1]
-    const id = match[2] || `knowledge-heading-${index}`
-    const text = (match[3] ?? '').replace(/<[^>]+>/g, '').trim()
-    if (text) {
+    const attrs = match[2] ?? ''
+    const content = match[3] ?? ''
+    const id = attrs.match(/id="([^"]*)"/)?.[1]
+    const text = content.replace(/<[^>]+>/g, '').trim()
+    if (id && text) {
       items.push({
         id,
         title: level === '2' ? text : `· ${text}`,
       })
-      index++
     }
   }
 
@@ -237,42 +257,26 @@ const knowledgeDetailTocItems = computed<ArticleSidebarTocItem[]>(() => {
 })
 
 const activeTocId = ref('')
-let tocObserver: IntersectionObserver | null = null
 
-// ==================== TOC 滚动监听 ====================
-
-async function observeTocAnchors() {
-  tocObserver?.disconnect()
-  tocObserver = null
-
-  await nextTick()
-
-  const anchorElements = knowledgeDetailTocItems.value
-    .map((item) => document.getElementById(item.id))
-    .filter((element): element is HTMLElement => Boolean(element))
-
-  activeTocId.value = knowledgeDetailTocItems.value[0]?.id ?? ''
-
-  if (!anchorElements.length) return
-
-  tocObserver = new IntersectionObserver(
-    (entries) => {
-      const visibleEntry = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0]
-
-      if (visibleEntry?.target.id) {
-        activeTocId.value = visibleEntry.target.id
-      }
-    },
-    {
-      rootMargin: '-104px 0px -62% 0px',
-      threshold: [0, 0.1, 1],
-    },
-  )
-
-  anchorElements.forEach((element) => tocObserver?.observe(element))
+/** 用户点击目录项时，立即更新高亮并平滑滚动到目标标题 */
+function onTocClick(id: string) {
+  activeTocId.value = id
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 }
+
+// 目录项加载完成后，默认高亮第一项
+watch(
+  () => knowledgeDetailTocItems.value,
+  (items) => {
+    if (items.length && !activeTocId.value) {
+      activeTocId.value = items[0]!.id
+    }
+  },
+  { immediate: true },
+)
 
 // ==================== SEO ====================
 
@@ -352,9 +356,8 @@ async function loadArticle() {
     prevArticle.value = result.prev
     nextArticle.value = result.next
 
-    // 等待 DOM 更新后建立 TOC 监听
+    // 等待 DOM 更新
     await nextTick()
-    observeTocAnchors()
   } catch (err) {
     errorMessage.value = err instanceof Error ? err.message : '加载文章失败，请稍后重试'
   } finally {
@@ -375,10 +378,6 @@ watch(
   },
 )
 
-onBeforeUnmount(() => {
-  tocObserver?.disconnect()
-  tocObserver = null
-})
 </script>
 
 <style scoped>
