@@ -27,8 +27,8 @@ export class ArticleResponseDto {
     this.bid = article.bid;
     this.flag = article.flag;
     this.simg = article.simg;
-    this.author = article.author;
-    this.source = article.source;
+    this.author = article.author || '销帮帮';
+    this.source = article.source || '官网';
     this.descs = article.descs;
     this.seoTitle = article.seoTitle;
     this.seoKeyword = article.seoKeyword;
