@@ -1022,7 +1022,6 @@ import ReviewCardGrid from '@/client/components/business/ReviewCardGrid.vue'
 import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
 import PlaygroundShell from './components/PlaygroundShell.vue'
 import {
-  bannerSlides,
   solutionCards,
   assistantCards,
   growthMetrics,
@@ -1033,8 +1032,29 @@ import {
   ecosystemAbility2,
   ecosystemAbility3,
   custChoiseImg,
+  type BannerSlide,
 } from '@/client/data/homeData'
 import { socials, footerHotline, footerEmail } from '@/client/data/siteFooterData'
+
+// ===== Mock 数据 =====
+const bannerSlides: BannerSlide[] = [
+  {
+    key: 'mock-hero',
+    mediaType: 'image',
+    title: '懂客户，更懂增长',
+    desc: '专注于客户数字化\n让增长不再是靠感觉，而是靠系统',
+    primaryCta: '了解更多',
+    secondaryCta: '预约产品演示',
+    bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)',
+    line: 'rgba(116, 129, 255, 0.16)',
+    accent: '#5b61ff',
+    glow: 'rgba(91, 97, 255, 0.18)',
+    orb: 'rgba(127, 214, 255, 0.22)',
+    showVisual: false,
+    visualImage: '',
+    visualImageAlt: '',
+  },
+]
 
 // ===== ContactCard 演示数据（与 Footer 底部信息栏共享数据源） =====
 const contactHotline = footerHotline

@@ -404,9 +404,11 @@
                     {{ slide.desc }}
                   </p>
                   <div
+                    v-if="slide.primaryCta || slide.secondaryCta"
                     class="flex gap-3 mt-10 max-lg:mt-6 max-lg:justify-center max-sm:flex-col max-sm:items-center"
                   >
                     <Button
+                      v-if="slide.primaryCta"
                       variant="hero"
                       size="lg"
                       class="!text-[18px]"
@@ -451,19 +453,21 @@
       </template>
 
       <template #dots="{ currentIndex, goTo, total }">
-        <button
-          v-for="i in total"
-          :key="i"
-          type="button"
-          :class="[
-            'hero-banner-progress-dot',
-            currentIndex === i - 1 ? 'hero-banner-progress-dot--active' : '',
-          ]"
-          :aria-label="`第 ${i} 张`"
-          @click="goTo(i - 1)"
-        >
-          <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
-        </button>
+        <div class="flex items-center gap-2.5 py-3" @click.stop>
+          <button
+            v-for="i in total"
+            :key="i"
+            type="button"
+            :class="[
+              'hero-banner-progress-dot',
+              currentIndex === i - 1 ? 'hero-banner-progress-dot--active' : '',
+            ]"
+            :aria-label="`第 ${i} 张`"
+            @click="goTo(i - 1)"
+          >
+            <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
+          </button>
+        </div>
       </template>
     </Carousel>
   </section>
