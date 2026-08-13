@@ -293,14 +293,12 @@ import { useRoute } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import { CloseSmall, Down, Hamburger, PhoneTelephone } from '@/client/components/ui/remixIcons'
 import type { HeaderNavItem, HeaderNavNode } from '@/client/data/siteNavData'
-import { toPagePath } from '@/client/data/routePaths'
 import { useSiteSettingsStore } from '@/client/stores/siteSettings'
 
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 const activeMenu = ref('')
 const store = useSiteSettingsStore()
-const downloadRoute = toPagePath('single_download')
 
 const props = withDefaults(
   defineProps<{

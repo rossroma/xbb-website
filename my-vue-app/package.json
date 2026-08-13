@@ -14,7 +14,7 @@
     "build-only": "vite-ssg build",
     "prerender": "vite-ssg build",
     "type-check": "vue-tsc --build",
-    "lint": "run-s lint:*",
+    "lint": "run-p lint:*",
     "lint:oxlint": "oxlint . --fix",
     "lint:eslint": "eslint . --fix --cache",
     "check:tailwind": "eslint . --no-fix --rule 'tailwindcss/no-arbitrary-value: error'",
