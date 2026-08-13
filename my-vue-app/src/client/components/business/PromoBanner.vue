@@ -1,8 +1,9 @@
 <template>
-  <SectionBlock spacing="loose" width="wide"
+  <SectionBlock spacing="loose" width="full"
     ><div
-      class="flex items-center gap-[77px] bg-surface-secondary rounded-card px-12 py-8 max-lg:flex-col max-lg:gap-8 max-md:px-6"
+      class="flex w-full items-center gap-[77px] bg-surface-secondary rounded-card px-12 py-8 max-lg:flex-col max-lg:gap-8 max-md:px-6"
     >
+    <div class="w-[1200px] flex mx-auto">
       <div class="flex-1">
         <p class="text-body text-text-secondary leading-subtitle mb-2 font-normal mt-[15px]">
           {{ eyebrow }}
@@ -27,6 +28,7 @@
         :alt="imageAlt ?? ''"
         class="w-[390px] h-[217px] max-md:w-full max-md:h-45 rounded-card object-cover shrink-0"
       />
+      </div>
     </div>
   </SectionBlock>
 </template>
