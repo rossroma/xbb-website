@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { QueryFailedError } from 'typeorm';
 import { BusinessException } from '../exceptions/business.exception';
 import { ResponseResult } from '../interfaces/response.interface';
 import { RESPONSE_CODE } from '../constants/response-code';
@@ -65,6 +66,17 @@ export class HttpExceptionFilter implements ExceptionFilter {
         default:
           code = status;
       }
+    } else if (exception instanceof QueryFailedError) {
+      // 数据库错误 — 翻译为友好消息，技术细节记录到日志
+      status = HttpStatus.BAD_REQUEST;
+      const dbError = this.handleDatabaseError(exception);
+      code = dbError.code;
+      message = dbError.message;
+      this.logger.error(
+        `Database error: ${exception.message}`,
+        exception.stack,
+        `${request.method} ${request.url}`,
+      );
     } else {
       // 未知异常
       this.logger.error(
@@ -84,5 +96,50 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const errorResponse = ResponseResult.error(code, message);
 
     response.status(status).json(errorResponse);
+  }
+
+  /**
+   * 将数据库错误（QueryFailedError）翻译为面向用户的友好错误消息。
+   * 根据 MySQL 驱动错误号（errno）分类，避免暴露内部 SQL 细节。
+   */
+  private handleDatabaseError(error: QueryFailedError): {
+    code: number;
+    message: string;
+  } {
+    const driverError = error.driverError as any;
+    const mysqlErrno: number | undefined = driverError?.errno;
+
+    switch (mysqlErrno) {
+      case 1406: // Data too long for column
+        return {
+          code: RESPONSE_CODE.DB_DATA_TOO_LONG,
+          message: '字段值过长，请检查输入内容',
+        };
+      case 1062: // Duplicate entry
+        return {
+          code: RESPONSE_CODE.DB_DUPLICATE_ENTRY,
+          message: '数据已存在，请检查唯一字段',
+        };
+      case 1452: // Cannot add or update a child row (foreign key)
+        return {
+          code: RESPONSE_CODE.DB_FOREIGN_KEY_FAIL,
+          message: '关联数据不存在，请检查关联字段',
+        };
+      case 1451: // Cannot delete or update a parent row (foreign key)
+        return {
+          code: RESPONSE_CODE.DB_FOREIGN_KEY_BLOCK,
+          message: '该记录存在关联数据，无法删除',
+        };
+      case 1048: // Column cannot be null
+        return {
+          code: RESPONSE_CODE.DB_NOT_NULL,
+          message: '必填字段不能为空',
+        };
+      default:
+        return {
+          code: RESPONSE_CODE.DB_ERROR,
+          message: '数据操作异常，请稍后重试或联系管理员',
+        };
+    }
   }
 }
