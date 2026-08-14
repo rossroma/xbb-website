@@ -1,34 +1,46 @@
 <template>
-  <div :class="['article-sidebar', `article-sidebar--${variant}`]">
-    <div v-if="variant === 'toc' && banners.length" class="article-sidebar__banners">
+  <div
+    :class="[
+      'flex w-full max-h-[calc(100vh-var(--client-header-height,76px)-48px)] flex-col gap-3.5 overflow-y-auto overscroll-contain pr-1 [scrollbar-width:thin]',
+      variant === 'link-tags' ? 'max-h-none overflow-visible pr-0' : '',
+    ]"
+  >
+    <div v-if="variant === 'toc' && banners.length" class="flex flex-col gap-3.5">
       <template v-for="banner in banners" :key="banner.key ?? banner.title">
-        <RouterLink v-if="banner.to" :to="banner.to" class="article-sidebar__promo">
+        <RouterLink
+          v-if="banner.to"
+          :to="banner.to"
+          class="block aspect-[15/7] w-full overflow-hidden rounded-lg bg-surface-secondary no-underline transition-[transform,box-shadow] duration-normal"
+        >
           <img
             :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
-            class="article-sidebar__promo-image"
+            class="block size-full object-cover"
             loading="lazy"
           />
         </RouterLink>
         <a
           v-else-if="banner.href"
           :href="banner.href"
-          class="article-sidebar__promo"
+          class="block aspect-[15/7] w-full overflow-hidden rounded-lg bg-surface-secondary no-underline transition-[transform,box-shadow] duration-normal"
           target="_blank"
           rel="noopener noreferrer"
         >
           <img
             :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
-            class="article-sidebar__promo-image"
+            class="block size-full object-cover"
             loading="lazy"
           />
         </a>
-        <div v-else class="article-sidebar__promo">
+        <div
+          v-else
+          class="block aspect-[15/7] w-full overflow-hidden rounded-lg bg-surface-secondary no-underline transition-[transform,box-shadow] duration-normal"
+        >
           <img
             :src="getOSSImageUrl(banner.image, 280)"
             :alt="banner.imageAlt ?? banner.title"
-            class="article-sidebar__promo-image"
+            class="block size-full object-cover"
             loading="lazy"
           />
         </div>
@@ -37,18 +49,35 @@
 
     <nav
       v-if="variant === 'toc'"
-      :class="['article-sidebar__toc', { 'is-expanded': isExpanded }]"
+      :class="[
+        'relative rounded-lg border border-border-subtle bg-white/[0.98]',
+        isExpanded ? 'overflow-y-auto overscroll-contain [scrollbar-width:thin]' : 'overflow-hidden',
+      ]"
       :aria-label="ariaLabel || '文章目录'"
     >
-      <h2 class="article-sidebar__toc-title">{{ title }}</h2>
+      <h2
+        class="border-b border-border-subtle px-4 py-1 text-xs font-semibold leading-1.4 text-text-primary"
+      >
+        {{ title }}
+      </h2>
       <ol
-        :class="['article-sidebar__toc-list', { 'is-collapsed': shouldShowToggle && !isExpanded }]"
+        :class="[
+          'relative m-0 list-none px-0 py-2.5 transition-[max-height] duration-normal',
+          shouldShowToggle && !isExpanded
+            ? tocListCollapsedClass
+            : '',
+        ]"
         :style="tocListStyle"
       >
-        <li v-for="item in tocItems" :key="item.id">
+        <li v-for="item in tocItems" :key="item.id" class="min-w-0">
           <a
             :href="item.href ?? `#${item.id}`"
-            :class="{ 'is-active': activeTocId === item.id }"
+            :class="[
+              'block box-border max-w-full truncate border-l-[3px] px-4.5 py-1 text-small leading-1.45 text-text-secondary no-underline transition-colors duration-fast hover:border-l-brand-primary hover:bg-brand-primary-soft hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2',
+              activeTocId === item.id
+                ? 'border-l-brand-primary bg-brand-primary-soft font-semibold text-brand-primary'
+                : 'border-l-transparent',
+            ]"
             @click="handleTocClick(item.id)"
           >
             {{ item.title }}
@@ -57,7 +86,10 @@
       </ol>
       <button
         v-if="shouldShowToggle"
-        class="article-sidebar__toc-toggle"
+        :class="[
+          'z-2 block w-max border-0 bg-transparent p-0 text-small font-semibold leading-1.45 text-brand-primary cursor-pointer transition-opacity duration-fast hover:opacity-80',
+          isExpanded ? 'static mx-auto mb-4' : 'absolute inset-x-0 bottom-4 mx-auto',
+        ]"
         type="button"
         :aria-expanded="isExpanded"
         @click="isExpanded = !isExpanded"
@@ -66,15 +98,23 @@
       </button>
     </nav>
 
-    <nav v-else class="article-sidebar__links" :aria-label="ariaLabel || title">
-      <h2 class="article-sidebar__links-title">{{ title }}</h2>
-      <div class="article-sidebar__links-grid">
+    <nav
+      v-else
+      class="overflow-hidden rounded bg-white shadow-[0_8px_24px_rgba(15,23,42,0.06)]"
+      :aria-label="ariaLabel || title"
+    >
+      <h2
+        class="border-b border-l-4 border-b-[#edf0f5] border-l-brand-primary px-5 py-[18px] pl-3 text-[18px] font-semibold leading-1.35 text-text-primary"
+      >
+        {{ title }}
+      </h2>
+      <div class="grid grid-cols-2 gap-x-2.5 gap-y-3 px-5 pb-5 pt-[18px]">
         <component
           :is="linkComponent(itemLink(item))"
           v-for="item in tocItems"
           :key="item.id"
           v-bind="linkAttrs(itemLink(item))"
-          class="article-sidebar__link-tag"
+          class="flex min-h-9 items-center justify-center rounded-[3px] border border-[#edf0f5] bg-[#f7f9fc] px-[9px] py-2 text-center text-small leading-1.35 text-[#354052] no-underline transition-[border-color,background,color] duration-fast hover:border-[rgba(255,100,0,0.36)] hover:bg-[#fff7f0] hover:text-brand-primary focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2"
         >
           {{ item.title }}
         </component>
@@ -83,7 +123,7 @@
         :is="linkComponent(viewAllLink)"
         v-if="viewAllLink && viewAllText"
         v-bind="linkAttrs(viewAllLink)"
-        class="article-sidebar__view-all"
+        class="flex items-center justify-center border-t border-[#edf0f5] px-5 py-[15px] text-small font-semibold leading-1.35 text-brand-primary no-underline transition-[background,color] duration-fast hover:bg-brand-primary-soft hover:text-brand-primary-hover focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-2"
       >
         {{ viewAllText }}
       </component>
@@ -150,6 +190,8 @@ const emit = defineEmits<{
 const isExpanded = ref(props.defaultExpanded)
 const shouldShowToggle = computed(() => props.tocItems.length > props.collapsedCount)
 const collapsedHeight = computed(() => `${Math.max(props.collapsedCount, 1) * 38}px`)
+const tocListCollapsedClass =
+  "max-h-[var(--article-sidebar-collapsed-height)] overflow-hidden pb-[46px] after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-[74px] after:bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.88)_46%,rgba(255,255,255,0.98)_100%)] after:content-['']"
 const tocListStyle = computed(() => ({
   '--article-sidebar-collapsed-height': collapsedHeight.value,
 }))
@@ -190,254 +232,3 @@ function linkAttrs(href: string) {
   return { href }
 }
 </script>
-
-<style scoped>
-.article-sidebar {
-  display: flex;
-  width: 100%;
-  max-height: calc(100vh - var(--client-header-height, 76px) - 48px);
-  flex-direction: column;
-  gap: 14px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding-right: 4px;
-  scrollbar-width: thin;
-}
-
-.article-sidebar--link-tags {
-  max-height: none;
-  overflow: visible;
-  padding-right: 0;
-}
-
-.article-sidebar__banners {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.article-sidebar__promo {
-  display: block;
-  width: 100%;
-  aspect-ratio: 15 / 7;
-  overflow: hidden;
-  border-radius: 8px;
-  background: var(--color-surface-secondary);
-  text-decoration: none;
-  transition:
-    transform var(--transition-duration-normal) ease,
-    box-shadow var(--transition-duration-normal) ease;
-}
-
-.article-sidebar__promo-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.article-sidebar__toc {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.98);
-}
-
-.article-sidebar__toc.is-expanded {
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-}
-
-.article-sidebar__toc-title {
-  border-bottom: 1px solid var(--color-border-subtle);
-  padding: 4px 16px;
-  color: var(--color-text-primary);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.article-sidebar__toc-list {
-  position: relative;
-  margin: 0;
-  padding: 10px 0;
-  list-style: none;
-  transition: max-height var(--transition-duration-normal) ease;
-}
-
-.article-sidebar__toc-list li {
-  min-width: 0;
-}
-
-.article-sidebar__toc-list.is-collapsed {
-  max-height: var(--article-sidebar-collapsed-height);
-  overflow: hidden;
-  padding-bottom: 46px;
-}
-
-.article-sidebar__toc-list.is-collapsed::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 74px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.88) 46%,
-    rgba(255, 255, 255, 0.98) 100%
-  );
-  content: '';
-  pointer-events: none;
-}
-
-.article-sidebar__toc-list a {
-  display: block;
-  box-sizing: border-box;
-  max-width: 100%;
-  overflow: hidden;
-  border-left: 3px solid transparent;
-  padding: 4px 18px;
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  line-height: 1.45;
-  text-decoration: none;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition:
-    color var(--transition-duration-fast) ease,
-    background var(--transition-duration-fast) ease,
-    border-color var(--transition-duration-fast) ease;
-}
-
-.article-sidebar__toc-list a:hover,
-.article-sidebar__toc-list a.is-active {
-  border-left-color: var(--color-brand-primary);
-  background: var(--color-brand-primary-soft);
-  color: var(--color-brand-primary);
-}
-
-.article-sidebar__toc-list a.is-active {
-  font-weight: 600;
-}
-
-.article-sidebar__toc-toggle {
-  position: absolute;
-  right: 0;
-  bottom: 16px;
-  left: 0;
-  z-index: 2;
-  display: block;
-  width: max-content;
-  margin: 0 auto;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--color-brand-primary);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.45;
-  cursor: pointer;
-  transition: opacity var(--transition-duration-fast) ease;
-}
-
-.article-sidebar__toc.is-expanded .article-sidebar__toc-toggle {
-  position: static;
-  margin: 0 auto 16px;
-}
-
-.article-sidebar__toc-toggle:hover {
-  opacity: 0.8;
-}
-
-.article-sidebar__links {
-  overflow: hidden;
-  border: 0;
-  border-radius: 4px;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-}
-
-.article-sidebar__links-title {
-  position: relative;
-  border-bottom: 1px solid #edf0f5;
-  padding: 18px 20px 15px 32px;
-  color: var(--color-text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.article-sidebar__links-title::before {
-  position: absolute;
-  top: 21px;
-  left: 20px;
-  width: 4px;
-  height: 18px;
-  border-radius: 2px;
-  background: var(--color-brand-primary);
-  content: '';
-}
-
-.article-sidebar__links-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px 10px;
-  padding: 18px 20px 20px;
-}
-
-.article-sidebar__link-tag {
-  display: flex;
-  min-height: 36px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #edf0f5;
-  border-radius: 3px;
-  background: #f7f9fc;
-  padding: 8px 9px;
-  color: #354052;
-  font-size: 14px;
-  line-height: 1.35;
-  text-align: center;
-  text-decoration: none;
-  transition:
-    border-color var(--transition-duration-fast) ease,
-    background var(--transition-duration-fast) ease,
-    color var(--transition-duration-fast) ease;
-}
-
-.article-sidebar__link-tag:hover {
-  border-color: rgba(255, 100, 0, 0.36);
-  background: #fff7f0;
-  color: var(--color-brand-primary);
-}
-
-.article-sidebar__link-tag:focus-visible,
-.article-sidebar__view-all:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
-  outline-offset: 2px;
-}
-
-.article-sidebar__view-all {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-top: 1px solid #edf0f5;
-  padding: 15px 20px;
-  color: var(--color-brand-primary);
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.35;
-  text-decoration: none;
-  transition:
-    background var(--transition-duration-fast) ease,
-    color var(--transition-duration-fast) ease;
-}
-
-.article-sidebar__view-all:hover {
-  background: var(--color-brand-primary-soft);
-  color: var(--color-brand-primary-hover);
-}
-</style>
