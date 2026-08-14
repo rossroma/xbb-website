@@ -38,7 +38,7 @@
             v-if="card.sideImage"
             :class="[
               'block h-auto shrink-0 self-start mb-2',
-              index === 1 ? 'w-7.5' : index === 2 ? 'w-[29px]' : 'w-[24px]',
+              index === 1 ? 'w-7.5' : index === 2 ? 'w-[29px]' : 'w-6',
             ]"
             :src="card.sideImage"
             :alt="card.sideImageAlt ?? ''"

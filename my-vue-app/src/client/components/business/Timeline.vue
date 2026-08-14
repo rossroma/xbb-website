@@ -27,7 +27,7 @@
       >
         <div
           ref="track"
-          class="relative grid min-w-[max(100%,calc(var(--timeline-count)*150px))] items-end before:absolute before:inset-x-0 before:bottom-[13px] before:h-px before:bg-[rgba(6,15,26,0.22)] max-lg:min-w-[calc(var(--timeline-count)*132px)] max-md:block max-md:min-w-0 max-md:space-y-6 max-md:before:inset-x-auto max-md:before:left-[7px] max-md:before:right-auto max-md:before:top-[8px] max-md:before:bottom-[8px] max-md:before:h-auto max-md:before:w-px max-md:before:bg-[rgba(39,200,207,0.28)]"
+          class="relative grid min-w-[max(100%,calc(var(--timeline-count)*150px))] items-end before:absolute before:inset-x-0 before:bottom-[13px] before:h-px before:bg-[rgba(6,15,26,0.22)] max-lg:min-w-[calc(var(--timeline-count)*132px)] max-md:block max-md:min-w-0 max-md:space-y-6 max-md:before:inset-x-auto max-md:before:left-[7px] max-md:before:right-auto max-md:before:top-2 max-md:before:bottom-2 max-md:before:h-auto max-md:before:w-px max-md:before:bg-[rgba(39,200,207,0.28)]"
           style="grid-template-columns: repeat(var(--timeline-count), minmax(120px, 1fr))"
           :style="{ '--timeline-count': String(displayMilestones.length) }"
         >
@@ -48,10 +48,10 @@
             >
               <span class="max-md:hidden">{{ formatYearLabel(milestone.year) }}</span>
               <span class="hidden max-md:block">
-                <span class="block text-[18px] font-medium leading-[1.55]">
+                <span class="block text-[18px] font-medium leading-1.55">
                   {{ formatYearLabel(milestone.year) }} {{ milestone.title }}
                 </span>
-                <span class="mt-1.5 block text-[15px] font-normal leading-[1.75] text-[#5f6b7a]">
+                <span class="mt-1.5 block text-[15px] font-normal leading-1.75 text-[#5f6b7a]">
                   <template v-for="(seg, segIdx) in milestone.description" :key="segIdx">
                     <span v-if="typeof seg === 'string'">{{ seg }}</span>
                     <span v-else :class="seg.highlight ? 'font-semibold text-brand-primary' : ''">
