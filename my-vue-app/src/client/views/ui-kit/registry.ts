@@ -91,6 +91,8 @@ export const sections: SectionEntry[] = [
   // 数据 / 信任 / 转化类
   { id: 'metrics-panel', name: 'MetricsPanel 数据指标', category: 'business' },
   { id: 'company-overview', name: 'CompanyOverview 公司介绍模块', category: 'business' },
+  { id: 'research-strength-section', name: 'ResearchStrengthSection 研发实力', category: 'business' },
+  { id: 'recognition-section', name: 'RecognitionSection 权威认可', category: 'business' },
   { id: 'industry-carousel', name: 'IndustryCarousel 行业案例', category: 'business' },
   { id: 'partner-grid', name: 'PartnerGrid 合作伙伴', category: 'business' },
   { id: 'platform-download', name: 'PlatformDownload 平台下载', category: 'business' },
