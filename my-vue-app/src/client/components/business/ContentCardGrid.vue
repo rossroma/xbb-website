@@ -11,7 +11,6 @@
     - product（产品列表）：图片 3:2，Tag 在内容区，强调色，浅灰底
     - resource（资源展示）：图片 16:10，含描述 + 底部链接按钮
     - square（正方形卡片）：卡片 1:1，图片 4:3，标题 + 描述（2行）
-    - address（地址卡片）：地图图片在上，地址标题与详情居中展示
 
   支持圆角开关：
     - rounded（默认 true）：开启圆角（rounded-card）
@@ -37,51 +36,35 @@
         :href="card.linkHref"
         :class="[
           'group flex flex-col overflow-hidden',
-          variant === 'address'
-            ? 'border border-transparent bg-surface-primary shadow-[0_10px_28px_rgba(15,23,42,0.08)]'
-            : 'border border-border-subtle',
+          'border border-border-subtle',
           rounded ? 'rounded-card' : 'rounded-none',
           'transition-all duration-normal ease',
-          variant === 'address'
-            ? 'hover:-translate-y-1 hover:shadow-[0_14px_32px_rgba(15,23,42,0.12)]'
-            : 'hover:-translate-y-1 hover:shadow-card-hover',
+          'hover:-translate-y-1 hover:shadow-card-hover',
           'motion-reduce:transition-none motion-reduce:transform-none',
           card.linkHref ? 'cursor-pointer' : '',
           cardBgClass,
           variant === 'square' ? 'aspect-square' : '',
         ]"
-        :role="card.linkHref || variant === 'address' ? undefined : 'button'"
-        :tabindex="card.linkHref || variant === 'address' ? undefined : 0"
+        :role="card.linkHref ? undefined : 'button'"
+        :tabindex="card.linkHref ? undefined : 0"
         @keydown="(e: KeyboardEvent) => handleCardKeydown(e, card)"
-        @click="!card.linkHref && variant !== 'address' && $emit('cardClick', card.title)"
+        @click="!card.linkHref && $emit('cardClick', card.title)"
       >
         <!-- 封面图片 -->
-        <div
-          :class="[
-            'relative overflow-hidden',
-            variant === 'address' ? 'bg-surface-primary p-4 pb-0' : imageAspectClass,
-          ]"
-        >
+        <div :class="['relative overflow-hidden', imageAspectClass]">
           <img
             :src="getOSSImageUrl(card.image, 280)"
             :alt="card.imageAlt ?? card.title"
             :class="[
               'block w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none',
-              variant === 'address' ? 'aspect-[321/136]' : 'h-full',
+              'h-full',
             ]"
             loading="lazy"
           />
         </div>
 
         <!-- 内容区 -->
-        <div
-          :class="[
-            'flex flex-1 flex-col',
-            variant === 'address'
-              ? 'items-center px-6 pb-9 pt-7 text-center max-lg:px-5 max-lg:pb-8 max-md:px-4'
-              : 'p-6 max-lg:p-5 max-md:p-4',
-          ]"
-        >
+        <div :class="['flex flex-1 flex-col', 'p-6 max-lg:p-5 max-md:p-4']">
           <!-- Tag 标签（case/product 变体） -->
           <span
             v-if="variant !== 'resource' && variant !== 'square' && card.tag"
@@ -101,21 +84,15 @@
                 ? 'transition-colors duration-fast ease group-hover:text-brand-primary'
                 : '',
               variant !== 'resource' && variant !== 'square' && card.tag ? 'mt-3' : '',
-              variant === 'address' ? 'font-medium text-brand-primary' : '',
             ]"
           >
             {{ card.title }}
           </h3>
 
-          <!-- 描述（resource/address 变体） -->
+          <!-- 描述（resource 变体） -->
           <p
-            v-if="(variant === 'resource' || variant === 'address') && card.description"
-            :class="[
-              'mt-3 text-small text-text-secondary leading-small',
-              variant === 'address'
-                ? 'max-w-68 text-body leading-body text-[#536583] max-md:text-small'
-                : '',
-            ]"
+            v-if="variant === 'resource' && card.description"
+            class="mt-3 text-small text-text-secondary leading-small"
           >
             {{ card.description }}
           </p>
@@ -261,7 +238,7 @@ export interface ContentCard {
 }
 
 /** 卡片展示形态 */
-type CardVariant = 'case' | 'product' | 'resource' | 'square' | 'address'
+type CardVariant = 'case' | 'product' | 'resource' | 'square'
 /** 卡片布局方向 */
 type CardLayout = 'vertical' | 'horizontal'
 
@@ -303,7 +280,6 @@ const imageAspectMap: Record<CardVariant, string> = {
   product: 'aspect-[3/2]',
   resource: 'aspect-[16/10]',
   square: 'aspect-[4/3]',
-  address: 'aspect-[321/136]',
 }
 
 const imageAspectClass = computed(() => imageAspectMap[props.variant])
@@ -314,7 +290,6 @@ const cardBgMap: Record<CardVariant, string> = {
   product: 'bg-surface-secondary',
   resource: 'bg-surface-secondary',
   square: 'bg-surface-primary',
-  address: 'bg-surface-primary',
 }
 
 const cardBgClass = computed(() => cardBgMap[props.variant])
@@ -325,7 +300,6 @@ const defaultTagColorMap: Record<CardVariant, string> = {
   product: 'bg-brand-accent-soft text-brand-accent',
   resource: '',
   square: '',
-  address: '',
 }
 
 function tagColorClass(): string {
@@ -356,7 +330,6 @@ const gridColsClass = computed(() => {
 
 /** 键盘事件处理：Enter/Space 触发卡片点击 */
 function handleCardKeydown(e: KeyboardEvent, card: ContentCard): void {
-  if (props.variant === 'address') return
   if (card.linkHref) return
   if (e.key === 'Enter' || e.key === ' ') {
     e.preventDefault()
