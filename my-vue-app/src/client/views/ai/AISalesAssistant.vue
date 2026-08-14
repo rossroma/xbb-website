@@ -34,7 +34,6 @@ import {
   coachSection,
   analystSection,
   focusSection,
-  footerCtaSection,
 } from './aiSalesAssistantData'
 
 usePageSEO()

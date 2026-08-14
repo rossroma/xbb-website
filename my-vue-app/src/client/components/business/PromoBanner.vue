@@ -9,7 +9,7 @@
         >
           <div class="min-w-0 max-[900px]:text-center min-[901px]:row-start-1">
             <p
-              class="mb-2 text-[20px] mt-[15px] text-body font-normal leading-subtitle text-text-secondary max-[900px]:mt-0"
+              class="mb-2 text-h3 mt-[15px] font-normal leading-subtitle text-text-secondary max-[900px]:mt-0"
             >
               {{ eyebrow }}
             </p>
@@ -42,8 +42,6 @@
 <script setup lang="ts">
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import Button from '@/client/components/ui/Button.vue'
-import { getOSSImageUrl } from '@/shared/utils/ossImage'
-
 defineProps<{
   eyebrow: string
   title: string

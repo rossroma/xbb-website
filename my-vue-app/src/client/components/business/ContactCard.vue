@@ -7,7 +7,7 @@
     <div class="grid grid-cols-2 gap-6 max-md:grid-cols-1 max-md:gap-0">
       <component :is="card.href ? 'a' : 'article'" v-for="card in resolvedCards" :key="card.title" :href="card.href"
         :target="card.external ? '_blank' : undefined" :rel="card.external ? 'noreferrer' : undefined"
-        class="block rounded-[12px] bg-surface-primary p-7.5 text-left shadow-[0_6px_20px_0_rgba(0,0,0,0.06)] transition-transform duration-normal hover:-translate-y-0.5 max-md:rounded-none max-md:border-b max-md:border-[#dfe2eb] max-md:px-3 max-md:py-6 max-md:shadow-none max-md:hover:translate-y-0">
+        class="block rounded-inner bg-surface-primary p-7.5 text-left shadow-[0_6px_20px_0_rgba(0,0,0,0.06)] transition-transform duration-normal hover:-translate-y-0.5 max-md:rounded-none max-md:border-b max-md:border-[#dfe2eb] max-md:px-3 max-md:py-6 max-md:shadow-none max-md:hover:translate-y-0">
         <span class="flex items-center gap-3">
           <component :is="resolveIcon(card.icon)" :class="card.iconClass || card.valueClass || 'text-brand-primary'"
             :size="32" />
@@ -18,7 +18,7 @@
 
         <div v-if="card.description" class="mt-6 flex flex-col gap-3 max-md:mt-7 max-md:gap-2">
           <span v-for="item in descriptionItems(card.description)" :key="item"
-            class="text-[14px] whitespace-pre-line text-body text-text-secondary leading-body">
+            class="text-small whitespace-pre-line text-text-secondary leading-body">
             {{ item }}
           </span>
         </div>
@@ -27,7 +27,7 @@
         <span v-if="card.type === 'socials'" class="mt-6 block max-md:mt-5">
           <SocialIcons :socials="card.socials || socials" />
         </span>
-        <span v-else-if="card.value" class="mt-6 flex items-center gap-3 text-[14px] font-semibold leading-none max-md:mt-5"
+        <span v-else-if="card.value" class="mt-6 flex items-center gap-3 text-small font-semibold leading-none max-md:mt-5"
           :class="card.valueClass || 'text-brand-primary'">
           <component v-if="card.valueIcon" :is="resolveIcon(card.valueIcon)" class="shrink-0" :size="22" />
           <span>{{ card.value }}</span>

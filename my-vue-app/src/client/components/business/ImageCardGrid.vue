@@ -189,8 +189,6 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
-import { getOSSImageUrl } from '@/shared/utils/ossImage'
-
 export interface ImageCardGridItem {
   key?: string
   title: string
