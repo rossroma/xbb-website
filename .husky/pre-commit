@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
-
 # 根项目 pre-commit 钩子
 # 前端项目 lint-staged 在 my-vue-app/.husky/pre-commit 中管理
 # 此处留空，避免覆盖前端项目的钩子
