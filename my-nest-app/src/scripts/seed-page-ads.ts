@@ -89,7 +89,7 @@ const addressAds = [
   {
     bid: 3,
     title: '北京',
-    descs: '朝阳区建国门外大街永安东里甲3号通用国际中心A座9层905-2',
+    descs: '北京市朝阳区朝外大街乙12号办公楼2601房间',
     simg: '/images/nnlx_mimg.jpg',
     ord: 2,
   },
@@ -103,7 +103,7 @@ const addressAds = [
   {
     bid: 3,
     title: '深圳',
-    descs: '南山区高新南九道53号航空航天大厦2号楼801室',
+    descs: '深圳市南山区高新南九道53号航空航天大厦2号楼801室',
     simg: '/images/nnlx_mimg.jpg',
     ord: 4,
   },
