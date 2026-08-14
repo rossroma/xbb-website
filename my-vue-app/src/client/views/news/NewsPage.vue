@@ -17,15 +17,21 @@
       />
 
       <!-- 加载态 -->
-      <div v-if="isLoading" class="mt-6 space-y-4">
+      <div
+        v-if="isLoading"
+        class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        aria-hidden="true"
+      >
         <div
-          v-for="i in 5"
+          v-for="i in 6"
           :key="i"
-          class="flex items-center gap-4 border-b border-border-subtle py-4"
+          class="rounded-card border border-border-subtle overflow-hidden"
         >
-          <div class="skeleton h-4 w-24 rounded" />
-          <div class="skeleton h-4 flex-1 rounded" />
-          <div class="skeleton h-4 w-12 rounded" />
+          <div class="aspect-[4/3] animate-skeleton" />
+          <div class="p-5 space-y-3">
+            <div class="h-5 w-16 animate-skeleton rounded-pill" />
+            <div class="h-6 w-full animate-skeleton rounded-inner" />
+          </div>
         </div>
       </div>
 
@@ -50,6 +56,8 @@
         :title="''"
         :items="articleItems"
         variant="card"
+        :cols="3"
+        :title-line-clamp="2"
         hide-header
         class="mt-6"
       />
