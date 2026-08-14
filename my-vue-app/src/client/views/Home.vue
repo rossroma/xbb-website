@@ -5,6 +5,7 @@
 
     <HeroBanner
       :slides="heroSlides"
+      :loading="adsLoading"
       :brand-video="heroBrandVideo"
     />
 
@@ -88,8 +89,8 @@ usePageSEO()
 
 const router = useRouter()
 
-// 首页 Banner 轮播 — 优先使用后台广告数据，API 不可用时回退到硬编码
-const { items: bannerAds } = useAds(AD_POSITION.HOME_BANNER)
+// 首页 Banner 轮播 — 优先使用后台广告数据，localStorage 缓存保障首次渲染速度
+const { items: bannerAds, loading: adsLoading } = useAds(AD_POSITION.HOME_BANNER)
 const heroSlides = computed(() => adsToBannerSlides(bannerAds.value))
 
 const navigateToClientPage = async (pageKey: string) => {

@@ -341,6 +341,34 @@
   </section>
 
   <!-- 轮播模式：多 Slide 轮播，适合首页 -->
+  <!-- 骨架屏：首次加载无数据时显示，API 返回后淡出 -->
+  <section
+    v-else-if="loading && slides.length === 0"
+    class="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] overflow-hidden"
+    aria-hidden="true"
+  >
+    <div
+      class="min-h-140 max-lg:min-h-130 max-md:min-h-115 flex items-center"
+      style="background: linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)"
+    >
+      <div class="w-[min(1200px,calc(100%-48px))] mx-auto grid grid-cols-[0.35fr_0.65fr] gap-9 max-lg:grid-cols-1 animate-pulse">
+        <div class="flex flex-col gap-6 max-lg:items-center max-lg:text-center">
+          <div class="h-12 w-3/4 rounded-lg bg-white/60 max-lg:h-10" />
+          <div class="h-4 w-1/2 rounded bg-white/40" />
+          <div class="mt-2 space-y-2">
+            <div class="h-3 w-full rounded bg-white/40" />
+            <div class="h-3 w-5/6 rounded bg-white/40" />
+          </div>
+          <div class="mt-6 flex gap-3">
+            <div class="h-12 w-32 rounded-full bg-white/50" />
+            <div class="h-12 w-32 rounded-full bg-white/30" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 轮播模式：多 Slide 轮播，适合首页 -->
   <section v-else class="relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)]">
     <Carousel
       class="hero-banner-carousel"
@@ -509,6 +537,8 @@ const props = withDefaults(
     mode?: 'carousel' | 'single' | 'showcase-carousel'
     slides?: BannerSlide[]
     brandVideo?: string
+    /** 是否正在加载（用于骨架屏显示） */
+    loading?: boolean
     /** 单页 Hero 变体：form-background 用于整张背景图右侧表单场景 */
     singleVariant?: 'default' | 'form-background'
     singleLayout?: 'horizontal' | 'vertical'
@@ -522,6 +552,7 @@ const props = withDefaults(
   {
     mode: 'carousel',
     slides: () => [],
+    loading: false,
     singleVariant: 'default',
     singleLayout: 'horizontal',
     showcaseTitle: '',
