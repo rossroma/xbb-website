@@ -660,11 +660,11 @@
       <FlowSteps v-bind="fsProps as any" :steps="flowDemoSteps" />
     </PlaygroundShell>
 
-    <!-- ===== TabShowcase（标题高亮按钮：取当前标题末两字） ===== -->
+    <!-- ===== TabShowcase（视觉风格 + 标题高亮按钮） ===== -->
     <PlaygroundShell
       section-id="tab-showcase"
       title="TabShowcase Tab 展示"
-      description="鼠标悬停即切换 Tab，激活时展开副标题，右侧配图带过渡动画，支持左右布局互换。"
+      description="鼠标悬停即切换 Tab，支持左侧列表、右侧列表、顶部标签和左侧横向标签等多种视觉风格。"
       code-tag="TabShowcase"
       code-self-closing
       :code-extra-props="tabShowcaseCodeExtra"
@@ -677,7 +677,7 @@
         '描述区 grid 动画展开/收起，固定 min-height 保证高度一致',
         '图片区域 min-h-[420px] 撑开组件，避免 Tab 切换时高度跳动',
         '右侧图片切换带 opacity + translateY 过渡动画',
-        'layout 控制 Tab 和图片的左右位置，theme 仅控制左侧选中 Tab 的色系',
+        'layout 控制视觉风格：tabs-left / tabs-right 为侧边列表，tabs-top 为顶部标签，tabs-left-horizontal 为左侧横向标签',
         'TabShowcaseItem.badgeIcon 选填（图标组件），不填则不显示',
       ]"
       v-slot="tsProps"
@@ -1840,14 +1840,16 @@ const articleSidebarCodeExtra = {
   variant: '"toc"',
 }
 
-// ===== TabShowcase 交互式控件（含标题高亮按钮开关） =====
+// ===== TabShowcase 交互式控件（含视觉风格和标题高亮按钮开关） =====
 const tabShowcaseControls = [
   {
-    label: 'Layout',
+    label: '视觉风格',
     prop: 'layout',
     options: [
-      { label: 'tabs-left', value: 'tabs-left' },
-      { label: 'tabs-right', value: 'tabs-right' },
+      { label: '左侧列表', value: 'tabs-left' },
+      { label: '右侧列表', value: 'tabs-right' },
+      { label: '顶部标签', value: 'tabs-top' },
+      { label: '左侧横向标签', value: 'tabs-left-horizontal' },
     ],
   },
   {
