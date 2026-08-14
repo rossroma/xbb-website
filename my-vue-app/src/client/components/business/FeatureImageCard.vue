@@ -7,14 +7,14 @@
       :clickable="true"
       @click="$emit('headingClick')"
     />
-    <CardGrid :cols="4" gap="default" :class="heading ? 'mt-14' : ''">
+    <CardGrid :cols="4" gap="default" :class="['justify-items-center', heading ? 'mt-14' : '']">
       <component
         :is="card.linkHref ? 'a' : 'article'"
         v-for="card in cards"
         :key="card.title"
         :href="card.linkHref"
         :class="[
-          'flex flex-col overflow-hidden border border-border-subtle rounded-card bg-surface-primary shadow-subtle transition-all duration-glide ease hover:-translate-y-2.5 hover:scale-1.01 hover:border-transparent hover:shadow-card-hover motion-reduce:transition-none motion-reduce:transform-none group',
+          'group mx-auto flex w-full flex-col overflow-hidden border border-border-subtle rounded-card bg-surface-primary shadow-subtle transition-all duration-glide ease hover:-translate-y-2.5 hover:scale-1.01 hover:border-transparent hover:shadow-card-hover motion-reduce:transition-none motion-reduce:transform-none max-lg:max-w-82',
           card.linkHref ? 'cursor-pointer' : '',
         ]"
         :role="card.linkHref ? undefined : 'button'"
@@ -23,14 +23,14 @@
         @click="handleClick(card)"
         @keydown="handleKeydown($event, card)"
       >
-        <div class="relative overflow-hidden">
+        <div class="relative aspect-square overflow-hidden">
           <img
             :src="card.image"
             :alt="card.title"
-            class="block w-full object-cover transition-transform duration-glide ease scale-105 group-hover:scale-100 motion-reduce:transition-none"
+            class="block size-full object-cover transition-transform duration-glide ease scale-110 group-hover:scale-105 motion-reduce:transition-none"
           />
         </div>
-        <div class="flex flex-1 flex-col gap-2.5 p-5 pb-6 bg-surface-primary">
+        <div class="flex flex-1 flex-col gap-2.5 p-5 pb-6 bg-surface-primary max-lg:px-6 max-lg:py-5 max-md:px-5 max-md:py-4">
           <span
             class="inline-flex w-fit items-center px-2.5 py-0.5 rounded-md bg-brand-primary-soft text-brand-primary text-caption font-semibold"
             >{{ card.kicker }}</span
@@ -60,11 +60,11 @@
               />
             </IconBadge>
           </div>
-          <div class="grid grid-cols-2 gap-2 mt-2">
+          <div class="grid grid-cols-2 gap-2 mt-2 max-md:gap-1.5">
             <span
               v-for="point in card.points"
               :key="point"
-              class="px-2.5 py-2 border border-card-point-border rounded-md bg-card-point-bg text-text-tertiary text-caption font-medium text-center whitespace-nowrap"
+              class="px-2.5 py-2 border border-card-point-border rounded-md bg-card-point-bg text-text-tertiary text-caption font-medium text-center whitespace-normal leading-tight max-md:px-2 max-md:py-1.5"
               >{{ point }}</span
             >
           </div>
