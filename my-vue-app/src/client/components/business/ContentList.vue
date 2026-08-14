@@ -32,7 +32,7 @@
     <div
       v-if="variant === 'card'"
       :class="[
-        'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-md:gap-4',
+        gridColsClass,
         hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
       ]"
     >
@@ -74,7 +74,12 @@
 
         <!-- 内容区 -->
         <div class="flex flex-1 flex-col p-6 max-lg:p-5 max-md:p-4">
-          <h3 class="text-h3 text-text-primary leading-subtitle">
+          <h3
+            :class="[
+              'text-h3 text-text-primary leading-subtitle',
+              titleLineClamp ? `line-clamp-${titleLineClamp}` : '',
+            ]"
+          >
             {{ item.title }}
           </h3>
           <p class="mt-2 line-clamp-2 text-body text-text-secondary leading-body">
@@ -88,7 +93,7 @@
     <div
       v-if="variant === 'compact'"
       :class="[
-        'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 max-md:gap-4',
+        gridColsClass,
         hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
       ]"
     >
@@ -302,6 +307,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
@@ -336,7 +342,10 @@ export interface ContentCard {
 /** 内容展示形态 */
 type ContentVariant = 'card' | 'compact' | 'list' | 'article-row'
 
-withDefaults(
+/** 网格列数（card/compact 变体生效） */
+type GridCols = 2 | 3 | 4
+
+const props = withDefaults(
   defineProps<{
     /** 区块标题 */
     title: string
@@ -364,6 +373,10 @@ withDefaults(
     totalPages?: number
     /** 隐藏发布日期（card/compact 变体生效） */
     hideDate?: boolean
+    /** 网格列数（card/compact 变体生效，默认 4 列） */
+    cols?: GridCols
+    /** 标题行数限制：1 | 2 | 不传则不限制（card/compact 变体生效） */
+    titleLineClamp?: 1 | 2
     /** 加载中状态（article-row 模式：初始加载时显示骨架屏，翻页时保持现有列表） */
     loading?: boolean
   }>(),
@@ -377,9 +390,20 @@ withDefaults(
     pageSize: 10,
     totalPages: 0,
     hideDate: false,
+    cols: 4,
+    titleLineClamp: undefined,
     loading: false,
   },
 )
+
+/** 根据 cols 属性生成网格列数类名 */
+const gridColsClass = computed(() => {
+  const cols = props.cols ?? 4
+  const base = 'grid grid-cols-1 gap-6 max-md:gap-4'
+  if (cols === 2) return `${base} sm:grid-cols-2`
+  if (cols === 3) return `${base} sm:grid-cols-2 lg:grid-cols-3`
+  return `${base} sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`
+})
 
 const emit = defineEmits<{
   /** 点击「查看全部」（viewAllLink 为空时触发） */

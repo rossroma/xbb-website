@@ -24,7 +24,7 @@
       <!-- 加载态 -->
       <div
         v-if="isLoading"
-        class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         aria-hidden="true"
       >
         <div
@@ -61,6 +61,8 @@
         title=""
         :items="caseCards"
         variant="card"
+        :cols="3"
+        :title-line-clamp="1"
         hide-header
         hide-date
         class="mt-8"
