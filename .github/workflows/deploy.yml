@@ -2,8 +2,8 @@
 # 销帮帮 CRM 官网 — GitHub Actions 部署流水线
 # ==========================================
 # 触发规则：
-#   develop 分支 → 自动构建 + 部署测试环境
-#   main 分支   → 自动触发 + 部署生产环境
+#   push → develop/main: 自动构建 + 部署测试/生产环境
+#   pull_request → develop/main: 仅执行预检（类型检查 + Lint + 单元测试），不构建部署
 # ==========================================
 # 镜像策略：
 #   构建阶段 → 推送 ACR（仅 SHA 标签，不可变；:latest 在部署成功后更新）
@@ -16,6 +16,8 @@ name: Deploy
 
 on:
   push:
+    branches: [develop, main]
+  pull_request:
     branches: [develop, main]
   workflow_dispatch:
 
@@ -90,6 +92,7 @@ jobs:
   # 构建后端镜像 → 推送 ACR（国内拉取加速）
   # ==========================================
   build-backend:
+    if: github.event_name == 'push'
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -121,6 +124,7 @@ jobs:
   # 构建前端镜像 → 推送 ACR（国内拉取加速）
   # ==========================================
   build-frontend:
+    if: github.event_name == 'push'
     needs: check
     runs-on: ubuntu-latest
     steps:
@@ -162,7 +166,7 @@ jobs:
   #   4. ❌ 失败 — 执行 rollback.sh（swap 前生成，恢复旧版本）
   # ==========================================
   deploy:
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main')
     needs: [build-backend, build-frontend]
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name == 'main' && 'production' || 'test' }}

@@ -111,7 +111,9 @@ description: 部署流程 — 部署前自检、Dockerfile 完整性检查、方
 
 ```
 □ CI 流水线是否全部通过？（check → build → deploy → verify）
-   → 如果 build 或 check 失败，说明有代码问题，修复后重新推送
+	   → 如果 check 失败，说明有代码问题，修复后重新推送
+	   → 注意：创建 MR 时 CI 会自动执行 check（类型检查 + Lint + 单元测试），作为合并门禁
+	   → 如果 MR 的 check 未通过，严禁合并到 develop/main
 
 □ 部署后验证脚本（verify-deploy.sh）是否通过？
    → SEO 检查、安全头检查、SSR 检查
