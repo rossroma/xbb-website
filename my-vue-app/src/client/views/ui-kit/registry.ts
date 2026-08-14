@@ -64,7 +64,7 @@ export const sections: SectionEntry[] = [
   { id: 'hero-banner', name: 'HeroBanner', category: 'business' },
   { id: 'hero-banner-single', name: 'HeroBanner (单页)', category: 'business' },
   { id: 'hero-banner-showcase-carousel', name: 'HeroBanner 展示轮播', category: 'business' },
-  { id: 'image-showcase', name: 'ImageShowcase 图文展示', category: 'business' },
+  { id: 'image-showcase', name: 'TabShowcase 单Tab图文', category: 'business' },
   { id: 'article-sidebar', name: 'ArticleSidebar 文章侧边栏', category: 'business' },
   { id: 'gradient-hero', name: 'GradientHero 渐变 Hero', category: 'business' },
   { id: 'promo-banner', name: 'PromoBanner 图文横幅', category: 'business' },
@@ -73,6 +73,7 @@ export const sections: SectionEntry[] = [
   // 图文卡片 / 展示类
   { id: 'feature-image-card', name: 'FeatureImageCard 图片卡片', category: 'business' },
   { id: 'content-card-grid', name: 'ContentCardGrid 图文卡片', category: 'business' },
+  { id: 'address-tabs', name: 'AddressTabs 地址切换', category: 'business' },
   { id: 'ai-crm-feature-grid', name: 'AiCrmFeatureGrid AI+CRM 能力卡片', category: 'business' },
   { id: 'image-card-grid', name: 'ImageCardGrid 图片卡片网格', category: 'business' },
   { id: 'icon-card-grid', name: 'IconCardGrid 图标卡片', category: 'business' },
@@ -89,6 +90,7 @@ export const sections: SectionEntry[] = [
 
   // 数据 / 信任 / 转化类
   { id: 'metrics-panel', name: 'MetricsPanel 数据指标', category: 'business' },
+  { id: 'company-overview', name: 'CompanyOverview 公司介绍模块', category: 'business' },
   { id: 'industry-carousel', name: 'IndustryCarousel 行业案例', category: 'business' },
   { id: 'partner-grid', name: 'PartnerGrid 合作伙伴', category: 'business' },
   { id: 'platform-download', name: 'PlatformDownload 平台下载', category: 'business' },

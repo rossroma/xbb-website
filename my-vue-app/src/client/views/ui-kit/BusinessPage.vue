@@ -298,7 +298,7 @@
       :initial-props="imageTextCardGridDefaults"
       :usage-notes="[
         'Props: title, cards（必需）；subtitle?, variant?, layout?, columns?, rounded?',
-        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）| address（地址）',
+        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）',
         'layout: vertical（默认）| horizontal（水平排列）',
         'columns: vertical 3/4/5，horizontal 1/2',
         'rounded: true（默认，圆角）| false（直角）',
@@ -327,6 +327,23 @@
         "
       />
     </PlaygroundShell>
+
+    <!-- ===== AddressTabs ===== -->
+    <Card id="address-tabs" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">AddressTabs 地址切换</h2>
+      <p class="text-small text-text-secondary mb-6">
+        顶部 tab 切换城市，下方展示地图与地址信息，适合联系我们页面的地址模块。
+      </p>
+      <AddressTabs title="公司地址" :items="addressTabsDemoItems" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title?, subtitle?, items</li>
+          <li>items 字段：title, description?, image, imageAlt?, mapLabel?, hotline?, email?</li>
+          <li>点击顶部 tab 切换下方地图和右侧地址内容。</li>
+        </ul>
+      </div>
+    </Card>
 
     <!-- ===== AiCrmFeatureGrid ===== -->
     <Card id="ai-crm-feature-grid" class="scroll-mt-14 lg:scroll-mt-0">
@@ -723,10 +740,32 @@
             ? '研发投入、团队能力与自主知识产权，支撑产品持续迭代。'
             : mpProps.columns === 3
               ? '实时数据尽在掌握，帮助企业快速决策'
-              : undefined
+          : undefined
         "
       />
     </PlaygroundShell>
+
+    <!-- ===== CompanyOverview ===== -->
+    <Card id="company-overview" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">CompanyOverview 公司介绍模块</h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“标题 + 左文右视频 + 下方四项数据”的固定展示模块，适合公司简介和品牌介绍场景。
+      </p>
+      <CompanyOverview
+        :title="aboutSection.title"
+        :paragraphs="aboutSection.paragraphs"
+        :video="aboutSection.video"
+        :metrics="aboutSection.metrics"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, paragraphs, video, metrics</li>
+          <li>结构固定为居中标题、左侧文本、右侧视频、下方四列数据卡片</li>
+          <li>适合公司介绍、品牌简介、企业概览类页面</li>
+        </ul>
+      </div>
+    </Card>
 
     <!-- ===== IndustryCarousel ===== -->
     <Card id="industry-carousel" class="scroll-mt-14 lg:scroll-mt-0">
@@ -846,28 +885,24 @@
     <PlaygroundShell
       section-id="contact-card"
       title="ContactCard 联系方式卡片"
-      description="三栏联系方式卡片：服务热线、企业邮箱、社交平台。支持图标左右/上下两种布局，社交平台图标 hover 显示二维码。"
+      description="联系方式卡片：支持通过 cards 数组动态配置售前、售后、邮箱和社交平台等内容。"
       code-tag="ContactCard"
       code-self-closing
       :code-extra-props="contactCardCodeExtra"
-      :controls="contactCardControls"
-      :initial-props="contactCardDefaults"
+      :controls="[]"
+      :initial-props="{}"
       :usage-notes="[
-        'Props: hotline, email, socials（均必需）；layout?（horizontal | vertical，默认 horizontal）',
-        'socials 类型复用 SocialItem[]（与 SiteFooter 共享数据源）',
-        'layout=horizontal: 图标左、文字右，三栏网格 items-center',
-        'layout=vertical: 图标上、文字下，图标自动放大至 w-14 × h-14，三栏 items-start 居中',
-        '社交平台图标 hover 时弹出二维码浮层（含箭头三角），与 Footer 交互一致',
-        '背景使用 bg-cta-warm-gradient 暖色渐变，圆角 rounded-card',
-        '支持 motion-reduce 禁用过渡动画',
+        'Props: cards?（推荐），社交平台可在 cards 内通过 type=socials 配置',
+        'cards: ContactCardItem[]，支持 title, description, value, href, icon, valueIcon, type 等字段',
+        '没有传 cards 时，会自动回退为售前咨询、售后服务、官方邮箱、社交平台四张卡',
+        'SectionBlock 内部默认 width=default，内容宽度为 1200px 约束',
+        '社交平台卡片支持 SocialIcons 悬浮二维码',
       ]"
       v-slot="ccProps"
     >
       <ContactCard
         v-bind="ccProps as any"
-        :hotline="contactHotline"
-        :email="contactEmail"
-        :socials="contactSocials"
+        :cards="contactCards"
       />
     </PlaygroundShell>
 
@@ -988,10 +1023,16 @@ import {
   CheckOne,
   Thunderbolt,
   Peoples,
+  Message,
+  Phone,
+  Headset,
+  Mail,
+  ShareSys,
 } from '@/client/components/ui/remixIcons'
 import { computed, ref } from 'vue'
 import Card from '@/client/components/ui/Card.vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import CompanyOverview from '@/client/components/business/CompanyOverview.vue'
 import FeatureImageCard from '@/client/components/business/FeatureImageCard.vue'
 import GradientCardGrid from '@/client/components/business/GradientCardGrid.vue'
 import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
@@ -1011,6 +1052,7 @@ import FlowSteps from '@/client/components/business/FlowSteps.vue'
 import FeatureList from '@/client/components/business/FeatureList.vue'
 import AiCrmFeatureGrid from '@/client/components/business/AiCrmFeatureGrid.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
+import AddressTabs from '@/client/components/business/AddressTabs.vue'
 import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
@@ -1034,6 +1076,7 @@ import {
   custChoiseImg,
   type BannerSlide,
 } from '@/client/data/homeData'
+import { aboutSection } from '../about/companyIntroData'
 import { socials, footerHotline, footerEmail } from '@/client/data/siteFooterData'
 
 // ===== Mock 数据 =====
@@ -1057,30 +1100,47 @@ const bannerSlides: BannerSlide[] = [
 ]
 
 // ===== ContactCard 演示数据（与 Footer 底部信息栏共享数据源） =====
-const contactHotline = footerHotline
-const contactEmail = footerEmail
-const contactSocials = socials
-
-// ===== ContactCard 交互式控件 =====
-const contactCardControls = [
+const contactCards = [
   {
-    label: 'Layout',
-    prop: 'layout',
-    options: [
-      { label: 'horizontal（左右）', value: 'horizontal' },
-      { label: 'vertical（上下）', value: 'vertical' },
-    ],
+    title: '售前咨询',
+    description: '了解产品详情、定制专属方案',
+    value: footerHotline,
+    href: `tel:${footerHotline}`,
+    icon: Message,
+    valueIcon: Phone,
+    iconClass: 'text-[#31c4d1]',
+    valueClass: 'text-[#31c4d1]',
   },
-]
-
-const contactCardDefaults = {
-  layout: 'horizontal',
-}
+  {
+    title: '售后服务',
+    description: '产品应用操作、全天候陪伴服务',
+    value: footerHotline,
+    href: `tel:${footerHotline}`,
+    icon: Headset,
+    valueIcon: Phone,
+    valueClass: 'text-brand-accent',
+  },
+  {
+    title: '官方邮箱',
+    description: '商务合作、媒体沟通与其他事务咨询',
+    value: footerEmail,
+    href: `mailto:${footerEmail}`,
+    icon: Mail,
+    valueIcon: Mail,
+    valueClass: 'text-brand-primary',
+  },
+  {
+    title: '社交平台',
+    description: '关注官方账号，获取产品资讯与活动动态',
+    type: 'socials',
+    icon: ShareSys,
+    iconClass: 'text-fs-icon-green',
+    socials,
+  },
+] as const
 
 const contactCardCodeExtra = {
-  ':hotline': 'footerHotline',
-  ':email': 'footerEmail',
-  ':socials': 'socials',
+  ':cards': 'contactCards',
 }
 
 // ===== Demo 数据 =====
@@ -1911,7 +1971,6 @@ const imageTextCardGridControls = [
       { label: 'product（产品）', value: 'product' },
       { label: 'resource（资源）', value: 'resource' },
       { label: 'square（正方形）', value: 'square' },
-      { label: 'address（地址）', value: 'address' },
     ],
   },
   {
@@ -1958,6 +2017,45 @@ const imageTextCardGridCodeExtra = {
 }
 
 // ===== EcoResourceCardGrid 演示数据 =====
+const addressTabsDemoItems = [
+  {
+    title: '杭州（总部）',
+    description: '杭州市滨江区滨盛路505号银丰大厦7层',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '杭州总部地图',
+    mapLabel: '杭州（总部）',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '北京',
+    description: '朝阳区建国门外大街永安东里甲3号通用国际中心A座05-2',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '北京公司地图',
+    mapLabel: '北京',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '上海',
+    description: '上海市杨浦区昆明路39号文通大厦009室',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '上海公司地图',
+    mapLabel: '上海',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '深圳',
+    description: '南山区高新南九道53号航空航天大厦2号楼801室',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '深圳公司地图',
+    mapLabel: '深圳',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+] as const
+
 const resourceDemoCards = [
   {
     image: ecosystemAbility1,
