@@ -1,42 +1,40 @@
 <template>
-  <SectionBlock spacing="default"
-    ><div class="flex justify-center mb-12 text-center">
+  <SectionBlock spacing="default">
+    <div class="mb-12 flex justify-center text-center max-lg:mb-10 max-md:mb-8">
       <SectionHeading
         :title="heading"
         align="center"
         :heading-class="headingClass"
       />
     </div>
-    <div class="max-w-284 mx-auto flex justify-center gap-4 max-lg:flex-col max-lg:items-center">
-      <!-- Left: 2 tall cards -->
-      <div class="flex gap-4 shrink-0 max-md:flex-col">
-        <MediaCard
-          v-for="card in tallCards"
-          content-position="below-title"
-          :key="card.key"
-          :title="card.title"
-          :icon="card.icon"
-          :desc-lines="card.descLines"
-          size="tall"
-          :accent="card.accent"
-          :image="card.image"
-          :full-background="card.fullBackground"
-          :bg="card.bg"
-        />
-      </div>
 
-      <!-- Right: 4 standard cards -->
-      <div class="shrink-0 flex flex-wrap gap-4 w-140 max-lg:w-auto max-md:flex-col max-md:w-full">
-        <MediaCard
-          v-for="card in standardCards"
-          :key="card.key"
-          :title="card.title"
-          :icon="card.icon"
-          :desc-lines="card.descLines"
-          size="standard"
-          :accent="card.accent"
-        />
-      </div>
+    <div
+      class="split-card-layout__grid mx-auto grid w-full max-w-284 gap-4"
+    >
+      <MediaCard
+        v-for="card in tallCards"
+        :key="card.key"
+        class="split-card-layout__card split-card-layout__card--tall"
+        content-position="below-title"
+        :title="card.title"
+        :icon="card.icon"
+        :desc-lines="card.descLines"
+        size="tall"
+        :accent="card.accent"
+        :image="card.image"
+        :full-background="card.fullBackground"
+        :bg="card.bg"
+      />
+      <MediaCard
+        v-for="(card, index) in standardCards"
+        :key="card.key"
+        :class="getStandardCardClass(index)"
+        :title="card.title"
+        :icon="card.icon"
+        :desc-lines="card.descLines"
+        size="standard"
+        :accent="card.accent"
+      />
     </div>
   </SectionBlock>
 </template>
@@ -68,4 +66,45 @@ const props = defineProps<{
 
 const tallCards = computed(() => props.cards.filter((c) => c.size === 'tall'))
 const standardCards = computed(() => props.cards.filter((c) => c.size === 'standard'))
+
+function getStandardCardClass(index: number): string {
+  return index >= 2
+    ? 'split-card-layout__card split-card-layout__card--wide-at-three'
+    : 'split-card-layout__card'
+}
 </script>
+
+<style scoped>
+.split-card-layout__grid {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.split-card-layout__card {
+  grid-column: span 2;
+}
+
+.split-card-layout__card--tall {
+  grid-row: span 2;
+}
+
+@media (max-width: 1024px) {
+  .split-card-layout__grid {
+    max-width: 724px;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .split-card-layout__card--wide-at-three {
+    grid-column: span 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .split-card-layout__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .split-card-layout__card--wide-at-three {
+    grid-column: span 2;
+  }
+}
+</style>
