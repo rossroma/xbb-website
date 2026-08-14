@@ -2,42 +2,62 @@
   <SectionBlock spacing="default">
     <SectionHeading v-if="title" :title="title" align="center" />
 
-    <div class="feature-overview__grid mt-12">
+    <div
+      class="mt-12 mb-10 flex flex-wrap items-stretch justify-center gap-[30px] max-[1100px]:gap-6"
+    >
       <div
         v-for="(card, index) in cards"
         :key="card.title"
-        class="feature-overview__card"
+        class="box-border flex h-[414px] w-[306px] flex-col bg-center bg-cover bg-no-repeat p-[30px] max-[1100px]:w-[min(306px,100%)] max-md:px-6 max-md:py-7"
         :style="cardStyle(card)"
       >
-        <div class="feature-overview__icon">
-          <img v-if="card.icon" :src="card.icon" :alt="card.iconAlt ?? card.title" loading="lazy" />
+        <div class="mb-6 flex h-12 w-12 items-center justify-center text-xs text-[#999]">
+          <img
+            v-if="card.icon"
+            :src="card.icon"
+            :alt="card.iconAlt ?? card.title"
+            class="block max-h-full max-w-full"
+            loading="lazy"
+          />
         </div>
 
-        <div class="feature-overview__heading-group">
-          <div class="feature-overview__heading">
-            <h3 class="feature-overview__title">{{ card.title }}</h3>
-            <p v-if="card.description" class="feature-overview__subtitle">
-              {{ card.description }}
-            </p>
-          </div>
+        <div class="min-w-0 shrink-0 -translate-y-[30px] max-md:-translate-y-[18px]">
+          <h3 class="mb-2 text-[22px] font-semibold leading-1.3 text-[#333] max-md:text-xl">
+            {{ card.title }}
+          </h3>
+          <p
+            v-if="card.description"
+            class="text-[21px] font-medium leading-1.45 text-[#333] max-md:text-[15px]"
+          >
+            {{ card.description }}
+          </p>
         </div>
 
-        <div class="feature-overview__content">
+        <div class="mt-auto flex items-start justify-between gap-3 px-0 pb-3 pt-1">
           <img
             v-if="card.sideImage"
-            :class="['feature-overview__side-image', sideImageClass(index)]"
+            :class="[
+              'block h-auto shrink-0 self-start mb-2',
+              index === 1 ? 'w-7.5' : index === 2 ? 'w-[29px]' : 'w-[24px]',
+            ]"
             :src="card.sideImage"
             :alt="card.sideImageAlt ?? ''"
             loading="lazy"
           />
-          <ul class="feature-overview__list">
-            <li v-for="point in card.points ?? []" :key="point">{{ point }}</li>
+          <ul class="m-0 min-w-0 flex-1 list-none p-0">
+            <li
+              v-for="point in card.points ?? []"
+              :key="point"
+              class="mb-2 flex items-start gap-2 text-[15px] leading-body text-[#555] last:mb-0 max-md:text-[13px]"
+            >
+              {{ point }}
+            </li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div v-if="ctaText && ctaHref" class="feature-overview__cta">
+    <div v-if="ctaText && ctaHref" class="flex justify-center">
       <UiButton :href="ctaHref" variant="hero" color="brand" size="lg">
         {{ ctaText }}
       </UiButton>
@@ -76,160 +96,4 @@ function cardStyle(card: AiCrmFeatureCard): CSSProperties {
     backgroundImage: `url("${card.image}")`,
   }
 }
-
-function sideImageClass(index: number): string {
-  if (index === 1) return 'feature-overview__side-image--small'
-  if (index === 2) return 'feature-overview__side-image--smaller'
-  return ''
-}
 </script>
-
-<style scoped>
-.feature-overview__grid {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 30px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-}
-
-.feature-overview__cta {
-  display: flex;
-  justify-content: center;
-}
-
-.feature-overview__card {
-  width: 306px;
-  height: 414px;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
-.feature-overview__icon {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  color: #999;
-}
-
-.feature-overview__icon img {
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
-}
-
-.feature-overview__title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: #333;
-  line-height: 1.3;
-}
-
-.feature-overview__heading {
-  flex: 0 0 auto;
-  min-width: 0;
-  transform: translateY(-30px);
-}
-
-.feature-overview__content {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: auto;
-  padding-bottom: 12px;
-  padding-top: 4px;
-}
-
-.feature-overview__content .feature-overview__list {
-  flex: 1;
-  min-width: 0;
-}
-
-.feature-overview__side-image {
-  width: 26px;
-  height: auto;
-  display: block;
-  flex-shrink: 0;
-  margin-bottom: 8px;
-}
-
-.feature-overview__side-image--small {
-  width: 32px;
-}
-
-.feature-overview__side-image--smaller {
-  width: 31px;
-}
-
-.feature-overview__subtitle {
-  font-size: 21px;
-  color: #333;
-  margin-bottom: 0;
-  font-weight: 500;
-  line-height: 1.45;
-}
-
-.feature-overview__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.feature-overview__list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 15px;
-  color: #555;
-  margin-bottom: 10px;
-  line-height: 1.7;
-}
-
-@media (max-width: 1100px) {
-  .feature-overview__grid {
-    gap: 24px;
-  }
-
-  .feature-overview__card {
-    width: min(306px, 100%);
-  }
-}
-
-@media (max-width: 768px) {
-  .feature-overview__card {
-    width: min(306px, 100%);
-    padding: 28px 24px;
-  }
-
-  .feature-overview__heading {
-    transform: translateY(-18px);
-  }
-
-  .feature-overview__title {
-    font-size: 20px;
-  }
-
-  .feature-overview__subtitle {
-    font-size: 15px;
-  }
-
-  .feature-overview__list li {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 450px) {
-}
-</style>
