@@ -76,7 +76,7 @@ const props = withDefaults(defineProps<Props>(), {
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 let animationId = 0
 let gl: WebGL2RenderingContext | null = null
-let uniforms: Record<string, WebGLUniformLocation | null> = {}
+let uniforms = {} as Record<string, WebGLUniformLocation | null | undefined>
 let startedAt = 0
 
 // Vertex shader
@@ -279,9 +279,9 @@ function hexToRgb(hex: string): [number, number, number] {
   const match = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
   if (!match) return [1, 1, 1]
   return [
-    parseInt(match[1], 16) / 255,
-    parseInt(match[2], 16) / 255,
-    parseInt(match[3], 16) / 255,
+    parseInt(match[1]!, 16) / 255,
+    parseInt(match[2]!, 16) / 255,
+    parseInt(match[3]!, 16) / 255,
   ]
 }
 
@@ -353,26 +353,26 @@ function initWebGL(canvas: HTMLCanvasElement): WebGL2RenderingContext | null {
   }
 
   // Set static uniforms
-  context.uniform1f(uniforms.uSpeed, props.speed)
-  context.uniform1f(uniforms.uAmplitude, props.amplitude)
-  context.uniform1f(uniforms.uWaveScale, props.waveScale)
-  context.uniform1f(uniforms.uWaveRatio, props.waveRatio)
-  context.uniform1f(uniforms.uSwell, props.swell)
-  context.uniform1f(uniforms.uTurbulence, props.turbulence)
-  context.uniform1f(uniforms.uTilt, props.tilt)
-  context.uniform1f(uniforms.uZoom, props.zoom)
-  context.uniform1f(uniforms.uHeight, props.height)
-  context.uniform1f(uniforms.uFogDepth, props.fogDepth)
-  context.uniform1f(uniforms.uSteps, detailToSteps(props.detail))
-  context.uniform1f(uniforms.uBrightness, props.brightness)
-  context.uniform1f(uniforms.uOpacity, props.opacity)
-  context.uniform1f(uniforms.uGrain, props.grain ? 1 : 0)
-  context.uniform1f(uniforms.uGrainIntensity, props.grainIntensity)
-  context.uniform1f(uniforms.uParallax, props.parallaxStrength)
-  context.uniform1i(uniforms.uEnableMouse, props.mouseInteraction ? 1 : 0)
-  context.uniform3fv(uniforms.uHorizonColor, hexToRgb(props.horizonColor))
-  context.uniform3fv(uniforms.uWaveColor, hexToRgb(props.waveColor))
-  context.uniform3fv(uniforms.uCrestColor, hexToRgb(props.crestColor))
+  context.uniform1f(uniforms.uSpeed!, props.speed)
+  context.uniform1f(uniforms.uAmplitude!, props.amplitude)
+  context.uniform1f(uniforms.uWaveScale!, props.waveScale)
+  context.uniform1f(uniforms.uWaveRatio!, props.waveRatio)
+  context.uniform1f(uniforms.uSwell!, props.swell)
+  context.uniform1f(uniforms.uTurbulence!, props.turbulence)
+  context.uniform1f(uniforms.uTilt!, props.tilt)
+  context.uniform1f(uniforms.uZoom!, props.zoom)
+  context.uniform1f(uniforms.uHeight!, props.height)
+  context.uniform1f(uniforms.uFogDepth!, props.fogDepth)
+  context.uniform1f(uniforms.uSteps!, detailToSteps(props.detail))
+  context.uniform1f(uniforms.uBrightness!, props.brightness)
+  context.uniform1f(uniforms.uOpacity!, props.opacity)
+  context.uniform1f(uniforms.uGrain!, props.grain ? 1 : 0)
+  context.uniform1f(uniforms.uGrainIntensity!, props.grainIntensity)
+  context.uniform1f(uniforms.uParallax!, props.parallaxStrength)
+  context.uniform1i(uniforms.uEnableMouse!, props.mouseInteraction ? 1 : 0)
+  context.uniform3fv(uniforms.uHorizonColor!, hexToRgb(props.horizonColor))
+  context.uniform3fv(uniforms.uWaveColor!, hexToRgb(props.waveColor))
+  context.uniform3fv(uniforms.uCrestColor!, hexToRgb(props.crestColor))
 
   context.clearColor(0, 0, 0, 0)
   context.enable(context.BLEND)
@@ -389,7 +389,7 @@ function resize(canvas: HTMLCanvasElement, context: WebGL2RenderingContext) {
     canvas.width = width
     canvas.height = height
     context.viewport(0, 0, width, height)
-    context.uniform2f(uniforms.iResolution, width, height)
+    context.uniform2f(uniforms.iResolution!, width, height)
   }
 }
 
@@ -401,8 +401,8 @@ onMounted(() => {
   if (!context) return
   gl = context
 
-  const currentMouse = [0.5, 0.5]
-  const targetMouse = [0.5, 0.5]
+  const currentMouse: [number, number] = [0.5, 0.5]
+  const targetMouse: [number, number] = [0.5, 0.5]
 
   canvas.addEventListener('pointermove', (event) => {
     const rect = canvas.getBoundingClientRect()
@@ -425,8 +425,8 @@ onMounted(() => {
     currentMouse[0] += 0.05 * (mx - currentMouse[0])
     currentMouse[1] += 0.05 * (my - currentMouse[1])
 
-    gl!.uniform1f(uniforms.iTime, (now - startedAt) * 0.001)
-    gl!.uniform2fv(uniforms.uMouse, currentMouse)
+    gl!.uniform1f(uniforms.iTime!, (now - startedAt) * 0.001)
+    gl!.uniform2fv(uniforms.uMouse!, currentMouse)
     gl!.clear(gl!.COLOR_BUFFER_BIT)
     gl!.drawArrays(gl!.TRIANGLES, 0, 3)
 

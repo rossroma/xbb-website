@@ -22,6 +22,27 @@ description: 部署流程 — 部署前自检、Dockerfile 完整性检查、方
 
 在执行部署或推送部署相关变更前，逐项检查以下清单。**任一项未通过，不得继续执行部署**。
 
+#### 1.0 本地代码质量检查（Pre-push Code Check）
+
+**在推送任何代码之前**（无论是否涉及 CI/CD 变更），必须先执行本地类型检查。这是第一道防线，不要在 CI 才暴露类型错误。
+
+```
+□ 是否已执行全量类型检查？
+   → 本地命令：pnpm type-check
+   → 注意：pnpm dev 不会做类型检查，Vite 使用 esbuild 转译，跳过类型检查
+   → 注意：pnpm build 虽然会跑 type-check，但它是与 vite-ssg build 并行运行的
+     （run-p type-check "build-only"），有可能构建成功但你没注意到 type-check 的报错
+
+□ 是否使用了 --noEmit 确保全量检查？
+   → 本地 vue-tsc --build 是增量模式，可能因 .tsbuildinfo 缓存跳过部分文件
+   → 建议在推送前执行：pnpm -C my-vue-app exec vue-tsc --build --noEmit
+   → 这会强制全量重新检查，覆盖率与 CI 一致
+
+□ 是否有未跟踪的文件包含了类型错误？
+   → CI 的类型检查会覆盖所有 src/ 下的文件，包括未跟踪的新文件
+   → 新增文件时尤其要注意，本地增量模式可能不会检查全新文件
+```
+
 #### 1.1 CI/CD 变更设计检查
 
 当本次变更涉及 `.github/workflows/`、`.gitlab-ci.yml`、`Dockerfile`、`docker-compose.yml`、`scripts/` 目录时：
