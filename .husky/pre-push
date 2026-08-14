@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
-
 # 部署前自检：推送到 develop/main 时，检查 CI/CD 相关文件是否变更
 while read -r local_ref local_sha remote_ref remote_sha; do
   branch=$(echo "$remote_ref" | sed 's|refs/heads/||')
