@@ -1,58 +1,31 @@
 <template>
   <div class="ai-sales-assistant">
-    <h1 class="sr-only">AI 销售助理 - 销帮帮 CRM</h1>
-    <HeroBanner mode="single" :slides="[heroBannerSlide]" />
+    <div class="ai-hero-wrapper relative w-screen ml-[calc(50%-50vw)] mr-[calc(50%-50vw)] bg-[#0A0814]">
+      <GradientWavesBg class="absolute inset-0 z-0" />
+      <HeroBanner mode="single" single-layout="vertical" :slides="[heroBannerSlide]" single-title-class="ai-hero-title"
+        single-subtitle-class="ai-hero-subtitle" single-primary-btn-class="ai-hero-primary-btn"
+        single-secondary-btn-class="ai-hero-secondary-btn" class="relative z-10" />
+    </div>
 
-    <TabShowcase
-      :title="lookalikeSection.title"
-      :tabs="lookalikeSection.tabs"
-      layout="tabs-left"
-      theme="purple"
-    />
+    <ImageCardGrid :title="lookalikeSection.title" :cards="lookalikeSection.cards" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
 
-    <TabShowcase
-      :title="transparentSection.title"
-      :tabs="transparentSection.tabs"
-      layout="tabs-right"
-      theme="blue"
-    />
+    <ImageCardGrid :title="transparentSection.title" :cards="transparentSection.cards" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
 
-    <TabShowcase
-      :title="coachSection.title"
-      :tabs="coachSection.tabs"
-      layout="tabs-left"
-      theme="indigo"
-    />
+    <ImageCardGrid :title="coachSection.title" :cards="coachSection.cards" variant="image-card" color-scheme="neutral" :rows="[3]" />
 
-    <TabShowcase
-      :title="analystSection.title"
-      :tabs="analystSection.tabs"
-      layout="tabs-right"
-      theme="purple"
-    />
+    <ImageCardGrid :title="analystSection.title" :cards="analystSection.cards" variant="image-card" color-scheme="neutral" :rows="[3]" />
 
-    <CTASection
-      variant="cool"
-      :title="focusSection.title"
-      :subtitle="focusSection.description"
-      :image="focusSection.image"
-      :image-alt="focusSection.imageAlt"
-    />
+    <CTASection variant="cool" :title="focusSection.title" :subtitle="focusSection.description"
+      :image="focusSection.image" :image-alt="focusSection.imageAlt" />
 
-    <CTASection
-      variant="cool"
-      :title="footerCtaSection.title"
-      :subtitle="footerCtaSection.subtitle"
-      :primary-cta="footerCtaSection.primaryCta"
-      :secondary-cta="footerCtaSection.secondaryCta"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import GradientWavesBg from '@/client/components/ui/GradientWavesBg.vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import TabShowcase from '@/client/components/business/TabShowcase.vue'
+import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
 import {
   heroBannerSlide,
@@ -66,3 +39,37 @@ import {
 
 usePageSEO()
 </script>
+
+<style>
+/* AI 销售助理 Hero 标题渐变样式 */
+.ai-hero-title {
+  font-size: 24px !important;
+  background: linear-gradient(281deg, #1574ff 2%, #5952ff 51%, #a969fe 96%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+}
+
+.ai-hero-subtitle {
+  font-size: 64px !important;
+  color: #1f2937 !important;
+  margin-top: 12px !important;
+  color: #ffffff !important;
+}
+
+/* 免费试用按钮 - 白色背景 + 深灰字体 */
+.ai-hero-primary-btn {
+  background: #ffffff !important;
+  color: #323233 !important;
+}
+
+/* 立即咨询按钮 - 渐变边框 */
+.ai-hero-secondary-btn {
+  color: #FFFFFF;
+  background: linear-gradient(#0A0814, #0A0814) padding-box,
+    linear-gradient(285deg, #1574ff 2%, #5952ff 51%, #a969fe 96%) border-box !important;
+  border: 2px solid transparent !important;
+  border-radius: 999px;
+}
+</style>

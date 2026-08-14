@@ -298,7 +298,7 @@
       :initial-props="imageTextCardGridDefaults"
       :usage-notes="[
         'Props: title, cards（必需）；subtitle?, variant?, layout?, columns?, rounded?',
-        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）| address（地址）',
+        'variant: case（案例）| product（产品）| resource（资源）| square（正方形）',
         'layout: vertical（默认）| horizontal（水平排列）',
         'columns: vertical 3/4/5，horizontal 1/2',
         'rounded: true（默认，圆角）| false（直角）',
@@ -327,6 +327,23 @@
         "
       />
     </PlaygroundShell>
+
+    <!-- ===== AddressTabs ===== -->
+    <Card id="address-tabs" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">AddressTabs 地址切换</h2>
+      <p class="text-small text-text-secondary mb-6">
+        顶部 tab 切换城市，下方展示地图与地址信息，适合联系我们页面的地址模块。
+      </p>
+      <AddressTabs title="公司地址" :items="addressTabsDemoItems" />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title?, subtitle?, items</li>
+          <li>items 字段：title, description?, image, imageAlt?, mapLabel?, hotline?, email?</li>
+          <li>点击顶部 tab 切换下方地图和右侧地址内容。</li>
+        </ul>
+      </div>
+    </Card>
 
     <!-- ===== AiCrmFeatureGrid ===== -->
     <Card id="ai-crm-feature-grid" class="scroll-mt-14 lg:scroll-mt-0">
@@ -361,28 +378,63 @@
         '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
         'variant: image-card（标题 + 描述 + 图片）| feature-panel（序号 + 模块 + 标题 + 描述 + 底部图片大卡片）',
         'colorScheme: brand | accent | mint | neutral | clean',
-        'columns: 2 | 3 | 4，移动端自动 1 列',
+        'columns 用于单行列数；rows 可按每行分别配置列数，当前示例通过第 1/2/3 行按钮控制 rows',
         'ImageCardGridItem 字段：title（必需）；description?, image?, imageAlt?, number?, module?',
       ]"
       v-slot="icgProps"
     >
       <!-- 标题高亮演示：将当前 title 的最后两个字传给 title-highlight -->
-      <div class="mb-4 flex justify-start">
-        <button
-          type="button"
-          :class="[
-            'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
-            imageCardGridTitleHighlightEnabled
-              ? 'bg-brand-primary text-white'
-              : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
-          ]"
-          @click="toggleImageCardGridTitleHighlight"
-        >
-          {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
-        </button>
+      <div class="mb-4 flex flex-col items-start gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            :class="[
+              'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
+              imageCardGridTitleHighlightEnabled
+                ? 'bg-brand-primary text-white'
+                : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
+            ]"
+            @click="toggleImageCardGridTitleHighlight"
+          >
+            {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
+          </button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
+            每行列数
+          </span>
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div
+              v-for="(rowControl, rowIndex) in imageCardGridRowControls"
+              :key="rowControl.label"
+              class="flex flex-col gap-2"
+            >
+              <span class="text-caption font-medium text-text-tertiary">
+                {{ rowControl.label }}
+              </span>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="option in rowControl.options"
+                  :key="`${rowControl.label}-${option.value}`"
+                  type="button"
+                  :class="[
+                    'px-4 py-1.5 rounded-pill text-[13px] font-medium transition-all duration-fast',
+                    imageCardGridRowColumns[rowIndex] === option.value
+                      ? 'bg-brand-primary text-white'
+                      : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
+                  ]"
+                  @click="setImageCardGridRowColumns(rowIndex, option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <ImageCardGrid
         v-bind="icgProps as any"
+        :rows="imageCardGridRows"
         :title-highlight="
           imageCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(icgProps.title) : undefined
         "
@@ -643,11 +695,11 @@
       <FlowSteps v-bind="fsProps as any" :steps="flowDemoSteps" />
     </PlaygroundShell>
 
-    <!-- ===== TabShowcase（标题高亮按钮：取当前标题末两字） ===== -->
+    <!-- ===== TabShowcase（视觉风格 + 标题高亮按钮） ===== -->
     <PlaygroundShell
       section-id="tab-showcase"
       title="TabShowcase Tab 展示"
-      description="鼠标悬停即切换 Tab，激活时展开副标题，右侧配图带过渡动画，支持左右布局互换。"
+      description="鼠标悬停即切换 Tab，支持左侧列表、右侧列表、顶部标签和左侧横向标签等多种视觉风格。"
       code-tag="TabShowcase"
       code-self-closing
       :code-extra-props="tabShowcaseCodeExtra"
@@ -660,7 +712,7 @@
         '描述区 grid 动画展开/收起，固定 min-height 保证高度一致',
         '图片区域 min-h-[420px] 撑开组件，避免 Tab 切换时高度跳动',
         '右侧图片切换带 opacity + translateY 过渡动画',
-        'layout 控制 Tab 和图片的左右位置，theme 仅控制左侧选中 Tab 的色系',
+        'layout 控制视觉风格：tabs-left / tabs-right 为侧边列表，tabs-top 为顶部标签，tabs-left-horizontal 为左侧横向标签',
         'TabShowcaseItem.badgeIcon 选填（图标组件），不填则不显示',
       ]"
       v-slot="tsProps"
@@ -723,10 +775,78 @@
             ? '研发投入、团队能力与自主知识产权，支撑产品持续迭代。'
             : mpProps.columns === 3
               ? '实时数据尽在掌握，帮助企业快速决策'
-              : undefined
+          : undefined
         "
       />
     </PlaygroundShell>
+
+    <!-- ===== CompanyOverview ===== -->
+    <Card id="company-overview" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">CompanyOverview 公司介绍模块</h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“标题 + 左文右视频 + 下方四项数据”的固定展示模块，适合公司简介和品牌介绍场景。
+      </p>
+      <CompanyOverview
+        :title="aboutSection.title"
+        :paragraphs="aboutSection.paragraphs"
+        :video="aboutSection.video"
+        :metrics="aboutSection.metrics"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, paragraphs, video, metrics</li>
+          <li>结构固定为居中标题、左侧文本、右侧视频、下方四列数据卡片</li>
+          <li>适合公司介绍、品牌简介、企业概览类页面</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== ResearchStrengthSection ===== -->
+    <Card id="research-strength-section" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">
+        ResearchStrengthSection 研发实力
+      </h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“研发实力”模块，包含居中标题、说明文案和证书/团队图片矩阵。
+      </p>
+      <ResearchStrengthSection
+        :title="technologySection.title"
+        :paragraphs="researchStrengthSection.intro"
+        :images="researchStrengthSection.images"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, paragraphs, images</li>
+          <li>图片默认 7 列展示，窄屏收敛为 4 列和 2 列</li>
+          <li>适合研发实力、资质证明、办公环境等图片矩阵型内容</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== RecognitionSection ===== -->
+    <Card id="recognition-section" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">RecognitionSection 权威认可</h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“权威认可”模块，包含顶部主视觉图和下方荣誉图片横向滚动。
+      </p>
+      <RecognitionSection
+        :title="recognitionSection.title"
+        :subtitle="recognitionSection.subtitle"
+        :image="recognitionSection.image"
+        :image-alt="recognitionSection.imageAlt"
+        :marquee-images="recognitionDemoImages"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, subtitle?, image, imageAlt?, marqueeImages?</li>
+          <li>顶部主图按容器宽度展示，下方荣誉图片自动横向滚动</li>
+          <li>鼠标悬停暂停滚动，并支持 prefers-reduced-motion 禁用动画</li>
+        </ul>
+      </div>
+    </Card>
 
     <!-- ===== IndustryCarousel ===== -->
     <Card id="industry-carousel" class="scroll-mt-14 lg:scroll-mt-0">
@@ -846,28 +966,24 @@
     <PlaygroundShell
       section-id="contact-card"
       title="ContactCard 联系方式卡片"
-      description="三栏联系方式卡片：服务热线、企业邮箱、社交平台。支持图标左右/上下两种布局，社交平台图标 hover 显示二维码。"
+      description="联系方式卡片：支持通过 cards 数组动态配置售前、售后、邮箱和社交平台等内容。"
       code-tag="ContactCard"
       code-self-closing
       :code-extra-props="contactCardCodeExtra"
-      :controls="contactCardControls"
-      :initial-props="contactCardDefaults"
+      :controls="[]"
+      :initial-props="{}"
       :usage-notes="[
-        'Props: hotline, email, socials（均必需）；layout?（horizontal | vertical，默认 horizontal）',
-        'socials 类型复用 SocialItem[]（与 SiteFooter 共享数据源）',
-        'layout=horizontal: 图标左、文字右，三栏网格 items-center',
-        'layout=vertical: 图标上、文字下，图标自动放大至 w-14 × h-14，三栏 items-start 居中',
-        '社交平台图标 hover 时弹出二维码浮层（含箭头三角），与 Footer 交互一致',
-        '背景使用 bg-cta-warm-gradient 暖色渐变，圆角 rounded-card',
-        '支持 motion-reduce 禁用过渡动画',
+        'Props: cards?（推荐），社交平台可在 cards 内通过 type=socials 配置',
+        'cards: ContactCardItem[]，支持 title, description, value, href, icon, valueIcon, type 等字段',
+        '没有传 cards 时，会自动回退为售前咨询、售后服务、官方邮箱、社交平台四张卡',
+        'SectionBlock 内部默认 width=default，内容宽度为 1200px 约束',
+        '社交平台卡片支持 SocialIcons 悬浮二维码',
       ]"
       v-slot="ccProps"
     >
       <ContactCard
         v-bind="ccProps as any"
-        :hotline="contactHotline"
-        :email="contactEmail"
-        :socials="contactSocials"
+        :cards="contactCards"
       />
     </PlaygroundShell>
 
@@ -904,7 +1020,7 @@
     <Card id="timeline" class="scroll-mt-14 lg:scroll-mt-0">
       <h2 class="text-h2 font-bold text-text-primary mb-2">Timeline 发展历程</h2>
       <p class="text-small text-text-secondary mb-6">
-        垂直时间线展示公司/产品发展里程碑，支持 3-4 个阶段，年份交替左右排列，描述文本支持高亮标记。
+        横向年份轴展示公司或产品的发展里程碑，支持悬停、聚焦或点击切换当前节点，并在下方展示对应详情卡片。
       </p>
       <Timeline
         title="发展历程"
@@ -927,8 +1043,9 @@
             <code>{ text, highlight?: true }</code> 高亮段
           </li>
           <li>高亮段使用品牌橙色（<code>text-brand-primary</code>）加粗渲染</li>
-          <li>桌面端中央时间线 + 左右交替排列，移动端左侧时间线 + 全部右对齐</li>
-          <li>建议 3-4 个里程碑，组件无交互（纯展示）</li>
+          <li>桌面端为横向可滚动年份轴 + 详情卡片，左右箭头用于查看更多年份</li>
+          <li>移动端切换为左侧纵向时间线，年份、标题和描述直接展开显示</li>
+          <li>适合 4 个以上里程碑；节点支持 hover、focus、click 切换当前详情</li>
         </ul>
       </div>
     </Card>
@@ -988,10 +1105,16 @@ import {
   CheckOne,
   Thunderbolt,
   Peoples,
+  Message,
+  Phone,
+  Headset,
+  Mail,
+  ShareSys,
 } from '@/client/components/ui/remixIcons'
 import { computed, ref } from 'vue'
 import Card from '@/client/components/ui/Card.vue'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import CompanyOverview from '@/client/components/business/CompanyOverview.vue'
 import FeatureImageCard from '@/client/components/business/FeatureImageCard.vue'
 import GradientCardGrid from '@/client/components/business/GradientCardGrid.vue'
 import MetricsPanel from '@/client/components/business/MetricsPanel.vue'
@@ -1005,12 +1128,15 @@ import ArticleSidebar, { type ArticleSidebarVariant } from '@/client/components/
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
+import ResearchStrengthSection from '@/client/components/business/ResearchStrengthSection.vue'
+import RecognitionSection from '@/client/components/business/RecognitionSection.vue'
 import SplitSection from '@/client/components/business/SplitSection.vue'
 import GradientHero from '@/client/components/business/GradientHero.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'
 import FeatureList from '@/client/components/business/FeatureList.vue'
 import AiCrmFeatureGrid from '@/client/components/business/AiCrmFeatureGrid.vue'
 import ContentCardGrid from '@/client/components/business/ContentCardGrid.vue'
+import AddressTabs from '@/client/components/business/AddressTabs.vue'
 import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
@@ -1034,9 +1160,19 @@ import {
   custChoiseImg,
   type BannerSlide,
 } from '@/client/data/homeData'
+import {
+  aboutSection,
+  recognitionSection,
+  researchStrengthSection,
+  technologySection,
+} from '../about/companyIntroData'
 import { socials, footerHotline, footerEmail } from '@/client/data/siteFooterData'
 
 // ===== Mock 数据 =====
+const recognitionDemoImages = recognitionSection.carouselImages.filter(
+  (item) => item.src !== '/images/company/honor-12.png',
+)
+
 const bannerSlides: BannerSlide[] = [
   {
     key: 'mock-hero',
@@ -1057,30 +1193,47 @@ const bannerSlides: BannerSlide[] = [
 ]
 
 // ===== ContactCard 演示数据（与 Footer 底部信息栏共享数据源） =====
-const contactHotline = footerHotline
-const contactEmail = footerEmail
-const contactSocials = socials
-
-// ===== ContactCard 交互式控件 =====
-const contactCardControls = [
+const contactCards = [
   {
-    label: 'Layout',
-    prop: 'layout',
-    options: [
-      { label: 'horizontal（左右）', value: 'horizontal' },
-      { label: 'vertical（上下）', value: 'vertical' },
-    ],
+    title: '售前咨询',
+    description: '了解产品详情、定制专属方案',
+    value: footerHotline,
+    href: `tel:${footerHotline}`,
+    icon: Message,
+    valueIcon: Phone,
+    iconClass: 'text-[#31c4d1]',
+    valueClass: 'text-[#31c4d1]',
   },
-]
-
-const contactCardDefaults = {
-  layout: 'horizontal',
-}
+  {
+    title: '售后服务',
+    description: '产品应用操作、全天候陪伴服务',
+    value: footerHotline,
+    href: `tel:${footerHotline}`,
+    icon: Headset,
+    valueIcon: Phone,
+    valueClass: 'text-brand-accent',
+  },
+  {
+    title: '官方邮箱',
+    description: '商务合作、媒体沟通与其他事务咨询',
+    value: footerEmail,
+    href: `mailto:${footerEmail}`,
+    icon: Mail,
+    valueIcon: Mail,
+    valueClass: 'text-brand-primary',
+  },
+  {
+    title: '社交平台',
+    description: '关注官方账号，获取产品资讯与活动动态',
+    type: 'socials',
+    icon: ShareSys,
+    iconClass: 'text-fs-icon-green',
+    socials,
+  },
+] as const
 
 const contactCardCodeExtra = {
-  ':hotline': 'footerHotline',
-  ':email': 'footerEmail',
-  ':socials': 'socials',
+  ':cards': 'contactCards',
 }
 
 // ===== Demo 数据 =====
@@ -1168,6 +1321,60 @@ const imageCardDemoFeatures = [
     image: '/images/liuzi/ability-3.png',
     imageAlt: '思维导图能力展示',
   },
+  {
+    title: '智能分析',
+    description: '自动归纳业务数据和客户行为，帮助团队更快发现增长机会与风险点',
+    image: '/images/liuzi/analysis.png',
+    imageAlt: '智能分析能力展示',
+  },
+  {
+    title: '日程安排',
+    description: '把客户跟进、会议和待办事项集中管理，减少遗漏并提升协同效率',
+    image: '/images/liuzi/schedule.png',
+    imageAlt: '日程安排能力展示',
+  },
+  {
+    title: '跟进记录',
+    description: '销售沟通内容自动沉淀，形成可追溯、可复盘的客户互动时间线',
+    image: '/images/liuzi/followUp.png',
+    imageAlt: '跟进记录能力展示',
+  },
+  {
+    title: '找客户',
+    description: '基于行业、区域和企业特征筛选潜在线索，让获客动作更精准',
+    image: '/images/liuzi/findCustomer.png',
+    imageAlt: '找客户能力展示',
+  },
+  {
+    title: '商机推荐',
+    description: '结合客户画像和历史成交数据，优先推荐更值得推进的销售机会',
+    image: '/images/liuzi/aiBusiness.png',
+    imageAlt: '商机推荐能力展示',
+  },
+  {
+    title: '销售助手',
+    description: '围绕线索分配、跟进提醒和话术建议，为销售提供实时辅助',
+    image: '/images/liuzi/aiSales.png',
+    imageAlt: '销售助手能力展示',
+  },
+  {
+    title: '以客找客',
+    description: '分析已成交客户的共性特征，帮助团队定位更多相似优质客户',
+    image: '/images/liuzi/aiFindCust.png',
+    imageAlt: '以客找客能力展示',
+  },
+  {
+    title: '培训陪练',
+    description: '通过真实场景模拟和智能反馈，让新人更快掌握标准销售动作',
+    image: '/images/liuzi/trainPartner.png',
+    imageAlt: '培训陪练能力展示',
+  },
+  {
+    title: '招投标洞察',
+    description: '聚合招投标相关信息，辅助销售判断客户需求和项目推进时机',
+    image: '/images/liuzi/biddingInfo.png',
+    imageAlt: '招投标洞察能力展示',
+  },
 ] as const
 
 const imagePanelDemoCards = [
@@ -1197,6 +1404,78 @@ const imagePanelDemoCards = [
       '将客户行为、销售过程和转化结果汇聚到统一视图，帮助团队持续优化运营策略。',
     image: '/images/customer/tab-collaboration-new.png',
     imageAlt: '数据洞察展示',
+  },
+  {
+    number: '04',
+    module: '客户运营',
+    title: '成交客户持续经营，复购机会更清晰',
+    description: '围绕续约提醒、复购机会和服务记录持续运营成交客户，提升客户长期价值。',
+    image: '/images/customer/tab-retention-new.png',
+    imageAlt: '成交客户经营展示',
+  },
+  {
+    number: '05',
+    module: '客户公海',
+    title: '客户分层回收，资源流转更高效',
+    description: '按客户状态、跟进频次和超期规则自动流转公海资源，减少线索沉睡。',
+    image: '/images/customer/public-sea-tiered.png',
+    imageAlt: '客户分层回收展示',
+  },
+  {
+    number: '06',
+    module: '回收机制',
+    title: '超期客户自动回收，团队资源不浪费',
+    description: '对长期未跟进或阶段停滞客户执行自动回收，让有效线索持续进入销售流程。',
+    image: '/images/customer/public-sea-recycle.png',
+    imageAlt: '超期客户回收展示',
+  },
+  {
+    number: '07',
+    module: '权限控制',
+    title: '领取规则灵活配置，客户分配更公平',
+    description: '通过领取上限、客户范围和人员权限控制，让客户资源分配更符合业务节奏。',
+    image: '/images/customer/public-sea-limit.png',
+    imageAlt: '领取规则配置展示',
+  },
+  {
+    number: '08',
+    module: '自动分配',
+    title: '线索自动分配，销售响应更及时',
+    description: '按区域、行业、客户等级或销售负载自动分配线索，缩短首次响应时间。',
+    image: '/images/customer/public-sea-assign.png',
+    imageAlt: '线索自动分配展示',
+  },
+  {
+    number: '09',
+    module: '防撞单',
+    title: '客户重复校验，跟进归属更明确',
+    description: '在线索进入、客户新建和联系人录入时自动识别重复信息，降低撞单风险。',
+    image: '/images/customer/dedup-collision-new.png',
+    imageAlt: '客户重复校验展示',
+  },
+  {
+    number: '10',
+    module: '源头防重',
+    title: '关键字段防重，数据质量更稳定',
+    description: '对手机号、公司名称、统一社会信用代码等关键字段进行校验，减少脏数据沉淀。',
+    image: '/images/customer/dedup-prevent-new.png',
+    imageAlt: '关键字段防重展示',
+  },
+  {
+    number: '11',
+    module: '数据报表',
+    title: '客户数据可信，管理分析更准确',
+    description: '通过重复客户治理提升客户数、跟进率和转化率统计质量，让经营判断更可靠。',
+    image: '/images/customer/dedup-report-new.png',
+    imageAlt: '客户数据报表展示',
+  },
+  {
+    number: '12',
+    module: '规则配置',
+    title: '判重规则灵活，适配多业务线',
+    description: '支持按业务线、客户模板和字段组合设置规则，匹配复杂组织的客户管理方式。',
+    image: '/images/customer/dedup-rules-new.png',
+    imageAlt: '判重规则配置展示',
   },
 ] as const
 
@@ -1245,6 +1524,44 @@ const tabShowcaseTitleHighlightEnabled = ref(false)
 const imageCardGridTitleHighlightEnabled = ref(false)
 const iconCardGridTitleHighlightEnabled = ref(false)
 
+type ImageCardGridColumnCount = 2 | 3 | 4
+type ImageCardGridRowColumnCount = 0 | 1 | ImageCardGridColumnCount
+type PositiveImageCardGridRowColumnCount = Exclude<ImageCardGridRowColumnCount, 0>
+type ImageCardGridRowColumns = [
+  ImageCardGridRowColumnCount,
+  ImageCardGridRowColumnCount,
+  ImageCardGridRowColumnCount,
+]
+
+const imageCardGridRowColumns = ref<ImageCardGridRowColumns>([3, 0, 0])
+
+const imageCardGridRowColumnOptions: readonly {
+  label: string
+  value: ImageCardGridRowColumnCount
+}[] = [
+  { label: '关闭', value: 0 },
+  { label: '1 列', value: 1 },
+  { label: '2 列', value: 2 },
+  { label: '3 列', value: 3 },
+  { label: '4 列', value: 4 },
+]
+
+const imageCardGridRowControls: readonly {
+  label: string
+  options: readonly {
+    label: string
+    value: ImageCardGridRowColumnCount
+  }[]
+}[] = [
+  { label: '第 1 行', options: imageCardGridRowColumnOptions.slice(1) },
+  { label: '第 2 行', options: imageCardGridRowColumnOptions },
+  { label: '第 3 行', options: imageCardGridRowColumnOptions },
+]
+
+const imageCardGridRows = computed((): PositiveImageCardGridRowColumnCount[] => {
+  return imageCardGridRowColumns.value.filter(isPositiveImageCardGridRowColumn)
+})
+
 function getLastTwoTitleHighlight(title: unknown): string | undefined {
   const text = String(title ?? '').trim()
   return text ? text.slice(-2) : undefined
@@ -1256,6 +1573,21 @@ function toggleTabShowcaseTitleHighlight(): void {
 
 function toggleImageCardGridTitleHighlight(): void {
   imageCardGridTitleHighlightEnabled.value = !imageCardGridTitleHighlightEnabled.value
+}
+
+function isPositiveImageCardGridRowColumn(
+  columns: ImageCardGridRowColumnCount,
+): columns is PositiveImageCardGridRowColumnCount {
+  return columns > 0
+}
+
+function setImageCardGridRowColumns(
+  rowIndex: number,
+  columns: ImageCardGridRowColumnCount,
+): void {
+  const next = [...imageCardGridRowColumns.value] as ImageCardGridRowColumns
+  next[rowIndex] = columns
+  imageCardGridRowColumns.value = next
 }
 
 function toggleIconCardGridTitleHighlight(): void {
@@ -1539,21 +1871,11 @@ const imageCardGridControls = [
       { label: 'clean', value: 'clean' },
     ],
   },
-  {
-    label: 'Columns',
-    prop: 'columns',
-    options: [
-      { label: '2', value: 2 },
-      { label: '3', value: 3 },
-      { label: '4', value: 4 },
-    ],
-  },
 ]
 
 const imageCardGridDefaults = {
   variant: 'feature-panel',
   'color-scheme': 'mint',
-  columns: 3,
   title: '解锁你的工作新方式',
 }
 
@@ -1779,14 +2101,16 @@ const articleSidebarCodeExtra = {
   variant: '"toc"',
 }
 
-// ===== TabShowcase 交互式控件（含标题高亮按钮开关） =====
+// ===== TabShowcase 交互式控件（含视觉风格和标题高亮按钮开关） =====
 const tabShowcaseControls = [
   {
-    label: 'Layout',
+    label: '视觉风格',
     prop: 'layout',
     options: [
-      { label: 'tabs-left', value: 'tabs-left' },
-      { label: 'tabs-right', value: 'tabs-right' },
+      { label: '左侧列表', value: 'tabs-left' },
+      { label: '右侧列表', value: 'tabs-right' },
+      { label: '顶部标签', value: 'tabs-top' },
+      { label: '左侧横向标签', value: 'tabs-left-horizontal' },
     ],
   },
   {
@@ -1823,13 +2147,17 @@ const tabShowcaseDefaults = {
 }
 
 // ===== Code Extra Props =====
-const imageCardGridCodeExtra = {
-  ':cards': 'cards',
-  title: '"解锁你的工作新方式"',
-  variant: '"feature-panel"',
-  'color-scheme': '"mint"',
-  columns: '3',
-}
+const imageCardGridCodeExtra = computed<Record<string, string>>(() => {
+  const extraProps: Record<string, string> = {
+    ':cards': 'cards',
+    title: '"解锁你的工作新方式"',
+    variant: '"feature-panel"',
+    'color-scheme': '"mint"',
+    ':rows': `[${imageCardGridRows.value.join(', ')}]`,
+  }
+
+  return extraProps
+})
 const featureCardGridCodeExtra = {
   ':features': 'features',
   title: '"内容创作能力，协同效率更高"',
@@ -1911,7 +2239,6 @@ const imageTextCardGridControls = [
       { label: 'product（产品）', value: 'product' },
       { label: 'resource（资源）', value: 'resource' },
       { label: 'square（正方形）', value: 'square' },
-      { label: 'address（地址）', value: 'address' },
     ],
   },
   {
@@ -1958,6 +2285,45 @@ const imageTextCardGridCodeExtra = {
 }
 
 // ===== EcoResourceCardGrid 演示数据 =====
+const addressTabsDemoItems = [
+  {
+    title: '杭州（总部）',
+    description: '杭州市滨江区滨盛路505号银丰大厦7层',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '杭州总部地图',
+    mapLabel: '杭州（总部）',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '北京',
+    description: '朝阳区建国门外大街永安东里甲3号通用国际中心A座05-2',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '北京公司地图',
+    mapLabel: '北京',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '上海',
+    description: '上海市杨浦区昆明路39号文通大厦009室',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '上海公司地图',
+    mapLabel: '上海',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+  {
+    title: '深圳',
+    description: '南山区高新南九道53号航空航天大厦2号楼801室',
+    image: '/images/nnlx_mimg.jpg',
+    imageAlt: '深圳公司地图',
+    mapLabel: '深圳',
+    hotline: footerHotline,
+    email: footerEmail,
+  },
+] as const
+
 const resourceDemoCards = [
   {
     image: ecosystemAbility1,

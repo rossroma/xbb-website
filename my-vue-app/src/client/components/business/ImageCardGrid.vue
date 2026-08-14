@@ -1,7 +1,9 @@
 <template>
   <SectionBlock spacing="default">
     <div class="flex flex-col items-center text-center">
-      <h2 class="text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3">
+      <h2
+        class="text-[36px] text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3"
+      >
         <template v-if="titleParts">
           {{ titleParts.before
           }}<span
@@ -26,63 +28,160 @@
       </p>
     </div>
 
-    <div
-      v-if="variant === 'image-card'"
-      :class="['mt-14 grid gap-6 max-lg:mt-10 max-lg:gap-5', gridColsClass]"
-    >
-      <article
-        v-for="(card, index) in cards"
-        :key="card.key ?? `${card.title}-${index}`"
-        class="group flex flex-col overflow-visible rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-lg:min-h-84 max-md:px-6"
-        :style="getImageCardStyle(index)"
-      >
-        <h3
-          class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
-          :style="getImageCardTitleStyle(index)"
-        >
-          {{ card.title }}
-        </h3>
-        <p
-          v-if="card.description"
-          class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
-        >
-          {{ card.description }}
-        </p>
-        <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-visible max-md:-mx-6">
-          <img
-            :src="getOSSImageUrl(card.image, 350)"
-            :alt="card.imageAlt ?? card.title"
-            class="block w-full max-w-none object-contain transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
-            loading="lazy"
-          />
-        </div>
-      </article>
-    </div>
-
-    <div v-else :class="['mt-14 grid gap-6 max-lg:mt-10 max-lg:gap-5', gridColsClass]">
-      <article
-        v-for="(card, index) in cards"
-        :key="card.key ?? `${card.title}-${index}`"
+    <template v-if="variant === 'image-card'">
+      <div
+        v-for="(row, rowIndex) in cardRows"
+        :key="`row-${rowIndex}`"
         :class="[
-          'image-card-grid-panel',
-          isWideFeaturePanelCard(index) ? 'image-card-grid-panel--wide col-span-full' : '',
+          'grid gap-6 max-lg:gap-5',
+          rowIndex === 0 ? 'mt-12 max-lg:mt-10' : 'mt-6',
+          getGridColsClass(row.cols),
         ]"
-        :style="getPanelStyle(index)"
       >
-        <div class="image-card-grid-panel__meta">
-          <span>{{ card.number ?? formatPanelNumber(index) }}</span>
-          <span>{{ card.module ?? title }}</span>
-        </div>
-        <div class="image-card-grid-panel__divider"></div>
-        <div class="image-card-grid-panel__content">
-          <h3>{{ card.title }}</h3>
-          <p v-if="card.description">{{ card.description }}</p>
-        </div>
-        <div v-if="card.image" class="image-card-grid-panel__image">
-          <img :src="getOSSImageUrl(card.image, 500)" :alt="card.imageAlt ?? card.title" loading="lazy" />
-        </div>
-      </article>
-    </div>
+        <!-- 竖排卡片：上文下图（行内多列时使用） -->
+        <template v-if="row.cols > 1">
+          <article
+            v-for="(card, cardIndex) in row.cards"
+            :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+            class="group flex flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-lg:min-h-84 max-md:px-6"
+            :style="getImageCardStyle(row.startIndex + cardIndex)"
+          >
+            <h3
+              class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
+              :style="getImageCardTitleStyle(row.startIndex + cardIndex)"
+            >
+              {{ card.title }}
+            </h3>
+            <p
+              v-if="card.description"
+              class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+            >
+              {{ card.description }}
+            </p>
+            <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-hidden max-md:-mx-6">
+              <img
+                :src="card.image"
+                :alt="card.imageAlt ?? card.title"
+                class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </template>
+
+        <!-- 横排卡片：左文右图（image-card 且单列行时自动启用） -->
+        <template v-else>
+          <article
+            v-for="(card, cardIndex) in row.cards"
+            :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+            class="group flex items-stretch gap-8 overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:flex-col max-md:gap-5 max-md:px-6"
+            :style="getImageCardStyle(row.startIndex + cardIndex)"
+          >
+            <div class="flex min-w-0 flex-1 flex-col justify-center">
+              <h3
+                class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
+                :style="getImageCardTitleStyle(row.startIndex + cardIndex)"
+              >
+                {{ card.title }}
+              </h3>
+              <p
+                v-if="card.description"
+                class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+              >
+                {{ card.description }}
+              </p>
+            </div>
+            <div
+              v-if="card.image"
+              class="flex w-[42%] shrink-0 items-center justify-center max-md:w-full"
+            >
+              <img
+                :src="card.image"
+                :alt="card.imageAlt ?? card.title"
+                class="h-auto max-h-full w-full object-contain transition-transform duration-normal group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
+                loading="lazy"
+              />
+            </div>
+          </article>
+        </template>
+      </div>
+    </template>
+
+    <template v-else>
+      <div
+        v-for="(row, rowIndex) in cardRows"
+        :key="`row-${rowIndex}`"
+        :class="[
+          'grid gap-6 max-lg:gap-5',
+          rowIndex === 0 ? 'mt-14 max-lg:mt-10' : 'mt-6',
+          getGridColsClass(row.cols),
+        ]"
+      >
+        <article
+          v-for="(card, cardIndex) in row.cards"
+          :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+          :class="[
+            'flex min-h-145 flex-col overflow-hidden rounded-[20px] border [background:var(--image-card-grid-panel-bg)] [border-color:var(--image-card-grid-panel-border)] [box-shadow:0_18px_44px_var(--image-card-grid-panel-shadow)] [color:var(--image-card-grid-panel-text)] transition-[transform,box-shadow] duration-normal hover:-translate-y-1 hover:[box-shadow:0_24px_54px_var(--image-card-grid-panel-shadow)] max-lg:min-h-140 max-md:min-h-125 max-md:rounded-card',
+            isWideFeaturePanelCard(row.startIndex + cardIndex)
+              ? 'col-span-full min-h-110 max-lg:min-h-125 max-md:min-h-115'
+              : '',
+          ]"
+          :style="getPanelStyle(row.startIndex + cardIndex)"
+        >
+          <div
+            class="flex items-center justify-between gap-5 px-[34px] pt-8 text-caption font-bold leading-none tracking-[0.08em] [color:var(--image-card-grid-panel-muted)] max-md:px-6 max-md:pt-[26px] max-md:text-small"
+          >
+            <span>{{ card.number ?? formatPanelNumber(row.startIndex + cardIndex) }}</span>
+            <span>{{ card.module ?? title }}</span>
+          </div>
+          <div
+            class="mx-[34px] mt-[15px] h-px [background:var(--image-card-grid-panel-divider)] max-md:mx-6 max-md:mt-[22px]"
+          ></div>
+          <div
+            :class="[
+              'px-[34px] pt-[27px] max-md:px-6 max-md:pt-7',
+              isWideFeaturePanelCard(row.startIndex + cardIndex) ? 'pt-[30px]' : '',
+            ]"
+          >
+            <h3
+              :class="[
+                'm-0 max-w-130 text-[32px] font-extrabold leading-1.16 [color:var(--image-card-grid-panel-text)] max-lg:text-h1 max-md:text-[26px]',
+                isWideFeaturePanelCard(row.startIndex + cardIndex)
+                  ? 'max-w-170 max-md:max-w-full'
+                  : '',
+              ]"
+            >
+              {{ card.title }}
+            </h3>
+            <p
+              v-if="card.description"
+              class="mt-[26px] text-[13px] leading-1.8 [color:var(--image-card-grid-panel-muted)] max-md:mt-[18px] max-md:text-small"
+            >
+              {{ card.description }}
+            </p>
+          </div>
+          <div
+            v-if="card.image"
+            :class="[
+              'mt-auto w-full px-[26px] pt-7',
+              isWideFeaturePanelCard(row.startIndex + cardIndex) ? 'pt-5' : '',
+            ]"
+          >
+            <img
+              :src="card.image"
+              :alt="card.imageAlt ?? card.title"
+              :class="[
+                'block h-auto max-h-70 w-full object-contain object-bottom',
+                isWideFeaturePanelCard(row.startIndex + cardIndex)
+                  ? 'max-h-80 max-md:max-h-70'
+                  : '',
+              ]"
+              loading="lazy"
+            />
+          </div>
+        </article>
+      </div>
+    </template>
   </SectionBlock>
 </template>
 
@@ -105,7 +204,13 @@ export interface ImageCardGridItem {
 }
 
 type ImageCardGridVariant = 'image-card' | 'feature-panel'
-type ImageCardGridColorScheme = 'brand' | 'accent' | 'mint' | 'neutral' | 'clean'
+type ImageCardGridColorScheme = 'brand' | 'accent' | 'mint' | 'neutral' | 'clean' | 'gray'
+
+interface CardRow {
+  cards: readonly ImageCardGridItem[]
+  cols: number
+  startIndex: number
+}
 
 const props = withDefaults(
   defineProps<{
@@ -114,6 +219,8 @@ const props = withDefaults(
     subtitle?: string
     cards: readonly ImageCardGridItem[]
     columns?: 2 | 3 | 4
+    /** 每行列数配置，最大 3 行。如 [3, 2, 2] 第1行3列、第2行2列、第3行2列 */
+    rows?: number[]
     variant?: ImageCardGridVariant
     colorScheme?: ImageCardGridColorScheme
   }>(),
@@ -132,9 +239,12 @@ const titleParts = computed(() => {
   if (index < 0) return null
 
   return {
+    //取高亮文字前面的文字
     before: props.title.slice(0, index),
     highlight,
+    //取高亮后面的文字
     after: props.title.slice(index + highlight.length),
+    //高亮文字是否较短，长度小于等于 2 个字符时使用短下划线样式
     isShort: highlight.length <= 2,
   }
 })
@@ -230,19 +340,19 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#f6f8fb',
       backgroundImage: 'linear-gradient(135deg, #f2f5f9 0%, #fbfcfe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#475569',
+      titleColor: '#1f2329',
     },
     {
       backgroundColor: '#f7f6fb',
       backgroundImage: 'linear-gradient(135deg, #f2f0f8 0%, #fbfbfe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#4b5563',
+      titleColor: '#1f2329',
     },
     {
       backgroundColor: '#f5f9fa',
       backgroundImage: 'linear-gradient(135deg, #eff7f8 0%, #fbfefe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#3f5f6b',
+      titleColor: '#1f2329',
     },
   ],
   clean: [
@@ -262,6 +372,14 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#ffffff',
       backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #f7fdff 100%)',
       borderColor: 'rgba(0, 0, 0, 0.04)',
+      titleColor: '#1f2329',
+    },
+  ],
+  gray: [
+    {
+      backgroundColor: '#f6f6f6',
+      backgroundImage: 'none',
+      borderColor: 'rgba(31, 35, 41, 0.06)',
       titleColor: '#1f2329',
     },
   ],
@@ -391,16 +509,56 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
       shadowColor: 'rgba(15, 23, 42, 0.07)',
     },
   ],
+  gray: [
+    {
+      background: '#f6f6f6',
+      borderColor: 'rgba(31, 35, 41, 0.06)',
+      textColor: '#1f2329',
+      mutedColor: '#646a73',
+      dividerColor: 'rgba(31, 35, 41, 0.12)',
+      shadowColor: 'rgba(15, 23, 42, 0.06)',
+    },
+  ],
 }
 
-const gridColsClass = computed(() => {
-  if (props.columns === 2) return 'grid-cols-1 lg:grid-cols-2'
-  if (props.columns === 4) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-  return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+const effectiveRows = computed(() => {
+  if (props.rows && props.rows.length > 0) {
+    return props.rows.slice(0, 3)
+  }
+  return []
 })
 
+const useMultiRow = computed(() => effectiveRows.value.length > 0)
+
+/** 每行数据：多行模式按 rows 拆分，单行模式（向后兼容）整行为一个 row */
+const cardRows = computed((): CardRow[] => {
+  if (useMultiRow.value) {
+    const rows: CardRow[] = []
+    let start = 0
+    for (const cols of effectiveRows.value) {
+      const end = start + cols
+      rows.push({ cards: props.cards.slice(start, end), cols, startIndex: start })
+      start = end
+    }
+    return rows
+  }
+  // 向后兼容：未传 rows 时退化为单行，列数由 columns 控制
+  return [{ cards: props.cards, cols: props.columns ?? 3, startIndex: 0 }]
+})
+
+function getGridColsClass(cols: number): string {
+  if (cols === 1) return 'grid-cols-1'
+  if (cols === 2) return 'grid-cols-1 sm:grid-cols-2'
+  if (cols === 3) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+  return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+}
+
 const isWideFeaturePanelLayout = computed(
-  () => props.variant === 'feature-panel' && props.columns === 3 && props.cards.length === 7,
+  () =>
+    !useMultiRow.value &&
+    props.variant === 'feature-panel' &&
+    props.columns === 3 &&
+    props.cards.length === 7,
 )
 
 function getImageCardTone(index: number): ImageCardTone {
@@ -483,154 +641,3 @@ function formatPanelNumber(index: number): string {
   return String(index + 1).padStart(2, '0')
 }
 </script>
-
-<style scoped>
-.image-card-grid-panel {
-  min-height: 580px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--image-card-grid-panel-border);
-  border-radius: 20px;
-  background: var(--image-card-grid-panel-bg);
-  color: var(--image-card-grid-panel-text);
-  box-shadow: 0 18px 44px var(--image-card-grid-panel-shadow);
-  transition:
-    transform var(--duration-normal) var(--ease-standard),
-    box-shadow var(--duration-normal) var(--ease-standard);
-}
-
-.image-card-grid-panel:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 24px 54px var(--image-card-grid-panel-shadow);
-}
-
-.image-card-grid-panel__meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 32px 34px 0;
-  color: var(--image-card-grid-panel-muted);
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.08em;
-}
-
-.image-card-grid-panel__divider {
-  height: 1px;
-  margin: 15px 34px 0;
-  background: var(--image-card-grid-panel-divider);
-}
-
-.image-card-grid-panel__content {
-  padding: 27px 34px 0;
-}
-
-.image-card-grid-panel__content h3 {
-  max-width: 520px;
-  margin: 0;
-  color: var(--image-card-grid-panel-text);
-  font-size: 32px;
-  font-weight: 800;
-  line-height: 1.16;
-}
-
-.image-card-grid-panel__content p {
-  margin: 26px 0 0;
-  color: var(--image-card-grid-panel-muted);
-  font-size: 13px;
-  line-height: 1.8;
-}
-
-.image-card-grid-panel__image {
-  width: 100%;
-  margin-top: auto;
-  padding: 28px 26px 0;
-}
-
-.image-card-grid-panel__image img {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 280px;
-  object-fit: contain;
-  object-position: center bottom;
-}
-
-.image-card-grid-panel--wide {
-  min-height: 440px;
-}
-
-.image-card-grid-panel--wide .image-card-grid-panel__content {
-  padding-top: 30px;
-}
-
-.image-card-grid-panel--wide .image-card-grid-panel__content h3 {
-  max-width: 680px;
-}
-
-.image-card-grid-panel--wide .image-card-grid-panel__image {
-  padding-top: 20px;
-}
-
-.image-card-grid-panel--wide .image-card-grid-panel__image img {
-  max-height: 320px;
-}
-
-@media (max-width: 1024px) {
-  .image-card-grid-panel {
-    min-height: 560px;
-  }
-
-  .image-card-grid-panel--wide {
-    min-height: 500px;
-  }
-
-  .image-card-grid-panel__content h3 {
-    font-size: 30px;
-  }
-}
-
-@media (max-width: 640px) {
-  .image-card-grid-panel {
-    min-height: 500px;
-    border-radius: 16px;
-  }
-
-  .image-card-grid-panel--wide {
-    min-height: 460px;
-  }
-
-  .image-card-grid-panel__meta {
-    padding: 26px 24px 0;
-    font-size: 14px;
-  }
-
-  .image-card-grid-panel__divider {
-    margin: 22px 24px 0;
-  }
-
-  .image-card-grid-panel__content {
-    padding: 28px 24px 0;
-  }
-
-  .image-card-grid-panel__content h3 {
-    font-size: 26px;
-  }
-
-  .image-card-grid-panel--wide .image-card-grid-panel__content h3 {
-    max-width: 100%;
-  }
-
-  .image-card-grid-panel__content p {
-    margin-top: 18px;
-    font-size: 14px;
-  }
-
-  .image-card-grid-panel--wide .image-card-grid-panel__image img {
-    max-height: 280px;
-  }
-}
-</style>

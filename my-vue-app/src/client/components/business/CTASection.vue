@@ -2,13 +2,9 @@
   <SectionBlock spacing="default">
     <div
       :class="!image ? bgClass : ''"
-      class="rounded-large py-16 px-8 flex flex-col items-center text-center max-md:py-12 max-md:px-6"
+      class="rounded-large flex flex-col items-center text-center max-md:py-12 max-md:px-6"
     >
-      <SectionHeading
-        :title="title"
-        :subtitle="subtitle"
-        align="center"
-      />
+      <SectionHeading :title="title" :subtitle="subtitle" align="center" />
 
       <div
         v-if="actionPlacement === 'under-title' && hasActions"
@@ -27,14 +23,14 @@
         </Button>
       </div>
 
-      <!-- 可选图片（展示产品截图或背景图） -->
       <img
         v-if="image"
         :src="image"
         :alt="imageAlt ?? title"
         :class="[
-          'max-w-230 w-full h-auto rounded-card shadow-subtle max-lg:mt-8',
-          actionPlacement === 'under-title' ? 'mt-12' : 'mt-12',
+          'h-auto rounded-card max-lg:mt-8',
+          imageFullBleed ? 'w-full max-w-none' : 'max-w-230 w-full',
+          'mt-12',
         ]"
       />
 
@@ -83,25 +79,20 @@ const props = withDefaults(
   defineProps<{
     title: string
     subtitle: string
-    /** 主按钮文案 */
     primaryCta?: string
     primaryHref?: string
-    primaryTarget?: '_self' | '_blank'
-    /** 次按钮文案（选填，不传则只显示主按钮） */
     secondaryCta?: string
     secondaryHref?: string
-    secondaryTarget?: '_self' | '_blank'
     actionPlacement?: ActionPlacement
-    /** 背景色变体 */
     variant?: BgVariant
-    /** 展示图片 URL（选填，展示产品截图或背景图） */
     image?: string
-    /** 图片 alt 文本 */
     imageAlt?: string
+    imageFullBleed?: boolean
   }>(),
   {
     variant: 'light',
     actionPlacement: 'default',
+    imageFullBleed: false,
   },
 )
 
@@ -130,24 +121,13 @@ function getActionHref(action: ActionType) {
 
 function handleAction(action: ActionType) {
   const href = getActionHref(action)
-  const target = action === 'primary' ? props.primaryTarget : props.secondaryTarget
 
   if (isInternalLink(href)) {
-    if (target === '_blank') {
-      window.open(href, '_blank', 'noopener,noreferrer')
-      return
-    }
-
     router.push(href)
     return
   }
 
   if (href) {
-    if (target === '_blank') {
-      window.open(href, '_blank', 'noopener,noreferrer')
-      return
-    }
-
     window.location.href = href
     return
   }
@@ -160,8 +140,6 @@ function handleAction(action: ActionType) {
   emit('secondaryClick')
 }
 
-// 轻量渐变背景：淡雅、有层次但不抢眼，文字始终使用深色保证可读性
-// 渐变定义见 tailwind.css Section 3：bg-cta-warm-gradient / bg-cta-cool-gradient / bg-cta-dawn-gradient / bg-cta-mint-gradient
 const variantClassMap: Record<BgVariant, string> = {
   light: 'bg-surface-secondary',
   warm: 'bg-cta-warm-gradient',

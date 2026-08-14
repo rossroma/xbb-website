@@ -7,7 +7,7 @@
     <div
       v-for="social in socials"
       :key="social.label"
-      class="group relative w-8 h-8 rounded-full border border-border-subtle bg-white inline-flex items-center justify-center cursor-pointer transition-all duration-normal motion-reduce:transition-none hover:border-brand-primary hover:shadow-footer-social-hover"
+      class="group/social-icon relative w-8 h-8 rounded-full border border-border-subtle bg-white inline-flex items-center justify-center cursor-pointer transition-all duration-normal motion-reduce:transition-none hover:border-brand-primary hover:shadow-footer-social-hover"
       :title="social.label"
     >
       <span class="flex items-center justify-center">
@@ -15,7 +15,7 @@
       </span>
       <!-- QR 弹出层 -->
       <span
-        class="absolute left-1/2 bottom-[calc(100%+10px)] -translate-x-1/2 translate-y-2 w-32 p-2 rounded-inner bg-white shadow-prominent border border-border-subtle opacity-0 invisible pointer-events-none z-10 transition-all duration-normal motion-reduce:transition-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0"
+        class="absolute left-1/2 bottom-[calc(100%+10px)] -translate-x-1/2 translate-y-2 w-32 p-2 rounded-inner bg-white shadow-prominent border border-border-subtle opacity-0 invisible pointer-events-none z-10 transition-all duration-normal motion-reduce:transition-none group-hover/social-icon:opacity-100 group-hover/social-icon:visible group-hover/social-icon:translate-y-0"
       >
         <img
           :src="social.qr"

@@ -15,16 +15,19 @@
   >
     <div
       :class="[
-        'w-[min(1200px,calc(100%-48px))] mx-auto grid gap-9 max-lg:gap-6 items-center py-16 max-lg:py-12 max-md:py-8',
+        'w-[min(1200px,calc(100%-48px))] mx-auto grid gap-16 max-lg:gap-6 items-center py-16 max-lg:py-12 max-md:py-8',
         singleLayout === 'vertical'
           ? 'grid-cols-1 text-center'
           : 'grid-cols-[1.15fr_0.85fr] max-lg:grid-cols-1 max-lg:text-center',
         {
-          'hero-banner-single__inner--form-background': singleVariant === 'form-background',
           'hero-banner-single__inner--vertical': singleLayout === 'vertical',
-          'hero-banner-single__inner--visual-image':
-            singleLayout !== 'vertical' && !$slots['single-visual'] && !!singleSlide.visualImage,
         },
+        singleVariant === 'form-background'
+          ? 'w-[min(1600px,calc(100%-80px))] grid-cols-[minmax(0,1fr)_500px] gap-8 py-0 max-[1200px]:w-[min(1000px,calc(100%-48px))] max-[1200px]:grid-cols-1 max-[1200px]:py-12 max-[500px]:w-[min(500px,calc(100%-32px))] max-[500px]:py-8'
+          : '',
+        singleLayout !== 'vertical' && !$slots['single-visual'] && !!singleSlide.visualImage
+          ? 'lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]'
+          : '',
       ]"
     >
       <!-- 左侧文案 -->
@@ -38,13 +41,19 @@
       >
         <h1
           v-if="singleSlide.title"
-          class="text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-md:text-h2"
+          :class="[
+            'text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-md:text-h2',
+            singleTitleClass,
+          ]"
         >
           {{ singleSlide.title }}
         </h1>
         <p
           v-if="singleSlide.subtitle"
-          class="mt-2 max-md:mt-3 text-h2 font-semibold text-hero-subtitle leading-heading whitespace-pre-line max-lg:text-h3 max-md:text-body"
+          :class="[
+            'mt-2 max-md:mt-3 text-h2 font-semibold text-hero-subtitle leading-heading whitespace-pre-line max-lg:text-h3 max-md:text-body',
+            singleSubtitleClass,
+          ]"
         >
           {{ singleSlide.subtitle }}
         </p>
@@ -68,7 +77,10 @@
             v-if="singleSlide.primaryCta"
             variant="hero"
             size="lg"
-            class="!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]"
+            :class="[
+              '!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]',
+              singlePrimaryBtnClass,
+            ]"
             @click="handleSingleAction(singleSlide, 'primary')"
             >{{ singleSlide.primaryCta }}</Button
           >
@@ -76,7 +88,10 @@
             v-if="singleSlide.secondaryCta"
             variant="hero-outline"
             size="lg"
-            class="!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]"
+            :class="[
+              '!h-[49px] w-36! !rounded-[99px] !px-9 !py-3 !text-[18px]',
+              singleSecondaryBtnClass,
+            ]"
             @click="handleSingleAction(singleSlide, 'secondary')"
             >{{ singleSlide.secondaryCta }}</Button
           >
@@ -94,7 +109,7 @@
               ? ''
               : 'max-lg:w-full max-lg:mt-2',
           singleLayout !== 'vertical' && !$slots['single-visual'] && singleSlide.visualImage
-            ? 'hero-banner-single__visual--image'
+            ? 'min-h-110 justify-end overflow-visible max-lg:min-h-0 max-lg:justify-center'
             : '',
         ]"
       >
@@ -104,10 +119,13 @@
             :src="getOSSImageUrl(singleSlide.visualImage, 700)"
             :alt="singleSlide.visualImageAlt ?? singleSlide.title"
             :class="[
-              'hero-banner-single__visual-image max-w-full h-auto rounded-large object-contain',
+              'hero-banner-single__visual-image max-w-full h-auto object-contain',
               singleLayout === 'vertical'
                 ? 'w-[min(100%,980px)] max-h-none'
                 : 'max-h-105 max-lg:max-h-85',
+              singleLayout !== 'vertical' && !$slots['single-visual'] && singleSlide.visualImage
+                ? 'w-[min(136%,700px)] max-w-none max-h-125 translate-x-14 scale-1.08 origin-right max-[1200px]:w-[min(126%,680px)] max-[1200px]:translate-x-6 max-[1200px]:scale-1.04 max-lg:w-[min(100%,720px)] max-lg:max-w-full max-lg:max-h-95 max-lg:translate-x-0 max-lg:scale-100 max-md:w-[min(100%,520px)] max-md:max-h-70'
+                : '',
             ]"
           />
         </slot>
@@ -457,11 +475,11 @@
                 <!-- Visual -->
                 <div
                   v-if="slide.showVisual !== false"
-                  class="relative min-h-99 max-md:min-h-75 flex items-center justify-center max-lg:hidden"
+                  class="relative flex min-h-99 items-center justify-center max-lg:mt-2 max-lg:min-h-0 max-lg:pb-12 max-md:pb-10"
                 >
                   <div
                     v-if="slide.mediaType === 'video'"
-                    class="w-[90%] min-h-[254px] max-md:min-h-50 ml-auto rounded-large bg-hero-video-bg border border-hero-video-border shadow-hero-video backdrop-blur-[18px] overflow-hidden"
+                    class="ml-auto min-h-[254px] w-[90%] overflow-hidden rounded-large border border-hero-video-border bg-hero-video-bg shadow-hero-video backdrop-blur-[18px] max-lg:mx-auto max-lg:aspect-video max-lg:min-h-0 max-lg:w-full max-lg:max-w-170 max-md:max-w-none"
                   >
                     <video
                       class="block w-full h-full object-cover"
@@ -542,6 +560,14 @@ const props = withDefaults(
     /** 单页 Hero 变体：form-background 用于整张背景图右侧表单场景 */
     singleVariant?: 'default' | 'form-background'
     singleLayout?: 'horizontal' | 'vertical'
+    /** 单页模式下标题自定义 class */
+    singleTitleClass?: string
+    /** 单页模式下副标题自定义 class */
+    singleSubtitleClass?: string
+    /** 单页模式下主要按钮自定义 class */
+    singlePrimaryBtnClass?: string
+    /** 单页模式下次要按钮自定义 class */
+    singleSecondaryBtnClass?: string
     /** 展示轮播标题 */
     showcaseTitle?: string
     /** 展示轮播布局：text-left 对应第四模块，text-right 对应第五模块 */
@@ -637,47 +663,6 @@ function splitShowcaseLines(text: string): string[] {
 </script>
 
 <style scoped>
-.hero-banner-single__inner--visual-image {
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-}
-
-.hero-banner-single__visual--image {
-  min-height: 440px;
-  justify-content: flex-end;
-  overflow: visible;
-}
-
-.hero-banner-single__visual--image .hero-banner-single__visual-image {
-  width: min(136%, 700px);
-  max-width: none;
-  max-height: 500px;
-  transform: translateX(56px) scale(1.08);
-  transform-origin: center right;
-}
-
-.hero-banner-progress-dot {
-  position: relative;
-  display: block;
-  width: 44px;
-  height: 6px;
-  padding: 0;
-  overflow: hidden;
-  appearance: none;
-  cursor: pointer;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(139, 166, 204, 0.24);
-}
-
-.hero-banner-progress-dot__fill {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 0;
-  border-radius: inherit;
-  background: #1687ff;
-}
-
 .hero-banner-progress-dot--active .hero-banner-progress-dot__fill {
   animation: hero-banner-progress-fill 5000ms linear forwards;
 }
@@ -694,14 +679,6 @@ function splitShowcaseLines(text: string): string[] {
   to {
     width: 100%;
   }
-}
-
-.hero-banner-single__inner--form-background {
-  width: min(1600px, calc(100% - 80px));
-  grid-template-columns: minmax(0, 1fr) 500px;
-  gap: 32px;
-  padding-top: 0;
-  padding-bottom: 0;
 }
 
 .management-showcase {
@@ -1098,18 +1075,6 @@ function splitShowcaseLines(text: string): string[] {
 }
 
 @media (max-width: 1200px) {
-  .hero-banner-single__visual--image .hero-banner-single__visual-image {
-    width: min(126%, 680px);
-    transform: translateX(24px) scale(1.04);
-  }
-
-  .hero-banner-single__inner--form-background {
-    width: min(1000px, calc(100% - 48px));
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
-
   .management-showcase {
     height: 1000px;
     box-sizing: content-box;
@@ -1132,31 +1097,6 @@ function splitShowcaseLines(text: string): string[] {
   }
 }
 
-@media (max-width: 1024px) {
-  .hero-banner-single__inner--visual-image {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .hero-banner-single__visual--image {
-    min-height: 0;
-    justify-content: center;
-  }
-
-  .hero-banner-single__visual--image .hero-banner-single__visual-image {
-    width: min(100%, 720px);
-    max-width: 100%;
-    max-height: 380px;
-    transform: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-banner-single__visual--image .hero-banner-single__visual-image {
-    width: min(100%, 520px);
-    max-height: 280px;
-  }
-}
-
 @media (max-width: 993px) {
   .management-showcase {
     height: 740px;
@@ -1173,12 +1113,6 @@ function splitShowcaseLines(text: string): string[] {
 }
 
 @media (max-width: 500px) {
-  .hero-banner-single__inner--form-background {
-    width: min(500px, calc(100% - 32px));
-    padding-top: 32px;
-    padding-bottom: 32px;
-  }
-
   .row__title {
     font-size: 26px;
   }

@@ -16,21 +16,20 @@ const trialPagePath = toPagePath('single_mfsy')
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '懂客户，更懂增长',
-  subtitle: '销帮帮，国内一线AI CRM品牌——以专业、易用、安全的产品力，为企业搭建可持续增长销售体系',
-  primaryCta: '免费使用',
+  desc: '销帮帮，国内一线AI CRM品牌—以专业、易用、安全的产品力\n为企业搭建可持续增长销售体系',
+  primaryCta: '免费试用',
   image: '',
   imageAlt: '',
-  bg: 'linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f8f5ff 100%)',
+  bg: "url('/images/company/hero-banner-soft.png') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
 export const heroBannerSlide = {
   key: 'company-intro-hero',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: heroSection.title,
-  subtitle: heroSection.subtitle,
-  desc: '',
+  subtitle: '',
+  desc: heroSection.desc,
   primaryCta: heroSection.primaryCta,
   primaryHref: trialPagePath,
   bg: heroSection.bg,
@@ -38,8 +37,8 @@ export const heroBannerSlide = {
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
   orb: 'rgba(127, 214, 255, 0.22)',
-  showVisual: true,
-  visualImage: heroSection.image,
+  showVisual: false,
+  visualImage: '',
   visualImageAlt: heroSection.imageAlt,
 }
 
@@ -48,12 +47,10 @@ export const aboutSection = {
   title: '关于销帮帮',
   video: heroBrandVideo,
   paragraphs: [
-    '杭州逍邦网络科技有限公司成立于2015年，是国内一线CRM品牌和企服领域知名品牌。',
-    '致力为客户提供专业的客户全生命周期管理和数字化销售管理服务，助力企业提升业绩，让企业更成功。',
-    '销帮帮拥有强大而灵活的“PaaS+低代码”能力。',
-    '支持大中型企业个性化业务定制，实现敏捷交付，随时响应市场与业务的变化。',
-    '销帮帮积极探索AI在企业端的落地，是国内最早成功实现AI转型的SaaS服务商。',
-    '其推出的销帮帮 AI CRM 已经深度服务了数百家付费客户，积累了大量销售团队AI转型的成功经验。',
+    '杭州逍邦网络科技有限公司成立于2015年，是国内一线CRM品牌和企服领域知名品牌。致力为客户提供专业的客户全生命周期管理和数字化销售管理服务，助力企业提升业绩，让企业更成功。',
+    '销帮帮拥有强大而灵活的“PaaS+低代码”能力。支持大中型企业个性化业务定制，实现敏捷交付，随时响应市场与业务的变化。',
+    '销帮帮积极探索AI在企业端的落地，是国内最早成功实现AI转型的SaaS服务商。其推出的销帮帮 AI CRM 已经深度服务了数百家付费客户，积累了大量销售团队AI转型的成功经验。',
+    '钉钉、企微、飞书、1688平台深度合作伙伴，在各平台CRM类目稳居第一。'
   ],
   metrics: [
     { label: '服务客户数', value: '40万+' },
@@ -129,33 +126,80 @@ export const timelineSection = {
 // ========== 技术驱动区域（MetricsPanel） ==========
 export const technologySection = {
   title: '技术驱动',
-  subtitle: '研发投入、团队能力与自主知识产权，是销帮帮持续迭代产品力的基础。',
-  metrics: [
-    {
-      value: '120',
-      unit: '+',
-      label: '研发团队规模',
-      description:
-        '杭州滨江、城西两大研发中心，50%以上来自一线互联网企业，博士及硕士研究生20余名。',
-    },
-    {
-      value: '40',
-      unit: '%',
-      label: '研发人员占比',
-      description: '300+员工中研发人员超过40%，技术基因深入公司骨髓，产品力就是竞争力。',
-    },
-    {
-      value: '39',
-      unit: '项',
-      label: '自主知识产权',
-      description: '6项专利 + 33项软件著作权，持续投入技术创新，用知识产权构建护城河。',
-    },
+}
+
+// ========== 研发实力区域（CTASection） ==========
+export const researchStrengthSection = {
+  intro: [
+    '销帮帮全国现有员工 200 余人，研发人员占比超 40%，是一家技术与服务驱动的国家级高新技术企业。\n杭州总部设立滨江研发中心，组建 80 余人研发团队，团队半数以上成员来自一线互联网企业，汇聚国内外高校博士、硕士研究生 20 余名。\n核心骨干普遍拥有多年研发实战经验。截至目前，公司拥有 8 项专利、61 项软件著作权。',
+  ],
+  images: [
+    { src: '/images/company/research-strength-01.png', alt: '研发实力 01' },
+    { src: '/images/company/research-strength-02.png', alt: '研发实力 02' },
+    { src: '/images/company/research-strength-03.jpg', alt: '研发实力 03' },
+    { src: '/images/company/research-strength-04.jpg', alt: '研发实力 04' },
+    { src: '/images/company/research-strength-05.jpg', alt: '研发实力 05' },
+    { src: '/images/company/research-strength-13.jpg', alt: '研发实力 13' },
+    { src: '/images/company/research-strength-14.jpg', alt: '研发实力 14' },
+    { src: '/images/company/research-strength-06.png', alt: '研发实力 06' },
+    { src: '/images/company/research-strength-08.jpg', alt: '研发实力 08' },
+    { src: '/images/company/research-strength-10.jpg', alt: '研发实力 10' },
+    { src: '/images/company/research-strength-11.jpg', alt: '研发实力 11' },
+    { src: '/images/company/research-strength-12.jpg', alt: '研发实力 12' },
+    { src: '/images/company/research-strength-09.jpg', alt: '研发实力 09' },
+    { src: '/images/company/research-strength-07.png', alt: '研发实力 07' },
+
   ],
 }
 
 // ========== 权威认可区域 ==========
 export const recognitionSection = {
   title: '权威认可，持续加码',
+  subtitle: '',
+  image: '/images/company/honor.png',
+  imageAlt: '权威认可，持续加码',
+  carouselImages: [
+    {
+      src: '/images/company/honor-10.png',
+      alt: '优秀雏鹰企业',
+    },
+    {
+      src: '/images/company/honor-8.png',
+      alt: '2021信息技术优秀产品',
+    },
+    {
+      src: '/images/company/honor-9.png',
+      alt: '杭州市科技型初创企业培育工程企业',
+    },
+    {
+      src: '/images/company/honor-3.png',
+      alt: '质量管理体系认证证书（ISO9001）',
+    },
+    {
+      src: '/images/company/honor-5.png',
+      alt: '信息安全管理体系认证证书（ISO27001）',
+    },
+    {
+      src: '/images/company/honor-4.png',
+      alt: '隐私信息管理体系认证证书（ISO27701）',
+    },
+    {
+      src: '/images/company/honor-7.png',
+      alt: 'CMMI Maturity Level 3',
+    },
+    {
+      src: '/images/company/honor-6.png',
+      alt: '软件产品证书（T/SIA003 2019）',
+    },
+    {
+      src: '/images/company/honor-11.png',
+      alt: '省级高新技术企业研究开发中心',
+    },
+    {
+      src: '/images/company/honor-12.png',
+      alt: '省级高新技术企业研究开发中心',
+    },
+  ],
   items: [
     '浙江省专精特新中小企业',
     '2021信息技术优秀产品',
@@ -229,4 +273,3 @@ export const footerCtaSection = {
   secondaryCta: '下载销帮帮AI CRM',
   secondaryHref: '/xiazaizhongxin',
 }
-
