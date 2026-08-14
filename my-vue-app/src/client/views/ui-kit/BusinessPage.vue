@@ -378,28 +378,63 @@
         '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
         'variant: image-card（标题 + 描述 + 图片）| feature-panel（序号 + 模块 + 标题 + 描述 + 底部图片大卡片）',
         'colorScheme: brand | accent | mint | neutral | clean',
-        'columns: 2 | 3 | 4，移动端自动 1 列',
+        'columns 用于单行列数；rows 可按每行分别配置列数，当前示例通过第 1/2/3 行按钮控制 rows',
         'ImageCardGridItem 字段：title（必需）；description?, image?, imageAlt?, number?, module?',
       ]"
       v-slot="icgProps"
     >
       <!-- 标题高亮演示：将当前 title 的最后两个字传给 title-highlight -->
-      <div class="mb-4 flex justify-start">
-        <button
-          type="button"
-          :class="[
-            'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
-            imageCardGridTitleHighlightEnabled
-              ? 'bg-brand-primary text-white'
-              : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
-          ]"
-          @click="toggleImageCardGridTitleHighlight"
-        >
-          {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
-        </button>
+      <div class="mb-4 flex flex-col items-start gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            :class="[
+              'inline-flex items-center rounded-pill px-4 py-1.5 text-[13px] font-medium transition-all duration-fast',
+              imageCardGridTitleHighlightEnabled
+                ? 'bg-brand-primary text-white'
+                : 'border border-border-default text-text-secondary hover:border-brand-primary hover:text-text-primary',
+            ]"
+            @click="toggleImageCardGridTitleHighlight"
+          >
+            {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
+          </button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
+            每行列数
+          </span>
+          <div class="grid gap-3 sm:grid-cols-3">
+            <div
+              v-for="(rowControl, rowIndex) in imageCardGridRowControls"
+              :key="rowControl.label"
+              class="flex flex-col gap-2"
+            >
+              <span class="text-caption font-medium text-text-tertiary">
+                {{ rowControl.label }}
+              </span>
+              <div class="flex flex-wrap gap-2">
+                <button
+                  v-for="option in rowControl.options"
+                  :key="`${rowControl.label}-${option.value}`"
+                  type="button"
+                  :class="[
+                    'px-4 py-1.5 rounded-pill text-[13px] font-medium transition-all duration-fast',
+                    imageCardGridRowColumns[rowIndex] === option.value
+                      ? 'bg-brand-primary text-white'
+                      : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
+                  ]"
+                  @click="setImageCardGridRowColumns(rowIndex, option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <ImageCardGrid
         v-bind="icgProps as any"
+        :rows="imageCardGridRows"
         :title-highlight="
           imageCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(icgProps.title) : undefined
         "
@@ -767,6 +802,52 @@
       </div>
     </Card>
 
+    <!-- ===== ResearchStrengthSection ===== -->
+    <Card id="research-strength-section" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">
+        ResearchStrengthSection 研发实力
+      </h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“研发实力”模块，包含居中标题、说明文案和证书/团队图片矩阵。
+      </p>
+      <ResearchStrengthSection
+        :title="technologySection.title"
+        :paragraphs="researchStrengthSection.intro"
+        :images="researchStrengthSection.images"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, paragraphs, images</li>
+          <li>图片默认 7 列展示，窄屏收敛为 4 列和 2 列</li>
+          <li>适合研发实力、资质证明、办公环境等图片矩阵型内容</li>
+        </ul>
+      </div>
+    </Card>
+
+    <!-- ===== RecognitionSection ===== -->
+    <Card id="recognition-section" class="scroll-mt-14 lg:scroll-mt-0">
+      <h2 class="text-h2 font-bold text-text-primary mb-2">RecognitionSection 权威认可</h2>
+      <p class="text-small text-text-secondary mb-6">
+        公司介绍页中“权威认可”模块，包含顶部主视觉图和下方荣誉图片横向滚动。
+      </p>
+      <RecognitionSection
+        :title="recognitionSection.title"
+        :subtitle="recognitionSection.subtitle"
+        :image="recognitionSection.image"
+        :image-alt="recognitionSection.imageAlt"
+        :marquee-images="recognitionDemoImages"
+      />
+      <div class="bg-surface-tertiary rounded-inner p-4 mt-4">
+        <h4 class="text-small font-semibold text-text-primary mb-2">使用规范</h4>
+        <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
+          <li>Props: title, subtitle?, image, imageAlt?, marqueeImages?</li>
+          <li>顶部主图按容器宽度展示，下方荣誉图片自动横向滚动</li>
+          <li>鼠标悬停暂停滚动，并支持 prefers-reduced-motion 禁用动画</li>
+        </ul>
+      </div>
+    </Card>
+
     <!-- ===== IndustryCarousel ===== -->
     <Card id="industry-carousel" class="scroll-mt-14 lg:scroll-mt-0">
       <h2 class="text-h2 font-bold text-text-primary mb-2">IndustryCarousel Logo 轮播</h2>
@@ -1047,6 +1128,8 @@ import ArticleSidebar, { type ArticleSidebarVariant } from '@/client/components/
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
+import ResearchStrengthSection from '@/client/components/business/ResearchStrengthSection.vue'
+import RecognitionSection from '@/client/components/business/RecognitionSection.vue'
 import SplitSection from '@/client/components/business/SplitSection.vue'
 import GradientHero from '@/client/components/business/GradientHero.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'
@@ -1077,10 +1160,19 @@ import {
   custChoiseImg,
   type BannerSlide,
 } from '@/client/data/homeData'
-import { aboutSection } from '../about/companyIntroData'
+import {
+  aboutSection,
+  recognitionSection,
+  researchStrengthSection,
+  technologySection,
+} from '../about/companyIntroData'
 import { socials, footerHotline, footerEmail } from '@/client/data/siteFooterData'
 
 // ===== Mock 数据 =====
+const recognitionDemoImages = recognitionSection.carouselImages.filter(
+  (item) => item.src !== '/images/company/honor-12.png',
+)
+
 const bannerSlides: BannerSlide[] = [
   {
     key: 'mock-hero',
@@ -1229,6 +1321,60 @@ const imageCardDemoFeatures = [
     image: '/images/liuzi/ability-3.png',
     imageAlt: '思维导图能力展示',
   },
+  {
+    title: '智能分析',
+    description: '自动归纳业务数据和客户行为，帮助团队更快发现增长机会与风险点',
+    image: '/images/liuzi/analysis.png',
+    imageAlt: '智能分析能力展示',
+  },
+  {
+    title: '日程安排',
+    description: '把客户跟进、会议和待办事项集中管理，减少遗漏并提升协同效率',
+    image: '/images/liuzi/schedule.png',
+    imageAlt: '日程安排能力展示',
+  },
+  {
+    title: '跟进记录',
+    description: '销售沟通内容自动沉淀，形成可追溯、可复盘的客户互动时间线',
+    image: '/images/liuzi/followUp.png',
+    imageAlt: '跟进记录能力展示',
+  },
+  {
+    title: '找客户',
+    description: '基于行业、区域和企业特征筛选潜在线索，让获客动作更精准',
+    image: '/images/liuzi/findCustomer.png',
+    imageAlt: '找客户能力展示',
+  },
+  {
+    title: '商机推荐',
+    description: '结合客户画像和历史成交数据，优先推荐更值得推进的销售机会',
+    image: '/images/liuzi/aiBusiness.png',
+    imageAlt: '商机推荐能力展示',
+  },
+  {
+    title: '销售助手',
+    description: '围绕线索分配、跟进提醒和话术建议，为销售提供实时辅助',
+    image: '/images/liuzi/aiSales.png',
+    imageAlt: '销售助手能力展示',
+  },
+  {
+    title: '以客找客',
+    description: '分析已成交客户的共性特征，帮助团队定位更多相似优质客户',
+    image: '/images/liuzi/aiFindCust.png',
+    imageAlt: '以客找客能力展示',
+  },
+  {
+    title: '培训陪练',
+    description: '通过真实场景模拟和智能反馈，让新人更快掌握标准销售动作',
+    image: '/images/liuzi/trainPartner.png',
+    imageAlt: '培训陪练能力展示',
+  },
+  {
+    title: '招投标洞察',
+    description: '聚合招投标相关信息，辅助销售判断客户需求和项目推进时机',
+    image: '/images/liuzi/biddingInfo.png',
+    imageAlt: '招投标洞察能力展示',
+  },
 ] as const
 
 const imagePanelDemoCards = [
@@ -1258,6 +1404,78 @@ const imagePanelDemoCards = [
       '将客户行为、销售过程和转化结果汇聚到统一视图，帮助团队持续优化运营策略。',
     image: '/images/customer/tab-collaboration-new.png',
     imageAlt: '数据洞察展示',
+  },
+  {
+    number: '04',
+    module: '客户运营',
+    title: '成交客户持续经营，复购机会更清晰',
+    description: '围绕续约提醒、复购机会和服务记录持续运营成交客户，提升客户长期价值。',
+    image: '/images/customer/tab-retention-new.png',
+    imageAlt: '成交客户经营展示',
+  },
+  {
+    number: '05',
+    module: '客户公海',
+    title: '客户分层回收，资源流转更高效',
+    description: '按客户状态、跟进频次和超期规则自动流转公海资源，减少线索沉睡。',
+    image: '/images/customer/public-sea-tiered.png',
+    imageAlt: '客户分层回收展示',
+  },
+  {
+    number: '06',
+    module: '回收机制',
+    title: '超期客户自动回收，团队资源不浪费',
+    description: '对长期未跟进或阶段停滞客户执行自动回收，让有效线索持续进入销售流程。',
+    image: '/images/customer/public-sea-recycle.png',
+    imageAlt: '超期客户回收展示',
+  },
+  {
+    number: '07',
+    module: '权限控制',
+    title: '领取规则灵活配置，客户分配更公平',
+    description: '通过领取上限、客户范围和人员权限控制，让客户资源分配更符合业务节奏。',
+    image: '/images/customer/public-sea-limit.png',
+    imageAlt: '领取规则配置展示',
+  },
+  {
+    number: '08',
+    module: '自动分配',
+    title: '线索自动分配，销售响应更及时',
+    description: '按区域、行业、客户等级或销售负载自动分配线索，缩短首次响应时间。',
+    image: '/images/customer/public-sea-assign.png',
+    imageAlt: '线索自动分配展示',
+  },
+  {
+    number: '09',
+    module: '防撞单',
+    title: '客户重复校验，跟进归属更明确',
+    description: '在线索进入、客户新建和联系人录入时自动识别重复信息，降低撞单风险。',
+    image: '/images/customer/dedup-collision-new.png',
+    imageAlt: '客户重复校验展示',
+  },
+  {
+    number: '10',
+    module: '源头防重',
+    title: '关键字段防重，数据质量更稳定',
+    description: '对手机号、公司名称、统一社会信用代码等关键字段进行校验，减少脏数据沉淀。',
+    image: '/images/customer/dedup-prevent-new.png',
+    imageAlt: '关键字段防重展示',
+  },
+  {
+    number: '11',
+    module: '数据报表',
+    title: '客户数据可信，管理分析更准确',
+    description: '通过重复客户治理提升客户数、跟进率和转化率统计质量，让经营判断更可靠。',
+    image: '/images/customer/dedup-report-new.png',
+    imageAlt: '客户数据报表展示',
+  },
+  {
+    number: '12',
+    module: '规则配置',
+    title: '判重规则灵活，适配多业务线',
+    description: '支持按业务线、客户模板和字段组合设置规则，匹配复杂组织的客户管理方式。',
+    image: '/images/customer/dedup-rules-new.png',
+    imageAlt: '判重规则配置展示',
   },
 ] as const
 
@@ -1306,6 +1524,44 @@ const tabShowcaseTitleHighlightEnabled = ref(false)
 const imageCardGridTitleHighlightEnabled = ref(false)
 const iconCardGridTitleHighlightEnabled = ref(false)
 
+type ImageCardGridColumnCount = 2 | 3 | 4
+type ImageCardGridRowColumnCount = 0 | 1 | ImageCardGridColumnCount
+type PositiveImageCardGridRowColumnCount = Exclude<ImageCardGridRowColumnCount, 0>
+type ImageCardGridRowColumns = [
+  ImageCardGridRowColumnCount,
+  ImageCardGridRowColumnCount,
+  ImageCardGridRowColumnCount,
+]
+
+const imageCardGridRowColumns = ref<ImageCardGridRowColumns>([3, 0, 0])
+
+const imageCardGridRowColumnOptions: readonly {
+  label: string
+  value: ImageCardGridRowColumnCount
+}[] = [
+  { label: '关闭', value: 0 },
+  { label: '1 列', value: 1 },
+  { label: '2 列', value: 2 },
+  { label: '3 列', value: 3 },
+  { label: '4 列', value: 4 },
+]
+
+const imageCardGridRowControls: readonly {
+  label: string
+  options: readonly {
+    label: string
+    value: ImageCardGridRowColumnCount
+  }[]
+}[] = [
+  { label: '第 1 行', options: imageCardGridRowColumnOptions.slice(1) },
+  { label: '第 2 行', options: imageCardGridRowColumnOptions },
+  { label: '第 3 行', options: imageCardGridRowColumnOptions },
+]
+
+const imageCardGridRows = computed((): PositiveImageCardGridRowColumnCount[] => {
+  return imageCardGridRowColumns.value.filter(isPositiveImageCardGridRowColumn)
+})
+
 function getLastTwoTitleHighlight(title: unknown): string | undefined {
   const text = String(title ?? '').trim()
   return text ? text.slice(-2) : undefined
@@ -1317,6 +1573,21 @@ function toggleTabShowcaseTitleHighlight(): void {
 
 function toggleImageCardGridTitleHighlight(): void {
   imageCardGridTitleHighlightEnabled.value = !imageCardGridTitleHighlightEnabled.value
+}
+
+function isPositiveImageCardGridRowColumn(
+  columns: ImageCardGridRowColumnCount,
+): columns is PositiveImageCardGridRowColumnCount {
+  return columns > 0
+}
+
+function setImageCardGridRowColumns(
+  rowIndex: number,
+  columns: ImageCardGridRowColumnCount,
+): void {
+  const next = [...imageCardGridRowColumns.value] as ImageCardGridRowColumns
+  next[rowIndex] = columns
+  imageCardGridRowColumns.value = next
 }
 
 function toggleIconCardGridTitleHighlight(): void {
@@ -1600,21 +1871,11 @@ const imageCardGridControls = [
       { label: 'clean', value: 'clean' },
     ],
   },
-  {
-    label: 'Columns',
-    prop: 'columns',
-    options: [
-      { label: '2', value: 2 },
-      { label: '3', value: 3 },
-      { label: '4', value: 4 },
-    ],
-  },
 ]
 
 const imageCardGridDefaults = {
   variant: 'feature-panel',
   'color-scheme': 'mint',
-  columns: 3,
   title: '解锁你的工作新方式',
 }
 
@@ -1886,13 +2147,17 @@ const tabShowcaseDefaults = {
 }
 
 // ===== Code Extra Props =====
-const imageCardGridCodeExtra = {
-  ':cards': 'cards',
-  title: '"解锁你的工作新方式"',
-  variant: '"feature-panel"',
-  'color-scheme': '"mint"',
-  columns: '3',
-}
+const imageCardGridCodeExtra = computed<Record<string, string>>(() => {
+  const extraProps: Record<string, string> = {
+    ':cards': 'cards',
+    title: '"解锁你的工作新方式"',
+    variant: '"feature-panel"',
+    'color-scheme': '"mint"',
+    ':rows': `[${imageCardGridRows.value.join(', ')}]`,
+  }
+
+  return extraProps
+})
 const featureCardGridCodeExtra = {
   ':features': 'features',
   title: '"内容创作能力，协同效率更高"',
