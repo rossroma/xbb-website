@@ -1,27 +1,30 @@
 <template>
   <article
     :class="[
-      'relative rounded-card overflow-hidden',
-      size === 'tall' ? 'w-68 h-104' : 'w-68 h-50 max-md:w-full',
+      'service-media-card relative overflow-hidden rounded-card',
+      size === 'tall'
+        ? 'aspect-[17/26] w-full'
+        : 'aspect-[34/25] w-full',
       size === 'standard' ? 'bg-surface-secondary' : '',
       'flex flex-col',
     ]"
     :style="{
       backgroundImage: size === 'tall' && fullBackground && image ? `url(${image})` : undefined,
       backgroundColor: size === 'tall' && !fullBackground ? bg || undefined : undefined,
-      backgroundSize: 'cover',
-      backgroundPosition: 'bottom',
-      backgroundRepeat: 'no-repeat',
     }"
   >
     <div
       :class="[
         'relative z-10 flex items-center justify-between gap-[18px]',
-        size === 'tall' ? 'p-[26px] pb-0' : 'py-7 px-[26px] pb-0',
+        size === 'tall'
+          ? 'p-[26px] pb-0 max-md:p-5 max-md:pb-0'
+          : 'py-7 px-[26px] pb-0 max-md:px-5 max-md:py-5 max-md:pb-0',
       ]"
     >
-      <h3 class="text-h2 font-semibold text-text-primary">{{ title }}</h3>
-      <IconBadge size="lg" variant="white" :color="accent" v-slot="{ iconSizeClass }">
+      <h3 class="text-h2 font-semibold text-text-primary max-md:text-h3 max-[640px]:text-body">
+        {{ title }}
+      </h3>
+      <IconBadge size="md" variant="white" :color="accent" v-slot="{ iconSizeClass }">
         <component :is="icon" :class="iconSizeClass" :stroke-width="2.2" />
       </IconBadge>
     </div>
@@ -29,11 +32,15 @@
     <div
       :class="[
         'relative z-10 flex flex-col gap-0.5',
-        size === 'tall' ? 'px-[26px] pb-[26px]' : 'px-[26px] pb-7',
+        size === 'tall'
+          ? 'px-[26px] pb-[26px] max-md:px-5 max-md:pb-5'
+          : 'px-[26px] pb-7 max-md:px-5 max-md:pb-5',
         contentPosition === 'bottom-left' ? 'mt-auto' : '',
       ]"
     >
-      <p v-for="line in descLines" :key="line" class="text-body text-service-desc">{{ line }}</p>
+      <p v-for="line in descLines" :key="line" class="text-small text-service-desc max-[640px]:text-caption">
+        {{ line }}
+      </p>
     </div>
   </article>
 </template>
@@ -59,3 +66,12 @@ withDefaults(
   },
 )
 </script>
+
+<style scoped>
+.service-media-card {
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: cover;
+}
+
+</style>
