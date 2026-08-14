@@ -939,7 +939,7 @@
     <Card id="timeline" class="scroll-mt-14 lg:scroll-mt-0">
       <h2 class="text-h2 font-bold text-text-primary mb-2">Timeline 发展历程</h2>
       <p class="text-small text-text-secondary mb-6">
-        垂直时间线展示公司/产品发展里程碑，支持 3-4 个阶段，年份交替左右排列，描述文本支持高亮标记。
+        横向年份轴展示公司或产品的发展里程碑，支持悬停、聚焦或点击切换当前节点，并在下方展示对应详情卡片。
       </p>
       <Timeline
         title="发展历程"
@@ -962,8 +962,9 @@
             <code>{ text, highlight?: true }</code> 高亮段
           </li>
           <li>高亮段使用品牌橙色（<code>text-brand-primary</code>）加粗渲染</li>
-          <li>桌面端中央时间线 + 左右交替排列，移动端左侧时间线 + 全部右对齐</li>
-          <li>建议 3-4 个里程碑，组件无交互（纯展示）</li>
+          <li>桌面端为横向可滚动年份轴 + 详情卡片，左右箭头用于查看更多年份</li>
+          <li>移动端切换为左侧纵向时间线，年份、标题和描述直接展开显示</li>
+          <li>适合 4 个以上里程碑；节点支持 hover、focus、click 切换当前详情</li>
         </ul>
       </div>
     </Card>
