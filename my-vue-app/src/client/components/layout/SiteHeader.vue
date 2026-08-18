@@ -3,7 +3,7 @@
     class="sticky top-0 z-100 backdrop-blur-[18px] bg-white/78 border-b border-border-default"
   >
     <div
-      class="flex items-center justify-between min-h-16 gap-10 w-[min(95%,calc(100%-48px))] mx-auto"
+      class="flex items-center justify-between min-h-16 gap-4 w-[min(95%,calc(100%-48px))] mx-auto"
     >
       <!-- Logo -->
       <RouterLink to="/" class="shrink-0">
@@ -212,7 +212,7 @@
 
         <button
           type="button"
-          class="lg:hidden p-2 rounded-inner hover:bg-surface-secondary transition-colors duration-fast motion-reduce:transition-none"
+          class="lg:hidden rounded-inner hover:bg-surface-secondary transition-colors duration-fast motion-reduce:transition-none"
           @click="mobileMenuOpen = true"
           aria-label="打开菜单"
         >
