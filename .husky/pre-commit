@@ -4,7 +4,7 @@
 echo ""
 echo "🔍 [pre-commit] 执行 lint-staged（变更文件格式化+修复）..."
 cd my-vue-app
-if ! npx lint-staged; then
+if ! pnpm exec lint-staged; then
   cd ..
   echo ""
   echo "❌ [pre-commit] lint-staged 失败，请修复后重新提交"

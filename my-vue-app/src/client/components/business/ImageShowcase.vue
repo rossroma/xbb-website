@@ -41,11 +41,7 @@ import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 import Button from '@/client/components/ui/Button.vue'
 import { getOSSImageUrl } from '@/shared/utils/ossImage'
-import {
-  type Theme,
-  THEME_BG_CLASS,
-  THEME_PRIMARY_COLOR,
-} from './theme'
+import { type Theme, THEME_BG_CLASS } from './theme'
 
 const props = withDefaults(
   defineProps<{
@@ -71,7 +67,6 @@ defineEmits<{
 
 const isTextRight = computed(() => props.layout === 'text-right')
 const bgClass = computed(() => THEME_BG_CLASS[props.theme])
-const accentColor = computed(() => THEME_PRIMARY_COLOR[props.theme])
 const containerClass = computed(() => [
   'grid gap-0  overflow-hidden max-lg:grid-cols-1 max-lg:border-0 max-lg:shadow-none max-lg:overflow-visible',
   isTextRight.value
