@@ -41,18 +41,28 @@
       >
         <h1
           v-if="singleSlide.title"
+          :data-text="isSingleTitleHighlighted ? singleSlide.title : undefined"
           :class="[
             'text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-md:text-h2',
             singleTitleClass,
+            isSingleTitleHighlighted ? 'hero-banner-single__text-gradient' : '',
+            isSingleTitleHighlighted && shouldShowSingleHighlightUnderline
+              ? 'hero-banner-single__text-gradient--underline'
+              : '',
           ]"
         >
           {{ singleSlide.title }}
         </h1>
         <p
           v-if="singleSlide.subtitle"
+          :data-text="isSingleSubtitleHighlighted ? singleSlide.subtitle : undefined"
           :class="[
-            'mt-2 max-md:mt-3 text-h2 font-semibold text-hero-subtitle leading-heading whitespace-pre-line max-lg:text-h3 max-md:text-body',
+            'mt-2 max-md:mt-3 text-display font-bold text-hero-title leading-display whitespace-pre-line max-lg:text-h1 max-md:text-h2',
             singleSubtitleClass,
+            isSingleSubtitleHighlighted ? 'hero-banner-single__text-gradient' : '',
+            isSingleSubtitleHighlighted && shouldShowSingleHighlightUnderline
+              ? 'hero-banner-single__text-gradient--underline'
+              : '',
           ]"
         >
           {{ singleSlide.subtitle }}
@@ -549,11 +559,20 @@ export interface HeroShowcaseSlide {
   secondaryHref?: string
 }
 
+export type HeroBannerHighlightMode = 'none' | 'title' | 'subtitle' | 'both'
+
+export type HeroBannerSlide = BannerSlide & {
+  /** Only used by mode="single" to highlight title/subtitle text. */
+  highlightMode?: HeroBannerHighlightMode
+  /** Whether to show the underline image below highlighted text. Defaults to true. */
+  highlightUnderline?: boolean
+}
+
 const props = withDefaults(
   defineProps<{
     /** 轮播模式 */
     mode?: 'carousel' | 'single' | 'showcase-carousel'
-    slides?: BannerSlide[]
+    slides?: HeroBannerSlide[]
     brandVideo?: string
     /** 是否正在加载（用于骨架屏显示） */
     loading?: boolean
@@ -588,7 +607,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  action: [slide: BannerSlide, action: 'primary' | 'secondary']
+  action: [slide: HeroBannerSlide, action: 'primary' | 'secondary']
 }>()
 
 /** 单页模式下的 Slide 数据 */
@@ -597,6 +616,17 @@ const trialPagePath = toPagePath('single_mfsy')
 const trialCtaTexts = new Set(['免费试用', '立即免费试用', '立即咨询', 'CRM免费试用', '免费使用'])
 
 const singleSlide = computed(() => props.slides[0] ?? null)
+const isSingleTitleHighlighted = computed(() => {
+  const mode = singleSlide.value?.highlightMode
+  return mode === 'title' || mode === 'both'
+})
+const isSingleSubtitleHighlighted = computed(() => {
+  const mode = singleSlide.value?.highlightMode
+  return mode === 'subtitle' || mode === 'both'
+})
+const shouldShowSingleHighlightUnderline = computed(() => {
+  return singleSlide.value?.highlightUnderline !== false
+})
 
 function isImageSource(value: HeroShowcaseSlide['titleIcon']): value is string {
   return typeof value === 'string'
@@ -624,7 +654,7 @@ function handleBannerClick(slide: BannerSlide) {
   }
 }
 
-function handleSingleAction(slide: BannerSlide, action: 'primary' | 'secondary') {
+function handleSingleAction(slide: HeroBannerSlide, action: 'primary' | 'secondary') {
   const text = action === 'primary' ? slide.primaryCta : slide.secondaryCta
   const configuredHref = action === 'primary' ? slide.primaryHref : slide.secondaryHref
   const href = getActionHref(text, configuredHref)
@@ -663,6 +693,50 @@ function splitShowcaseLines(text: string): string[] {
 </script>
 
 <style scoped>
+.hero-banner-single__text-gradient {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0 0.04em;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0em;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-banner-single__text-gradient::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: linear-gradient(281deg, #1574ff 2%, #5952ff 51%, #a969fe 96%);
+  background-clip: text;
+  color: transparent;
+  white-space: inherit;
+  pointer-events: none;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-banner-single__text-gradient--underline::after {
+  content: '';
+  position: absolute;
+  right: -0.08em;
+  bottom: -0.46em;
+  left: -0.08em;
+  z-index: 0;
+  width: 94.74%;
+  height: 72.73%;
+  background-image: url('/images/customer/digital-management-underline.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+
 .hero-banner-progress-dot--active .hero-banner-progress-dot__fill {
   animation: hero-banner-progress-fill 5000ms linear forwards;
 }
