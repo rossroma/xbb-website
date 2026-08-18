@@ -7,11 +7,6 @@
     <div :class="containerClass">
       <!-- 左侧文本 -->
       <div :class="textPanelClass">
-        <span
-          class="block w-12 h-1.5 rounded-full"
-          :style="{ backgroundColor: accentColor }"
-          aria-hidden="true"
-        />
         <SectionHeading
           :title="title"
           :subtitle="subtitle"
@@ -78,13 +73,13 @@ const isTextRight = computed(() => props.layout === 'text-right')
 const bgClass = computed(() => THEME_BG_CLASS[props.theme])
 const accentColor = computed(() => THEME_PRIMARY_COLOR[props.theme])
 const containerClass = computed(() => [
-  'grid gap-0 rounded-card border border-border-subtle shadow-subtle overflow-hidden max-lg:grid-cols-1 max-lg:border-0 max-lg:shadow-none max-lg:overflow-visible',
+  'grid gap-0  overflow-hidden max-lg:grid-cols-1 max-lg:border-0 max-lg:shadow-none max-lg:overflow-visible',
   isTextRight.value
     ? 'grid-cols-[minmax(0,1fr)_minmax(0,420px)]'
     : 'grid-cols-[minmax(0,420px)_minmax(0,1fr)]',
 ])
 const textPanelClass = computed(() => [
-  'bg-surface-secondary/60 p-12 max-lg:p-8 max-md:p-6 flex flex-col justify-center',
+  'p-12 max-lg:p-8 max-md:p-6 flex flex-col justify-center',
   isTextRight.value ? 'order-2 max-lg:order-none' : 'order-1',
 ])
 const imagePanelClass = computed(() => [
