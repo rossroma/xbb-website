@@ -3,24 +3,23 @@
     <div class="w-[min(1280px,calc(100%-48px))] mx-auto">
       <section class="flex flex-col items-center text-center pt-6">
         <div>
-          <h2 class="text-h2 font-bold leading-heading text-heading max-md:text-h3">
+          <h2 class="text-h2 font-bold leading-heading text-heading">
             {{ displayCtaSection.title }}
           </h2>
           <p
             v-if="displayCtaSection.subtitle"
-            class="mt-2 text-body leading-body text-text-secondary max-md:text-small"
+            class="mt-2 text-body leading-body text-text-secondary"
           >
             {{ displayCtaSection.subtitle }}
           </p>
         </div>
-        <div class="mt-6 flex flex-wrap justify-center gap-3 max-md:w-full max-md:flex-col">
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
           <Button
             v-if="displayCtaSection.primaryCta"
             :to="getCtaHref(displayCtaSection.primaryCta, displayCtaSection.primaryHref)"
             variant="primary"
             color="brand"
             size="lg"
-            class="max-md:w-full"
           >
             {{ displayCtaSection.primaryCta }}
           </Button>
@@ -30,7 +29,6 @@
             variant="outline"
             color="brand"
             size="lg"
-            class="max-md:w-full"
           >
             {{ displayCtaSection.secondaryCta }}
           </Button>
@@ -69,7 +67,7 @@
         >
           <button
             type="button"
-            class="flex h-14 w-full items-center justify-between rounded-lg px-5 text-left text-h3 font-semibold leading-none text-heading transition-colors duration-fast"
+            class="flex h-12 w-full items-center justify-between rounded-lg px-5 text-left text-h3 font-semibold leading-none text-heading transition-colors duration-fast"
             :class="isMobileFooterColumnOpen(col.title) ? 'bg-[#f0f1f3]' : 'bg-transparent'"
             :aria-expanded="isMobileFooterColumnOpen(col.title)"
             :aria-controls="`footer-mobile-panel-${colIndex}`"
