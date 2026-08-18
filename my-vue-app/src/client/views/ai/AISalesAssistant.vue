@@ -40,14 +40,9 @@ usePageSEO()
 </script>
 
 <style>
-/* AI 销售助理 Hero 标题渐变样式 */
+/* AI 销售助理 Hero 标题字号 */
 .ai-hero-title {
   font-size: 24px !important;
-  background: linear-gradient(281deg, #1574ff 2%, #5952ff 51%, #a969fe 96%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: #ffffff;
 }
 
 .ai-hero-subtitle {
