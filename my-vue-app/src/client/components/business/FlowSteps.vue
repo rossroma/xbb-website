@@ -61,76 +61,103 @@
 
     <div
       v-if="variant === 'rich'"
-      class="mt-12 flex items-start justify-center max-lg:flex-col max-lg:items-stretch max-lg:mt-10"
+      class="mt-14 grid items-stretch gap-10 [grid-template-columns:repeat(var(--flow-step-count),minmax(0,1fr))] max-xl:gap-7 max-lg:mt-10 max-lg:flex max-lg:flex-col max-lg:gap-6 max-md:mt-8"
+      :style="{ '--flow-step-count': String(steps.length) }"
     >
-      <template v-for="(step, index) in steps" :key="index">
+      <article
+        v-for="(step, index) in steps"
+        :key="index"
+        class="relative min-w-0 pt-[58px] max-lg:min-h-0 max-lg:pl-[82px] max-lg:pt-0 max-md:pl-[70px]"
+      >
         <div
-          class="flex flex-1 flex-col items-center text-center max-lg:flex-row max-lg:text-left max-lg:gap-4 max-lg:items-start"
-          :class="index < steps.length - 1 ? 'flex-1' : 'flex-shrink-0'"
+          v-if="index < steps.length - 1"
+          class="pointer-events-none absolute left-[calc(50%+55px)] top-[47px] z-0 h-[22px] w-[calc(100%+40px-110px)] max-xl:w-[calc(100%+28px-110px)] max-lg:left-8 max-lg:top-[74px] max-lg:h-[calc(100%+24px-56px)] max-lg:w-0.5 max-md:left-7 max-md:top-[66px]"
+          aria-hidden="true"
+        >
+          <span
+            class="absolute inset-x-0 top-1/2 h-[3px] -translate-y-1/2 rounded-pill bg-brand-accent-soft max-lg:inset-y-0 max-lg:left-1/2 max-lg:h-auto max-lg:w-0.5 max-lg:-translate-x-1/2 max-lg:translate-y-0"
+          ></span>
+          <span
+            class="absolute left-[-2px] top-px h-5 w-1 rounded-pill bg-brand-accent-soft max-lg:hidden"
+          ></span>
+          <span
+            class="absolute right-[-2px] top-px h-5 w-1 rounded-pill bg-brand-accent-soft max-lg:hidden"
+          ></span>
+        </div>
+
+        <div
+          class="absolute left-1/2 top-0 z-2 size-[94px] -translate-x-1/2 rounded-pill border border-brand-accent-soft bg-brand-accent-soft shadow-prominent max-lg:left-0 max-lg:size-[66px] max-lg:translate-x-0 max-md:size-[58px]"
+          aria-hidden="true"
+        >
+          <svg
+            class="absolute inset-0 size-full"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <defs>
+              <radialGradient :id="`flow-step-glass-${index}`" cx="35%" cy="50%" r="72%">
+                <stop offset="0%" stop-color="var(--color-brand-accent)" stop-opacity="0.4" />
+                <stop offset="65%" stop-color="var(--color-brand-accent)" stop-opacity="0.24" />
+                <stop offset="100%" stop-color="var(--color-surface-primary)" stop-opacity="0.64" />
+              </radialGradient>
+            </defs>
+            <path
+              d="M20 23c-6 0-10 5-10 12v30c0 7 4 12 11 12l41-13V36L20 23Z"
+              fill="var(--color-brand-accent)"
+            />
+            <path
+              d="M65 20c-6 0-10 5-10 11v38c0 6 4 11 10 11l20-13V33L65 20Z"
+              :fill="`url(#flow-step-glass-${index})`"
+            />
+          </svg>
+          <span
+            class="absolute inset-y-0 left-0 z-1 flex w-2/3 items-center justify-center text-h2 font-extrabold italic leading-none tracking-normal text-white max-lg:text-[17px] max-md:text-[15px]"
+            >{{ formatStepNumber(index) }}</span
+          >
+        </div>
+
+        <div
+          class="relative z-1 flex min-h-75 flex-col items-center justify-center overflow-hidden rounded-card border border-brand-primary-soft bg-surface-primary px-8 pb-8 pt-18 text-center shadow-subtle max-xl:min-h-70 max-xl:px-6 max-lg:min-h-0 max-lg:items-start max-lg:p-6 max-lg:text-left max-md:p-5"
         >
           <div
-            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-primary-gradient text-white text-h3 font-bold leading-subtitle max-lg:text-body"
-          >
-            {{ index + 1 }}
-          </div>
-
-          <h3 class="mt-4 text-h3 text-text-primary leading-subtitle max-lg:mt-0 max-lg:text-body">
-            {{ step.title }}
-          </h3>
-
-          <div
-            class="mt-6 flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-surface-secondary max-lg:hidden"
+            v-if="step.icon || step.image"
+            class="mb-[18px] inline-flex size-[46px] items-center justify-center rounded-badge bg-brand-primary-soft text-brand-primary max-lg:mb-3.5 max-lg:size-10"
+            aria-hidden="true"
           >
             <component
               v-if="step.icon"
               :is="step.icon"
-              :size="48"
-              class="text-text-tertiary"
-              :stroke-width="2"
+              :size="24"
+              class="text-brand-primary"
+              :stroke-width="2.2"
             />
             <img
               v-else-if="step.image"
               :src="step.image"
               :alt="step.imageAlt ?? step.title"
-              class="h-full w-full rounded-2xl object-cover"
+              class="block size-full rounded-badge object-cover"
               loading="lazy"
             />
           </div>
 
+          <h3 class="m-0 text-h3 font-bold leading-subtitle text-text-primary max-lg:text-body">
+            {{ step.title }}
+          </h3>
           <p
             v-if="step.description"
-            class="mt-4 max-w-60 text-small text-text-secondary leading-small max-lg:mt-0"
+            class="mt-3.5 max-w-70 text-small leading-small text-text-secondary max-lg:mt-2 max-lg:max-w-none"
           >
             {{ step.description }}
           </p>
         </div>
-
-        <div
-          v-if="index < steps.length - 1"
-          class="flex shrink-0 items-center justify-center w-16 mt-1.5 max-lg:w-auto max-lg:mt-0 max-lg:py-2"
-          aria-hidden="true"
-        >
-          <component
-            :is="Right"
-            :size="28"
-            class="text-text-tertiary max-lg:hidden"
-            :stroke-width="3"
-          />
-          <component
-            :is="Down"
-            :size="28"
-            class="hidden text-text-tertiary max-lg:block"
-            :stroke-width="3"
-          />
-        </div>
-      </template>
+      </article>
     </div>
   </SectionBlock>
 </template>
 
 <script setup lang="ts">
 import type { Component } from 'vue'
-import { Down, Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 
@@ -155,4 +182,8 @@ withDefaults(
     variant: 'simple',
   },
 )
+
+function formatStepNumber(index: number): string {
+  return String(index + 1).padStart(2, '0')
+}
 </script>
