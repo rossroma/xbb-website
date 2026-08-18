@@ -1,29 +1,70 @@
-# 部署前自检：推送到 develop/main 时，检查 CI/CD 相关文件是否变更
+# 推送前自检：推送到 develop/main 时，执行全量检查
+# 1. CI/CD 配置变更 → 部署前自检（deploy-check.sh）
+# 2. 前端代码变更 → TypeScript 类型检查 + 完整 lint
+
 while read -r local_ref local_sha remote_ref remote_sha; do
   branch=$(echo "$remote_ref" | sed 's|refs/heads/||')
 
   if [ "$branch" = "develop" ] || [ "$branch" = "main" ]; then
-    # 检查本次推送是否包含 CI/CD 相关文件变更
-    # 对比基准：远程当前状态 → 本地推送的 HEAD
-    # 使用 diff-tree 更准确，避免 merge-base 差异
+    echo ""
+    echo "═══════════════════════════════════════════"
+    echo "  🚦 [pre-push] 推送至 $branch 分支，执行门禁检查"
+    echo "═══════════════════════════════════════════"
+
+    # 检查本次推送是否包含前端源码变更
+    VUE_FILES=$(git diff-tree --no-commit-id -r --name-only "$remote_sha".."$local_sha" 2>/dev/null | grep -E '^my-vue-app/src/.*\.(ts|vue|tsx)$' || true)
+
+    if [ -n "$VUE_FILES" ]; then
+      echo ""
+      echo "  📄 前端文件变更:"
+      echo "$VUE_FILES" | sed 's/^/    /'
+
+      echo ""
+      echo "  🔍 TypeScript 类型检查 (vue-tsc --build)..."
+      cd my-vue-app
+      if ! pnpm exec vue-tsc --build --noEmit; then
+        cd ..
+        echo ""
+        echo "  ❌ TypeScript 类型检查失败，推送已取消"
+        echo "     快速诊断：cd my-vue-app && pnpm exec vue-tsc --build --noEmit"
+        exit 1
+      fi
+      cd ..
+      echo "  ✅ TypeScript 类型检查通过"
+
+      echo ""
+      echo "  🔍 完整 Lint 检查..."
+      cd my-vue-app
+      if ! pnpm lint; then
+        cd ..
+        echo ""
+        echo "  ❌ Lint 检查失败，推送已取消"
+        echo "     快速诊断：cd my-vue-app && pnpm lint"
+        exit 1
+      fi
+      cd ..
+      echo "  ✅ Lint 检查通过"
+    fi
+
+    # ====== 原有 CI/CD 配置变更自检（保留） ======
     CI_FILES=$(git diff-tree --no-commit-id -r --name-only "$remote_sha".."$local_sha" 2>/dev/null | grep -E '\.github/|Dockerfile|docker-compose|scripts/|\.claude/' || true)
 
     if [ -n "$CI_FILES" ]; then
       echo ""
-      echo "🔍 检测到 CI/CD 相关文件变更，执行部署前自检..."
-      echo "$CI_FILES" | sed 's/^/  📄 /'
+      echo "  📄 CI/CD 相关文件变更:"
+      echo "$CI_FILES" | sed 's/^/    /'
 
+      echo ""
+      echo "  🔍 部署前自检..."
       if [ -f scripts/deploy-check.sh ]; then
-        echo ""
         bash scripts/deploy-check.sh
         if [ $? -ne 0 ]; then
           echo ""
-          echo "❌ 部署前自检未通过，推送已取消。"
-          echo "   请修复问题后重新推送，或使用 --no-verify 跳过（不推荐）。"
+          echo "  ❌ 部署前自检未通过，推送已取消"
+          echo "     请修复问题后重新推送，或使用 --no-verify 跳过（不推荐）"
           exit 1
         fi
-        echo ""
-        echo "✅ 部署前自检通过。"
+        echo "  ✅ 部署前自检通过"
       else
         echo "  ⚠️  scripts/deploy-check.sh 不存在，跳过自检"
       fi

@@ -1,3 +1,14 @@
-# 根项目 pre-commit 钩子
-# 前端项目 lint-staged 在 my-vue-app/.husky/pre-commit 中管理
-# 此处留空，避免覆盖前端项目的钩子
+# 轻量级预提交检查：仅对变更文件执行 lint-staged（oxlint + eslint + prettier）
+# 全量 TypeScript 类型检查在 pre-push 推送至 develop/main 时执行，避免拖慢每次提交
+
+echo ""
+echo "🔍 [pre-commit] 执行 lint-staged（变更文件格式化+修复）..."
+cd my-vue-app
+if ! npx lint-staged; then
+  cd ..
+  echo ""
+  echo "❌ [pre-commit] lint-staged 失败，请修复后重新提交"
+  exit 1
+fi
+cd ..
+echo "✅ [pre-commit] 检查通过"

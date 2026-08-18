@@ -78,6 +78,7 @@
   "lint-staged": {
     "**/*.{ts,vue,js}": [
       "oxlint --fix",
+      "eslint --fix --cache",
       "prettier --write"
     ],
     "**/*.{css,json,md}": [
