@@ -17,7 +17,7 @@ const trialPagePath = toPagePath('single_mfsy')
 export const heroSection = {
   title: '联系我们',
   primaryCta: '免费试用',
- bg: "url('/images/contact/hero-banner-2.jpg') center / cover no-repeat",
+ bg: "url('/images/contact/hero-banner.png') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
@@ -25,7 +25,7 @@ export const heroBannerSlide: BannerSlide = {
   key: 'contact-us-hero',
   mediaType: 'image',
   title: heroSection.title,
-  desc: '',
+  desc: '留下联系方式，专业顾问将尽快与您取得联系，提供产品演示与解决方案',
   primaryCta: heroSection.primaryCta,
   primaryHref: trialPagePath,
   bg: heroSection.bg,
