@@ -14,30 +14,30 @@ import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
 const heroImage = '/images/youzhikehubg.png'
-const freeSupportImage = '/images/youzhibg1.png'
-const premiumServiceImage = '/images/youzhibg3.png'
-const vipServiceImage = '/images/youzhibg2.png'
+const freeSupportImage = '/images/service/youzhibg1.png'
+const premiumServiceImage = '/images/service/youzhibg3.png'
+const vipServiceImage = '/images/service/youzhibg2.png'
 const trialPagePath = toPagePath('single_mfsy')
 
 
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '优质服务',
-  subtitle: '专业相伴，让系统真正落地',
+  desc: '提供从需求调研到上线培训的全流程服务，专属客户成功经理持续跟进\n快速响应问题，保障系统平稳落地。',
   primaryCta: '免费试用',
   image: heroImage,
   imageAlt: '优质服务展示',
-  bg: 'linear-gradient(135deg, #eaf6ff 0%, #edf4ff 52%, #f8fbff 100%)',
+  bg: "url('/images/service/hero-banner.jpg') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
 export const heroBannerSlide: BannerSlide = {
   key: 'service-hero',
   mediaType: 'image',
-  eyebrow: '',
   title: heroSection.title,
-  subtitle: heroSection.subtitle,
-  desc: '',
+  subtitle: '',
+  desc: heroSection.desc,
+  highlightMode: 'title',
   primaryCta: heroSection.primaryCta,
   primaryHref: trialPagePath,
   bg: heroSection.bg,
@@ -45,8 +45,8 @@ export const heroBannerSlide: BannerSlide = {
   accent: '#4a7fd9',
   glow: 'rgba(74, 127, 217, 0.18)',
   orb: 'rgba(14, 165, 233, 0.2)',
-  showVisual: true,
-  visualImage: heroSection.image,
+  showVisual: false,
+  visualImage: '',
   visualImageAlt: heroSection.imageAlt,
 }
 

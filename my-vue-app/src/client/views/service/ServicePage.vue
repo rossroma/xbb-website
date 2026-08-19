@@ -20,7 +20,7 @@
       :image="section.image"
       :image-alt="section.imageAlt"
       :layout="section.layout"
-      theme="blue"
+      theme="plain"
     />
 
     <IconCardGrid
