@@ -25,7 +25,7 @@ export const heroBannerSlide = {
   desc: heroSection.description,
   primaryCta: '',
   secondaryCta: '',
-  bg: "url('/images/ambassador/hero-banner-bg.png') center / cover no-repeat",
+  bg: "url('/images/ambassador/hero-banner.png') center / cover no-repeat",
   line: 'rgba(255, 100, 0, 0.16)',
   accent: '#ff6400',
   glow: 'rgba(255, 100, 0, 0.18)',
