@@ -6,18 +6,10 @@
     <IconCardGrid
       :title="basicAbilitySection.title"
       :subtitle="basicAbilitySection.description"
-      :features="basicAbilitySection.features"
+      :features="basicAbilitySection.cards"
       :columns="basicAbilitySection.columns"
-      variant="icon-tile"
-      color-scheme="accent"
-    />
-
-    <CTASection
-      variant="mint"
-      :title="trafficOperationSection.title"
-      :subtitle="trafficOperationSection.description"
-      :image="trafficOperationSection.image"
-      :image-alt="trafficOperationSection.imageAlt"
+      variant="capability-card"
+      color-scheme="brand"
     />
 
     <ImageShowcase
@@ -37,14 +29,8 @@
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
-import CTASection from '@/client/components/business/CTASection.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
-import {
-  heroBannerSlide,
-  basicAbilitySection,
-  trafficOperationSection,
-  showcaseSections,
-} from './qiweiPageData'
+import { heroBannerSlide, basicAbilitySection, showcaseSections } from './qiweiPageData'
 
 usePageSEO()
 </script>
