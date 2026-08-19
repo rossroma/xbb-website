@@ -1,83 +1,124 @@
 <template>
   <SectionBlock spacing="default">
-    <div class="flex flex-col items-center text-center">
-      <h2
-        class="text-[36px] text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3"
-      >
-        <template v-if="titleParts">
-          {{ titleParts.before
-          }}<span
-            :class="[
-              'business-section-title-highlight',
-              titleParts.isShort ? 'business-section-title-highlight--short' : '',
-            ]"
-            :data-text="titleParts.highlight"
-          >
-            {{ titleParts.highlight }}</span
-          >{{ titleParts.after }}
-        </template>
-        <template v-else>
-          {{ title }}
-        </template>
-      </h2>
-      <p
-        v-if="subtitle"
-        class="mt-4 max-w-150 text-body text-text-tertiary leading-body max-lg:text-body"
-      >
-        {{ subtitle }}
-      </p>
-    </div>
+    <div class="mx-auto w-full" :style="containerStyle">
+      <div class="flex flex-col items-center text-center">
+        <h2
+          class="text-[36px] text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3"
+        >
+          <template v-if="titleParts">
+            {{ titleParts.before
+            }}<span
+              :class="[
+                'business-section-title-highlight',
+                titleParts.isShort ? 'business-section-title-highlight--short' : '',
+              ]"
+              :data-text="titleParts.highlight"
+            >
+              {{ titleParts.highlight }}</span
+            >{{ titleParts.after }}
+          </template>
+          <template v-else>
+            {{ title }}
+          </template>
+        </h2>
+        <p
+          v-if="subtitle"
+          class="mt-4 max-w-150 text-body text-text-tertiary leading-body max-lg:text-body"
+        >
+          {{ subtitle }}
+        </p>
+      </div>
 
-    <template v-if="variant === 'image-card'">
-      <div
-        v-for="(row, rowIndex) in cardRows"
-        :key="`row-${rowIndex}`"
-        :class="[
-          'grid gap-6 max-lg:gap-5',
-          rowIndex === 0 ? 'mt-12 max-lg:mt-10' : 'mt-6',
-          getGridColsClass(row.cols),
-        ]"
-      >
-        <!-- 竖排卡片：上文下图（行内多列时使用） -->
-        <template v-if="row.cols > 1">
-          <article
-            v-for="(card, cardIndex) in row.cards"
-            :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
-            class="group flex flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-lg:min-h-84 max-md:px-6"
-            :style="getImageCardStyle(row.startIndex + cardIndex)"
-          >
-            <h3
-              class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
-              :style="getImageCardTitleStyle(row.startIndex + cardIndex)"
+      <template v-if="variant === 'image-card'">
+        <div
+          v-for="(row, rowIndex) in cardRows"
+          :key="`row-${rowIndex}`"
+          :class="[
+            'grid gap-6 max-lg:gap-5',
+            rowIndex === 0 ? 'mt-12 max-lg:mt-10' : 'mt-6',
+            row.splitGroup ? 'lg:grid-cols-2' : getGridColsClass(row.cols),
+          ]"
+        >
+          <!-- 新版式：单卡 + 双卡垂直排列（layout=feature-left / feature-right，行内 3 卡时生效） -->
+          <template v-if="row.splitGroup">
+            <article
+              :class="[
+                'group flex flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:px-6',
+                row.splitGroup.featureIndex === row.startIndex ? '' : 'lg:order-2',
+              ]"
+              :style="getImageCardStyle(row.splitGroup.featureIndex)"
             >
-              {{ card.title }}
-            </h3>
-            <p
-              v-if="card.description"
-              class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+              <h3
+                class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
+                :style="getImageCardTitleStyle(row.splitGroup.featureIndex)"
+              >
+                {{ row.splitGroup.featureCard.title }}
+              </h3>
+              <p
+                v-if="row.splitGroup.featureCard.description"
+                class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+              >
+                {{ row.splitGroup.featureCard.description }}
+              </p>
+              <div
+                v-if="row.splitGroup.featureCard.image"
+                class="-mx-8 -mb-7 mt-6 flex flex-1 items-end overflow-hidden max-md:-mx-6"
+              >
+                <img
+                  :src="row.splitGroup.featureCard.image"
+                  :alt="row.splitGroup.featureCard.imageAlt ?? row.splitGroup.featureCard.title"
+                  class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+            <div
+              :class="[
+                'flex flex-col gap-6 max-lg:gap-5',
+                row.splitGroup.featureIndex === row.startIndex ? '' : 'lg:order-1',
+              ]"
             >
-              {{ card.description }}
-            </p>
-            <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-hidden max-md:-mx-6">
-              <img
-                :src="card.image"
-                :alt="card.imageAlt ?? card.title"
-                class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
-                loading="lazy"
-              />
+              <article
+                v-for="side in row.splitGroup.sideCards"
+                :key="side.card.key ?? `${side.card.title}-${side.index}`"
+                class="group flex h-[300px] flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:px-6"
+                :style="getImageCardStyle(side.index)"
+              >
+                <h3
+                  class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
+                  :style="getImageCardTitleStyle(side.index)"
+                >
+                  {{ side.card.title }}
+                </h3>
+                <p
+                  v-if="side.card.description"
+                  class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+                >
+                  {{ side.card.description }}
+                </p>
+                <div
+                  v-if="side.card.image"
+                  class="-mx-8 -mb-7 mt-auto flex-1 overflow-hidden max-md:-mx-6"
+                >
+                  <img
+                    :src="side.card.image"
+                    :alt="side.card.imageAlt ?? side.card.title"
+                    class="block h-full w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
+                    loading="lazy"
+                  />
+                </div>
+              </article>
             </div>
-          </article>
-        </template>
+          </template>
 
-        <!-- 横排卡片：左文右图（image-card 且单列行时自动启用） -->
-        <template v-else>
-          <article
-            v-for="(card, cardIndex) in row.cards"
-            :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
-            class="group flex items-stretch gap-8 overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:flex-col max-md:gap-5 max-md:px-6"
-            :style="getImageCardStyle(row.startIndex + cardIndex)"
-          >
-            <div class="flex min-w-0 flex-1 flex-col justify-center">
+          <!-- 竖排卡片：上文下图（行内多列时使用） -->
+          <template v-else-if="row.cols > 1">
+            <article
+              v-for="(card, cardIndex) in row.cards"
+              :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+              class="group flex flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-lg:min-h-84 max-md:px-6"
+              :style="getImageCardStyle(row.startIndex + cardIndex)"
+            >
               <h3
                 class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
                 :style="getImageCardTitleStyle(row.startIndex + cardIndex)"
@@ -90,98 +131,124 @@
               >
                 {{ card.description }}
               </p>
+              <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-hidden max-md:-mx-6">
+                <img
+                  :src="card.image"
+                  :alt="card.imageAlt ?? card.title"
+                  class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+          </template>
+
+          <!-- 横排卡片：左文右图（image-card 且单列行时自动启用） -->
+          <template v-else>
+            <article
+              v-for="(card, cardIndex) in row.cards"
+              :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+              class="group flex items-stretch gap-8 overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-lg:min-h-84 max-md:flex-col max-md:gap-5 max-md:px-6"
+              :style="getImageCardStyle(row.startIndex + cardIndex)"
+            >
+              <div class="flex min-w-0 flex-1 flex-col justify-center">
+                <h3
+                  class="text-h2 font-bold leading-title whitespace-pre-line max-lg:text-h3"
+                  :style="getImageCardTitleStyle(row.startIndex + cardIndex)"
+                >
+                  {{ card.title }}
+                </h3>
+                <p
+                  v-if="card.description"
+                  class="mt-3 text-small text-text-secondary leading-small whitespace-pre-line"
+                >
+                  {{ card.description }}
+                </p>
+              </div>
+              <div
+                v-if="card.image"
+                class="-my-7 -mr-8 flex w-[600px] shrink-0 items-center justify-end overflow-hidden max-md:-mx-6 max-md:mb-[-1.75rem] max-md:mt-0 max-md:w-[calc(100%+3rem)]"
+              >
+                <img
+                  :src="card.image"
+                  :alt="card.imageAlt ?? card.title"
+                  class="h-full max-h-full w-full object-contain object-right transition-transform duration-normal group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none max-md:h-auto max-md:object-center"
+                  loading="lazy"
+                />
+              </div>
+            </article>
+          </template>
+        </div>
+      </template>
+
+      <template v-else>
+        <div
+          v-for="(row, rowIndex) in cardRows"
+          :key="`row-${rowIndex}`"
+          :class="[
+            'grid gap-6 max-lg:gap-5',
+            rowIndex === 0 ? 'mt-14 max-lg:mt-10' : 'mt-6',
+            getGridColsClass(row.cols),
+          ]"
+        >
+          <article
+            v-for="(card, cardIndex) in row.cards"
+            :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
+            :class="[
+              'flex min-h-135 flex-col overflow-hidden rounded-[20px] border [background:var(--image-card-grid-panel-bg)] [border-color:var(--image-card-grid-panel-border)] [box-shadow:0_18px_44px_var(--image-card-grid-panel-shadow)] [color:var(--image-card-grid-panel-text)] transition-[transform,box-shadow] duration-normal hover:-translate-y-1 hover:[box-shadow:0_24px_54px_var(--image-card-grid-panel-shadow)] max-lg:min-h-140 max-md:min-h-125 max-md:rounded-card',
+              isWideFeaturePanelCard(row.startIndex + cardIndex)
+                ? 'col-span-full min-h-110 max-lg:min-h-125 max-md:min-h-115'
+                : '',
+            ]"
+            :style="getPanelStyle(row.startIndex + cardIndex)"
+          >
+            <div
+              class="flex items-center justify-between gap-5 px-[34px] pt-8 text-caption font-bold leading-none tracking-[0.08em] [color:var(--image-card-grid-panel-muted)] max-md:px-6 max-md:pt-[26px] max-md:text-small"
+            >
+              <span>{{ card.number ?? formatPanelNumber(row.startIndex + cardIndex) }}</span>
+              <span>{{ card.module ?? title }}</span>
             </div>
             <div
-              v-if="card.image"
-              class="flex w-[42%] shrink-0 items-center justify-center max-md:w-full"
-            >
-              <img
-                :src="card.image"
-                :alt="card.imageAlt ?? card.title"
-                class="h-auto max-h-full w-full object-contain transition-transform duration-normal group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
-                loading="lazy"
-              />
-            </div>
-          </article>
-        </template>
-      </div>
-    </template>
-
-    <template v-else>
-      <div
-        v-for="(row, rowIndex) in cardRows"
-        :key="`row-${rowIndex}`"
-        :class="[
-          'grid gap-6 max-lg:gap-5',
-          rowIndex === 0 ? 'mt-14 max-lg:mt-10' : 'mt-6',
-          getGridColsClass(row.cols),
-        ]"
-      >
-        <article
-          v-for="(card, cardIndex) in row.cards"
-          :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
-          :class="[
-            'flex min-h-145 flex-col overflow-hidden rounded-[20px] border [background:var(--image-card-grid-panel-bg)] [border-color:var(--image-card-grid-panel-border)] [box-shadow:0_18px_44px_var(--image-card-grid-panel-shadow)] [color:var(--image-card-grid-panel-text)] transition-[transform,box-shadow] duration-normal hover:-translate-y-1 hover:[box-shadow:0_24px_54px_var(--image-card-grid-panel-shadow)] max-lg:min-h-140 max-md:min-h-125 max-md:rounded-card',
-            isWideFeaturePanelCard(row.startIndex + cardIndex)
-              ? 'col-span-full min-h-110 max-lg:min-h-125 max-md:min-h-115'
-              : '',
-          ]"
-          :style="getPanelStyle(row.startIndex + cardIndex)"
-        >
-          <div
-            class="flex items-center justify-between gap-5 px-[34px] pt-8 text-caption font-bold leading-none tracking-[0.08em] [color:var(--image-card-grid-panel-muted)] max-md:px-6 max-md:pt-[26px] max-md:text-small"
-          >
-            <span>{{ card.number ?? formatPanelNumber(row.startIndex + cardIndex) }}</span>
-            <span>{{ card.module ?? title }}</span>
-          </div>
-          <div
-            class="mx-[34px] mt-[15px] h-px [background:var(--image-card-grid-panel-divider)] max-md:mx-6 max-md:mt-[22px]"
-          ></div>
-          <div
-            :class="[
-              'px-[34px] pt-[27px] max-md:px-6 max-md:pt-7',
-              isWideFeaturePanelCard(row.startIndex + cardIndex) ? 'pt-[30px]' : '',
-            ]"
-          >
-            <h3
+              class="mx-[34px] mt-[15px] h-px [background:var(--image-card-grid-panel-divider)] max-md:mx-6 max-md:mt-[22px]"
+            ></div>
+            <div
               :class="[
-                'm-0 max-w-130 text-[32px] font-extrabold leading-1.16 [color:var(--image-card-grid-panel-text)] max-lg:text-h1 max-md:text-[26px]',
-                isWideFeaturePanelCard(row.startIndex + cardIndex)
-                  ? 'max-w-170 max-md:max-w-full'
-                  : '',
+                'px-[34px] pt-[27px] max-md:px-6 max-md:pt-7',
+                isWideFeaturePanelCard(row.startIndex + cardIndex) ? 'pt-[30px]' : '',
               ]"
             >
-              {{ card.title }}
-            </h3>
-            <p
-              v-if="card.description"
-              class="mt-[26px] text-[13px] leading-1.8 [color:var(--image-card-grid-panel-muted)] max-md:mt-[18px] max-md:text-small"
-            >
-              {{ card.description }}
-            </p>
-          </div>
-          <div
-            v-if="card.image"
-            :class="[
-              'mt-auto w-full px-[26px] pt-7',
-              isWideFeaturePanelCard(row.startIndex + cardIndex) ? 'pt-5' : '',
-            ]"
-          >
+              <h3
+                :class="[
+                  'm-0 text-[30px]  font-extrabold leading-1.16 whitespace-pre-line [color:var(--image-card-grid-panel-text)] max-lg:text-h1 max-md:text-[26px]',
+                  isWideFeaturePanelCard(row.startIndex + cardIndex)
+                    ? 'max-w-170 max-md:max-w-full'
+                    : '',
+                ]"
+              >
+                {{ card.title }}
+              </h3>
+              <p
+                v-if="card.description"
+                class="mt-2 text-[13px] leading-1.8 whitespace-pre-line [color:var(--image-card-grid-panel-muted)] max-md:mt-[18px] max-md:text-small"
+              >
+                {{ card.description }}
+              </p>
+            </div>
             <img
+              v-if="card.image"
               :src="card.image"
               :alt="card.imageAlt ?? card.title"
               :class="[
-                'block h-auto max-h-70 w-full object-contain object-bottom',
+                'block h-auto w-full object-contain object-bottom mt-6',
                 isWideFeaturePanelCard(row.startIndex + cardIndex)
                   ? 'max-h-80 max-md:max-h-70'
                   : '',
               ]"
               loading="lazy"
             />
-          </div>
-        </article>
-      </div>
-    </template>
+          </article>
+        </div>
+      </template>
+    </div>
   </SectionBlock>
 </template>
 
@@ -203,11 +270,28 @@ export interface ImageCardGridItem {
 
 type ImageCardGridVariant = 'image-card' | 'feature-panel'
 type ImageCardGridColorScheme = 'brand' | 'accent' | 'mint' | 'neutral' | 'clean' | 'gray'
+/** 布局模式：grid 常规网格；feature-left 单卡居左 + 双卡垂直居右；feature-right 双卡垂直居左 + 单卡居右 */
+type ImageCardGridLayout = 'grid' | 'feature-left' | 'feature-right'
 
 interface CardRow {
   cards: readonly ImageCardGridItem[]
   cols: number
   startIndex: number
+}
+
+interface SplitSideCard {
+  card: ImageCardGridItem
+  index: number
+}
+
+interface SplitGroup {
+  featureCard: ImageCardGridItem
+  featureIndex: number
+  sideCards: SplitSideCard[]
+}
+
+interface RenderCardRow extends CardRow {
+  splitGroup: SplitGroup | null
 }
 
 const props = withDefaults(
@@ -216,18 +300,25 @@ const props = withDefaults(
     titleHighlight?: string
     subtitle?: string
     cards: readonly ImageCardGridItem[]
-    columns?: 2 | 3 | 4
+    columns?: 2 | 3 | 4 | 5
     /** 每行列数配置，最大 3 行。如 [3, 2, 2] 第1行3列、第2行2列、第3行2列 */
     rows?: number[]
     variant?: ImageCardGridVariant
     colorScheme?: ImageCardGridColorScheme
+    /** 布局模式，见 ImageCardGridLayout */
+    layout?: ImageCardGridLayout
+    /** 模块内容最大宽度（px），不传则使用 SectionBlock 默认宽度 */
+    maxWidth?: number
   }>(),
   {
     columns: 3,
     variant: 'image-card',
     colorScheme: 'brand',
+    layout: 'grid',
   },
 )
+
+const containerStyle = computed(() => (props.maxWidth ? { maxWidth: `${props.maxWidth}px` } : {}))
 
 const titleParts = computed(() => {
   const highlight = props.titleHighlight?.trim()
@@ -528,26 +619,51 @@ const effectiveRows = computed(() => {
 
 const useMultiRow = computed(() => effectiveRows.value.length > 0)
 
+/** 单卡 + 双卡垂直布局：仅 image-card 且行内恰 3 张卡片时生效 */
+function getSplitGroup(row: CardRow): SplitGroup | null {
+  if (props.layout === 'grid' || row.cols !== 3 || row.cards.length !== 3) return null
+  if (props.layout === 'feature-left') {
+    return {
+      featureCard: row.cards[0]!,
+      featureIndex: row.startIndex,
+      sideCards: [
+        { card: row.cards[1]!, index: row.startIndex + 1 },
+        { card: row.cards[2]!, index: row.startIndex + 2 },
+      ],
+    }
+  }
+  return {
+    featureCard: row.cards[2]!,
+    featureIndex: row.startIndex + 2,
+    sideCards: [
+      { card: row.cards[0]!, index: row.startIndex },
+      { card: row.cards[1]!, index: row.startIndex + 1 },
+    ],
+  }
+}
+
 /** 每行数据：多行模式按 rows 拆分，单行模式（向后兼容）整行为一个 row */
-const cardRows = computed((): CardRow[] => {
+const cardRows = computed((): RenderCardRow[] => {
+  const buildRow = (row: CardRow): RenderCardRow => ({ ...row, splitGroup: getSplitGroup(row) })
   if (useMultiRow.value) {
-    const rows: CardRow[] = []
+    const rows: RenderCardRow[] = []
     let start = 0
     for (const cols of effectiveRows.value) {
       const end = start + cols
-      rows.push({ cards: props.cards.slice(start, end), cols, startIndex: start })
+      rows.push(buildRow({ cards: props.cards.slice(start, end), cols, startIndex: start }))
       start = end
     }
     return rows
   }
   // 向后兼容：未传 rows 时退化为单行，列数由 columns 控制
-  return [{ cards: props.cards, cols: props.columns ?? 3, startIndex: 0 }]
+  return [buildRow({ cards: props.cards, cols: props.columns ?? 3, startIndex: 0 })]
 })
 
 function getGridColsClass(cols: number): string {
   if (cols === 1) return 'grid-cols-1'
   if (cols === 2) return 'grid-cols-1 sm:grid-cols-2'
   if (cols === 3) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+  if (cols === 5) return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5'
   return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
 }
 
