@@ -3,13 +3,13 @@
     <h1 class="sr-only">销售管理 - 销帮帮 CRM</h1>
     <HeroBanner mode="single" :slides="[heroBannerSlide]" />
 
-    <IconCardGrid
+    <ImageCardGrid
       :title="aiCoachSection.title"
       :subtitle="aiCoachSection.description"
-      :features="aiCoachSection.cards"
-      variant="icon-badge"
-      :columns="4"
-      color-scheme="brand"
+      :cards="aiCoachSection.cards"
+      variant="image-card"
+      :columns="2"
+      color-scheme="neutral"
     />
 
     <TabShowcase
@@ -40,22 +40,14 @@
       theme="orange"
     />
 
-    <CTASection
-      variant="dawn"
-      :title="footerCtaSection.title"
-      :subtitle="footerCtaSection.subtitle"
-      :primary-cta="footerCtaSection.primaryCta"
-      :secondary-cta="footerCtaSection.secondaryCta"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
+import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
-import CTASection from '@/client/components/business/CTASection.vue'
 import {
   heroBannerSlide,
   aiCoachSection,

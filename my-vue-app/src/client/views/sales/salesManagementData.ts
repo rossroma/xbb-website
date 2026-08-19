@@ -1,9 +1,5 @@
 // ========== 销售管理页面 SEO 配置 ==========
 import {
-  Robot,
-  LoopOnce,
-  Monitor,
-  Trend,
   History,
   DataDisplay,
   Calendar,
@@ -18,7 +14,7 @@ import {
   Comment,
 } from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
-import type { FeatureItem } from '@/client/components/business/IconCardGrid.vue'
+import type { ImageCardGridItem } from '@/client/components/business/ImageCardGrid.vue'
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
@@ -27,7 +23,8 @@ const trialPagePath = toPagePath('single_mfsy')
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '销售管理',
-  subtitle: '精细化销售管理助力业绩增长',
+  subtitle: '精细化运营',
+  desc:'支持 AI 销售陪练，自动生成训练任务赋能团队成长，客户跟进全程可追溯，访客与签到管理让外勤过程透明闭环，全面提升销售执行效率与业绩产出',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
   secondaryHref: trialPagePath,
@@ -41,10 +38,10 @@ export const heroSection = {
 export const heroBannerSlide = {
   key: 'sales-hero',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: heroSection.title,
   subtitle: heroSection.subtitle,
-  desc: '',
+  desc: heroSection.desc,
+  highlightMode: 'title',
   primaryCta: heroSection.primaryCta,
   primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
@@ -59,37 +56,41 @@ export const heroBannerSlide = {
   visualImageAlt: heroSection.imageAlt,
 }
 
-// ========== AI 销售陪练区域（BadgeCardGrid） ==========
+// ========== AI 销售陪练区域（ImageCardGrid） ==========
 export const aiCoachSection = {
   title: 'AI 销售陪练，让每个销售都练在关键处',
   description:
     'AI CRM 基于真实沟通数据分析销售薄弱环节，自动生成陪练任务；沉淀话术、产品知识与异议处理，系统化支撑新人培训与团队复训。Web/移动端多端可用，AI 即时评分并输出报告，便于追踪完成情况和能力变化，培训更精准、更可持续。',
   cards: [
     {
-      icon: Robot,
       title: '自动生成任务',
       description:
         '从真实沟通中识别问题，一键生成陪练主题和客户画像，减少主管手动设计训练场景的成本。',
+      image: '/images/sales/auto-task.png',
+      imageAlt: '自动生成任务展示图',
     },
     {
-      icon: LoopOnce,
       title: '固定主题复用',
       description:
         '将优秀话术、产品知识、异议处理等沉淀为标准训练内容，支持新人反复练、团队周期练。',
+      image: '/images/sales/reusable-topic.png',
+      imageAlt: '固定主题复用展示图',
     },
     {
-      icon: Monitor,
       title: '双端练习即时反馈',
       description:
         'Web 和移动端均可练习，AI 实时评分，自动生成练习报告，帮助销售快速改进表达和应对能力。',
+      image: '/images/sales/dual-feedback.png',
+      imageAlt: '双端练习即时反馈展示图',
     },
     {
-      icon: Trend,
       title: '数据闭环追踪',
       description:
         '练习次数、完成情况、得分排名、能力维度一目了然，方便主管做表扬、辅导和复训安排。',
+      image: '/images/sales/data-loop.png',
+      imageAlt: '数据闭环追踪展示图',
     },
-  ] as readonly FeatureItem[],
+  ] as readonly ImageCardGridItem[],
 }
 
 // ========== AI 过程透明化区域（TabShowcase） ==========
@@ -101,7 +102,7 @@ export const transparentSection = {
       label: '客户跟进全程可追溯',
       description:
         '每一条线索从分配到触达、从沟通到转化，全链路记录不遗漏。客户为什么丢了、卡在哪一步、谁的跟进出问题了，数据替你找答案。',
-      image: '/images/sales/tab-transparent-1.png',
+      image: '/images/sales/followup-trace.png',
       imageAlt: '客户跟进追溯功能截图',
       badgeIcon: History,
     },
@@ -110,7 +111,7 @@ export const transparentSection = {
       label: '管理决策有据可依',
       description:
         '团队整体沟通数据自动汇总为可视化看板，个人排名实时呈现，管理决策不再凭感觉、拍脑袋。',
-      image: '/images/sales/tab-transparent-2.png',
+      image: '/images/sales/data-driven.png',
       imageAlt: '管理决策数据看板截图',
       badgeIcon: DataDisplay,
     },
@@ -126,7 +127,7 @@ export const visitPlanSection = {
       label: '多入口快捷创建',
       description:
         '客户详情页、首页看板、批量导入，从客户出发一键建立访客计划，让计划制定不再繁琐。',
-      image: '/images/sales/tab-visit-1.png',
+      image: '/images/sales/quick-create.png',
       imageAlt: '访客计划创建功能截图',
       badgeIcon: AddOne,
     },
@@ -135,7 +136,7 @@ export const visitPlanSection = {
       label: '日历视图 + 数据总览',
       description:
         '月/周日历视图一目了然，颜色标记状态——未开始/进行中/已完成/已逾期，团队拜访安排尽在掌控。',
-      image: '/images/sales/tab-visit-2.png',
+      image: '/images/sales/calendar-view.png',
       imageAlt: '访客日历视图截图',
       badgeIcon: Calendar,
     },
@@ -143,7 +144,7 @@ export const visitPlanSection = {
       key: 'auto-close',
       label: '执行 → 关联 → 自动完成',
       description: '签到、写跟进自动关联访客计划，任务完成后自动结算，审批闭环。',
-      image: '/images/sales/tab-visit-3.png',
+      image: '/images/sales/auto-complete.png',
       imageAlt: '访客执行闭环截图',
       badgeIcon: CheckOne,
     },
@@ -159,7 +160,7 @@ export const checkinSection = {
       label: '双模式签到签退',
       description:
         '极速模式一键签到，标准模式支持签退自动写跟进；支持设置签到范围、超时补签，灵活适配不同外勤场景。',
-      image: '/images/sales/tab-checkin-1.png',
+      image: '/images/sales/dual-checkin.png',
       imageAlt: '签到签退功能截图',
       badgeIcon: CheckOne,
     },
@@ -168,7 +169,7 @@ export const checkinSection = {
       label: '多地址 + 轨迹追踪',
       description:
         '支持客户/线索多地址签到，地图/轨迹视图切换，拜访时长自动统计，外勤轨迹一目了然。',
-      image: '/images/sales/tab-checkin-2.png',
+      image: '/images/sales/track-trace.png',
       imageAlt: '轨迹追踪功能截图',
       badgeIcon: Local,
     },
@@ -177,7 +178,7 @@ export const checkinSection = {
       label: '签到 → 自动沉淀',
       description:
         '签退自动生成跟进记录、关联访客计划，客户旅程中完整呈现签到历史，让每一次外勤签到都有据可查。',
-      image: '/images/sales/tab-checkin-3.png',
+      image: '/images/sales/auto-record.png',
       imageAlt: '签到自动沉淀截图',
       badgeIcon: FileText,
     },
@@ -186,7 +187,7 @@ export const checkinSection = {
       label: 'PDCA 闭环',
       description:
         '从制定拜访计划、现场签到执行、填写跟进记录，到主管复盘拜访结果，系统完整串联 Plan-Do-Check-Act 管理闭环。主管不仅能看到计划有没有完成，还能基于逾期情况、客户反馈和跟进质量，持续优化拜访节奏、客户分配和销售动作。',
-      image: '/images/sales/tab-checkin-4.png',
+      image: '/images/sales/pdca-loop.png',
       imageAlt: 'PDCA 闭环截图',
       badgeIcon: Cycle,
     },
