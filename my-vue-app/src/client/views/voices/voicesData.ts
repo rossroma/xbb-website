@@ -2,8 +2,6 @@
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
-const liuziPagePath = '/liuzi'
-
 
 // ========== 用户心声根类目配置 ==========
 
@@ -16,15 +14,16 @@ export const VOICE_ROOT_BID = 19
 export const voicesBannerSlide = {
   key: 'voices-banner',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: '用户心声',
-  subtitle: '来自各行业的真实客户评价',
-  desc: '',
+  subtitle: '',
+  desc: '来自各行业的真实客户评价',
+  highlightMode: 'title',
+  highlightUnderline: true,
   primaryCta: '免费试用',
   primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
-  secondaryHref: liuziPagePath,
-  bg: 'linear-gradient(135deg, #f0f1ff 0%, #e8e9fe 52%, #dce0ff 100%)',
+  secondaryHref: trialPagePath,
+  bg: "url('/images/voices/hero-banner.png') center / cover no-repeat",
   line: 'rgba(91, 97, 255, 0.16)',
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
