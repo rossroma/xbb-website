@@ -68,6 +68,7 @@
         <ul class="text-[13px] text-text-secondary space-y-1 list-disc list-inside">
           <li>Props: mode="single", slides: BannerSlide[] (取第一个)</li>
           <li>singleLayout: horizontal | vertical</li>
+          <li>BannerSlide.highlightMode: none | title | subtitle | both（仅 single 模式读取）</li>
           <li>Emits: action(slide, 'primary' | 'secondary')</li>
           <li>全宽通栏，grid-cols-[1fr_1fr]，移动端堆叠</li>
         </ul>
@@ -367,7 +368,7 @@
     <PlaygroundShell
       section-id="image-card-grid"
       title="ImageCardGrid 图片卡片网格"
-      description="图片卡片网格组件，支持原 image-card 图文卡片和大卡片 feature-panel 两种视觉风格。"
+      description="图片卡片网格组件，支持 image-card 图文卡片和 feature-panel 大卡片两种视觉风格。"
       code-tag="ImageCardGrid"
       code-self-closing
       :code-extra-props="imageCardGridCodeExtra"
@@ -377,7 +378,7 @@
         'Props: title, cards（必需）；titleHighlight?, subtitle?, columns?, variant?, colorScheme?',
         '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
         'variant: image-card（标题 + 描述 + 图片）| feature-panel（序号 + 模块 + 标题 + 描述 + 底部图片大卡片）',
-        'colorScheme: brand | accent | mint | neutral | clean',
+        'colorScheme: brand | accent | mint | neutral | clean | gray',
         'columns 用于单行列数；rows 可按每行分别配置列数，当前示例通过第 1/2/3 行按钮控制 rows',
         'ImageCardGridItem 字段：title（必需）；description?, image?, imageAlt?, number?, module?',
       ]"
@@ -398,6 +399,27 @@
           >
             {{ imageCardGridTitleHighlightEnabled ? '取消标题高亮' : '高亮标题末两字' }}
           </button>
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
+            卡片布局（image-card 且单行 3 卡时生效）
+          </span>
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="option in imageCardGridLayoutOptions"
+              :key="option.value"
+              type="button"
+              :class="[
+                'px-4 py-1.5 rounded-pill text-[13px] font-medium transition-all duration-fast',
+                imageCardGridLayout === option.value
+                  ? 'bg-brand-primary text-white'
+                  : 'text-text-secondary border border-border-default hover:text-text-primary hover:border-brand-primary',
+              ]"
+              @click="setImageCardGridLayout(option.value)"
+            >
+              {{ option.label }}
+            </button>
+          </div>
         </div>
         <div class="flex flex-col gap-2">
           <span class="text-caption font-semibold text-text-tertiary uppercase tracking-wider">
@@ -435,12 +457,11 @@
       <ImageCardGrid
         v-bind="icgProps as any"
         :rows="imageCardGridRows"
+        :layout="imageCardGridLayout"
         :title-highlight="
           imageCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(icgProps.title) : undefined
         "
-        :cards="
-          icgProps.variant === 'feature-panel' ? imagePanelDemoCards : imageCardDemoFeatures
-        "
+        :cards="icgProps.variant === 'feature-panel' ? imagePanelDemoCards : imageCardDemoFeatures"
       />
     </PlaygroundShell>
 
@@ -448,7 +469,7 @@
     <PlaygroundShell
       section-id="icon-card-grid"
       title="IconCardGrid 能力卡片网格"
-      description="展示功能/能力卡片，支持 5 种视觉风格 × 4 种色彩方案，2 / 3 / 4 / 5 / 7 列布局。"
+      description="展示功能/能力卡片，支持 6 种视觉风格 × 4 种色彩方案，2 / 3 / 4 / 5 / 7 列布局。"
       code-tag="IconCardGrid"
       :code-extra-props="featureCardGridCodeExtra"
       code-self-closing
@@ -457,9 +478,10 @@
       :usage-notes="[
         'Props: title, features（必需）；titleHighlight?, subtitle?, topImages?, columns?, variant?, colorScheme?',
         '标题高亮按钮：点击“高亮标题末两字”会取当前 title 最后两个字作为 title-highlight；再次点击取消高亮。',
-        'variant: plain（默认）| icon-badge（图标徽章行内）| icon-badge-protruding（凸出）| accent-strip（顶部强调线）| icon-tile（图标方块 + 标题下置）',
+        'variant: plain（默认）| icon-badge（图标徽章行内）| icon-badge-protruding（凸出）| accent-strip（顶部强调线）| icon-tile（图标方块 + 标题下置）| capability-card（图标 + 多段说明 + 底部预览）',
         'colorScheme: brand（品牌橙）| accent（蓝紫）| neutral（中性灰）| clean（icon-tile 无底色/无阴影/小图标）',
         'columns: 2 | 3 | 4 | 5 | 7（默认 4），移动端自动 1 列',
+        'FeatureItem 字段：title, description（必需）；icon?, image?, imageAlt?, iconImage?, iconAlt?, intro?, previewType?, accentColor?',
       ]"
       v-slot="fgProps"
     >
@@ -484,7 +506,11 @@
           iconCardGridTitleHighlightEnabled ? getLastTwoTitleHighlight(fgProps.title) : undefined
         "
         :features="
-          fgProps.variant === 'icon-badge-protruding' ? ecoConnectCards : featureCardDemoFeatures
+          fgProps.variant === 'capability-card'
+            ? imageCapabilityDemoCards
+            : fgProps.variant === 'icon-badge-protruding'
+              ? ecoConnectCards
+              : featureCardDemoFeatures
         "
       />
     </PlaygroundShell>
@@ -775,7 +801,7 @@
             ? '研发投入、团队能力与自主知识产权，支撑产品持续迭代。'
             : mpProps.columns === 3
               ? '实时数据尽在掌握，帮助企业快速决策'
-          : undefined
+              : undefined
         "
       />
     </PlaygroundShell>
@@ -804,9 +830,7 @@
 
     <!-- ===== ResearchStrengthSection ===== -->
     <Card id="research-strength-section" class="scroll-mt-14 lg:scroll-mt-0">
-      <h2 class="text-h2 font-bold text-text-primary mb-2">
-        ResearchStrengthSection 研发实力
-      </h2>
+      <h2 class="text-h2 font-bold text-text-primary mb-2">ResearchStrengthSection 研发实力</h2>
       <p class="text-small text-text-secondary mb-6">
         公司介绍页中“研发实力”模块，包含居中标题、说明文案和证书/团队图片矩阵。
       </p>
@@ -962,6 +986,27 @@
       <ProcessSteps v-bind="psProps as any" :steps="processDemoSteps" />
     </PlaygroundShell>
 
+    <!-- ===== ContactHotline ===== -->
+    <PlaygroundShell
+      section-id="contact-hotline"
+      title="ContactHotline 热线联系方式"
+      description="单热线联系方式卡片，适合推广大使、伙伴合作等只需要突出一个客服电话的模块。"
+      code-tag="ContactHotline"
+      code-self-closing
+      :code-extra-props="contactHotlineCodeExtra"
+      :controls="contactHotlineControls"
+      :initial-props="contactHotlineDefaults"
+      :usage-notes="[
+        'Props: title?, subtitle?, label?, description?, phone, displayPhone?, href?, icon?, theme?',
+        'theme: brand（橙色）| accent（蓝紫）| blue（蓝色）',
+        '未传 href 时会根据 phone 自动生成 tel: 链接',
+        '适合单个热线入口；多联系方式列表继续使用 ContactCard',
+      ]"
+      v-slot="hotlineProps"
+    >
+      <ContactHotline v-bind="hotlineProps as any" />
+    </PlaygroundShell>
+
     <!-- ===== ContactCard ===== -->
     <PlaygroundShell
       section-id="contact-card"
@@ -981,10 +1026,7 @@
       ]"
       v-slot="ccProps"
     >
-      <ContactCard
-        v-bind="ccProps as any"
-        :cards="contactCards"
-      />
+      <ContactCard v-bind="ccProps as any" :cards="contactCards" />
     </PlaygroundShell>
 
     <!-- ===== ReviewCardGrid ===== -->
@@ -1124,7 +1166,9 @@ import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
 import PromoBanner from '@/client/components/business/PromoBanner.vue'
 import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
 import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
-import ArticleSidebar, { type ArticleSidebarVariant } from '@/client/components/business/ArticleSidebar.vue'
+import ArticleSidebar, {
+  type ArticleSidebarVariant,
+} from '@/client/components/business/ArticleSidebar.vue'
 import TabShowcase from '@/client/components/business/TabShowcase.vue'
 import IconCardGrid from '@/client/components/business/IconCardGrid.vue'
 import CTASection from '@/client/components/business/CTASection.vue'
@@ -1141,6 +1185,7 @@ import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
 import PlatformDownload from '@/client/components/business/PlatformDownload.vue'
 import FaqList from '@/client/components/business/FaqList.vue'
+import ContactHotline from '@/client/components/business/ContactHotline.vue'
 import ContactCard from '@/client/components/business/ContactCard.vue'
 import ProcessSteps from '@/client/components/business/ProcessSteps.vue'
 import Timeline from '@/client/components/business/Timeline.vue'
@@ -1232,6 +1277,34 @@ const contactCards = [
   },
 ] as const
 
+const contactHotlineControls = [
+  {
+    label: 'Theme',
+    prop: 'theme',
+    options: [
+      { label: 'brand（橙色）', value: 'brand' },
+      { label: 'accent（蓝紫）', value: 'accent' },
+      { label: 'blue（蓝色）', value: 'blue' },
+    ],
+  },
+]
+
+const contactHotlineDefaults = {
+  title: '立即联系客服，申请成为推荐大使',
+  label: '客服热线',
+  description: '推荐大使咨询',
+  phone: footerHotline,
+  displayPhone: footerHotline,
+  theme: 'brand',
+}
+
+const contactHotlineCodeExtra = {
+  title: '"立即联系客服，申请成为推荐大使"',
+  label: '"客服热线"',
+  description: '"推荐大使咨询"',
+  phone: `"${footerHotline}"`,
+}
+
 const contactCardCodeExtra = {
   ':cards': 'contactCards',
 }
@@ -1299,6 +1372,49 @@ const featureCardDemoFeatures = [
     title: '报表可信，管理决策更准',
     description: '减少重复客户后，客户数、跟进率、转化率和成交数据更接近真实。',
     icon: Trend,
+  },
+] as const
+
+const imageCapabilityDemoCards = [
+  {
+    icon: User,
+    title: '客户管理',
+    intro: '360° 客户画像，让每位客户都被记住',
+    description: '统一管理客户信息、联系记录、商机跟进，构建完整客户档案，随时掌握客户动态。',
+    image: '/images/customer/product-intro.png',
+    imageAlt: '客户管理能力展示',
+  },
+  {
+    icon: Trend,
+    title: '销售管理',
+    intro: '标准化流程，每个商机都有迹可循',
+    description: '从线索到成交的全流程管理，阶段推进器规范销售动作，漏斗分析精准预测业绩。',
+    image: '/images/customer/tab-tracking-new.png',
+    imageAlt: '销售管理能力展示',
+  },
+  {
+    icon: Search,
+    title: '市场管理',
+    intro: '全渠道营销，驱动增长飞轮',
+    description: '整合多渠道营销数据，追踪广告投放效果，计算 ROI，让每一分市场预算都花得值得。',
+    image: '/images/customer/tab-collaboration-new.png',
+    imageAlt: '市场管理能力展示',
+  },
+  {
+    icon: ChartHistogram,
+    title: '智能报表',
+    intro: '可视化 BI，决策有据可依',
+    description: '自动生成销售日报、周报、月报，多维度数据分析，帮助管理者快速洞察业务趋势。',
+    image: '/images/customer/dedup-report-new.png',
+    imageAlt: '智能报表能力展示',
+  },
+  {
+    icon: SettingConfig,
+    title: '流程引擎',
+    intro: '零代码搭建，业务流程自动化',
+    description: '可视化流程设计器，拖拽式配置审批流、业务流，灵活适配企业个性化管理需求。',
+    image: '/images/customer/dedup-rules-new.png',
+    imageAlt: '流程引擎能力展示',
   },
 ] as const
 
@@ -1391,8 +1507,7 @@ const imagePanelDemoCards = [
     number: '02',
     module: '过程管理',
     title: '销售动作可视，推进节奏更稳',
-    description:
-      '围绕客户跟进、任务提醒和阶段推进建立标准动作，让管理者及时发现卡点并推动协作。',
+    description: '围绕客户跟进、任务提醒和阶段推进建立标准动作，让管理者及时发现卡点并推动协作。',
     image: '/images/customer/tab-tracking-new.png',
     imageAlt: '销售动作可视展示',
   },
@@ -1400,8 +1515,7 @@ const imagePanelDemoCards = [
     number: '03',
     module: '智能运营',
     title: '数据洞察沉淀，决策更有依据',
-    description:
-      '将客户行为、销售过程和转化结果汇聚到统一视图，帮助团队持续优化运营策略。',
+    description: '将客户行为、销售过程和转化结果汇聚到统一视图，帮助团队持续优化运营策略。',
     image: '/images/customer/tab-collaboration-new.png',
     imageAlt: '数据洞察展示',
   },
@@ -1482,12 +1596,12 @@ const imagePanelDemoCards = [
 const heroBannerDemoSlide = {
   key: 'demo-hero',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: '客户管理',
   subtitle: '客户全生命周期数字化管理',
   desc: '',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
+  highlightMode: 'subtitle',
   bg: "url('/images/customer/customer.png') center / cover no-repeat",
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
@@ -1496,7 +1610,7 @@ const heroBannerDemoSlide = {
   showVisual: true,
   visualImage: '/images/customer/product-intro.png',
   visualImageAlt: '客户管理产品展示',
-}
+} satisfies BannerSlide
 
 const heroBannerSingleLayout = ref<'horizontal' | 'vertical'>('vertical')
 const heroBannerSingleLayoutOptions = ['horizontal', 'vertical'] as const
@@ -1524,7 +1638,18 @@ const tabShowcaseTitleHighlightEnabled = ref(false)
 const imageCardGridTitleHighlightEnabled = ref(false)
 const iconCardGridTitleHighlightEnabled = ref(false)
 
-type ImageCardGridColumnCount = 2 | 3 | 4
+type ImageCardGridLayoutOption = 'grid' | 'feature-left' | 'feature-right'
+const imageCardGridLayout = ref<ImageCardGridLayoutOption>('grid')
+const imageCardGridLayoutOptions: readonly { label: string; value: ImageCardGridLayoutOption }[] = [
+  { label: '常规网格', value: 'grid' },
+  { label: '左大卡 + 双卡垂直', value: 'feature-left' },
+  { label: '双卡垂直 + 右大卡', value: 'feature-right' },
+]
+function setImageCardGridLayout(layout: ImageCardGridLayoutOption): void {
+  imageCardGridLayout.value = layout
+}
+
+type ImageCardGridColumnCount = 2 | 3 | 4 | 5
 type ImageCardGridRowColumnCount = 0 | 1 | ImageCardGridColumnCount
 type PositiveImageCardGridRowColumnCount = Exclude<ImageCardGridRowColumnCount, 0>
 type ImageCardGridRowColumns = [
@@ -1533,7 +1658,7 @@ type ImageCardGridRowColumns = [
   ImageCardGridRowColumnCount,
 ]
 
-const imageCardGridRowColumns = ref<ImageCardGridRowColumns>([3, 0, 0])
+const imageCardGridRowColumns = ref<ImageCardGridRowColumns>([3, 2, 2])
 
 const imageCardGridRowColumnOptions: readonly {
   label: string
@@ -1544,6 +1669,7 @@ const imageCardGridRowColumnOptions: readonly {
   { label: '2 列', value: 2 },
   { label: '3 列', value: 3 },
   { label: '4 列', value: 4 },
+  { label: '5 列', value: 5 },
 ]
 
 const imageCardGridRowControls: readonly {
@@ -1581,10 +1707,7 @@ function isPositiveImageCardGridRowColumn(
   return columns > 0
 }
 
-function setImageCardGridRowColumns(
-  rowIndex: number,
-  columns: ImageCardGridRowColumnCount,
-): void {
+function setImageCardGridRowColumns(rowIndex: number, columns: ImageCardGridRowColumnCount): void {
   const next = [...imageCardGridRowColumns.value] as ImageCardGridRowColumns
   next[rowIndex] = columns
   imageCardGridRowColumns.value = next
@@ -1869,14 +1992,16 @@ const imageCardGridControls = [
       { label: 'mint', value: 'mint' },
       { label: 'neutral', value: 'neutral' },
       { label: 'clean', value: 'clean' },
+      { label: 'gray', value: 'gray' },
     ],
   },
 ]
 
 const imageCardGridDefaults = {
-  variant: 'feature-panel',
-  'color-scheme': 'mint',
-  title: '解锁你的工作新方式',
+  variant: 'image-card',
+  'color-scheme': 'brand',
+  title: '图片卡片网格',
+  subtitle: '用于展示带图片的业务能力、产品功能或场景入口',
 }
 
 // ===== IconCardGrid 交互式控件（含标题高亮按钮开关） =====
@@ -1885,6 +2010,7 @@ const featureCardGridControls = [
     label: 'Variant',
     prop: 'variant',
     options: [
+      { label: 'capability-card', value: 'capability-card' },
       { label: 'icon-badge', value: 'icon-badge' },
       { label: 'icon-tile', value: 'icon-tile' },
       { label: 'icon-badge-protruding', value: 'icon-badge-protruding' },
@@ -1916,10 +2042,11 @@ const featureCardGridControls = [
 ]
 
 const featureCardGridDefaults = {
-  variant: 'icon-badge',
-  'color-scheme': 'accent',
-  columns: 3,
-  title: '内容创作能力，协同效率更高',
+  variant: 'capability-card',
+  'color-scheme': 'brand',
+  columns: 5,
+  title: '销帮帮CRM基本能力',
+  subtitle: '提供给所有企业销售日常业务所需的基本功能，也可根据企业特殊场景，定制个性化数字服务',
 }
 
 // ===== CTASection 交互式控件 =====
@@ -2150,20 +2277,23 @@ const tabShowcaseDefaults = {
 const imageCardGridCodeExtra = computed<Record<string, string>>(() => {
   const extraProps: Record<string, string> = {
     ':cards': 'cards',
-    title: '"解锁你的工作新方式"',
-    variant: '"feature-panel"',
-    'color-scheme': '"mint"',
+    title: '"图片卡片网格"',
+    subtitle: '"用于展示带图片的业务能力、产品功能或场景入口"',
     ':rows': `[${imageCardGridRows.value.join(', ')}]`,
+  }
+  if (imageCardGridLayout.value !== 'grid') {
+    extraProps.layout = `"${imageCardGridLayout.value}"`
   }
 
   return extraProps
 })
 const featureCardGridCodeExtra = {
   ':features': 'features',
-  title: '"内容创作能力，协同效率更高"',
-  variant: '"icon-badge"',
-  'color-scheme': '"accent"',
-  columns: '3',
+  title: '"销帮帮CRM基本能力"',
+  subtitle: '"提供给所有企业销售日常业务所需的基本功能，也可根据企业特殊场景，定制个性化数字服务"',
+  variant: '"capability-card"',
+  'color-scheme': '"brand"',
+  columns: '5',
 }
 const finalCtaCodeExtra = {
   title: '"让增长，从这里开始"',

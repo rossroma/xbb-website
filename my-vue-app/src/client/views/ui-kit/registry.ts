@@ -98,6 +98,7 @@ export const sections: SectionEntry[] = [
   { id: 'platform-download', name: 'PlatformDownload 平台下载', category: 'business' },
   { id: 'cta-section', name: 'CTASection 行动号召', category: 'business' },
   { id: 'process-steps', name: 'ProcessSteps 流程步骤卡片', category: 'business' },
+  { id: 'contact-hotline', name: 'ContactHotline 热线联系方式', category: 'business' },
   { id: 'contact-card', name: 'ContactCard 联系方式卡片', category: 'business' },
   { id: 'review-card-grid', name: 'ReviewCardGrid 用户评价', category: 'business' },
   { id: 'timeline', name: 'Timeline 发展历程', category: 'business' },
