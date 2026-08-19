@@ -39,6 +39,16 @@
             : 'max-lg:ml-0 max-lg:items-center max-lg:text-center',
         ]"
       >
+        <div
+          v-if="singleSlide.eyebrow"
+          :class="[
+            'hero-banner-single__eyebrow self-start inline-flex mb-7 items-center rounded-pill px-3.5 py-1.5 text-body font-semibold leading-none [background:var(--hero-banner-single-eyebrow-bg)] [color:var(--hero-banner-single-eyebrow-color)] max-lg:mb-8 max-md:mb-6 max-md:px-5 max-md:py-3 max-md:text-[18px]',
+            singleLayout === 'vertical' ? 'mx-auto' : 'max-lg:mx-auto',
+          ]"
+          :style="getSingleEyebrowStyle(singleSlide)"
+        >
+          <span>{{ singleSlide.eyebrow }}</span>
+        </div>
         <h1
           v-if="singleSlide.title"
           :data-text="isSingleTitleHighlighted ? singleSlide.title : undefined"
@@ -379,7 +389,9 @@
       class="min-h-140 max-lg:min-h-130 max-md:min-h-115 flex items-center"
       style="background: linear-gradient(135deg, #f7faff 0%, #edf4ff 52%, #f6f2ff 100%)"
     >
-      <div class="w-[min(1200px,calc(100%-48px))] mx-auto grid grid-cols-[0.35fr_0.65fr] gap-9 max-lg:grid-cols-1 animate-pulse">
+      <div
+        class="w-[min(1200px,calc(100%-48px))] mx-auto grid grid-cols-[0.35fr_0.65fr] gap-9 max-lg:grid-cols-1 animate-pulse"
+      >
         <div class="flex flex-col gap-6 max-lg:items-center max-lg:text-center">
           <div class="h-12 w-3/4 rounded-lg bg-white/60 max-lg:h-10" />
           <div class="h-4 w-1/2 rounded bg-white/40" />
@@ -531,6 +543,7 @@
 
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
+import type { CSSProperties } from 'vue'
 import { useRouter } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
@@ -566,6 +579,9 @@ export type HeroBannerSlide = BannerSlide & {
   highlightMode?: HeroBannerHighlightMode
   /** Whether to show the underline image below highlighted text. Defaults to true. */
   highlightUnderline?: boolean
+  /** Only used by mode="single" to render a badge above the title. */
+  eyebrowBackground?: string
+  eyebrowColor?: string
 }
 
 const props = withDefaults(
@@ -630,6 +646,13 @@ const shouldShowSingleHighlightUnderline = computed(() => {
 
 function isImageSource(value: HeroShowcaseSlide['titleIcon']): value is string {
   return typeof value === 'string'
+}
+
+function getSingleEyebrowStyle(slide: HeroBannerSlide): CSSProperties {
+  return {
+    '--hero-banner-single-eyebrow-bg': slide.eyebrowBackground ?? 'rgba(91, 82, 255, 0.1)',
+    '--hero-banner-single-eyebrow-color': slide.eyebrowColor ?? '#5b61ff',
+  } as CSSProperties
 }
 
 function isInternalLink(href?: string): href is string {
