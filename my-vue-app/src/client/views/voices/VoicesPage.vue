@@ -23,11 +23,7 @@
 
       <!-- 加载态 -->
       <div v-if="isLoading" class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6" aria-hidden="true">
-        <div
-          v-for="i in 4"
-          :key="i"
-          class="rounded-card border border-border-subtle p-6 space-y-4"
-        >
+        <div v-for="i in 4" :key="i" class="rounded-card border border-border-subtle p-6 space-y-4">
           <div class="flex items-center gap-4">
             <div class="w-12 h-12 rounded-full animate-skeleton" />
             <div class="flex-1 space-y-2">
@@ -88,7 +84,11 @@ import Pagination from '@/client/components/ui/Pagination.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import { getClientCases, type CaseListResponse, type CaseListItem } from '@/shared/api/case'
-import { getClientCategories, type ClientCategoryListResponse, type Category } from '@/shared/api/category'
+import {
+  getClientCategories,
+  type ClientCategoryListResponse,
+  type Category,
+} from '@/shared/api/category'
 import { voicesBannerSlide, VOICE_ROOT_BID } from './voicesData'
 
 // ==================== SEO ====================
@@ -101,9 +101,7 @@ const isLoading = ref(false)
 const errorMessage = ref<string | null>(null)
 
 /** 分类 Tab 列表（含动态获取的 bid） */
-const categoryTabs = ref<{ key: string; label: string }[]>([
-  { key: 'all', label: '全部' },
-])
+const categoryTabs = ref<{ key: string; label: string }[]>([{ key: 'all', label: '全部' }])
 
 /** 内部分类映射表：key → bid */
 const categoryMap = ref<Map<string, number>>(new Map())
@@ -132,6 +130,15 @@ const reviewCards = computed<ReviewCard[]>(() => {
   return voiceList.value.items.map((item) => toReviewCard(item))
 })
 
+// ==================== 工具函数 ====================
+
+/** 去除 HTML 标签，将富文本转为纯文本 */
+function stripHtml(html: string): string {
+  const div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || div.innerText || ''
+}
+
 // ==================== 数据转换 ====================
 
 /** 根据 bid 从分类映射表中查找分类名称 */
@@ -152,7 +159,7 @@ function toReviewCard(item: CaseListItem): ReviewCard {
     logo: item.image || '',
     logoAlt: item.title,
     industry: getCategoryName(item.bid),
-    content: item.description || '',
+    content: stripHtml(item.content || item.description || ''),
     username: item.title,
     rating: 5,
   }
@@ -173,12 +180,13 @@ async function loadVoices() {
 
   try {
     const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } = {
-      page: currentPage.value,
-      limit: pageSize.value,
-      rootBid: VOICE_ROOT_BID,
-      order: 'random',
-    }
+    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } =
+      {
+        page: currentPage.value,
+        limit: pageSize.value,
+        rootBid: VOICE_ROOT_BID,
+        order: 'random',
+      }
     if (bid !== undefined) {
       params.bid = bid
     }
@@ -197,9 +205,7 @@ async function loadCategories() {
     const categories: Category[] = result.items
 
     // 过滤出用户心声根类目下的子类目
-    const childCategories = categories.filter(
-      (c) => c.pid === VOICE_ROOT_BID && c.status === 1,
-    )
+    const childCategories = categories.filter((c) => c.pid === VOICE_ROOT_BID && c.status === 1)
 
     if (childCategories.length > 0) {
       const tabs = [{ key: 'all', label: '全部' }]

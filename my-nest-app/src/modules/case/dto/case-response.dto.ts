@@ -80,7 +80,7 @@ export class CaseListResponseDto {
   totalPages: number;
 
   constructor(items: any[], total: number, page: number, limit: number) {
-    this.items = items.map((item) => new CaseResponseDto(item, false));
+    this.items = items.map((item) => new CaseResponseDto(item, true));
     this.total = total;
     this.page = page;
     this.limit = limit;
