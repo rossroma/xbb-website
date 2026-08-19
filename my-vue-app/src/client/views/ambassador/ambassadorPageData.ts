@@ -3,37 +3,35 @@ import { Audit, Edit, Gift, ShoppingCart } from '@/client/components/ui/remixIco
 import type { BannerSlide } from '@/client/data/homeData'
 import type { FaqCategory, FaqItem } from '@/client/components/business/FaqList.vue'
 
-const heroVisualImage = '/images/customer/hero.png'
 
 
 // ========== Hero 区域 ==========
 export const heroSection = {
-  title: '"荐"者有份，诚邀您成为销帮帮推荐大使',
-  subtitle: '您的每一次推荐，都值得被回报',
+  title: '"荐"者有礼',
+  subtitle: '',
   description:
-    '邀请具备推广能力的你，成为销帮帮推荐大使\n推荐客户成功签约即享高比例现金返佣。快加入我们轻松赚取引荐奖金吧',
+    '邀请好友成为销帮帮客户\n成功签约即享高额现金返佣，轻松赚取引荐奖金',
   primaryCta: '立即联系客服',
   secondaryCta: '了解推荐流程',
-  image: heroVisualImage,
+  image: '',
   imageAlt: '销帮帮推广大使计划展示',
 }
 
 export const heroBannerSlide = {
   key: 'ambassador-hero',
   mediaType: 'image',
-  eyebrow: '',
   title: heroSection.title,
   subtitle: heroSection.subtitle,
   desc: heroSection.description,
   primaryCta: '',
   secondaryCta: '',
-  bg: 'linear-gradient(135deg, #fff7ed 0%, #fff1e6 48%, #f8f4ff 100%)',
+  bg: "url('/images/ambassador/hero-banner-bg.png') center / cover no-repeat",
   line: 'rgba(255, 100, 0, 0.16)',
   accent: '#ff6400',
   glow: 'rgba(255, 100, 0, 0.18)',
   orb: 'rgba(255, 154, 77, 0.22)',
-  showVisual: true,
-  visualImage: heroSection.image,
+  showVisual: false,
+  visualImage: '',
   visualImageAlt: heroSection.imageAlt,
 } satisfies BannerSlide
 
@@ -41,6 +39,14 @@ export const heroBannerSlide = {
 export const contactSection = {
   title: '立即联系客服，申请成为推荐大使',
   subtitle: '客服热线：4000-464-288',
+}
+
+export const contactHotlineSection = {
+  title: contactSection.title,
+  label: '客服热线',
+  description: '推荐大使咨询',
+  phone: '4000-464-288',
+  theme: 'brand' as const,
 }
 
 // ========== 推荐流程区域 ==========
