@@ -79,11 +79,6 @@
         <header
           class="article-header mt-10 text-center pb-6 border-b border-border-subtle shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
         >
-          <!-- 分类标签 -->
-          <Badge v-if="categoryLabel" variant="brand" class="mb-4">
-            {{ categoryLabel }}
-          </Badge>
-
           <!-- 标题 -->
           <h1 class="text-h1 text-text-primary mb-3">{{ article.title }}</h1>
 
@@ -157,7 +152,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { useHead } from '@unhead/vue'
 import { Left } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
-import Badge from '@/client/components/ui/Badge.vue'
 import Button from '@/client/components/ui/Button.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
@@ -169,7 +163,6 @@ import {
   type ArticleDetail as ArticleDetailData,
   type ArticleNavInfo,
 } from '@/shared/api/article'
-import { DEFAULT_CATEGORY_TABS } from './newsData'
 
 // ==================== 路由 ====================
 
@@ -195,14 +188,6 @@ const formattedTime = computed(() => {
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
-})
-
-/** 根据 bid 获取分类标签名 */
-const categoryLabel = computed(() => {
-  const bid = article.value?.bid
-  if (bid === undefined || bid === null) return ''
-  const tab = DEFAULT_CATEGORY_TABS.find((t) => t.bid === bid)
-  return tab?.label ?? ''
 })
 
 /** 面包屑数据 */
