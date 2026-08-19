@@ -35,15 +35,9 @@
       :image="reportSection.image"
       :image-alt="reportSection.imageAlt"
       :primary-cta="reportSection.ctaText"
+      image-full-bleed
     />
 
-    <CTASection
-      variant="cool"
-      :title="footerCtaSection.title"
-      :subtitle="footerCtaSection.subtitle"
-      :primary-cta="footerCtaSection.primaryCta"
-      :secondary-cta="footerCtaSection.secondaryCta"
-    />
   </div>
 </template>
 
