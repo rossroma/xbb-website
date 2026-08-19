@@ -2,7 +2,6 @@
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
-const liuziPagePath = '/liuzi'
 
 
 // ========== Hero 区域 Banner 配置 ==========
@@ -11,15 +10,14 @@ const liuziPagePath = '/liuzi'
 export const newsBannerSlide = {
   key: 'news-banner',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: '新闻动态',
-  subtitle: '了解销帮帮最新资讯与行业动态',
-  desc: '',
+  subtitle: '',
+  desc: '汇聚产品更新、行业趋势与客户案例，第一时间掌握销帮帮最新动态',
   primaryCta: '免费试用',
   primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
-  secondaryHref: liuziPagePath,
-  bg: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 52%, #e0e7ff 100%)',
+  secondaryHref: trialPagePath,
+  bg: "url('/images/news/hero-banner.png') center / cover no-repeat",
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#7461ff',
   glow: 'rgba(116, 129, 255, 0.18)',
