@@ -61,9 +61,8 @@
                 <h1 class="knowledge-detail-title">{{ article.title }}</h1>
 
                 <div class="knowledge-detail-meta">
-                  <span v-if="formattedTime">{{ formattedTime }}</span>
-                  <span v-if="article.author">作者：{{ article.author }}</span>
-                  <RouterLink to="/message" class="knowledge-detail-consult">微信咨询</RouterLink>
+                  <span>{{ article.author }} · 编辑于 {{ formattedTime}}</span>
+                  <RouterLink to="/mianfeishiyong" class="knowledge-detail-consult">免费试用</RouterLink>
                 </div>
 
                 <div v-if="summaryText" class="knowledge-detail-summary">

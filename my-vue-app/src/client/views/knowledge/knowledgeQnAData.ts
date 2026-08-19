@@ -26,14 +26,12 @@ export const knowledgeQnABreadcrumb: BreadcrumbItem[] = [
 export const knowledgeQnAHeroSlide = {
   key: 'knowledge-qna-hero',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: '知识问答',
-  subtitle:
-    '为企业提供CRM系统、数字化转型、企业经营管理、销售管理、市场营销、客户服务等方面的专业知识。',
-  desc: '',
+  subtitle: '',
+  desc: '为企业提供CRM系统、数字化转型、企业经营管理、销售管理\n市场营销、客户服务等方面的专业知识',
   primaryCta: '',
   secondaryCta: '',
-  bg: 'linear-gradient(90deg, rgba(247, 251, 255, 0.94) 0%, rgba(247, 251, 255, 0.82) 46%, rgba(247, 251, 255, 0.58) 100%)',
+  bg: "url('/images/knowledge/hero-banner.png') center / cover no-repeat",
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
