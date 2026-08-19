@@ -27,22 +27,21 @@ const partnerContactHref = `${toPagePath('channel_qudao')}#partner-contact`
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '销帮帮AI CRM合作伙伴招募',
-  subtitle: '互相成就，共享 AI CRM 增长红利，携手销帮帮AI CRM助力企业智能销售全面升级',
+  desc: '互相成就，共享 AI CRM 增长红利\n携手销帮帮AI CRM助力企业智能销售全面升级',
   primaryCta: '立即加入',
   primaryHref: partnerContactHref,
   image: productVisualImage,
   imageAlt: '销帮帮AI CRM产品界面展示',
-  bg: 'linear-gradient(135deg, #faf7ff 0%, #f3f0ff 48%, #eef6ff 100%)',
+  bg: "url('/images/partner/hero-banner.png') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
 export const heroBannerSlide = {
   key: 'partner-cooperation-hero',
   mediaType: 'image',
-  eyebrow: '',
   title: heroSection.title,
-  subtitle: heroSection.subtitle,
-  desc: '',
+  subtitle: '',
+  desc: heroSection.desc,
   primaryCta: heroSection.primaryCta,
   primaryHref: heroSection.primaryHref,
   secondaryCta: undefined,
@@ -51,15 +50,15 @@ export const heroBannerSlide = {
   accent: '#7c5cff',
   glow: 'rgba(124, 92, 255, 0.18)',
   orb: 'rgba(14, 165, 233, 0.16)',
-  showVisual: true,
-  visualImage: heroSection.image,
+  showVisual: false,
+  visualImage: '',
   visualImageAlt: heroSection.imageAlt,
 } satisfies BannerSlide
 
 // ========== 渠道伙伴类型区域（IconCardGrid） ==========
 export const partnerTypeSection = {
   title: '我们在寻找怎样的渠道伙伴',
-  subtitle: '只要你有客户资源和服务意愿，就是我们想要的伙伴。',
+  subtitle: '只要你有客户资源和服务意愿，就是我们想要的伙伴',
   features: [
     {
       title: '有客户积累的服务商',
@@ -158,6 +157,5 @@ export const contactSection = {
 // ========== 合作伙伴信息查询区域 ==========
 export const partnerQuerySection = {
   title: '合作伙伴信息查询',
-  subtitle: '输入企业名称、编号即可查询',
   placeholder: '请输入企业名称或合作伙伴编号',
 }
