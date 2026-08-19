@@ -11,6 +11,7 @@ import {
 } from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { ImageCardGridItem } from '@/client/components/business/ImageCardGrid.vue'
+import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
@@ -22,7 +23,7 @@ const customerLifecycleImage = '/images/customer/product-intro.png'
 export const heroSection = {
   title: '客户全生命周期',
   subtitle: '数字化管理',
-  description: '支持多维度客户查重，通过自定义字段与标签实现分层分类\n构建360°客户画像，提升私域运营效率，精准把控客户旅程。',
+  description: '支持多维度客户查重，通过自定义字段与标签实现分层分类\n构建360°客户画像，提升私域运营效率，精准把控客户旅程',
   primaryCta: '免费试用',
   primaryHref: trialPagePath,
   secondaryCta: '立即咨询',
@@ -36,7 +37,6 @@ export const heroSection = {
 export const heroBannerSlide = {
   key: 'customer-hero',
   mediaType: 'image' as const,
-  eyebrow: '',
   title: heroSection.title,
   subtitle: heroSection.subtitle,
   desc: heroSection.description,
@@ -44,6 +44,7 @@ export const heroBannerSlide = {
   primaryHref: heroSection.primaryHref,
   secondaryCta: heroSection.secondaryCta,
   secondaryHref: heroSection.secondaryHref,
+  highlightMode: 'subtitle',
   bg: heroSection.bg,
   line: 'rgba(116, 129, 255, 0.16)',
   accent: '#5b61ff',
@@ -52,7 +53,7 @@ export const heroBannerSlide = {
   showVisual: true,
   visualImage: heroSection.image,
   visualImageAlt: heroSection.imageAlt,
-}
+} satisfies BannerSlide
 
 // ========== Tab 功能介绍区域 ==========
 export const tabFeaturesSection = {
