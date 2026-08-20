@@ -4,8 +4,6 @@
       v-if="heading"
       :title="heading"
       :subtitle="subheading"
-      :clickable="true"
-      @click="$emit('headingClick')"
     />
     <CardGrid :cols="4" gap="default" :class="['justify-items-center', heading ? 'mt-14' : '']">
       <component
@@ -98,7 +96,6 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  headingClick: []
   cardClick: [title: string]
 }>()
 
