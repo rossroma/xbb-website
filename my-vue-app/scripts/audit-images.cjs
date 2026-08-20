@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
 /**
  * 图片审计工具：实测全站图片"自然尺寸 vs 渲染尺寸"，找出超配（过大）图片。
  *

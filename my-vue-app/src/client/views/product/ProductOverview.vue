@@ -10,7 +10,6 @@
       variant="feature-panel"
       color-scheme="brand"
     />
-
   </div>
 </template>
 
@@ -18,14 +17,7 @@
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import ImageCardGrid from '@/client/components/business/ImageCardGrid.vue'
-import ImageShowcase from '@/client/components/business/ImageShowcase.vue'
-import CTASection from '@/client/components/business/CTASection.vue'
-import {
-  heroBannerSlide,
-  moduleCenterUrl,
-  productAbilitySection,
-  productShowcaseSections,
-} from './productOverviewData'
+import { heroBannerSlide, moduleCenterUrl, productAbilitySection } from './productOverviewData'
 
 const openModuleCenter = () => {
   window.open(moduleCenterUrl, '_blank', 'noopener,noreferrer')
