@@ -49,13 +49,30 @@
         @click="!item.linkHref && emit('cardClick', item.title)"
       >
         <!-- 封面图片 -->
-        <div class="relative aspect-video overflow-hidden">
+        <div class="relative aspect-video overflow-hidden bg-surface-secondary">
           <img
+            v-if="item.image"
             :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
             class="block h-full w-full object-cover object-top transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
           />
+          <!-- 无图片时的默认占位图 -->
+          <div v-else class="flex h-full w-full items-center justify-center" aria-hidden="true">
+            <svg
+              class="h-16 w-16 text-text-tertiary/40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
           <!-- 分类标签：图片左上角浮层 -->
           <span
             v-if="item.tag"
@@ -107,13 +124,30 @@
         @click="!item.linkHref && emit('cardClick', item.title)"
       >
         <!-- 封面图片（16:9） -->
-        <div class="relative aspect-video overflow-hidden">
+        <div class="relative aspect-video overflow-hidden bg-surface-secondary">
           <img
+            v-if="item.image"
             :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
             class="block h-full w-full object-cover object-top transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
           />
+          <!-- 无图片时的默认占位图 -->
+          <div v-else class="flex h-full w-full items-center justify-center" aria-hidden="true">
+            <svg
+              class="h-16 w-16 text-text-tertiary/40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+          </div>
           <!-- 分类标签：图片左上角浮层 -->
           <span
             v-if="item.tag"
@@ -232,6 +266,25 @@
                     class="content-list-article-row__media-img"
                   />
                 </component>
+                <div
+                  v-else
+                  class="flex h-full w-full items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <svg
+                    class="h-12 w-12 text-text-tertiary/40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                </div>
               </div>
 
               <div class="content-list-article-row__body">
