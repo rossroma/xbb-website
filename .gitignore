@@ -44,6 +44,8 @@ __screenshots__
 .eslintcache
 *.tsbuildinfo
 .histoire
+.playwright-mcp/
+**/images-backup/
 
 # Runtime
 pids

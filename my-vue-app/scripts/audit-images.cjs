@@ -66,7 +66,6 @@ async function scrollPage(page) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
 
-  const results = []; // {img, natural, render, ratio, pages[]}
   const byImg = new Map();
 
   for (const route of ROUTES) {
