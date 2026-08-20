@@ -49,6 +49,7 @@ export interface CaseListItem {
   title: string
   bid?: number
   description: string
+  content?: string
   image: string
   tags: string[]
   addtime?: number
