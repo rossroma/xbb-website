@@ -22,7 +22,7 @@
 
     <TabShowcase
       :title="visitPlanSection.title"
-      :subtitle="transparentSection.subtitle"
+      :subtitle="visitPlanSection.subtitle"
       :tabs="visitPlanSection.tabs"
       layout="tabs-right"
       theme="purple"
@@ -30,7 +30,7 @@
 
     <TabShowcase
       :title="checkinSection.title"
-      :subtitle="transparentSection.subtitle"
+      :subtitle="checkinSection.subtitle"
       :tabs="checkinSection.tabs"
       layout="tabs-left"
       theme="sky"

@@ -96,7 +96,7 @@ export const aiCoachSection = {
 // ========== AI 过程透明化区域（TabShowcase） ==========
 export const transparentSection = {
   title: 'AI 过程透明化，让每一步都有据可查',
-  subtitle: 'AI CRM 自动记录并分析和客户的每一次沟通、每一次跟进，将散落在不同环节的沟通内容完整串联。无论是通话内容摘要、客户意向变化还是商机推进节奏，都可实时追踪、回溯复盘，让管理不再凭感觉、考核不再靠猜测。',
+  subtitle: 'AI CRM 自动记录并分析和客户的每一次沟通、每一次跟进，将散落在不同环节的沟通内容完整串联。\n无论是通话内容摘要、客户意向变化还是商机推进节奏，都可实时追踪、回溯复盘，让管理不再凭感觉、考核不再靠猜测。',
   tabs: [
     {
       key: 'traceable',
@@ -122,7 +122,7 @@ export const transparentSection = {
 // ========== 访客计划区域（TabShowcase） ==========
 export const visitPlanSection = {
   title: '访客计划，让每一次拜访都形成闭环',
-  subtitle:'以客户为出发点制定拜访计划，通过日历视图掌握团队每日/每周/每月访客安排。签到签退、跟进记录自动关联，形成「计划→执行→复盘」完整闭环。',
+  subtitle:'以客户为出发点制定拜访计划，通过日历视图掌握团队每日/每周/每月访客安排。\n签到签退、跟进记录自动关联，形成「计划→执行→复盘」完整闭环。',
   tabs: [
     {
       key: 'quick-create',
@@ -156,7 +156,7 @@ export const visitPlanSection = {
 // ========== 签到管理区域（TabShowcase） ==========
 export const checkinSection = {
   title: '签到管理，让外勤考勤一目了然',
-  subtitle:'GPS精准定位签到签退，支持极速/标准双模式。外勤轨迹一目了然，签退自动生成跟进记录——让每一次外出都有据可查，再也不用担心销售"放羊"。',
+  subtitle:'GPS精准定位签到签退，支持极速/标准双模式\n外勤轨迹一目了然，签退自动生成跟进记录——让每一次外出都有据可查，再也不用担心销售"放羊"。',
   tabs: [
     {
       key: 'dual-mode',
@@ -200,7 +200,7 @@ export const checkinSection = {
 // ========== 工作报告区域（TabShowcase） ==========
 export const workReportSection = {
   title: '工作报告，让团队汇报更轻、更清楚',
-  subtitle:'日报、周报、拜访总结、项目进展都可以用工作报告统一沉淀。AI CRM 支持多种报告模板，员工可快速填写和提交，管理者可集中查看、批阅和追踪阅读状态，让团队汇报更规范，管理反馈更及时。',
+  subtitle:'日报、周报、拜访总结、项目进展都可以用工作报告统一沉淀。AI CRM 支持多种报告模板，员工可快速填写和提交\n管理者可集中查看、批阅和追踪阅读状态，让团队汇报更规范，管理反馈更及时。',
   tabs: [
     {
       key: 'multi-template',
