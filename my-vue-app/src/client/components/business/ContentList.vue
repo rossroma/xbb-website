@@ -80,7 +80,7 @@
             />
             <!-- 插图 -->
             <svg
-              class="relative h-28 w-28 text-text-tertiary/40"
+              class="relative h-36 w-36 text-text-tertiary/40"
               viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -225,7 +225,7 @@
             />
             <!-- 插图 -->
             <svg
-              class="relative h-28 w-28 text-text-tertiary/40"
+              class="relative h-36 w-36 text-text-tertiary/40"
               viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -430,7 +430,7 @@
                     "
                   />
                   <svg
-                    class="relative h-20 w-20 text-text-tertiary/40"
+                    class="relative h-24 w-24 text-text-tertiary/40"
                     viewBox="0 0 96 96"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
