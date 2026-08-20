@@ -1,6 +1,7 @@
 <template>
   <SectionBlock spacing="default">
-    <h2
+    <div class="flex flex-col items-center text-center">
+      <h2
       class="text-[36px] text-h1 text-text-primary leading-heading text-center max-lg:text-h2 max-md:text-h3"
     >
       <template v-if="titleParts">
@@ -22,10 +23,12 @@
 
     <p
       v-if="subtitle"
-      class="mx-auto justify-center mt-4 max-w-150 text-body text-text-tertiary leading-body max-lg:text-body"
+      class="mt-4 max-w-220 whitespace-pre-line text-body text-text-tertiary leading-body max-lg:text-body"
     >
       {{ subtitle }}
     </p>
+    </div>
+    
 
     <!-- ===== Single tab mode（仅一个 tab 时，无 tab 导航，左文右图/右文左图） ===== -->
     <div
