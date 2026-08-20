@@ -70,30 +70,77 @@
             <div
               class="absolute -bottom-6 -left-6 h-36 w-36 rounded-full bg-brand-primary/8 blur-xl"
             />
-            <!-- 图标 -->
+            <!-- 装饰性细网格线 -->
+            <div
+              class="absolute inset-0 opacity-0.04"
+              style="
+                background-image: radial-gradient(circle, currentColor 0.5px, transparent 0.5px);
+                background-size: 20px 20px;
+              "
+            />
+            <!-- 插图 -->
             <svg
-              class="relative h-24 w-24 text-text-tertiary/35"
-              viewBox="0 0 80 80"
+              class="relative h-28 w-28 text-text-tertiary/40"
+              viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              <!-- 相框背景 -->
               <rect
-                x="8"
-                y="12"
-                width="64"
-                height="56"
-                rx="6"
-                stroke="currentColor"
-                stroke-width="2.5"
+                x="14"
+                y="18"
+                width="68"
+                height="60"
+                rx="8"
+                fill="currentColor"
+                fill-opacity="0.08"
               />
-              <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
-              <path
-                d="M72 56L56 40L40 56L28 44L8 64"
+              <!-- 相框边框 -->
+              <rect
+                x="14"
+                y="18"
+                width="68"
+                height="60"
+                rx="8"
                 stroke="currentColor"
-                stroke-width="2.5"
+                stroke-width="1.5"
+                stroke-opacity="0.25"
+              />
+              <!-- 太阳 -->
+              <circle cx="54" cy="34" r="6" fill="currentColor" fill-opacity="0.3" />
+              <circle cx="54" cy="34" r="8" fill="currentColor" fill-opacity="0.1" />
+              <!-- 远山 -->
+              <path
+                d="M18 68L34 44L46 56L58 38L76 68"
+                stroke="currentColor"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+                stroke-opacity="0.35"
+                fill="currentColor"
+                fill-opacity="0.06"
               />
+              <!-- 近山 -->
+              <path
+                d="M22 72L42 48L54 60L62 52L78 72"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-opacity="0.2"
+                fill="currentColor"
+                fill-opacity="0.04"
+              />
+              <!-- 云朵 -->
+              <path
+                d="M30 30c0-2.2 1.8-4 4-4a5.5 5.5 0 0 1 10 0 3.5 3.5 0 0 1 0 7H34a4 4 0 0 1-4-4z"
+                fill="currentColor"
+                fill-opacity="0.15"
+              />
+              <!-- 装饰点 -->
+              <circle cx="34" cy="58" r="1.5" fill="currentColor" fill-opacity="0.2" />
+              <circle cx="64" cy="46" r="1" fill="currentColor" fill-opacity="0.15" />
+              <circle cx="44" cy="36" r="1" fill="currentColor" fill-opacity="0.2" />
             </svg>
           </div>
           <!-- 分类标签：图片左上角浮层 -->
@@ -168,30 +215,77 @@
             <div
               class="absolute -bottom-6 -left-6 h-36 w-36 rounded-full bg-brand-primary/8 blur-xl"
             />
-            <!-- 图标 -->
+            <!-- 装饰性细网格线 -->
+            <div
+              class="absolute inset-0 opacity-0.04"
+              style="
+                background-image: radial-gradient(circle, currentColor 0.5px, transparent 0.5px);
+                background-size: 20px 20px;
+              "
+            />
+            <!-- 插图 -->
             <svg
-              class="relative h-24 w-24 text-text-tertiary/35"
-              viewBox="0 0 80 80"
+              class="relative h-28 w-28 text-text-tertiary/40"
+              viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
+              <!-- 相框背景 -->
               <rect
-                x="8"
-                y="12"
-                width="64"
-                height="56"
-                rx="6"
-                stroke="currentColor"
-                stroke-width="2.5"
+                x="14"
+                y="18"
+                width="68"
+                height="60"
+                rx="8"
+                fill="currentColor"
+                fill-opacity="0.08"
               />
-              <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
-              <path
-                d="M72 56L56 40L40 56L28 44L8 64"
+              <!-- 相框边框 -->
+              <rect
+                x="14"
+                y="18"
+                width="68"
+                height="60"
+                rx="8"
                 stroke="currentColor"
-                stroke-width="2.5"
+                stroke-width="1.5"
+                stroke-opacity="0.25"
+              />
+              <!-- 太阳 -->
+              <circle cx="54" cy="34" r="6" fill="currentColor" fill-opacity="0.3" />
+              <circle cx="54" cy="34" r="8" fill="currentColor" fill-opacity="0.1" />
+              <!-- 远山 -->
+              <path
+                d="M18 68L34 44L46 56L58 38L76 68"
+                stroke="currentColor"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
+                stroke-opacity="0.35"
+                fill="currentColor"
+                fill-opacity="0.06"
               />
+              <!-- 近山 -->
+              <path
+                d="M22 72L42 48L54 60L62 52L78 72"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-opacity="0.2"
+                fill="currentColor"
+                fill-opacity="0.04"
+              />
+              <!-- 云朵 -->
+              <path
+                d="M30 30c0-2.2 1.8-4 4-4a5.5 5.5 0 0 1 10 0 3.5 3.5 0 0 1 0 7H34a4 4 0 0 1-4-4z"
+                fill="currentColor"
+                fill-opacity="0.15"
+              />
+              <!-- 装饰点 -->
+              <circle cx="34" cy="58" r="1.5" fill="currentColor" fill-opacity="0.2" />
+              <circle cx="64" cy="46" r="1" fill="currentColor" fill-opacity="0.15" />
+              <circle cx="44" cy="36" r="1" fill="currentColor" fill-opacity="0.2" />
             </svg>
           </div>
           <!-- 分类标签：图片左上角浮层 -->
@@ -324,29 +418,72 @@
                   <div
                     class="absolute -bottom-3 -left-3 h-20 w-20 rounded-full bg-brand-primary/8 blur-xl"
                   />
+                  <div
+                    class="absolute inset-0 opacity-0.04"
+                    style="
+                      background-image: radial-gradient(
+                        circle,
+                        currentColor 0.5px,
+                        transparent 0.5px
+                      );
+                      background-size: 16px 16px;
+                    "
+                  />
                   <svg
-                    class="relative h-16 w-16 text-text-tertiary/35"
-                    viewBox="0 0 80 80"
+                    class="relative h-20 w-20 text-text-tertiary/40"
+                    viewBox="0 0 96 96"
                     fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <rect
-                      x="8"
-                      y="12"
-                      width="64"
-                      height="56"
-                      rx="6"
-                      stroke="currentColor"
-                      stroke-width="2.5"
+                      x="14"
+                      y="18"
+                      width="68"
+                      height="60"
+                      rx="8"
+                      fill="currentColor"
+                      fill-opacity="0.08"
                     />
-                    <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
-                    <path
-                      d="M72 56L56 40L40 56L28 44L8 64"
+                    <rect
+                      x="14"
+                      y="18"
+                      width="68"
+                      height="60"
+                      rx="8"
                       stroke="currentColor"
-                      stroke-width="2.5"
+                      stroke-width="1.5"
+                      stroke-opacity="0.25"
+                    />
+                    <circle cx="54" cy="34" r="6" fill="currentColor" fill-opacity="0.3" />
+                    <circle cx="54" cy="34" r="8" fill="currentColor" fill-opacity="0.1" />
+                    <path
+                      d="M18 68L34 44L46 56L58 38L76 68"
+                      stroke="currentColor"
+                      stroke-width="2"
                       stroke-linecap="round"
                       stroke-linejoin="round"
+                      stroke-opacity="0.35"
+                      fill="currentColor"
+                      fill-opacity="0.06"
                     />
+                    <path
+                      d="M22 72L42 48L54 60L62 52L78 72"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-opacity="0.2"
+                      fill="currentColor"
+                      fill-opacity="0.04"
+                    />
+                    <path
+                      d="M30 30c0-2.2 1.8-4 4-4a5.5 5.5 0 0 1 10 0 3.5 3.5 0 0 1 0 7H34a4 4 0 0 1-4-4z"
+                      fill="currentColor"
+                      fill-opacity="0.15"
+                    />
+                    <circle cx="34" cy="58" r="1.5" fill="currentColor" fill-opacity="0.2" />
+                    <circle cx="64" cy="46" r="1" fill="currentColor" fill-opacity="0.15" />
+                    <circle cx="44" cy="36" r="1" fill="currentColor" fill-opacity="0.2" />
                   </svg>
                 </div>
               </div>
