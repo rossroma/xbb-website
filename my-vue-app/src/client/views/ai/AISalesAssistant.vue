@@ -7,13 +7,13 @@
         single-secondary-btn-class="ai-hero-secondary-btn" class="relative z-10" />
     </div>
 
-    <ImageCardGrid :title="lookalikeSection.title" :cards="lookalikeSection.cards" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
+    <ImageCardGrid :title="lookalikeSection.title" :cards="lookalikeSection.cards" :subtitle="lookalikeSection.subtitle" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
 
-    <ImageCardGrid :title="transparentSection.title" :cards="transparentSection.cards" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
+    <ImageCardGrid :title="transparentSection.title" :cards="transparentSection.cards" :subtitle="transparentSection.subtitle" variant="image-card" color-scheme="neutral" :rows="[1, 2]" />
 
-    <ImageCardGrid :title="coachSection.title" :cards="coachSection.cards" variant="image-card" color-scheme="neutral" :rows="[3]" />
+    <ImageCardGrid :title="coachSection.title" :cards="coachSection.cards" :subtitle="coachSection.subtitle" variant="image-card" color-scheme="neutral" :rows="[3]" />
 
-    <ImageCardGrid :title="analystSection.title" :cards="analystSection.cards" variant="image-card" color-scheme="neutral" :rows="[3]" />
+    <ImageCardGrid :title="analystSection.title" :cards="analystSection.cards" :subtitle="analystSection.subtitle" variant="image-card" color-scheme="neutral" :rows="[3]" />
 
     <CTASection variant="cool" :title="focusSection.title" :subtitle="focusSection.description"
       :image="focusSection.image" :image-alt="focusSection.imageAlt" />
@@ -47,7 +47,6 @@ usePageSEO()
 
 .ai-hero-subtitle {
   font-size: 64px !important;
-  color: #1f2937 !important;
   margin-top: 12px !important;
   color: #ffffff !important;
 }
@@ -55,7 +54,7 @@ usePageSEO()
 /* 免费试用按钮 - 白色背景 + 深灰字体 */
 .ai-hero-primary-btn {
   background: #ffffff !important;
-  color: #323233 !important;
+  color: #29241F !important;
 }
 
 /* 立即咨询按钮 - 渐变边框 */
