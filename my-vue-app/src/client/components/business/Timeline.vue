@@ -119,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { Left, Right } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
@@ -141,7 +141,6 @@ const props = defineProps<{
   milestones: readonly TimelineMilestone[]
 }>()
 
-const activeIndex = ref(0)
 const trackViewport = ref<HTMLElement | null>(null)
 const track = ref<HTMLElement | null>(null)
 const showControls = ref(false)
@@ -150,10 +149,15 @@ const displayMilestones = computed(() =>
   [...props.milestones].sort((a, b) => Number.parseInt(a.year, 10) - Number.parseInt(b.year, 10)),
 )
 
+const activeIndex = ref(getLastMilestoneIndex())
 const activeMilestone = computed(() => displayMilestones.value[activeIndex.value])
 
 function setActiveIndex(index: number) {
   activeIndex.value = index
+}
+
+function getLastMilestoneIndex() {
+  return Math.max(displayMilestones.value.length - 1, 0)
 }
 
 function formatYearLabel(year: string) {
@@ -176,14 +180,32 @@ function scrollTimeline(direction: -1 | 1) {
   })
 }
 
+function scrollTimelineToEnd() {
+  const viewport = trackViewport.value
+  if (!viewport) return
+  viewport.scrollTo({
+    left: viewport.scrollWidth - viewport.clientWidth,
+    behavior: 'auto',
+  })
+}
+
 function handleResize() {
   updateOverflowState()
 }
 
 onMounted(async () => {
   await nextTick()
+  activeIndex.value = getLastMilestoneIndex()
   updateOverflowState()
+  scrollTimelineToEnd()
   window.addEventListener('resize', handleResize)
+})
+
+watch(displayMilestones, async () => {
+  activeIndex.value = getLastMilestoneIndex()
+  await nextTick()
+  updateOverflowState()
+  scrollTimelineToEnd()
 })
 
 onUnmounted(() => {
