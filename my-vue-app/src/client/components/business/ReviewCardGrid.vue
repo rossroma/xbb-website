@@ -78,13 +78,11 @@
         <div class="mt-4 flex items-center justify-between gap-3 max-md:mt-3">
           <span class="text-body font-semibold text-text-primary">{{ card.username }}</span>
           <div class="flex items-center gap-0.5">
-            <Star
+            <StarFill
               v-for="star in 5"
               :key="star"
               :size="16"
-              :theme="star <= card.rating ? 'filled' : 'outline'"
-              :class="star <= card.rating ? 'text-brand-primary' : 'text-text-tertiary'"
-              :stroke-width="3"
+              class="text-brand-primary"
             />
           </div>
         </div>
@@ -95,7 +93,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import { Star, Down, Up } from '@/client/components/ui/remixIcons'
+import { StarFill, Down, Up } from '@/client/components/ui/remixIcons'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import SectionHeading from '@/client/components/ui/SectionHeading.vue'
 

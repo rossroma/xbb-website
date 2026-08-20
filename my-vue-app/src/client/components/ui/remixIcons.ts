@@ -86,6 +86,7 @@ import {
   RiShieldLine,
   RiShoppingCartLine,
   RiStackLine,
+  RiStarFill,
   RiStarLine,
   RiSubtractLine,
   RiTeamFill,
@@ -194,6 +195,7 @@ const remixIcons = {
   RiShieldLine,
   RiShoppingCartLine,
   RiStackLine,
+  RiStarFill,
   RiStarLine,
   RiSubtractLine,
   RiTeamFill,
@@ -368,6 +370,7 @@ export const ShareSys = createIcon('RiShareLine')
 export const Shield = createIcon('RiShieldLine')
 export const ShoppingCart = createIcon('RiShoppingCartLine')
 export const Star = createIcon('RiStarLine')
+export const StarFill = createIcon('RiStarFill')
 export const Subtract = createIcon('RiSubtractLine')
 export const TencentQq = createIcon('RiQqLine')
 export const Thunderbolt = createIcon('RiFlashlightLine')
