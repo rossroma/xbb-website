@@ -22,12 +22,12 @@
         </div>
 
         <div class="min-w-0 shrink-0 -translate-y-[30px] max-md:-translate-y-[18px]">
-          <h3 class="mb-2 text-[22px] font-semibold leading-1.3 text-[#333] max-md:text-xl">
+          <h3 class="mb-2 text-[22px] font-semibold leading-1.3 text-text-primary max-md:text-xl">
             {{ card.title }}
           </h3>
           <p
             v-if="card.description"
-            class="text-[21px] font-medium leading-1.45 text-[#333] max-md:text-[15px]"
+            class="text-[21px] font-medium leading-1.45 text-text-primary max-md:text-[15px]"
           >
             {{ card.description }}
           </p>
