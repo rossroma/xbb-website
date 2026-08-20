@@ -12,7 +12,10 @@
       <div
         class="mx-auto grid min-h-175 w-full max-w-300 grid-cols-1 items-center justify-items-center gap-10 lg:min-h-190 lg:grid-cols-[minmax(0,1fr)_460px] lg:px-10"
       >
-        <div class="hidden h-145 w-full items-center justify-center lg:flex" aria-hidden="true">
+        <div
+          class="flex h-140 w-full max-w-115 items-center justify-center sm:h-150 md:h-140 lg:h-145 lg:max-w-none"
+          aria-hidden="true"
+        >
           <img
             src="/images/liuzi/customer_wall.png"
             alt=""

@@ -118,7 +118,7 @@ export const timelineSection = {
     {
       year: '2025',
       title: 'AI时代',
-      description: ['销帮帮AI CRM发布，并入驻1688平台。'],
+      description: ['销帮帮AI CRM发布，入驻1688平台。'],
     },
   ],
 }
