@@ -23,7 +23,7 @@
         </h2>
         <p
           v-if="subtitle"
-          class="mt-4 max-w-150 text-body text-text-tertiary leading-body max-lg:text-body"
+          class="mt-4 max-w-240 text-body text-text-tertiary leading-body max-lg:text-body"
         >
           {{ subtitle }}
         </p>
@@ -65,7 +65,7 @@
                 class="-mx-8 -mb-7 mt-6 flex flex-1 items-end overflow-hidden max-md:-mx-6"
               >
                 <img
-                  :src="row.splitGroup.featureCard.image"
+                  :src="getOSSImageUrl(row.splitGroup.featureCard.image, 600)"
                   :alt="row.splitGroup.featureCard.imageAlt ?? row.splitGroup.featureCard.title"
                   class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
                   loading="lazy"
@@ -101,7 +101,7 @@
                   class="-mx-8 -mb-7 mt-auto flex-1 overflow-hidden max-md:-mx-6"
                 >
                   <img
-                    :src="side.card.image"
+                    :src="getOSSImageUrl(side.card.image, 420)"
                     :alt="side.card.imageAlt ?? side.card.title"
                     class="block h-full w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
                     loading="lazy"
@@ -131,9 +131,9 @@
               >
                 {{ card.description }}
               </p>
-              <div v-if="card.image" class="-mx-8 -mb-7 mt-2 overflow-hidden max-md:-mx-6">
+              <div v-if="card.image" class="-mx-8 -mb-7 mt-6 overflow-hidden max-md:-mx-6">
                 <img
-                  :src="card.image"
+                  :src="getOSSImageUrl(card.image, 400)"
                   :alt="card.imageAlt ?? card.title"
                   class="block w-full max-w-none object-contain rounded-b-card transition-transform duration-normal group-hover:scale-110 motion-reduce:transition-none motion-reduce:transform-none"
                   loading="lazy"
@@ -169,7 +169,7 @@
                 class="-my-7 -mr-8 flex w-[600px] shrink-0 items-center justify-end overflow-hidden max-md:-mx-6 max-md:mb-[-1.75rem] max-md:mt-0 max-md:w-[calc(100%+3rem)]"
               >
                 <img
-                  :src="card.image"
+                  :src="getOSSImageUrl(card.image, 600)"
                   :alt="card.imageAlt ?? card.title"
                   class="h-full max-h-full w-full object-contain object-right transition-transform duration-normal group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none max-md:h-auto max-md:object-center"
                   loading="lazy"
@@ -194,7 +194,7 @@
             v-for="(card, cardIndex) in row.cards"
             :key="card.key ?? `${card.title}-${row.startIndex + cardIndex}`"
             :class="[
-              'flex min-h-135 flex-col overflow-hidden rounded-[20px] border [background:var(--image-card-grid-panel-bg)] [border-color:var(--image-card-grid-panel-border)] [box-shadow:0_18px_44px_var(--image-card-grid-panel-shadow)] [color:var(--image-card-grid-panel-text)] transition-[transform,box-shadow] duration-normal hover:-translate-y-1 hover:[box-shadow:0_24px_54px_var(--image-card-grid-panel-shadow)] max-lg:min-h-140 max-md:min-h-125 max-md:rounded-card',
+              'flex flex-col overflow-hidden rounded-[20px] border [background:var(--image-card-grid-panel-bg)] [border-color:var(--image-card-grid-panel-border)] [box-shadow:0_18px_44px_var(--image-card-grid-panel-shadow)] [color:var(--image-card-grid-panel-text)] transition-[transform,box-shadow] duration-normal hover:-translate-y-1 hover:[box-shadow:0_24px_54px_var(--image-card-grid-panel-shadow)] max-lg:min-h-140 max-md:min-h-125 max-md:rounded-card',
               isWideFeaturePanelCard(row.startIndex + cardIndex)
                 ? 'col-span-full min-h-110 max-lg:min-h-125 max-md:min-h-115'
                 : '',
@@ -233,9 +233,29 @@
                 {{ card.description }}
               </p>
             </div>
+            <div
+              v-if="card.visual?.type === 'conversion-funnel'"
+              class="image-card-grid-funnel"
+              :aria-label="card.visual.ariaLabel ?? card.imageAlt ?? card.title"
+            >
+              <div class="image-card-grid-funnel__headline">
+                <span>{{ card.visual.headline }}</span>
+              </div>
+              <div class="image-card-grid-funnel__body">
+                <div
+                  v-for="stage in card.visual.stages"
+                  :key="`${card.title}-${stage.label}`"
+                  class="image-card-grid-funnel__stage"
+                  :class="getFunnelStageClasses(stage)"
+                  :style="getFunnelStageStyle(stage)"
+                >
+                  <span>{{ stage.label }}： {{ stage.value }}</span>
+                </div>
+              </div>
+            </div>
             <img
-              v-if="card.image"
-              :src="card.image"
+              v-else-if="card.image"
+              :src="getOSSImageUrl(card.image, isWideFeaturePanelCard(row.startIndex + cardIndex) ? 760 : 460)"
               :alt="card.imageAlt ?? card.title"
               :class="[
                 'block h-auto w-full object-contain object-bottom mt-6',
@@ -256,17 +276,39 @@
 import { computed } from 'vue'
 import type { CSSProperties } from 'vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
+import { getOSSImageUrl } from '@/shared/utils/ossImage'
 export interface ImageCardGridItem {
   key?: string
   title: string
   description?: string
   image?: string
   imageAlt?: string
+  visual?: ImageCardGridVisual
   /** feature-panel 视觉中左上角序号，未传时按索引自动生成 01/02 */
   number?: string
   /** feature-panel 视觉中右上角所属模块 */
   module?: string
 }
+
+export type ImageCardGridFunnelStageShape = 'bar' | 'wide-trapezoid' | 'narrow-bar' | 'terminal'
+export type ImageCardGridFunnelStageTone = 'blue' | 'sky' | 'cyan' | 'green'
+
+export interface ImageCardGridFunnelStage {
+  label: string
+  value: string
+  shape?: ImageCardGridFunnelStageShape
+  tone?: ImageCardGridFunnelStageTone
+  width?: number
+}
+
+export interface ImageCardGridFunnelVisual {
+  type: 'conversion-funnel'
+  headline: string
+  ariaLabel?: string
+  stages: readonly ImageCardGridFunnelStage[]
+}
+
+export type ImageCardGridVisual = ImageCardGridFunnelVisual
 
 type ImageCardGridVariant = 'image-card' | 'feature-panel'
 type ImageCardGridColorScheme = 'brand' | 'accent' | 'mint' | 'neutral' | 'clean' | 'gray'
@@ -723,7 +765,7 @@ function getPanelTone(index: number): PanelTone {
       return {
         background: 'linear-gradient(135deg, #fff1e6 0%, #f4f3ff 48%, #eefbff 100%)',
         borderColor: 'rgba(91, 97, 255, 0.12)',
-        textColor: '#4f46e5',
+        textColor: '#29241F',
         mutedColor: '#5e6d82',
         dividerColor: 'rgba(91, 97, 255, 0.18)',
         shadowColor: 'rgba(91, 97, 255, 0.12)',
@@ -751,7 +793,194 @@ function getPanelStyle(index: number): CSSProperties {
   }
 }
 
+function getFunnelStageClasses(stage: ImageCardGridFunnelStage): string[] {
+  const classes = [
+    `image-card-grid-funnel__stage--${stage.shape ?? 'bar'}`,
+    `image-card-grid-funnel__stage--${stage.tone ?? 'blue'}`,
+  ]
+  if ((stage.width ?? 100) < 18) {
+    classes.push('image-card-grid-funnel__stage--compact')
+  }
+  return classes
+}
+
+function getFunnelStageStyle(stage: ImageCardGridFunnelStage): CSSProperties {
+  return {
+    '--image-card-grid-funnel-stage-width': `${stage.width ?? 100}%`,
+  } as CSSProperties
+}
+
 function formatPanelNumber(index: number): string {
   return String(index + 1).padStart(2, '0')
 }
 </script>
+
+<style scoped>
+.image-card-grid-funnel {
+  width: calc(100% - 32px);
+  max-width: 640px;
+  margin: 28px auto 30px;
+  padding-top: 8px;
+}
+
+.image-card-grid-funnel__headline {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  border: 1px dashed rgba(255, 100, 0, 0.82);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow:
+    0 12px 26px rgba(55, 99, 170, 0.1),
+    inset 0 -10px 22px rgba(65, 113, 255, 0.06);
+  text-align: center;
+}
+
+.image-card-grid-funnel__headline span {
+  background: linear-gradient(90deg, #9b5cff 0%, #1677ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.image-card-grid-funnel__body {
+  width: 100%;
+  margin-top: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-card-grid-funnel__stage {
+  --image-card-grid-funnel-stage-bg: linear-gradient(180deg, #1f7ed7 0%, #1976d2 100%);
+  --image-card-grid-funnel-stage-clip: inset(0 round 4px 4px 0 0);
+
+  position: relative;
+  width: 100%;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  filter: drop-shadow(0 8px 16px rgba(24, 101, 202, 0.16));
+}
+
+.image-card-grid-funnel__stage + .image-card-grid-funnel__stage {
+  margin-top: -1px;
+}
+
+.image-card-grid-funnel__stage::before,
+.image-card-grid-funnel__stage::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--image-card-grid-funnel-stage-width);
+  clip-path: var(--image-card-grid-funnel-stage-clip);
+}
+
+.image-card-grid-funnel__stage::before {
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.image-card-grid-funnel__stage::after {
+  top: 1.25px;
+  bottom: 1.25px;
+  width: max(calc(var(--image-card-grid-funnel-stage-width) - 2.5px), 24px);
+  background: var(--image-card-grid-funnel-stage-bg);
+}
+
+.image-card-grid-funnel__stage span {
+  position: relative;
+  z-index: 1;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 5px rgba(15, 23, 42, 0.42);
+}
+
+.image-card-grid-funnel__stage--wide-trapezoid {
+  --image-card-grid-funnel-stage-clip: polygon(0 0, 100% 0, 75% 100%, 25% 100%);
+  height: 64px;
+}
+
+.image-card-grid-funnel__stage--narrow-bar {
+  --image-card-grid-funnel-stage-clip: inset(0);
+}
+
+.image-card-grid-funnel__stage--terminal {
+  --image-card-grid-funnel-stage-clip: polygon(0 0, 100% 0, 68% 100%, 32% 100%);
+  height: 64px;
+}
+
+.image-card-grid-funnel__stage--blue {
+  --image-card-grid-funnel-stage-bg: linear-gradient(180deg, #1f82db 0%, #1976d2 100%);
+}
+
+.image-card-grid-funnel__stage--sky {
+  --image-card-grid-funnel-stage-bg: linear-gradient(180deg, #2da8ff 0%, #2495ee 100%);
+}
+
+.image-card-grid-funnel__stage--cyan {
+  --image-card-grid-funnel-stage-bg: linear-gradient(180deg, #55baff 0%, #43a7ef 100%);
+}
+
+.image-card-grid-funnel__stage--green {
+  --image-card-grid-funnel-stage-bg: linear-gradient(180deg, #08cc57 0%, #02ba4d 100%);
+}
+
+.image-card-grid-funnel__stage--compact span {
+  padding: 5px 8px;
+  border: 1px solid rgba(2, 186, 77, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 6px 14px rgba(2, 186, 77, 0.16);
+  color: #04723a;
+  text-shadow: none;
+}
+
+@media (max-width: 767px) {
+  .image-card-grid-funnel {
+    width: calc(100% - 24px);
+    margin-top: 24px;
+    margin-bottom: 26px;
+  }
+
+  .image-card-grid-funnel__headline {
+    min-height: 48px;
+    padding: 9px 14px;
+    border-radius: 16px;
+  }
+
+  .image-card-grid-funnel__headline span {
+    font-size: 14px;
+    white-space: normal;
+  }
+
+  .image-card-grid-funnel__body {
+    margin-top: 26px;
+  }
+
+  .image-card-grid-funnel__stage {
+    height: 48px;
+  }
+
+  .image-card-grid-funnel__stage--wide-trapezoid,
+  .image-card-grid-funnel__stage--terminal {
+    height: 56px;
+  }
+
+  .image-card-grid-funnel__stage span {
+    font-size: 14px;
+  }
+}
+</style>
