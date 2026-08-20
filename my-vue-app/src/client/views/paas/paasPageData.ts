@@ -55,8 +55,7 @@ export const heroBannerSlide = {
 // ========== 业务搭建能力区域（TabShowcase，左文右图） ==========
 export const businessBuildSection = {
   title: 'Paas底层能力赋能您的整个商业流程',
-  subtitle:
-    '销帮帮PaaS底层能力助力企业应对与日俱增的业务挑战，实现系统与企业个性化需求的快速适配。',
+  subtitle: '销帮帮PaaS底层能力助力企业应对与日俱增的业务挑战，实现系统与企业个性化需求的快速适配',
   tabs: [
     {
       key: 'custom-form',

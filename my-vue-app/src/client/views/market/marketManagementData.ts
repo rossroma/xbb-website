@@ -76,7 +76,7 @@ export const heroBannerSlide = {
 // ========== 线索来源承接区域（CTASection） ==========
 export const leadSourceSection = {
   title: '客户从哪来，都能接得住',
-  description: '官网、展会、电话、微信——所有渠道线索统一汇入线索资产池。',
+  description: '官网、展会、电话、微信——所有渠道线索统一汇入线索资产池',
   image: marketCustomer,
   imageAlt: '全渠道线索汇入展示占位图',
   ctaText: '立即咨询',
@@ -86,7 +86,7 @@ export const leadSourceSection = {
 export const imageCardGridSections: MarketImageCardSection[] = [
   {
     title: '让每条线索，都走向成交',
-    subtitle: '公海池灵活流转，自动推进下一步，减少线索浪费。',
+    subtitle: '公海池灵活流转，自动推进下一步，减少线索浪费',
     rows: [2, 2],
     cards: [
       {
@@ -121,7 +121,7 @@ export const imageCardGridSections: MarketImageCardSection[] = [
   },
   {
     title: '跟进旅程，全程沉淀',
-    subtitle: '每次沟通、每个阶段、每步决策，都有记录可追溯。',
+    subtitle: '每次沟通、每个阶段、每步决策，都有记录可追溯',
     columns: 3,
     cards: [
       {
@@ -149,7 +149,7 @@ export const imageCardGridSections: MarketImageCardSection[] = [
   },
   {
     title: '线索一转，客户入库',
-    subtitle: '确认有效即转客户，成交 / 无效 / 不确定分类清晰，客户进入新流转。',
+    subtitle: '确认有效即转客户，成交 / 无效 / 不确定分类清晰，客户进入新流转',
     columns: 3,
     cards: [
       {
@@ -177,7 +177,7 @@ export const imageCardGridSections: MarketImageCardSection[] = [
   },
   {
     title: '活动成效，一屏看清',
-    subtitle: '渠道 ROI、转出效果、转化漏斗——用数据优化投放策略。',
+    subtitle: '渠道 ROI、转出效果、转化漏斗——用数据优化投放策略',
     columns: 3,
     cards: [
       {

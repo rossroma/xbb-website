@@ -83,7 +83,7 @@ export const partnerTypeSection = {
 // ========== 合作收益区域（FeatureList / features） ==========
 export const partnerBenefitSection = {
   title: '与销帮帮同行，共享AI CRM市场红利',
-  subtitle: '加入销帮帮，你将获得。',
+  subtitle: '加入销帮帮，你将获得',
   cards: [
     {
       title: '高回报分成',
@@ -109,7 +109,7 @@ export const partnerBenefitSection = {
 // ========== 选择销帮帮区域（FeatureList / description） ==========
 export const whyChooseSection = {
   title: '为什么选择销帮帮',
-  subtitle: '不只是卖AI CRM，是交付一套完整的业务数字化能力。',
+  subtitle: '不只是卖AI CRM，是交付一套完整的业务数字化能力',
   cards: [
     {
       title: '产品能打',
@@ -146,7 +146,7 @@ export const onboardingSection = {
 // ========== 联系我们区域 ==========
 export const contactSection = {
   title: '联系我们',
-  subtitle: '提交合作意向前，也可以直接联系渠道合作经理。',
+  subtitle: '提交合作意向前，也可以直接联系渠道合作经理',
   contacts: [
     { name: '郑经理', phone: '15600906840' },
     { name: '郭经理', phone: '15381142230' },

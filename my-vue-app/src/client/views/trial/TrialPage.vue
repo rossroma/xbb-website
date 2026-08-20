@@ -7,12 +7,19 @@
 <template>
   <div class="min-h-screen">
     <div
-      class="relative min-h-175 bg-[url(/images/liuzi/background-image.jpg)] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
+      class="relative min-h-175 bg-linear-to-b from-[#FBFCFF] to-[#EAEFFF] px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
     >
       <div
         class="mx-auto grid min-h-175 w-full max-w-300 grid-cols-1 items-center justify-items-center gap-10 lg:min-h-190 lg:grid-cols-[minmax(0,1fr)_460px] lg:px-10"
       >
-        <div class="hidden h-110 w-full lg:block" aria-hidden="true"></div>
+        <div class="hidden h-145 w-full items-center justify-center lg:flex" aria-hidden="true">
+          <img
+            src="/images/liuzi/customer_wall.png"
+            alt=""
+            class="h-full w-full object-contain object-center"
+            loading="eager"
+          />
+        </div>
 
         <div
           class="w-full max-w-115 rounded-[20px] bg-white/96 px-10 py-10 shadow-[0_20px_50px_rgba(33,52,96,0.16)] ring-1 ring-white/70 backdrop-blur-sm lg:h-110 lg:w-115 max-sm:px-6 max-sm:py-8"
