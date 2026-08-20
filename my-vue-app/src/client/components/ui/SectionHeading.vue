@@ -22,7 +22,7 @@
       <h2
         :class="[
           kicker ? 'mt-4' : '',
-          '  text-h1 leading-heading max-lg:text-h2 max-md:text-h3 text-[36px] max-lg:text-h2 max-md:text-h3',
+          'text-h1 text-text-primary leading-heading max-lg:text-h2 max-md:text-h3 text-[36px] max-lg:text-h2 max-md:text-h3',
           headingClass,
         ]"
       >

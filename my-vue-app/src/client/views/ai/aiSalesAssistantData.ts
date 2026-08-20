@@ -74,6 +74,7 @@ export const heroBannerSlide = {
 // ========== AI 以客找客区域（ImageCardGrid） ==========
 export const lookalikeSection = {
   title: 'AI 以客找客',
+  subtitle: '让高价值客户画像，持续带来更相似的新客户',
   cards: [
     toImageCardGridItem({
       key: 'profile-modeling',
@@ -102,6 +103,7 @@ export const lookalikeSection = {
 // ========== AI 销售过程透明化区域（ImageCardGrid） ==========
 export const transparentSection = {
   title: 'AI 销售过程透明化',
+  subtitle:'让每一次沟通、每一步推进，都有迹可循',
   cards: [
     toImageCardGridItem({
       key: 'five-data-sources',
@@ -130,6 +132,7 @@ export const transparentSection = {
 // ========== AI 陪练助手区域（ImageCardGrid） ==========
 export const coachSection = {
   title: 'AI 陪练助手',
+  subtitle: '让销冠可复制，打造业内一流销售团队',
   cards: [
     toImageCardGridItem({
       key: 'real-scenario',
@@ -158,6 +161,7 @@ export const coachSection = {
 // ========== AI 分析师区域（ImageCardGrid） ==========
 export const analystSection = {
   title: 'AI 分析师',
+  subtitle: '让一线的炮火响彻后方，让管理支持建立在真实业务变化之上',
   cards: [
     toImageCardGridItem({
       key: 'customer-layering',

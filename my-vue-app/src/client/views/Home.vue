@@ -43,6 +43,8 @@
       @cta-click="navigateToClientPage(caseCarouselSection.ctaPageKey)"
     />
 
+    <CaseDetailHeader :cases="industryCaseHeaderSlides" />
+
     <PromoBanner
       :eyebrow="enterpriseVideoSection.eyebrow"
       :title="enterpriseVideoSection.title"
@@ -73,6 +75,8 @@ import PartnerGrid from '@/client/components/business/PartnerGrid.vue'
 import PromoBanner from '@/client/components/business/PromoBanner.vue'
 import IndustryCarousel from '@/client/components/business/IndustryCarousel.vue'
 import SplitCardLayout from '@/client/components/business/SplitCardLayout.vue'
+import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
+import { industryCaseHeaderSlides } from '@/client/views/cases/casesData'
 import {
   solutionCardsSection,
   aiFeatureCardsSection,

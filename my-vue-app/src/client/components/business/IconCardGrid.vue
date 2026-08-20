@@ -648,9 +648,9 @@ const TILE_COLORS: Record<ColorScheme, readonly { bg: string; color: string }[]>
   ],
   neutral: [
     { bg: '#f4f7fb', color: '#64748b' },
-    { bg: '#f7f8fa', color: '#1f2329' },
+    { bg: '#f7f8fa', color: '#29241F' },
     { bg: '#f1f5f9', color: '#64748b' },
-    { bg: '#f8fafc', color: '#1f2329' },
+    { bg: '#f8fafc', color: '#29241F' },
     { bg: '#f6f6fb', color: '#64748b' },
   ],
   clean: [
@@ -755,7 +755,7 @@ const protrudingGridColsClass = computed(() => {
 .preview-name {
   min-width: 0;
   flex: 1;
-  color: #1d2129;
+  color: var(--color-text-primary);
   font-size: 11px;
   font-weight: 600;
 }

@@ -96,11 +96,3 @@ export const faqItems: FaqItem[] = [
     category: 'all',
   },
 ]
-
-// ========== 底部转化区域 ==========
-export const finalCtaSection = {
-  title: '立即加入，推荐即赚钱',
-  subtitle: '扫码成为销帮帮推荐大使',
-  primaryCta: '立即联系客服',
-  secondaryCta: '拨打 4000-464-288',
-}

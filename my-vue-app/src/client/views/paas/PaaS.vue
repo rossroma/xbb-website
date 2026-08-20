@@ -6,6 +6,7 @@
     <TabShowcase
       :title="businessBuildSection.title"
       :tabs="businessBuildSection.tabs"
+      :subtitle="businessBuildSection.subtitle"
       layout="tabs-left"
       theme="blue"
     />
@@ -20,6 +21,7 @@
     <TabShowcase
       :title="detailCapabilitySection.title"
       :tabs="detailCapabilitySection.tabs"
+      :subtitle="detailCapabilitySection.subtitle"
       layout="tabs-left"
       theme="orange"
     />

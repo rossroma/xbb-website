@@ -5,10 +5,6 @@ export const pageContent = {
   title: '免费试用',
   /** 页面副标题 */
   subtitle: '立即体验销帮帮CRM，开启高效客户管理之旅',
-  /** 左侧图片（占位，后续替换） */
-  image: '/images/free-trial/hero.png',
-  /** 左侧图片 alt 文案 */
-  imageAlt: '销帮帮CRM免费试用',
   /** 提交按钮文案 */
   submitButton: '提交试用申请',
   /** 提交中按钮文案 */

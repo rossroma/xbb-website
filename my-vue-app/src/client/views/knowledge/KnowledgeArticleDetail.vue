@@ -443,7 +443,7 @@ watch(
 .knowledge-detail-title {
   max-width: 980px;
   margin: 0;
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 36px;
   font-weight: 500;
   line-height: 1.22;
@@ -491,7 +491,7 @@ watch(
   border-radius: 3px;
   background: #f6f7f9;
   padding: 24px;
-  color: #111827;
+  color: var(--color-text-primary);
   font-size: 16px;
   line-height: 1.7;
 }

@@ -14,6 +14,7 @@
 
     <TabShowcase
       :title="transparentSection.title"
+      :subtitle="transparentSection.subtitle"
       :tabs="transparentSection.tabs"
       layout="tabs-left"
       theme="blue"
@@ -21,6 +22,7 @@
 
     <TabShowcase
       :title="visitPlanSection.title"
+      :subtitle="visitPlanSection.subtitle"
       :tabs="visitPlanSection.tabs"
       layout="tabs-right"
       theme="purple"
@@ -28,6 +30,7 @@
 
     <TabShowcase
       :title="checkinSection.title"
+      :subtitle="checkinSection.subtitle"
       :tabs="checkinSection.tabs"
       layout="tabs-left"
       theme="sky"
@@ -35,6 +38,7 @@
 
     <TabShowcase
       :title="workReportSection.title"
+      :subtitle="workReportSection.subtitle"
       :tabs="workReportSection.tabs"
       layout="tabs-right"
       theme="orange"

@@ -35,7 +35,7 @@
   --color-brand-accent-glow: rgba(91, 97, 255, 0.18);
 
   /* ---- 1.2 中性色 ---- */
-  --color-brand-neutral: #1f2329;
+  --color-brand-neutral: #29241F;
   --color-brand-neutral-soft: #646a73;
   --color-brand-neutral-muted: #86909c;
 
@@ -46,7 +46,7 @@
   --color-surface-elevated: #ffffff;
 
   /* ---- 1.4 文字色 ---- */
-  --color-text-primary: #1f2329;
+  --color-text-primary: #29241F;
   --color-text-secondary: #646a73;
   --color-text-tertiary: #86909c;
 
@@ -169,13 +169,13 @@
   --color-ai-bg: #eee9ff;
   --color-ai-bg-light: #f1edff;
   --color-ai-muted: #a4a0ad;
-  --color-ai-card-title: #111217;
+  --color-ai-card-title: #29241F;
   --color-ai-card-desc: #555763;
-  --color-ai-title: #272a32;
-  --color-ai-coach-text: #22242b;
+  --color-ai-title: #29241F;
+  --color-ai-coach-text: #29241F;
   --color-ai-prompt-text: #343640;
-  --color-ai-process-title: #20222a;
-  --color-ai-process-text: #333641;
+  --color-ai-process-title: #29241F;
+  --color-ai-process-text: #29241F;
   --color-ai-process-danger: #f05b42;
   --color-ai-process-danger-soft: #fff0ed;
   --color-ai-process-success: #20b26b;
@@ -206,7 +206,7 @@
 
   /* ---- 2.3 Hero Banner (HeroBanner.vue) ---- */
   --color-hero-eyebrow: #4d5bd4;
-  --color-hero-title: #17203f;
+  --color-hero-title: #29241F;
   --color-hero-subtitle: #5563ef;
   --color-hero-desc: #4b587c;
   --color-hero-video-bg: #0b1220;
@@ -268,18 +268,18 @@
 
   /* ---- 2.8 其他组件 ---- */
   /* 通用标题 (SiteFooter, Button, SectionHeading) */
-  --color-heading: #101828;
+  --color-heading: #29241F;
 
   /* 生态合作伙伴 (EcosystemPartners.vue) */
-  --color-eco-title: #1f2d3d;
+  --color-eco-title: #29241F;
   --color-eco-desc: #5e6d82;
   --color-eco-1688: #1d2440;
 
   /* 服务体系 (ServiceCardItem.vue) */
-  --color-service-desc: #2b2f36;
+  --color-service-desc: #29241F;
 
   /* 解决方案卡片 (SolutionCards.vue) */
-  --color-card-title: #1d2129;
+  --color-card-title: #29241F;
   --color-card-point-bg: #f8f9fb;
   --color-card-point-border: #f0f0f0;
 
@@ -293,7 +293,7 @@
   --shadow-service-icon: 0 10px 24px rgba(148, 163, 184, 0.12);
 
   /* Header 电话图标 (SiteHeader.vue) */
-  --shadow-header-phone-icon: 0 8px 18px rgba(255, 100, 0, 0.18);
+  --shadow-header-phone-icon: 0 8px 18px rgba(91, 97, 255, 0.18);
 
   /* 通用 Badge 圆角 (Badge.vue, HeroBanner) */
   --radius-badge: 14px;
@@ -631,7 +631,7 @@
     background: rgba(255, 255, 255, 0.92);
   }
   & :where(input) {
-    color: var(--color-trial-text, #1f2329);
+    color: var(--color-trial-text, #29241F);
     font-size: 14px;
     line-height: 36px;
   }

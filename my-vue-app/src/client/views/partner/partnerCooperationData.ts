@@ -156,6 +156,5 @@ export const contactSection = {
 // ========== 合作伙伴信息查询区域 ==========
 export const partnerQuerySection = {
   title: '合作伙伴信息查询',
-  subtitle: '输入企业名称、编号即可查询',
-  placeholder: '请输入企业名称或合作伙伴编号',
+  placeholder: '请输入企业名称（全称）',
 }

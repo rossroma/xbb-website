@@ -50,7 +50,7 @@
 
         <div class="flex min-w-0 flex-col justify-center py-9 pr-5 max-lg:p-[10px_12px_24px]">
           <h3
-            class="m-0 mb-[42px] flex items-center gap-[14px] text-h2 font-medium leading-1.2 text-[#111827] max-lg:text-h3 max-md:mb-6"
+            class="m-0 mb-[42px] flex items-center gap-[14px] text-h2 font-medium leading-1.2 text-text-primary max-lg:text-h3 max-md:mb-6"
           >
             <Local class="shrink-0 text-[#1568ff]" :size="42" aria-hidden="true" />
             <span>{{ activeItem.title }}</span>

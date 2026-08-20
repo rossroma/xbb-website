@@ -9,8 +9,6 @@
     <!-- ===== Hero Banner 区 ===== -->
     <HeroBanner mode="single" :slides="[caseHeroSlide]" />
 
-    <CaseDetailHeader :cases="industryCaseHeaderSlides" />
-
     <!-- ===== 分类 Tab 区 + 案例卡片列表 ===== -->
     <SectionBlock spacing="none" paddingBottom="default" class="mt-5">
       <!-- 分类 Tab -->
@@ -91,7 +89,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
-import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
@@ -105,7 +102,7 @@ import {
   type ClientCategoryListResponse,
   type Category,
 } from '@/shared/api/category'
-import { caseHeroSlide, CASE_ROOT_BID, industryCaseHeaderSlides } from './casesData'
+import { caseHeroSlide, CASE_ROOT_BID } from './casesData'
 
 // ==================== SEO ====================
 

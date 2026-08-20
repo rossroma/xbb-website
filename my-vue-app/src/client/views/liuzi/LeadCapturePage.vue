@@ -133,15 +133,7 @@
 
     <PartnerGrid :heading="ecosystemSection.heading" :items="ecosystemSection.items" />
 
-    <CaseDetailHeader
-      :image="caseHeaderSection.image"
-      :image-alt="caseHeaderSection.imageAlt"
-      :logo="caseHeaderSection.logo"
-      :logo-alt="caseHeaderSection.logoAlt"
-      :description="caseHeaderSection.description"
-      :title="caseHeaderSection.title"
-      :tags="caseHeaderSection.tags"
-    />
+    <CaseDetailHeader :cases="caseHeaderSlides" />
 
     <SiteFooter
       :footer-columns="footerColumns"
@@ -188,7 +180,7 @@ import TrialSuccessModal from '@/client/views/trial/TrialSuccessModal.vue'
 import {
   aiCrmSection,
   biCapabilitySection,
-  caseHeaderSection,
+  caseHeaderSlides,
   ecosystemSection,
   leadHeroSlide,
   liuziTrialHref,
@@ -288,7 +280,7 @@ const handleFormSubmit = async () => {
 
 .lead-hero-form-card__heading h1 {
   margin: 0;
-  color: #1f2329;
+  color: var(--color-text-primary);
   font-size: 26px;
   font-weight: 600;
   line-height: 1.3;
@@ -296,7 +288,7 @@ const handleFormSubmit = async () => {
 
 .lead-hero-form-card__heading p {
   margin: 10px 0 0;
-  color: #373737;
+  color: var(--color-text-primary);
   font-size: 16px;
   line-height: 1.6;
 }
@@ -387,7 +379,7 @@ const handleFormSubmit = async () => {
 }
 
 .lead-hero-form-card__agreement a {
-  color: #303030;
+  color: var(--color-text-primary);
 }
 
 .lead-hero-form-card__submit {

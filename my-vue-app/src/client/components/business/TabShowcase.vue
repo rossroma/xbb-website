@@ -1,6 +1,7 @@
 <template>
   <SectionBlock spacing="default">
-    <h2
+    <div class="flex flex-col items-center text-center">
+      <h2
       class="text-[36px] text-h1 text-text-primary leading-heading text-center max-lg:text-h2 max-md:text-h3"
     >
       <template v-if="titleParts">
@@ -19,6 +20,15 @@
         {{ title }}
       </template>
     </h2>
+
+    <p
+      v-if="subtitle"
+      class="mt-4 max-w-220 whitespace-pre-line text-body text-text-tertiary leading-body max-lg:text-body"
+    >
+      {{ subtitle }}
+    </p>
+    </div>
+    
 
     <!-- ===== Single tab mode（仅一个 tab 时，无 tab 导航，左文右图/右文左图） ===== -->
     <div
@@ -382,6 +392,7 @@ const props = withDefaults(
   defineProps<{
     title: string
     titleHighlight?: string
+    subtitle?: string
     tabs: readonly TabShowcaseItem[]
     layout?: 'tabs-left' | 'tabs-right' | 'tabs-top' | 'tabs-left-horizontal'
     theme?: Theme

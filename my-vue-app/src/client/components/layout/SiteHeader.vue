@@ -105,7 +105,7 @@
                   </div>
                   <div class="grid grid-cols-2 gap-3">
                     <RouterLink
-                      v-for="entry in item.mega.features"
+                      v-for="(entry, index) in item.mega.features"
                       :key="entry.label"
                       :to="getItemTo(entry)"
                       class="flex items-start gap-3 px-3 py-2.5 rounded-inner text-left transition-colors duration-fast motion-reduce:transition-none hover:bg-surface-secondary no-underline"
@@ -115,7 +115,8 @@
                         :is="entry.icon.component"
                         v-if="entry.icon?.component"
                         :size="entry.icon.width"
-                        class="shrink-0 mt-0.5 text-text-tertiary"
+                        :style="{ color: featureIconColors[index % featureIconColors.length] }"
+                        class="shrink-0 mt-0.5"
                       />
                       <img
                         v-else-if="entry.icon?.src"
@@ -175,11 +176,11 @@
       </nav>
 
       <!-- Right Actions -->
-      <div class="flex items-center gap-3 shrink-0">
-        <div class="hidden lg:inline-flex items-center gap-2.5">
+      <div class="flex items-center shrink-0">
+        <div class="hidden lg:inline-flex items-center mr-4 gap-2.5">
           <a
             :href="`tel:${displayHotline}`"
-            class="group relative flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary shadow-header-phone-icon no-underline"
+            class="group relative flex items-center justify-center w-6 h-6 rounded-full bg-[#29241F] shadow-header-phone-icon no-underline"
             :aria-label="`客服电话 ${displayHotline}`"
           >
             <PhoneTelephone :size="16" class="text-white" aria-hidden="true" />
@@ -196,7 +197,7 @@
           variant="outline"
           size="md"
           radius="lg"
-          class="hidden lg:inline-flex"
+          class="hidden mr-3 lg:inline-flex"
         >
           登录
         </Button>
@@ -205,7 +206,7 @@
           variant="primary"
           size="md"
           radius="lg"
-          class="hidden lg:inline-flex"
+          class="hidden mr-3 lg:inline-flex"
         >
           免费试用
         </Button>
@@ -314,6 +315,9 @@ const props = withDefaults(
 )
 
 const displayHotline = computed(() => store.tel || props.hotline)
+
+/** Mega 菜单功能模块面形图标色板（按顺序循环取色） */
+const featureIconColors = ['#4361ee', '#7c3aed', '#ea580c', '#059669', '#dc2626', '#0891b2']
 
 const currentHash = computed(() => route.hash)
 const hasSubmenu = (item: HeaderNavItem) => Boolean(item.children?.length || item.mega)
