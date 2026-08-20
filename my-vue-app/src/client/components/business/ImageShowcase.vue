@@ -21,7 +21,7 @@
       </div>
 
       <!-- 右侧图片 -->
-      <div :class="imagePanelClass">
+      <div :class="imagePanelClass" class="rounded-[24px]">
         <div class="w-full max-w-170 aspect-[680/420] flex items-center justify-center">
           <img
             :src="getOSSImageUrl(image, 680)"
@@ -70,11 +70,11 @@ const bgClass = computed(() => THEME_BG_CLASS[props.theme])
 const containerClass = computed(() => [
   'grid gap-0  overflow-hidden max-lg:grid-cols-1 max-lg:border-0 max-lg:shadow-none max-lg:overflow-visible',
   isTextRight.value
-    ? 'grid-cols-[minmax(0,1fr)_minmax(0,420px)]'
-    : 'grid-cols-[minmax(0,420px)_minmax(0,1fr)]',
+    ? 'grid-cols-[minmax(0,1fr)_minmax(0,600px)]'
+    : 'grid-cols-[minmax(0,600px)_minmax(0,1fr)]',
 ])
 const textPanelClass = computed(() => [
-  'p-12 max-lg:p-8 max-md:p-6 flex flex-col justify-center',
+  'p-16 max-lg:p-8 max-md:p-6 flex flex-col justify-center',
   isTextRight.value ? 'order-2 max-lg:order-none' : 'order-1',
 ])
 const imagePanelClass = computed(() => [
