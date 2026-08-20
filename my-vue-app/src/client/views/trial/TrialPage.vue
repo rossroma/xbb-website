@@ -5,9 +5,11 @@
 -->
 <template>
   <div class="min-h-screen">
-    <div class="relative flex min-h-175 items-center justify-center bg-[url('/images/liuzi/background-image.jpg')] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:block lg:min-h-190 lg:px-0 lg:py-0">
+    <div
+      class="relative flex min-h-175 items-center justify-center bg-[url('/images/liuzi/background-image.jpg')] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:block lg:min-h-190 lg:px-0 lg:py-0"
+    >
       <div
-        class="w-full max-w-[460px] rounded-[20px] bg-white/96 px-10 py-10 shadow-[0_20px_50px_rgba(33,52,96,0.16)] ring-1 ring-white/70 backdrop-blur-sm lg:absolute lg:right-40 lg:top-32 lg:h-[440px] lg:w-[460px] max-sm:px-6 max-sm:py-8"
+        class="w-full max-w-115 rounded-[20px] bg-white/96 px-10 py-10 shadow-[0_20px_50px_rgba(33,52,96,0.16)] ring-1 ring-white/70 backdrop-blur-sm lg:absolute lg:right-40 lg:top-32 lg:h-110 lg:w-115 max-sm:px-6 max-sm:py-8"
       >
         <div class="w-full">
           <!-- 标题 -->
@@ -59,7 +61,9 @@
               aria-label="手机号码"
               size="md"
               :maxlength="11"
-              @update:model-value="(val: string | number) => (form.tel = String(val).replace(/\D/g, ''))"
+              @update:model-value="
+                (val: string | number) => (form.tel = String(val).replace(/\D/g, ''))
+              "
             />
 
             <!-- 短信验证码 -->
