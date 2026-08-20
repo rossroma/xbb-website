@@ -189,7 +189,7 @@ const prefixClasses = computed(() => {
 const suffixClasses = computed(() => {
   const base = 'shrink-0 text-text-tertiary'
   if (resolvedSize.value === 'sm') return `${base} ml-2.5`
-  return `${base} ml-3`
+  return `${base}`
 })
 
 function handleInput(e: Event) {

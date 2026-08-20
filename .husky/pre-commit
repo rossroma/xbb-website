@@ -1,6 +1,8 @@
 # 轻量级预提交检查：仅对变更文件执行 lint-staged（oxlint + eslint + prettier）
 # 全量 TypeScript 类型检查在 pre-push 推送至 develop/main 时执行，避免拖慢每次提交
 
+. "$(dirname "$0")/use-project-node"
+
 echo ""
 echo "🔍 [pre-commit] 执行 lint-staged（变更文件格式化+修复）..."
 cd my-vue-app
