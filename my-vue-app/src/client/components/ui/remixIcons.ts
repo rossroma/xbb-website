@@ -21,11 +21,13 @@ import {
   RiCheckboxBlankCircleLine,
   RiCloseLine,
   RiCloudLine,
+  RiCodeBoxFill,
   RiCodeBoxLine,
   RiComputerLine,
   RiContractLine,
   RiCursorLine,
   RiCustomerService2Line,
+  RiDashboard3Fill,
   RiDashboard3Line,
   RiDeleteBinLine,
   RiDingdingLine,
@@ -54,6 +56,7 @@ import {
   RiHome3Line,
   RiInboxLine,
   RiInformationLine,
+  RiLineChartFill,
   RiLineChartLine,
   RiLoader4Line,
   RiLockLine,
@@ -69,7 +72,9 @@ import {
   RiPlayFill,
   RiQqLine,
   RiQuestionLine,
+  RiRobot2Fill,
   RiRobot2Line,
+  RiRocketFill,
   RiRocketLine,
   RiSearchLine,
   RiSendPlaneLine,
@@ -83,6 +88,7 @@ import {
   RiStackLine,
   RiStarLine,
   RiSubtractLine,
+  RiTeamFill,
   RiTeamLine,
   RiTiktokLine,
   RiTimeLine,
@@ -123,11 +129,13 @@ const remixIcons = {
   RiCheckboxBlankCircleLine,
   RiCloseLine,
   RiCloudLine,
+  RiCodeBoxFill,
   RiCodeBoxLine,
   RiComputerLine,
   RiContractLine,
   RiCursorLine,
   RiCustomerService2Line,
+  RiDashboard3Fill,
   RiDashboard3Line,
   RiDeleteBinLine,
   RiDingdingLine,
@@ -156,6 +164,7 @@ const remixIcons = {
   RiHome3Line,
   RiInboxLine,
   RiInformationLine,
+  RiLineChartFill,
   RiLineChartLine,
   RiLoader4Line,
   RiLockLine,
@@ -171,7 +180,9 @@ const remixIcons = {
   RiPlayFill,
   RiQqLine,
   RiQuestionLine,
+  RiRobot2Fill,
   RiRobot2Line,
+  RiRocketFill,
   RiRocketLine,
   RiSearchLine,
   RiSendPlaneLine,
@@ -185,6 +196,7 @@ const remixIcons = {
   RiStackLine,
   RiStarLine,
   RiSubtractLine,
+  RiTeamFill,
   RiTeamLine,
   RiTiktokLine,
   RiTimeLine,
@@ -267,6 +279,7 @@ export const Agreement = createIcon('RiContractLine')
 export const Alipay = createIcon('RiAlipayLine')
 export const AllApplication = createIcon('RiApps2Line')
 export const ApiApp = createIcon('RiCodeBoxLine')
+export const ApiAppFill = createIcon('RiCodeBoxFill')
 export const ArrowDown = createIcon('RiArrowDownLine')
 export const ArrowRight = createIcon('RiArrowRightLine')
 export const Audit = createIcon('RiShieldCheckLine')
@@ -293,6 +306,7 @@ export const CooperativeHandshake = createIcon('RiShakeHandsLine')
 export const Copy = createIcon('RiFileCopyLine')
 export const Cycle = createIcon('RiLoopRightLine')
 export const DataDisplay = createIcon('RiDashboard3Line')
+export const DataDisplayFill = createIcon('RiDashboard3Fill')
 export const Delete = createIcon('RiDeleteBinLine')
 export const Dingding = createIcon('RiDingdingLine')
 export const DocDetail = createIcon('RiFileList3Line')
@@ -332,6 +346,7 @@ export const Message = createIcon('RiMessage3Line')
 export const Monitor = createIcon('RiComputerLine')
 export const People = createIcon('RiUserLine')
 export const Peoples = createIcon('RiTeamLine')
+export const PeoplesFill = createIcon('RiTeamFill')
 export const Phone = createIcon('RiPhoneLine')
 export const PhoneTelephone = createIcon('RiPhoneLine')
 export const Play = createIcon('RiPlayFill')
@@ -339,7 +354,9 @@ export const Plus = createIcon('RiAddLine')
 export const Protect = createIcon('RiShieldCheckLine')
 export const Right = createIcon('RiArrowRightSLine')
 export const Robot = createIcon('RiRobot2Line')
+export const RobotFill = createIcon('RiRobot2Fill')
 export const Rocket = createIcon('RiRocketLine')
+export const RocketFill = createIcon('RiRocketFill')
 export const Round = createIcon('RiCheckboxBlankCircleLine')
 export const SalesReport = createIcon('RiLineChartLine')
 export const Search = createIcon('RiSearchLine')
@@ -357,6 +374,7 @@ export const Thunderbolt = createIcon('RiFlashlightLine')
 export const Tiktok = createIcon('RiTiktokLine')
 export const Time = createIcon('RiTimeLine')
 export const Trend = createIcon('RiLineChartLine')
+export const TrendFill = createIcon('RiLineChartFill')
 export const Up = createIcon('RiArrowUpSLine')
 export const User = createIcon('RiUserLine')
 export const UserBusiness = createIcon('RiUserStarLine')

@@ -1,15 +1,12 @@
 import { toPagePath } from '@/client/data/routePaths'
 import type { Component } from 'vue'
 import {
-  ApiApp,
-  DataDisplay,
-  Dingding,
-  Message,
-  Peoples,
-  Robot,
-  Rocket,
-  Trend,
-  Wechat,
+  ApiAppFill,
+  DataDisplayFill,
+  PeoplesFill,
+  RobotFill,
+  RocketFill,
+  TrendFill,
 } from '@/client/components/ui/remixIcons'
 
 /** 导航菜单图标 */
@@ -65,55 +62,55 @@ const productFeatures: HeaderNavNode[] = [
     label: '客户管理',
     desc: '客户全生命周期数字化管理',
     to: '/kehuguanli',
-    icon: { component: Peoples, width: 18, height: 18 },
+    icon: { component: PeoplesFill, width: 18, height: 18 },
   },
   {
     label: '销售管理',
     desc: '精细化销售管理助力业绩增长',
     to: '/xiaoshouguanli',
-    icon: { component: Trend, width: 18, height: 18 },
+    icon: { component: TrendFill, width: 18, height: 18 },
   },
   {
     label: '市场管理',
     desc: '全渠道营销获客，高效转化',
     to: '/shichangguanli',
-    icon: { component: Rocket, width: 18, height: 18 },
+    icon: { component: RocketFill, width: 18, height: 18 },
   },
   {
     label: 'PaaS',
     desc: '底层能力赋能商业个性化需求',
     to: '/paas',
-    icon: { component: ApiApp, width: 18, height: 18 },
+    icon: { component: ApiAppFill, width: 18, height: 18 },
   },
   {
     label: 'AI销售助理',
     desc: '重塑销售作业流程，助力业绩增长',
     to: '/ai',
-    icon: { component: Robot, width: 18, height: 18 },
+    icon: { component: RobotFill, width: 18, height: 18 },
   },
   {
     label: 'BI',
     desc: '数据驱动决策，洞察业务增长',
     to: '/bi',
-    icon: { component: DataDisplay, width: 18, height: 18 },
+    icon: { component: DataDisplayFill, width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 钉钉',
     desc: '让进步发生，让业绩提升',
     to: '/dingtalk',
-    icon: { component: Dingding, width: 18, height: 18 },
+    icon: { src: '/images/dingtalk/dingding.svg', width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 飞书',
     desc: '拥抱数字化，拥抱先进',
     to: '/feishubanben',
-    icon: { component: Message, width: 18, height: 18 },
+    icon: { src: '/images/feishu/feishu.svg', width: 18, height: 18 },
   },
   {
     label: '销帮帮 X 企业微信',
     desc: '强者结合，绝妙拍档',
     to: '/qiweibanben',
-    icon: { component: Wechat, width: 18, height: 18 },
+    icon: { src: '/images/qiwei/qiwei.svg', width: 18, height: 18 },
   },
 ]
 
