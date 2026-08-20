@@ -20,6 +20,13 @@
       </template>
     </h2>
 
+    <p
+      v-if="subtitle"
+      class="mx-auto justify-center mt-4 max-w-150 text-body text-text-tertiary leading-body max-lg:text-body"
+    >
+      {{ subtitle }}
+    </p>
+
     <!-- ===== Single tab mode（仅一个 tab 时，无 tab 导航，左文右图/右文左图） ===== -->
     <div
       v-if="isSingleTab && singleTab"
@@ -382,6 +389,7 @@ const props = withDefaults(
   defineProps<{
     title: string
     titleHighlight?: string
+    subtitle?: string
     tabs: readonly TabShowcaseItem[]
     layout?: 'tabs-left' | 'tabs-right' | 'tabs-top' | 'tabs-left-horizontal'
     theme?: Theme
