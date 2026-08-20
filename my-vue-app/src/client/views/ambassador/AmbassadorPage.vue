@@ -28,13 +28,11 @@
       :show-categories="false"
       :show-search="false"
     />
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import CTASection from '@/client/components/business/CTASection.vue'
 import ContactHotline from '@/client/components/business/ContactHotline.vue'
 import FaqList from '@/client/components/business/FaqList.vue'
 import FlowSteps from '@/client/components/business/FlowSteps.vue'
@@ -43,7 +41,6 @@ import {
   contactHotlineSection,
   faqCategories,
   faqItems,
-  finalCtaSection,
   heroBannerSlide,
   referralProcessSection,
 } from './ambassadorPageData'
