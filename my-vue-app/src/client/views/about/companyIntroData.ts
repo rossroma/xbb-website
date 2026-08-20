@@ -63,7 +63,7 @@ export const aboutSection = {
 // ========== 发展历程区域（Timeline） ==========
 export const timelineSection = {
   title: '发展历程',
-  subtitle: '从SaaS到PaaS，从多生态到AI CRM，销帮帮持续围绕企业增长场景进化。',
+  subtitle: '从SaaS到PaaS，从多生态到AI CRM，销帮帮持续围绕企业增长场景进化',
   milestones: [
     {
       year: '2015',
@@ -131,7 +131,7 @@ export const technologySection = {
 // ========== 研发实力区域（CTASection） ==========
 export const researchStrengthSection = {
   intro: [
-    '销帮帮全国现有员工 200 余人，研发人员占比超 40%，是一家技术与服务驱动的国家级高新技术企业。\n杭州总部设立滨江研发中心，组建 80 余人研发团队，团队半数以上成员来自一线互联网企业，汇聚国内外高校博士、硕士研究生 20 余名。\n核心骨干普遍拥有多年研发实战经验。截至目前，公司拥有 8 项专利、61 项软件著作权。',
+    '销帮帮全国现有员工 200 余人，研发人员占比超 40%，是一家技术与服务驱动的国家级高新技术企业\n杭州总部设立滨江研发中心，组建 80 余人研发团队，团队半数以上成员来自一线互联网企业，汇聚国内外高校博士、硕士研究生 20 余名\n核心骨干普遍拥有多年研发实战经验。截至目前，公司拥有 8 项专利、61 项软件著作权',
   ],
   images: [
     { src: '/images/company/research-strength-01.png', alt: '研发实力 01' },
@@ -262,14 +262,4 @@ export const successSupportSection = {
     { title: '输送行业最佳实践', icon: Rocket },
     { title: '全面助力业绩增长', icon: ChartHistogram },
   ],
-}
-
-// ========== 底部转化区域 ==========
-export const footerCtaSection = {
-  title: '联系我们',
-  subtitle: '下载销帮帮AI CRM',
-  primaryCta: '联系我们',
-  primaryHref: '/liuzi',
-  secondaryCta: '下载销帮帮AI CRM',
-  secondaryHref: '/xiazaizhongxin',
 }

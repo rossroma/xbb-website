@@ -1,5 +1,5 @@
 <template>
-  <div class="download-center mt-15">
+  <div class="download-center mt-20">
     <PlatformDownload
       :title="downloadCenterSection.title"
       :subtitle="downloadCenterSection.subtitle"

@@ -55,7 +55,7 @@ export const heroBannerSlide = {
 // ========== 随身数据区域（CTASection） ==========
 export const mobileDataSection = {
   title: '随时随地，数据随身',
-  description: 'Web 端 / 手机端完整查看仪表盘，出门在外也能及时掌握业务动态。',
+  description: 'Web 端 / 手机端完整查看仪表盘，出门在外也能及时掌握业务动态',
   image: `${biImageBase}/data-anywhere.png`,
   imageAlt: '随时随地查看 BI 数据仪表盘',
   ctaText: '立即咨询',
