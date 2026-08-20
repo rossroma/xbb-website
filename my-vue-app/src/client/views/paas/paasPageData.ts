@@ -55,7 +55,8 @@ export const heroBannerSlide = {
 
 // ========== 业务搭建能力区域（TabShowcase，左文右图） ==========
 export const businessBuildSection = {
-  title: '自定义表单、流程引擎、权限管理',
+  title: 'Paas底层能力赋能您的整个商业流程',
+  subtitle:'销帮帮PaaS底层能力助力企业应对与日俱增的业务挑战，实现系统与企业个性化需求的快速适配。',
   tabs: [
     {
       key: 'custom-form',
@@ -86,7 +87,7 @@ export const businessBuildSection = {
 
 // ========== 开放平台能力区域（TabShowcase，右文左图） ==========
 export const openPlatformSection = {
-  title: 'BI 引擎、云叩低代码、OPEN API',
+  title: '',
   tabs: [
     {
       key: 'bi-engine',

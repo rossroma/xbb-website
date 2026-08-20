@@ -6,6 +6,7 @@
     <TabShowcase
       :title="businessBuildSection.title"
       :tabs="businessBuildSection.tabs"
+      :subtitle="businessBuildSection.subtitle"
       layout="tabs-left"
       theme="blue"
     />
@@ -37,7 +38,6 @@ import {
   businessBuildSection,
   openPlatformSection,
   detailCapabilitySection,
-  footerCtaSection,
 } from './paasPageData'
 
 usePageSEO()
