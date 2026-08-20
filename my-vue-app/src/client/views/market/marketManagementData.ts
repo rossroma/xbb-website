@@ -1,5 +1,6 @@
 // ========== 市场管理页面 SEO 配置 ==========
 import type { BannerSlide } from '@/client/data/homeData'
+import type { ImageCardGridFunnelVisual } from '@/client/components/business/ImageCardGrid.vue'
 import { toPagePath } from '@/client/data/routePaths'
 
 const blankShowcaseImage = '/images/paas/blank-showcase.svg'
@@ -16,9 +17,6 @@ const customerPoolFollowUpCultivationImage =
   '/images/market/customer-pool-follow-up-cultivation.png'
 const closedLoopCustomerServiceImage =
   '/images/market/closed-loop-customer-service-archive-review.png'
-const campaignPerformanceImage = '/images/market/campaign-performance.png'
-const leadTransferPerformanceAnalysisImage = '/images/market/lead-transfer-performance-analysis.png'
-const visualConversionFunnelImage = '/images/market/visual-conversion-funnel.png'
 const trialPagePath = toPagePath('single_mfsy')
 
 interface MarketImageCardItem {
@@ -26,6 +24,7 @@ interface MarketImageCardItem {
   description: string
   image?: string
   imageAlt?: string
+  visual?: ImageCardGridFunnelVisual
   /** feature-panel 视觉中右上角所属模块 */
   module?: string
 }
@@ -184,21 +183,48 @@ export const imageCardGridSections: MarketImageCardSection[] = [
       {
         title: '活动成效',
         module: '活动成效',
-        image: campaignPerformanceImage,
+        visual: {
+          type: 'conversion-funnel',
+          headline: '某一次活动/渠道从线索到成交的逐级转化',
+          stages: [
+            { label: '线索量', value: '100%', shape: 'bar', tone: 'blue', width: 100 },
+            { label: '有效', value: '72%', shape: 'wide-trapezoid', tone: 'sky', width: 82 },
+            { label: '跟进', value: '54%', shape: 'narrow-bar', tone: 'cyan', width: 42 },
+            { label: '成交', value: '28%', shape: 'terminal', tone: 'green', width: 42 },
+          ],
+        },
         imageAlt: '活动成效数据分析产品界面',
         description: '各渠道线索量、有效率、跟进率、转化率一目了然，实时对比投放效果',
       },
       {
         title: '转出效果分析',
         module: '转出效果分析',
-        image: leadTransferPerformanceAnalysisImage,
+        visual: {
+          type: 'conversion-funnel',
+          headline: '线索到成交各阶段的转化',
+          stages: [
+            { label: '线索量', value: '100%', shape: 'bar', tone: 'blue', width: 100 },
+            { label: 'MQL', value: '64%', shape: 'wide-trapezoid', tone: 'sky', width: 70 },
+            { label: 'SQL', value: '38%', shape: 'narrow-bar', tone: 'cyan', width: 36 },
+            { label: '成交', value: '22%', shape: 'terminal', tone: 'green', width: 36 },
+          ],
+        },
         imageAlt: '线索转出效果分析产品界面',
         description: '线索转客户效率、各销售转化能力、各阶段停留时长，精准定位瓶颈',
       },
       {
         title: '可视转化漏斗',
         module: '可视转化漏斗',
-        image: visualConversionFunnelImage,
+        visual: {
+          type: 'conversion-funnel',
+          headline: '从广告投放全链路到最终成交',
+          stages: [
+            { label: '曝光', value: '100%', shape: 'bar', tone: 'blue', width: 100 },
+            { label: '点击', value: '48%', shape: 'wide-trapezoid', tone: 'sky', width: 58 },
+            { label: '线索', value: '26%', shape: 'narrow-bar', tone: 'cyan', width: 30 },
+            { label: '成交', value: '8%', shape: 'terminal', tone: 'green', width: 30 },
+          ],
+        },
         imageAlt: '全链路可视转化漏斗产品界面',
         description: '从曝光→点击→线索→跟进→成交，全链路漏斗，每个环节流失率清晰',
       },
