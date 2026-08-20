@@ -58,19 +58,42 @@
             loading="lazy"
           />
           <!-- 无图片时的默认占位图 -->
-          <div v-else class="flex h-full w-full items-center justify-center" aria-hidden="true">
+          <div
+            v-else
+            class="relative flex h-full w-full items-center justify-center overflow-hidden"
+            aria-hidden="true"
+          >
+            <!-- 装饰性背景元素 -->
+            <div
+              class="absolute -right-8 -top-8 h-50 w-50 rounded-full bg-surface-tertiary/50 blur-2xl"
+            />
+            <div
+              class="absolute -bottom-6 -left-6 h-36 w-36 rounded-full bg-brand-primary/8 blur-xl"
+            />
+            <!-- 图标 -->
             <svg
-              class="h-16 w-16 text-text-tertiary/40"
-              viewBox="0 0 24 24"
+              class="relative h-24 w-24 text-text-tertiary/35"
+              viewBox="0 0 80 80"
               fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
+              <rect
+                x="8"
+                y="12"
+                width="64"
+                height="56"
+                rx="6"
+                stroke="currentColor"
+                stroke-width="2.5"
+              />
+              <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
+              <path
+                d="M72 56L56 40L40 56L28 44L8 64"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <!-- 分类标签：图片左上角浮层 -->
@@ -133,19 +156,42 @@
             loading="lazy"
           />
           <!-- 无图片时的默认占位图 -->
-          <div v-else class="flex h-full w-full items-center justify-center" aria-hidden="true">
+          <div
+            v-else
+            class="relative flex h-full w-full items-center justify-center overflow-hidden"
+            aria-hidden="true"
+          >
+            <!-- 装饰性背景元素 -->
+            <div
+              class="absolute -right-8 -top-8 h-50 w-50 rounded-full bg-surface-tertiary/50 blur-2xl"
+            />
+            <div
+              class="absolute -bottom-6 -left-6 h-36 w-36 rounded-full bg-brand-primary/8 blur-xl"
+            />
+            <!-- 图标 -->
             <svg
-              class="h-16 w-16 text-text-tertiary/40"
-              viewBox="0 0 24 24"
+              class="relative h-24 w-24 text-text-tertiary/35"
+              viewBox="0 0 80 80"
               fill="none"
-              stroke="currentColor"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
+              <rect
+                x="8"
+                y="12"
+                width="64"
+                height="56"
+                rx="6"
+                stroke="currentColor"
+                stroke-width="2.5"
+              />
+              <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
+              <path
+                d="M72 56L56 40L40 56L28 44L8 64"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
             </svg>
           </div>
           <!-- 分类标签：图片左上角浮层 -->
@@ -268,21 +314,39 @@
                 </component>
                 <div
                   v-else
-                  class="flex h-full w-full items-center justify-center"
+                  class="relative flex h-full w-full items-center justify-center overflow-hidden"
                   aria-hidden="true"
                 >
+                  <!-- 装饰性背景元素 -->
+                  <div
+                    class="absolute -right-4 -top-4 h-30 w-30 rounded-full bg-surface-tertiary/50 blur-2xl"
+                  />
+                  <div
+                    class="absolute -bottom-3 -left-3 h-20 w-20 rounded-full bg-brand-primary/8 blur-xl"
+                  />
                   <svg
-                    class="h-12 w-12 text-text-tertiary/40"
-                    viewBox="0 0 24 24"
+                    class="relative h-16 w-16 text-text-tertiary/35"
+                    viewBox="0 0 80 80"
                     fill="none"
-                    stroke="currentColor"
-                    stroke-width="1"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                    <circle cx="8.5" cy="8.5" r="1.5" />
-                    <polyline points="21 15 16 10 5 21" />
+                    <rect
+                      x="8"
+                      y="12"
+                      width="64"
+                      height="56"
+                      rx="6"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                    />
+                    <circle cx="28" cy="32" r="8" stroke="currentColor" stroke-width="2.5" />
+                    <path
+                      d="M72 56L56 40L40 56L28 44L8 64"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
