@@ -7,19 +7,21 @@
   <div class="cases-page">
     <h1 class="sr-only">行业案例 - 销帮帮 CRM</h1>
     <!-- ===== 轮播 Banner 区 ===== -->
-    <PromoBannerCarousel :slides="casePromoSlides" />
+    <PromoBannerCarousel :slides="casePromoSlides" @cta-click="handlePromoCtaClick" />
 
     <!-- ===== 分类 Tab 区 + 案例卡片列表 ===== -->
     <SectionBlock spacing="none" paddingBottom="default" class="mt-20">
       <!-- 分类 Tab -->
-      <Tabs
-        v-model="activeTabKey"
-        :tabs="categoryTabs"
-        layout="text-only"
-        active-bg="brand"
-        :disabled="isLoading"
-        @update:model-value="handleTabChange"
-      />
+      <div class="scroll-mt-20">
+        <Tabs
+          v-model="activeTabKey"
+          :tabs="categoryTabs"
+          layout="text-only"
+          active-bg="brand"
+          :disabled="isLoading"
+          @update:model-value="handleTabChange"
+        />
+      </div>
 
       <!-- 加载态 -->
       <div
@@ -84,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
@@ -95,8 +97,13 @@ import Pagination from '@/client/components/ui/Pagination.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import { getClientCases, type CaseListResponse } from '@/shared/api/case'
-import { getClientCategories, type ClientCategoryListResponse, type Category } from '@/shared/api/category'
+import {
+  getClientCategories,
+  type ClientCategoryListResponse,
+  type Category,
+} from '@/shared/api/category'
 import { casePromoSlides, CASE_ROOT_BID } from './casesData'
+import type { PromoBannerSlide } from '@/client/components/business/PromoBannerCarousel.vue'
 
 // ==================== SEO ====================
 
@@ -108,9 +115,7 @@ const isLoading = ref(false)
 const errorMessage = ref<string | null>(null)
 
 /** 分类 Tab 列表（含动态获取的 bid） */
-const categoryTabs = ref<{ key: string; label: string }[]>([
-  { key: 'all', label: '全部' },
-])
+const categoryTabs = ref<{ key: string; label: string }[]>([{ key: 'all', label: '全部' }])
 
 /** 内部分类映射表：key → bid */
 const categoryMap = ref<Map<string, number>>(new Map())
@@ -173,12 +178,13 @@ async function loadCases() {
 
   try {
     const bid = getActiveBid()
-    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } = {
-      page: currentPage.value,
-      limit: pageSize.value,
-      rootBid: CASE_ROOT_BID,
-      order: 'random',
-    }
+    const params: { page: number; limit: number; bid?: number; rootBid?: number; order: 'random' } =
+      {
+        page: currentPage.value,
+        limit: pageSize.value,
+        rootBid: CASE_ROOT_BID,
+        order: 'random',
+      }
     if (bid !== undefined) {
       params.bid = bid
     }
@@ -197,9 +203,7 @@ async function loadCategories() {
     const categories: Category[] = result.items
 
     // 过滤出行业案例根类目下的子类目
-    const childCategories = categories.filter(
-      (c) => c.pid === CASE_ROOT_BID && c.status === 1,
-    )
+    const childCategories = categories.filter((c) => c.pid === CASE_ROOT_BID && c.status === 1)
 
     if (childCategories.length > 0) {
       const tabs = [{ key: 'all', label: '全部' }]
@@ -239,6 +243,32 @@ function handlePageChange(page: number) {
   loadCases()
   // 滚动到列表顶部
   window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+/** 轮播图「了解详情」点击 — 触发对应行业分类 Tab 选中 */
+function handlePromoCtaClick(slide: PromoBannerSlide) {
+  // 找到与轮播图 eyebrow 匹配的分类 Tab
+  const matchedTab = categoryTabs.value.find(
+    (tab) => tab.key !== 'all' && tab.label === slide.eyebrow,
+  )
+  if (!matchedTab) return
+
+  // 如果已经是当前 Tab 则不做处理（避免重复请求）
+  if (activeTabKey.value === matchedTab.key) return
+
+  // 更新 Tab 选中状态，触发数据加载
+  activeTabKey.value = matchedTab.key
+  prevTabKey.value = matchedTab.key
+  currentPage.value = 1
+  loadCases()
+
+  // 等 DOM 更新后滚动到分类 Tab 区域（scroll-mt-20 自动留出 80px 顶部间距）
+  nextTick(() => {
+    const tabWrapper = document.querySelector('.cases-page .scroll-mt-20')
+    if (tabWrapper) {
+      tabWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  })
 }
 
 // ==================== 生命周期 ====================
