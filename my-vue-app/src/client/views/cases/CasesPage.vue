@@ -6,11 +6,13 @@
 <template>
   <div class="cases-page">
     <h1 class="sr-only">行业案例 - 销帮帮 CRM</h1>
-    <!-- ===== 轮播 Banner 区 ===== -->
-    <PromoBannerCarousel :slides="casePromoSlides" @cta-click="handlePromoCtaClick" />
+    <!-- ===== Hero Banner 区 ===== -->
+    <HeroBanner mode="single" :slides="[caseHeroSlide]" />
+
+    <CaseDetailHeader :cases="industryCaseHeaderSlides" />
 
     <!-- ===== 分类 Tab 区 + 案例卡片列表 ===== -->
-    <SectionBlock spacing="none" paddingBottom="default" class="mt-20">
+    <SectionBlock spacing="none" paddingBottom="default" class="mt-5">
       <!-- 分类 Tab -->
       <div class="scroll-mt-20">
         <Tabs
@@ -88,7 +90,8 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, onMounted } from 'vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
-import PromoBannerCarousel from '@/client/components/business/PromoBannerCarousel.vue'
+import HeroBanner from '@/client/components/business/HeroBanner.vue'
+import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
 import Tabs from '@/client/components/ui/Tabs.vue'
 import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import ContentList from '@/client/components/business/ContentList.vue'
@@ -102,8 +105,8 @@ import {
   type ClientCategoryListResponse,
   type Category,
 } from '@/shared/api/category'
-import { casePromoSlides, CASE_ROOT_BID } from './casesData'
 import type { PromoBannerSlide } from '@/client/components/business/PromoBannerCarousel.vue'
+import { caseHeroSlide, CASE_ROOT_BID, industryCaseHeaderSlides } from './casesData'
 
 // ==================== SEO ====================
 
