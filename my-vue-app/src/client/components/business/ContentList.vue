@@ -72,7 +72,7 @@
             />
             <!-- 装饰性细网格线 -->
             <div
-              class="absolute inset-0 opacity-0.04"
+              class="absolute inset-0 text-brand-primary/15 opacity-0.04"
               style="
                 background-image: radial-gradient(circle, currentColor 0.5px, transparent 0.5px);
                 background-size: 20px 20px;
@@ -80,7 +80,7 @@
             />
             <!-- 插图 -->
             <svg
-              class="relative h-48 w-48 text-text-tertiary/40"
+              class="relative h-48 w-48 text-brand-primary/30"
               viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -217,7 +217,7 @@
             />
             <!-- 装饰性细网格线 -->
             <div
-              class="absolute inset-0 opacity-0.04"
+              class="absolute inset-0 text-brand-primary/15 opacity-0.04"
               style="
                 background-image: radial-gradient(circle, currentColor 0.5px, transparent 0.5px);
                 background-size: 20px 20px;
@@ -225,7 +225,7 @@
             />
             <!-- 插图 -->
             <svg
-              class="relative h-48 w-48 text-text-tertiary/40"
+              class="relative h-48 w-48 text-brand-primary/30"
               viewBox="0 0 96 96"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -419,7 +419,7 @@
                     class="absolute -bottom-3 -left-3 h-20 w-20 rounded-full bg-brand-primary/8 blur-xl"
                   />
                   <div
-                    class="absolute inset-0 opacity-0.04"
+                    class="absolute inset-0 text-brand-primary/15 opacity-0.04"
                     style="
                       background-image: radial-gradient(
                         circle,
