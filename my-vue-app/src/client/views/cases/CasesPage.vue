@@ -9,8 +9,6 @@
     <!-- ===== Hero Banner 区 ===== -->
     <HeroBanner mode="single" :slides="[caseHeroSlide]" />
 
-    <CaseDetailHeader :cases="industryCaseHeaderSlides" />
-
     <!-- ===== 分类 Tab 区 + 案例卡片列表 ===== -->
     <SectionBlock spacing="none" paddingBottom="default" class="mt-5">
       <!-- 分类 Tab -->
