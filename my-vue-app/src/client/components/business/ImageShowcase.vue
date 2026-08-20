@@ -21,7 +21,7 @@
       </div>
 
       <!-- 右侧图片 -->
-      <div :class="imagePanelClass" class="rounded-[24px]">
+      <div :class="imagePanelClass" class="rounded-ai-card">
         <div class="w-full max-w-170 aspect-[680/420] flex items-center justify-center">
           <img
             :src="getOSSImageUrl(image, 680)"

@@ -5,9 +5,9 @@
   包含前端防攻击措施：蜜罐字段、频率限制、提交冷却
 -->
 <template>
-  <div>
+  <div class="min-h-screen">
     <div
-      class="relative min-h-175 bg-[url('/images/liuzi/background-image.jpg')] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
+      class="relative min-h-175 bg-[url(/images/liuzi/background-image.jpg)] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
     >
       <div
         class="mx-auto grid min-h-175 w-full max-w-300 grid-cols-1 items-center justify-items-center gap-10 lg:min-h-190 lg:grid-cols-[minmax(0,1fr)_460px] lg:px-10"
@@ -66,7 +66,9 @@
               aria-label="手机号码"
               size="md"
               :maxlength="11"
-              @update:model-value="(val: string | number) => (form.tel = String(val).replace(/\D/g, ''))"
+              @update:model-value="
+                (val: string | number) => (form.tel = String(val).replace(/\D/g, ''))
+              "
             />
 
             <!-- 短信验证码 -->

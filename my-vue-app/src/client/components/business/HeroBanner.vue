@@ -551,7 +551,7 @@ import { useRouter } from 'vue-router'
 import Button from '@/client/components/ui/Button.vue'
 import Carousel from '@/client/components/ui/Carousel.vue'
 import { getOSSImageUrl } from '@/shared/utils/ossImage'
-import type { BannerSlide } from '@/client/data/homeData'
+import type { BannerSlide, HeroBannerHighlightMode } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
 export interface HeroShowcaseItem {
@@ -575,13 +575,11 @@ export interface HeroShowcaseSlide {
   secondaryHref?: string
 }
 
-export type HeroBannerHighlightMode = 'none' | 'title' | 'subtitle' | 'both'
+export type { HeroBannerHighlightMode }
 
 export type HeroBannerSlide = BannerSlide & {
   /** Only used by mode="single" to highlight title/subtitle text. */
   highlightMode?: HeroBannerHighlightMode
-  /** Whether to show the underline image below highlighted text. Defaults to true. */
-  highlightUnderline?: boolean
   /** Only used by mode="single" to render a badge above the title. */
   eyebrowBackground?: string
   eyebrowColor?: string
@@ -806,7 +804,7 @@ function splitShowcaseLines(text: string): string[] {
 
 .management-showcase {
   --main-color: #ff6400;
-  --text-color-2: #29241F;
+  --text-color-2: #29241f;
   --text-color-light-2: #5e6d82;
   --white: #ffffff;
   width: 100vw;

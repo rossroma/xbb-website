@@ -26,21 +26,22 @@
         v-for="(card, index) in cards"
         :key="index"
         :class="[
-          'group flex flex-col rounded-card border border-border-subtle bg-surface-primary p-6 shadow-subtle',
+          'group relative flex flex-col rounded-card border border-border-subtle bg-surface-primary p-6 shadow-subtle',
           'transition-all duration-normal ease',
           'hover:-translate-y-1 hover:shadow-card-hover',
           'motion-reduce:transition-none motion-reduce:transform-none',
           'max-lg:p-5 max-md:p-4',
         ]"
       >
-        <!-- 顶部：品牌 Logo + 行业标签 -->
-        <div class="flex items-center justify-between gap-3">
-          <img
-            :src="card.logo"
-            :alt="card.logoAlt ?? card.industry"
-            class="h-8 w-auto max-w-30 object-contain"
-            loading="lazy"
-          />
+        <!-- 顶部品牌 Logo：绝对定位脱离文档流，圆形徽章，仅顶部凸出卡片 -->
+        <img
+          :src="card.logo"
+          :alt="card.logoAlt ?? card.industry"
+          class="absolute left-6 -top-6 z-10 h-25 w-25 rounded-full border border-border-subtle bg-surface-primary object-cover shadow-prominent"
+          loading="lazy"
+        />
+        <!-- 行业标签：自然高度右对齐，不参与 logo 占位 -->
+        <div class="flex items-center justify-end">
           <span
             class="inline-flex shrink-0 items-center rounded-pill bg-brand-primary-soft px-3 py-1 text-caption font-medium text-brand-primary"
           >
@@ -48,11 +49,11 @@
           </span>
         </div>
 
-        <!-- 分隔线 -->
-        <div class="my-4 border-t border-border-subtle max-md:my-3" />
+        <!-- 分隔线（避开顶部圆形 logo 占位） -->
+        <div class="my-4 ml-29 border-t border-border-subtle max-md:my-3" />
 
-        <!-- 评价内容 -->
-        <div class="flex-1">
+        <!-- 评价内容（文本右移避开 logo） -->
+        <div class="ml-29 flex-1">
           <p
             :ref="(el) => setContentRef(index, el)"
             :class="[
@@ -78,12 +79,7 @@
         <div class="mt-4 flex items-center justify-between gap-3 max-md:mt-3">
           <span class="text-body font-semibold text-text-primary">{{ card.username }}</span>
           <div class="flex items-center gap-0.5">
-            <StarFill
-              v-for="star in 5"
-              :key="star"
-              :size="16"
-              class="text-brand-primary"
-            />
+            <StarFill v-for="star in 5" :key="star" :size="16" class="text-brand-primary" />
           </div>
         </div>
       </div>

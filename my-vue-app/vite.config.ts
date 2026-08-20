@@ -29,13 +29,10 @@ function extractPackageName(id: string): string | null {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const apiTarget = env.VITE_API_BASE_URL || 'http://localhost:3000'
+  const uploadsTarget = env.VITE_UPLOADS_TARGET || 'https://bbs.xbongbong.com'
 
   return {
-    plugins: [
-      vue(),
-      vueDevTools(),
-      tailwindcss(),
-    ],
+    plugins: [vue(), vueDevTools(), tailwindcss()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
@@ -51,6 +48,10 @@ export default defineConfig(({ mode }) => {
         },
         '/uploads': {
           target: apiTarget,
+          changeOrigin: true,
+        },
+        '/Uploads': {
+          target: uploadsTarget,
           changeOrigin: true,
         },
       },

@@ -64,6 +64,8 @@ export interface BannerSlide {
   eyebrow?: string
   title: string
   subtitle?: string
+  highlightMode?: HeroBannerHighlightMode
+  highlightUnderline?: boolean
   desc: string
   primaryCta: string
   primaryHref?: string
@@ -85,6 +87,8 @@ export interface BannerSlide {
   visualBadges?: HeroVisualBadge[]
   visualBridge?: HeroVisualBridge[]
 }
+
+export type HeroBannerHighlightMode = 'none' | 'title' | 'subtitle' | 'both'
 
 // ========== 工具函数 ==========
 const makeLogos = (group: number, names: string[]) =>
@@ -369,7 +373,6 @@ export const serviceSystemCards = [
 // ====================================================================
 // 首页区域配置（按组件维度组织，合并标题 / CTA / 路由映射）
 // ====================================================================
-
 
 /** 区域二：解决方案卡片 */
 export const solutionCardsSection = {

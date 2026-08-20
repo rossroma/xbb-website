@@ -11,11 +11,7 @@
   <component :is="hideHeader ? 'div' : SectionBlock" :spacing="hideHeader ? undefined : 'default'">
     <!-- 标题区：左侧标题 + 右侧「查看全部」 -->
     <div v-if="!hideHeader" class="flex items-end justify-between gap-6">
-      <SectionHeading
-        :title="title"
-        :subtitle="subtitle"
-        align="left"
-      />
+      <SectionHeading :title="title" :subtitle="subtitle" align="left" />
       <component
         v-if="variant !== 'article-row'"
         :is="viewAllLink ? 'a' : 'button'"
@@ -31,10 +27,7 @@
     <!-- ===== 变体：card（默认）— 卡片网格 ===== -->
     <div
       v-if="variant === 'card'"
-      :class="[
-        gridColsClass,
-        hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
-      ]"
+      :class="[gridColsClass, hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8']"
     >
       <component
         :is="getLinkComponent(item.linkHref)"
@@ -60,7 +53,7 @@
           <img
             :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
-            class="block h-full w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
+            class="block h-full w-full object-cover object-top transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
           />
           <!-- 分类标签：图片左上角浮层 -->
@@ -92,10 +85,7 @@
     <!-- ===== 变体：compact — 紧凑图文卡片 ===== -->
     <div
       v-if="variant === 'compact'"
-      :class="[
-        gridColsClass,
-        hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8',
-      ]"
+      :class="[gridColsClass, hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8']"
     >
       <component
         :is="getLinkComponent(item.linkHref)"
@@ -121,7 +111,7 @@
           <img
             :src="getOSSImageUrl(item.image, 280)"
             :alt="item.imageAlt ?? item.title"
-            class="block h-full w-full object-cover transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
+            class="block h-full w-full object-cover object-top transition-transform duration-glide ease group-hover:scale-105 motion-reduce:transition-none motion-reduce:transform-none"
             loading="lazy"
           />
           <!-- 分类标签：图片左上角浮层 -->
@@ -210,15 +200,8 @@
       :class="['content-list-article-row', hideHeader ? 'mt-0' : 'mt-12 max-lg:mt-10 max-md:mt-8']"
     >
       <!-- 初始加载骨架屏（仅 loading 且无数据时显示） -->
-      <div
-        v-if="loading && items.length === 0"
-        class="content-list-article-row__skeleton"
-      >
-        <div
-          v-for="i in 5"
-          :key="i"
-          class="content-list-article-row__skeleton-item"
-        >
+      <div v-if="loading && items.length === 0" class="content-list-article-row__skeleton">
+        <div v-for="i in 5" :key="i" class="content-list-article-row__skeleton-item">
           <div class="content-list-article-row__skeleton-media" />
           <div class="content-list-article-row__skeleton-body">
             <div class="content-list-article-row__skeleton-line skeleton-line--short" />
@@ -229,17 +212,10 @@
       </div>
 
       <!-- 数据列表（翻页时保持挂载，通过 Transition 切换） -->
-      <div
-        v-else
-        class="content-list-article-row__items"
-      >
+      <div v-else class="content-list-article-row__items">
         <Transition name="list-fade" mode="out-in">
           <div :key="currentPage" class="content-list-article-row__items-inner">
-            <div
-              v-for="item in items"
-              :key="item.title"
-              class="content-list-article-row__item"
-            >
+            <div v-for="item in items" :key="item.title" class="content-list-article-row__item">
               <div class="content-list-article-row__media">
                 <component
                   v-if="item.image"
@@ -249,7 +225,12 @@
                   class="content-list-article-row__media-link"
                   :aria-label="item.linkHref ? `查看文章：${item.title}` : undefined"
                 >
-                  <img :src="getOSSImageUrl(item.image, 300)" :alt="item.imageAlt ?? item.title" loading="lazy" class="content-list-article-row__media-img" />
+                  <img
+                    :src="getOSSImageUrl(item.image, 300)"
+                    :alt="item.imageAlt ?? item.title"
+                    loading="lazy"
+                    class="content-list-article-row__media-img"
+                  />
                 </component>
               </div>
 
@@ -264,7 +245,10 @@
                     {{ item.title }}
                   </component>
                 </h3>
-                <p v-if="item.summary || item.description" class="content-list-article-row__description">
+                <p
+                  v-if="item.summary || item.description"
+                  class="content-list-article-row__description"
+                >
                   <component
                     :is="getLinkComponent(item.linkHref, 'span')"
                     :to="isInternalLink(item.linkHref) ? item.linkHref : undefined"
@@ -288,10 +272,7 @@
         </Transition>
       </div>
 
-      <div
-        v-if="showPagination && total > 0"
-        class="flex justify-center mt-6"
-      >
+      <div v-if="showPagination && total > 0" class="flex justify-center mt-6">
         <Pagination
           :current-page="currentPage"
           :total="total"
@@ -510,8 +491,12 @@ function handlePaginationChange(page: number): void {
 }
 
 @keyframes content-list-skeleton-pulse {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .content-list-article-row__items {
@@ -579,6 +564,7 @@ function handlePaginationChange(page: number): void {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
   transition: transform 0.3s ease;
 }
 

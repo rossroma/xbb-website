@@ -154,28 +154,34 @@ bash deploy.sh --test
 bash deploy.sh
 ```
 
-**GitHub Secrets 配置**：
+**GitHub Secrets / Variables 配置**：
 
-| 分类 | Secret | 说明 |
-|------|--------|------|
-| SSH | `TEST_SSH_HOST` | 测试服务器 IP |
-| SSH | `TEST_SSH_PORT` | SSH 端口（默认 22） |
-| SSH | `TEST_SSH_USER` | SSH 用户名 |
-| SSH | `TEST_SSH_PRIVATE_KEY` | SSH 私钥 |
-| ACR | `ACR_REGISTRY` | 阿里云镜像仓库地址 |
-| ACR | `ACR_NAMESPACE` | ACR 命名空间 |
-| ACR | `ACR_USERNAME` | ACR 用户名 |
-| ACR | `ACR_PASSWORD` | ACR 密码 |
-| 应用 | `TEST_DB_PASSWORD` | 测试数据库密码 |
-| 应用 | `TEST_DB_DATABASE` | 测试数据库名 |
-| 应用 | `TEST_JWT_SECRET` | JWT 密钥 |
-| 应用 | `TEST_DEPLOY_PATH` | 部署目录 |
-| OSS | `OSS_REGION` | OSS 区域 |
-| OSS | `OSS_BUCKET` | OSS Bucket 名称 |
-| OSS | `OSS_ACCESS_KEY_ID` | OSS AccessKey ID |
-| OSS | `OSS_ACCESS_KEY_SECRET` | OSS AccessKey Secret |
-| 短信 | `SMS_USERNAME` | 短信平台用户名 |
-| 短信 | `SMS_PASSWORD` | 短信平台密码 |
-| 短信 | `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
-| 回调 | `DATACENTER_TOKEN` | 数据中心回调 Token |
-| 合作 | `PARTNER_API_TOKEN` | 合作伙伴 API Token |
+敏感信息存于 **Secrets**，非敏感配置存于 **Variables**（参考 [deploy.yml](.github/workflows/deploy.yml)）：
+
+| 类型 | 名称 | 说明 |
+|------|------|------|
+| Secret | `SSH_HOST` | 服务器 IP |
+| Secret | `SSH_USER` | SSH 用户名 |
+| Secret | `SSH_PRIVATE_KEY` | SSH 私钥 |
+| Secret | `ACR_PASSWORD` | ACR 密码 |
+| Secret | `DB_PASSWORD` | 数据库密码 |
+| Secret | `JWT_SECRET` | JWT 密钥 |
+| Secret | `OSS_ACCESS_KEY_SECRET` | OSS AccessKey Secret |
+| Secret | `SMS_PASSWORD` | 短信平台密码 |
+| Secret | `CAPTCHA_JWT_SECRET` | 验证码 JWT 密钥 |
+| Secret | `DATACENTER_TOKEN` | 数据中心回调 Token |
+| Secret | `PARTNER_API_TOKEN` | 合作伙伴 API Token |
+| Variable | `SSH_PORT` | SSH 端口（默认 22） |
+| Variable | `ACR_REGISTRY` | 阿里云镜像仓库地址 |
+| Variable | `ACR_NAMESPACE` | ACR 命名空间 |
+| Variable | `ACR_USERNAME` | ACR 用户名 |
+| Variable | `DB_HOST` | 数据库地址 |
+| Variable | `DB_PORT` | 数据库端口（默认 3306） |
+| Variable | `DB_USERNAME` | 数据库用户名 |
+| Variable | `DB_DATABASE` | 数据库名 |
+| Variable | `DEPLOY_PATH` | 部署目录 |
+| Variable | `FRONTEND_PORT` | 前端服务端口 |
+| Variable | `OSS_REGION` | OSS 区域 |
+| Variable | `OSS_BUCKET` | OSS Bucket 名称 |
+| Variable | `OSS_ACCESS_KEY_ID` | OSS AccessKey ID |
+| Variable | `SMS_USERNAME` | 短信平台用户名 |

@@ -25,7 +25,6 @@
       layout="tabs-left"
       theme="orange"
     />
-
   </div>
 </template>
 
