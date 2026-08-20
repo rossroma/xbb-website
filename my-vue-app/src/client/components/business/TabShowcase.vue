@@ -244,7 +244,7 @@
     <div
       v-else
       :class="[
-        'mt-12 grid lg:h-105 lg:overflow-hidden max-lg:mt-8',
+        'mt-12 grid lg:min-h-105 max-lg:mt-8',
         layout === 'tabs-right' ? 'grid-cols-[1fr_380px]' : 'grid-cols-[380px_1fr]',
         'max-lg:grid-cols-1 max-lg:rounded-none max-lg:border-0 max-lg:shadow-none max-lg:gap-6 max-lg:overflow-visible',
       ]"
