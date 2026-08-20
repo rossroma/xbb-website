@@ -59,9 +59,10 @@ CONVERT = {
     "company/research-strength-07.png": {"width": 320, "format": "png", "quality": 80},
     "cases/hero-banner.png": {"width": 1920, "format": "webp", "quality": 80},
     "cases/hangye_img-3.jpg": {"width": 400, "format": "jpeg", "quality": 82},
+    "BI/report.png": {"width": 1360, "format": "png", "quality": None},
+    "liuzi/background-image.jpg": {"width": 1920, "format": "jpeg", "quality": 82},
     "company/research-strength-06.png": {"width": 320, "format": "png", "quality": 80},
     "news/hero-banner.png": {"width": 1920, "format": "webp", "quality": 80},
-    "paas/blank-showcase.png": {"width": 680, "format": "webp", "quality": 80},
     "qiwei/hero-banner.png": {"width": 1920, "format": "webp", "quality": 80},
     "service-hours.png": {"width": 360, "format": "webp", "quality": 80},
     "consultant.png": {"width": 360, "format": "webp", "quality": 80},
@@ -97,7 +98,6 @@ CONVERT = {
     "download/flydown.jpg": {"width": 240, "format": "jpeg", "quality": 82},
     "download/wxdown.jpg": {"width": 240, "format": "jpeg", "quality": 82},
     "download/xbbdown.jpg": {"width": 240, "format": "jpeg", "quality": 82},
-    "liuzi/pc_banner.png": {"width": 1600, "format": "png", "quality": None},
     "liuzi/1-1.png": {"width": 1300, "format": "png", "quality": None},
     "liuzi/1-2.png": {"width": 1500, "format": "png", "quality": None},
     "ai/kuayuan.png": {"width": 1200, "format": "png", "quality": None},
@@ -132,6 +132,10 @@ HERO_BANNER_PATHS = [
     "contact/hero-banner.png",
     "sales/hero-banner.png",
     "market/hero-banner.png",
+    "company/hero-banner-soft.png",
+    "voices/hero-banner.png",
+    "paas/hero-banner.png",
+    "liuzi/pc_banner.png",
 ]
 
 # company/research-strength-*.jpg 重压（实测渲染仅 158x223px，目标 320 宽）
@@ -298,12 +302,21 @@ def build_plan() -> list[tuple[str, Path, Path | None]]:
         if p.exists() and str(p.relative_to(IMG_ROOT)) not in CONVERT:
             plan.append(("CONVERT", p, None))
 
-    # research-strength jpg 重压
+    # research-strength jpg 重压（已达标——宽度已 <=320——则跳过，避免重复编码变大）
+    def _already_narrow(p: Path, max_w: int) -> bool:
+        try:
+            with Image.open(p) as im:
+                return im.width <= max_w
+        except OSError:
+            return True
+
     for p in sorted((IMG_ROOT / "company").glob("research-strength-*.jpg")):
+        if _already_narrow(p, 320):
+            continue
         plan.append(("CONVERT", p, None))
     for rel in RESEARCH_PNG_TO_JPG:
         p = IMG_ROOT / rel
-        if p.exists():
+        if p.exists() and not _already_narrow(p, 320):
             plan.append(("CONVERT", p, None))
 
     # logos 通配: 495x234 合作伙伴 logo -> 280 宽
