@@ -413,8 +413,7 @@
     <Carousel
       class="hero-banner-carousel"
       :total-slides="slides.length"
-      :auto-play="true"
-      :interval="5000"
+      :auto-play="false"
       show-dots
       aria-label="Banner 轮播"
     >
@@ -533,7 +532,11 @@
             :aria-label="`第 ${i} 张`"
             @click="goTo(i - 1)"
           >
-            <span class="hero-banner-progress-dot__fill" aria-hidden="true" />
+            <span
+              class="hero-banner-progress-dot__fill"
+              aria-hidden="true"
+              @animationend="currentIndex === i - 1 ? goTo(i % total) : undefined"
+            />
           </button>
         </div>
       </template>
@@ -803,7 +806,7 @@ function splitShowcaseLines(text: string): string[] {
 
 .management-showcase {
   --main-color: #ff6400;
-  --text-color-2: #1f2d3d;
+  --text-color-2: #29241F;
   --text-color-light-2: #5e6d82;
   --white: #ffffff;
   width: 100vw;
@@ -827,7 +830,7 @@ function splitShowcaseLines(text: string): string[] {
   font-size: 44px;
   letter-spacing: -1px;
   font-weight: 600;
-  color: #333;
+  color: var(--color-text-primary);
   line-height: 1;
 }
 
@@ -1036,7 +1039,7 @@ function splitShowcaseLines(text: string): string[] {
 }
 
 .management-showcase__actions .btn-show {
-  color: #000000;
+  color: var(--color-text-primary);
   background-color: #f7f8fd;
 }
 
