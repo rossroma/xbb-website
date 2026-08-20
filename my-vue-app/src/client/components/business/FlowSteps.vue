@@ -52,7 +52,7 @@
           <span class="block text-2xl font-medium leading-1.15 text-[#3177ff] max-lg:text-2xl">
             step.{{ index + 1 }}
           </span>
-          <h3 class="mt-2.5 text-[18px] font-medium leading-1.35 text-[#33476a] max-lg:text-[18px]">
+          <h3 class="mt-2.5 text-[18px] font-medium leading-1.35 text-text-primary max-lg:text-[18px]">
             {{ step.title }}
           </h3>
         </div>

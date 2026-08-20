@@ -351,19 +351,19 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#fff6ef',
       backgroundImage: 'linear-gradient(135deg, #fff0e5 0%, #fffaf6 100%)',
       borderColor: 'rgba(255, 100, 0, 0.08)',
-      titleColor: '#ff6400',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#f6f3ff',
       backgroundImage: 'linear-gradient(135deg, #f0ecff 0%, #fbf9ff 100%)',
       borderColor: 'rgba(91, 97, 255, 0.1)',
-      titleColor: '#7c5cff',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#edfaff',
       backgroundImage: 'linear-gradient(135deg, #e7faff 0%, #f7fdff 100%)',
       borderColor: 'rgba(14, 165, 169, 0.1)',
-      titleColor: '#0087b8',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#fff8e8',
@@ -403,25 +403,25 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#53df8e',
       backgroundImage: 'linear-gradient(135deg, #4adb85 0%, #57e49c 100%)',
       borderColor: 'rgba(16, 185, 129, 0.16)',
-      titleColor: '#062515',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#f5f2eb',
       backgroundImage: 'linear-gradient(135deg, #f5f2eb 0%, #fffdf8 100%)',
       borderColor: 'rgba(31, 35, 41, 0.08)',
-      titleColor: '#101418',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#e9e6f7',
       backgroundImage: 'linear-gradient(135deg, #e4e0f4 0%, #f4f1ff 100%)',
       borderColor: 'rgba(124, 92, 255, 0.1)',
-      titleColor: '#111827',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#e7faff',
       backgroundImage: 'linear-gradient(135deg, #dcf7ff 0%, #f6feff 100%)',
       borderColor: 'rgba(14, 165, 233, 0.1)',
-      titleColor: '#0f172a',
+      titleColor: '#29241F',
     },
   ],
   neutral: [
@@ -429,19 +429,19 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#f6f8fb',
       backgroundImage: 'linear-gradient(135deg, #f2f5f9 0%, #fbfcfe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#f7f6fb',
       backgroundImage: 'linear-gradient(135deg, #f2f0f8 0%, #fbfbfe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#f5f9fa',
       backgroundImage: 'linear-gradient(135deg, #eff7f8 0%, #fbfefe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.1)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
   ],
   clean: [
@@ -449,19 +449,19 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#ffffff',
       backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #fafbff 100%)',
       borderColor: 'rgba(0, 0, 0, 0.04)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#ffffff',
       backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #fffaf6 100%)',
       borderColor: 'rgba(0, 0, 0, 0.04)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
     {
       backgroundColor: '#ffffff',
       backgroundImage: 'linear-gradient(135deg, #ffffff 0%, #f7fdff 100%)',
       borderColor: 'rgba(0, 0, 0, 0.04)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
   ],
   gray: [
@@ -469,7 +469,7 @@ const IMAGE_CARD_TONES: Record<ImageCardGridColorScheme, readonly ImageCardTone[
       backgroundColor: '#f6f6f6',
       backgroundImage: 'none',
       borderColor: 'rgba(31, 35, 41, 0.06)',
-      titleColor: '#1f2329',
+      titleColor: '#29241F',
     },
   ],
 }
@@ -488,7 +488,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #fff1e6 0%, #fff8f2 100%)',
       borderColor: 'rgba(255, 100, 0, 0.12)',
-      textColor: '#1f2329',
+      textColor: '#29241F',
       mutedColor: '#6b5a50',
       dividerColor: 'rgba(255, 100, 0, 0.18)',
       shadowColor: 'rgba(255, 100, 0, 0.12)',
@@ -496,7 +496,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f3f5ff 0%, #fbfbff 100%)',
       borderColor: 'rgba(91, 97, 255, 0.12)',
-      textColor: '#111827',
+      textColor: '#29241F',
       mutedColor: '#5d6475',
       dividerColor: 'rgba(91, 97, 255, 0.18)',
       shadowColor: 'rgba(91, 97, 255, 0.1)',
@@ -504,7 +504,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #eafcff 0%, #f8feff 100%)',
       borderColor: 'rgba(14, 165, 169, 0.12)',
-      textColor: '#0f172a',
+      textColor: '#29241F',
       mutedColor: '#49636a',
       dividerColor: 'rgba(14, 165, 169, 0.18)',
       shadowColor: 'rgba(14, 165, 169, 0.1)',
@@ -514,7 +514,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #eef0ff 0%, #fafbff 100%)',
       borderColor: 'rgba(91, 97, 255, 0.14)',
-      textColor: '#111827',
+      textColor: '#29241F',
       mutedColor: '#596075',
       dividerColor: 'rgba(91, 97, 255, 0.2)',
       shadowColor: 'rgba(91, 97, 255, 0.12)',
@@ -522,7 +522,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f5efff 0%, #fffaff 100%)',
       borderColor: 'rgba(124, 92, 255, 0.14)',
-      textColor: '#171426',
+      textColor: '#29241F',
       mutedColor: '#655a75',
       dividerColor: 'rgba(124, 92, 255, 0.2)',
       shadowColor: 'rgba(124, 92, 255, 0.12)',
@@ -530,7 +530,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #eef9ff 0%, #fbfeff 100%)',
       borderColor: 'rgba(37, 99, 235, 0.12)',
-      textColor: '#111827',
+      textColor: '#29241F',
       mutedColor: '#53627a',
       dividerColor: 'rgba(37, 99, 235, 0.18)',
       shadowColor: 'rgba(37, 99, 235, 0.1)',
@@ -540,7 +540,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #4ade80 0%, #4ade80 100%)',
       borderColor: 'rgba(2, 44, 34, 0.12)',
-      textColor: '#03170d',
+      textColor: '#29241F',
       mutedColor: 'rgba(3, 23, 13, 0.72)',
       dividerColor: 'rgba(3, 23, 13, 0.16)',
       shadowColor: 'rgba(74, 222, 128, 0.24)',
@@ -548,7 +548,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f5f2eb 0%, #fffdf8 100%)',
       borderColor: 'rgba(31, 35, 41, 0.1)',
-      textColor: '#06080a',
+      textColor: '#29241F',
       mutedColor: '#63615c',
       dividerColor: 'rgba(31, 35, 41, 0.14)',
       shadowColor: 'rgba(31, 35, 41, 0.08)',
@@ -556,7 +556,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #e9e6f7 0%, #f6f3ff 100%)',
       borderColor: 'rgba(124, 92, 255, 0.1)',
-      textColor: '#080b12',
+      textColor: '#29241F',
       mutedColor: '#636071',
       dividerColor: 'rgba(124, 92, 255, 0.14)',
       shadowColor: 'rgba(124, 92, 255, 0.1)',
@@ -566,7 +566,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%)',
       borderColor: 'rgba(100, 106, 115, 0.12)',
-      textColor: '#111827',
+      textColor: '#29241F',
       mutedColor: '#5f6b7a',
       dividerColor: 'rgba(100, 106, 115, 0.16)',
       shadowColor: 'rgba(15, 23, 42, 0.08)',
@@ -574,7 +574,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f7f8fa 0%, #ffffff 100%)',
       borderColor: 'rgba(100, 106, 115, 0.12)',
-      textColor: '#1f2329',
+      textColor: '#29241F',
       mutedColor: '#606a78',
       dividerColor: 'rgba(100, 106, 115, 0.16)',
       shadowColor: 'rgba(15, 23, 42, 0.08)',
@@ -582,7 +582,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #f2f4f7 0%, #fbfcfe 100%)',
       borderColor: 'rgba(100, 106, 115, 0.12)',
-      textColor: '#1f2937',
+      textColor: '#29241F',
       mutedColor: '#667085',
       dividerColor: 'rgba(100, 106, 115, 0.16)',
       shadowColor: 'rgba(15, 23, 42, 0.08)',
@@ -592,7 +592,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: 'linear-gradient(180deg, #ffffff 0%, #fafbff 100%)',
       borderColor: 'rgba(15, 23, 42, 0.08)',
-      textColor: '#1f2329',
+      textColor: '#29241F',
       mutedColor: '#646a73',
       dividerColor: 'rgba(15, 23, 42, 0.12)',
       shadowColor: 'rgba(15, 23, 42, 0.07)',
@@ -602,7 +602,7 @@ const PANEL_TONES: Record<ImageCardGridColorScheme, readonly PanelTone[]> = {
     {
       background: '#f6f6f6',
       borderColor: 'rgba(31, 35, 41, 0.06)',
-      textColor: '#1f2329',
+      textColor: '#29241F',
       mutedColor: '#646a73',
       dividerColor: 'rgba(31, 35, 41, 0.12)',
       shadowColor: 'rgba(15, 23, 42, 0.06)',
@@ -701,7 +701,7 @@ function getPanelTone(index: number): PanelTone {
       return {
         background: 'linear-gradient(180deg, #eefbf4 0%, #f8fdf9 100%)',
         borderColor: 'rgba(16, 185, 129, 0.12)',
-        textColor: '#111827',
+        textColor: '#29241F',
         mutedColor: '#4f6b61',
         dividerColor: 'rgba(16, 185, 129, 0.16)',
         shadowColor: 'rgba(16, 185, 129, 0.1)',
@@ -712,7 +712,7 @@ function getPanelTone(index: number): PanelTone {
       return {
         background: 'linear-gradient(180deg, #edf6ff 0%, #f8fbff 100%)',
         borderColor: 'rgba(59, 130, 246, 0.12)',
-        textColor: '#111827',
+        textColor: '#29241F',
         mutedColor: '#53627a',
         dividerColor: 'rgba(59, 130, 246, 0.16)',
         shadowColor: 'rgba(59, 130, 246, 0.1)',

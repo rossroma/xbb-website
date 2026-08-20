@@ -615,7 +615,7 @@ function handlePaginationChange(page: number): void {
 
 .content-list-article-row__title {
   margin: 0;
-  color: #0f172a;
+  color: var(--color-text-primary);
   font-size: 16px;
   font-weight: 600;
   line-height: 1.35;
