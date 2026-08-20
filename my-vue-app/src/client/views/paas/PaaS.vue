@@ -20,6 +20,7 @@
     <TabShowcase
       :title="detailCapabilitySection.title"
       :tabs="detailCapabilitySection.tabs"
+      :subtitle="detailCapabilitySection.subtitle"
       layout="tabs-left"
       theme="orange"
     />

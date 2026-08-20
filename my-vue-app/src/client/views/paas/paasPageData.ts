@@ -28,7 +28,7 @@ export const heroSection = {
   secondaryHref: trialPagePath,
   primaryHref: trialPagePath,
   imageAlt: 'PaaS 产品能力展示',
-  bg: "url('/images/paas/hero-banner.jpg') center / cover no-repeat",
+  bg: "url('/images/paas/hero-banner.png') center / cover no-repeat",
 }
 
 /** Hero Banner Slide 格式（供 HeroBanner mode="single" 使用） */
@@ -118,13 +118,13 @@ export const openPlatformSection = {
 // ========== 细节能力区域（TabShowcase，左文右图） ==========
 export const detailCapabilitySection = {
   title: '不止于基础，更能深入细节',
-  description: '从字段联动到数据回溯，从多模板管理到文档预览——每一个细节，都经过真实业务的打磨。',
+  subtitle: '从字段联动到数据回溯，从多模板管理到文档预览——每一个细节，都经过真实业务的打磨',
   tabs: [
     {
       key: 'field-linkage',
       label: '字段自动联动，减少重复填写',
       description:
-        '从字段联动到数据回溯，从多模板管理到文档预览——每一个细节，都经过真实业务的打磨。当用户选择特定字段选项时，系统可自动带出相关信息，支持文本、富文本、图片、附件等内容跨表单联动，减少手动录入和信息遗漏。',
+        '当用户选择特定字段选项时，系统可自动带出相关信息，支持文本、富文本、图片、附件等内容跨表单联动，减少手动录入和信息遗漏。',
       image: '/images/paas/field-linkage.png',
       imageAlt: '字段自动联动功能展示图',
       badgeIcon: LinkCloud,
@@ -142,7 +142,7 @@ export const detailCapabilitySection = {
       key: 'cascade-filter',
       label: '层级筛选跟随，录入更高效',
       description: '上级字段选择后，下级选项自动过滤，帮助用户更快找到正确选项，降低填错概率。',
-      image: blankShowcaseImage,
+      image: '/images/paas/cengjishaixuan.png',
       imageAlt: '层级筛选跟随功能展示占位图',
       badgeIcon: Filter,
     },
@@ -150,27 +150,19 @@ export const detailCapabilitySection = {
       key: 'sub-form',
       label: '子表单更好用，复杂信息也清楚',
       description:
-        '多行文本自适应展示，支持展开收起，移动端采用更适合阅读的纵向平铺样式。报价明细、拜访记录、产品清单等复杂信息查看更顺畅。',
+        '多行文本自适应展示，支持展开收起。报价明细、拜访记录、产品清单等复杂信息查看更顺畅。',
       image: '/images/paas/sub-form.png',
       imageAlt: '子表单功能展示图',
       badgeIcon: FolderPlus,
     },
     {
       key: 'opportunity-process',
-      label: '商机推进更顺，过程更可控',
+      label: '阶段推进更顺，过程更可控',
       description:
         '阶段任务完成后自动勾选，流失原因支持多级选择，并可在推进过程中直接新建关联数据，让销售推进商机时少跳转、少遗漏。',
       image: '/images/paas/opportunity-process.png',
-      imageAlt: '商机推进功能展示图',
+      imageAlt: '阶段推进功能展示图',
       badgeIcon: Trend,
     },
   ] as readonly TabShowcaseItem[],
-}
-
-// ========== Footer CTA 区域 ==========
-export const footerCtaSection = {
-  title: '让增长，从这里开始',
-  subtitle: '免费试用7天，体验AI驱动的新一代CRM平台',
-  primaryCta: '立即免费试用',
-  secondaryCta: '预约产品演示',
 }
