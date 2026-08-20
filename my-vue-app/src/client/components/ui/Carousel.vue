@@ -88,28 +88,52 @@ const emit = defineEmits<{
 }>()
 
 const currentIndex = ref(0)
-let timer: ReturnType<typeof window.setInterval> | null = null
+let timer: ReturnType<typeof window.setTimeout> | null = null
+let timerStartedAt = 0
+let remainingInterval = props.interval
 
-const slide = (direction: number) => {
+const clearAutoPlayTimer = () => {
+  if (!timer) return
+  window.clearTimeout(timer)
+  timer = null
+}
+
+const startAutoPlay = () => {
+  if (!props.autoPlay || timer || props.totalSlides <= 1) return
+  timerStartedAt = window.performance.now()
+  timer = window.setTimeout(() => {
+    timer = null
+    remainingInterval = props.interval
+    slide(1, false)
+    startAutoPlay()
+  }, remainingInterval)
+}
+
+const resetAutoPlay = () => {
+  if (!props.autoPlay) return
+  clearAutoPlayTimer()
+  remainingInterval = props.interval
+  startAutoPlay()
+}
+
+const slide = (direction: number, resetTimer = true) => {
   if (!props.totalSlides) return
   currentIndex.value = (currentIndex.value + direction + props.totalSlides) % props.totalSlides
+  if (resetTimer) resetAutoPlay()
 }
 
 const goTo = (index: number) => {
   if (index >= 0 && index < props.totalSlides) {
     currentIndex.value = index
+    resetAutoPlay()
   }
-}
-
-const startAutoPlay = () => {
-  if (!props.autoPlay || timer) return
-  timer = window.setInterval(() => slide(1), props.interval)
 }
 
 const pauseAutoPlay = () => {
   if (!timer) return
-  window.clearInterval(timer)
-  timer = null
+  const elapsed = window.performance.now() - timerStartedAt
+  remainingInterval = Math.max(props.interval - elapsed, 0)
+  clearAutoPlayTimer()
 }
 
 const resumeAutoPlay = () => startAutoPlay()
