@@ -327,6 +327,7 @@ jobs:
             export CAPTCHA_JWT_SECRET="${{ secrets.CAPTCHA_JWT_SECRET }}"
             export DATACENTER_TOKEN="${{ secrets.DATACENTER_TOKEN }}"
             export PARTNER_API_TOKEN="${{ secrets.PARTNER_API_TOKEN }}"
+            export FRONTEND_PORT="${{ vars.FRONTEND_PORT || 80 }}"
 
             # 启动新服务（compose 自动替换容器）
             # --wait-timeout 180：覆盖默认超时，确保 healthcheck 有足够时间通过
@@ -372,6 +373,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "📋 运行部署后验证（SEO/安全头/SSR 检查）..."
+            export FRONTEND_PORT="${{ vars.FRONTEND_PORT || 80 }}"
             if [ -f ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ]; then
               chmod +x ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh
               bash ${{ vars.DEPLOY_PATH }}/scripts/verify-deploy.sh ${{ github.ref_name == 'main' && '--prod' || '--test' }}

@@ -11,11 +11,12 @@
 set -euo pipefail
 
 MODE="${1:---test}"
+FRONTEND_PORT="${FRONTEND_PORT:-80}"
 if [ "$MODE" = "--prod" ]; then
-  BASE_URL="http://localhost"
+  BASE_URL="http://localhost:${FRONTEND_PORT}"
   LABEL="生产环境"
 else
-  BASE_URL="http://localhost"
+  BASE_URL="http://localhost:${FRONTEND_PORT}"
   LABEL="测试环境"
 fi
 
