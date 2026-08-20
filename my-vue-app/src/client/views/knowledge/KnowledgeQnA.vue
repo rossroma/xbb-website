@@ -67,10 +67,7 @@ import SectionBlock from '@/client/components/ui/SectionBlock.vue'
 import ErrorState from '@/client/components/ui/ErrorState.vue'
 import EmptyState from '@/client/components/ui/EmptyState.vue'
 import { getClientArticles, type ClientArticleListResponse } from '@/shared/api/article'
-import {
-  knowledgeQnAHeroSlide,
-  knowledgeSceneSolutionItems,
-} from './knowledgeQnAData'
+import { knowledgeQnAHeroSlide, knowledgeSceneSolutionItems } from './knowledgeQnAData'
 
 const KNOWLEDGE_QNA_BID = 190
 const pageSize = 10
@@ -106,7 +103,7 @@ const articleItems = computed<ContentCard[]>(() => {
     description: article.descs || undefined,
     summary: article.descs || undefined,
     publishDate: formatTimestamp(article.addtime),
-    updatedAt: article.updatetime ? formatTimestamp(article.updatetime) : undefined,
+    updatedAt: formatTimestamp(article.addtime),
     author: '销帮帮',
     linkHref: `/zhishiwenda/${article.id}`,
   }))

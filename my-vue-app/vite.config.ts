@@ -98,7 +98,7 @@ export default defineConfig(({ mode }) => {
         '/gongsidongtai',
         '/hangyeanli',
         '/yonghuxinsheng',
-        '/zhishiwenda',
+        // '/zhishiwenda', // 动态列表页，已移除 SSG 预渲染，改用 SPA 实时获取数据
         '/gongsijianjie',
         '/lianxiwomen',
         '/mianfeishiyong',
