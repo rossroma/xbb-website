@@ -311,6 +311,7 @@ jobs:
             export FRONTEND_TAG=${{ github.sha }}
             export ACR_REGISTRY="${{ vars.ACR_REGISTRY }}"
             export ACR_NAMESPACE="${{ vars.ACR_NAMESPACE }}"
+            export DEPLOY_PATH="${{ vars.DEPLOY_PATH }}"
             export DB_HOST="${{ vars.DB_HOST }}"
             export DB_PORT="${{ vars.DB_PORT || 3306 }}"
             export DB_USERNAME="${{ vars.DB_USERNAME }}"
