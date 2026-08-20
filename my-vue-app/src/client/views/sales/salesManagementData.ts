@@ -15,16 +15,16 @@ import {
 } from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
 import type { ImageCardGridItem } from '@/client/components/business/ImageCardGrid.vue'
+import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
 const trialPagePath = toPagePath('single_mfsy')
-
 
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: '销售管理',
   subtitle: '精细化运营',
-  desc:'支持 AI 销售陪练，自动生成训练任务赋能团队成长，客户跟进全程可追溯，访客与签到管理让外勤过程透明闭环，全面提升销售执行效率与业绩产出',
+  desc: '支持 AI 销售陪练，自动生成训练任务赋能团队成长，客户跟进全程可追溯，访客与签到管理让外勤过程透明闭环，全面提升销售执行效率与业绩产出',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
   secondaryHref: trialPagePath,
@@ -54,7 +54,7 @@ export const heroBannerSlide = {
   showVisual: false,
   visualImage: '',
   visualImageAlt: heroSection.imageAlt,
-}
+} satisfies BannerSlide
 
 // ========== AI 销售陪练区域（ImageCardGrid） ==========
 export const aiCoachSection = {

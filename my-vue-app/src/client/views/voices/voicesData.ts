@@ -1,5 +1,6 @@
 // ========== 用户心声页面 SEO 配置 ==========
 import { toPagePath } from '@/client/data/routePaths'
+import type { BannerSlide } from '@/client/data/homeData'
 
 const trialPagePath = toPagePath('single_mfsy')
 
@@ -28,4 +29,4 @@ export const voicesBannerSlide = {
   accent: '#5b61ff',
   glow: 'rgba(91, 97, 255, 0.18)',
   orb: 'rgba(91, 97, 255, 0.22)',
-}
+} satisfies BannerSlide
