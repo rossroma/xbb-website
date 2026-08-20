@@ -144,13 +144,20 @@ const caseCards = computed<ContentCard[]>(() => {
     image: item.image,
     title: item.title,
     tag: item.tags?.[0] ?? '',
-    description: item.description,
+    description: stripHtml(item.content || item.description || ''),
     publishDate: formatTimestamp(item.addtime),
     linkHref: `/hangyeanli/${item.id}`,
   }))
 })
 
 // ==================== 工具函数 ====================
+
+/** 去除 HTML 标签，将富文本转为纯文本 */
+function stripHtml(html: string): string {
+  const div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || div.innerText || ''
+}
 
 /** Unix 时间戳转日期字符串 */
 function formatTimestamp(ts?: number): string {
