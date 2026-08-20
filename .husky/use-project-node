@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+# GUI Git clients do not load the interactive shell profile, so their hooks
+# may otherwise run with an unrelated system Node.js version.
+if [ -s "$HOME/.nvm/nvm.sh" ]; then
+  . "$HOME/.nvm/nvm.sh"
+  if ! nvm use --silent >/dev/null 2>&1; then
+    nvm use --silent 20 >/dev/null 2>&1 || {
+      echo "❌ 未找到项目要求的 Node.js 版本（.nvmrc 或 Node 20）"
+      exit 1
+    }
+  fi
+fi
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "❌ Git hook 找不到 Node.js，请安装项目要求的 Node.js"
+  exit 1
+fi
+
+NODE_MAJOR=$(node -p "process.versions.node.split('.')[0]")
+if [ "$NODE_MAJOR" -lt 20 ]; then
+  echo "❌ Git hook 需要 Node.js 20+，当前版本为 $(node --version)"
+  echo "   请安装项目要求的 Node.js，或确保 SourceTree 能找到 ~/.nvm/nvm.sh"
+  exit 1
+fi

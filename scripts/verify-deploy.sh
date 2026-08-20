@@ -77,7 +77,7 @@ fi
 
 SITEMAP=$(curl -s --max-time 10 "${BASE_URL}/sitemap.xml")
 if echo "$SITEMAP" | grep -q '<urlset'; then
-  SITEMAP_COUNT=$(echo "$SITEMAP" | grep -c '<url>' || echo 0)
+  SITEMAP_COUNT=$(echo "$SITEMAP" | grep -c '<url>' || true)
   check "sitemap.xml 格式正确 (${SITEMAP_COUNT} 个 URL)" "pass"
 else
   check "sitemap.xml 格式正确" "fail" "返回非 XML 内容"
@@ -121,7 +121,7 @@ else
 fi
 
 # H1 标签
-H1_COUNT=$(echo "$INDEX_HTML" | grep -c '<h1' || echo 0)
+H1_COUNT=$(echo "$INDEX_HTML" | grep -c '<h1' || true)
 if [ "$H1_COUNT" -eq 1 ]; then
   H1_TEXT=$(echo "$INDEX_HTML" | grep -oP '<h1[^>]*>\K[^<]+' | head -1)
   check "H1 标签 (1 个)" "pass" "内容: ${H1_TEXT}"
@@ -145,7 +145,7 @@ fi
 echo ""
 echo "📊 JSON-LD 结构化数据"
 
-JSON_LD_COUNT=$(echo "$INDEX_HTML" | grep -c 'application/ld+json' || echo 0)
+JSON_LD_COUNT=$(echo "$INDEX_HTML" | grep -c 'application/ld+json' || true)
 if [ "$JSON_LD_COUNT" -gt 0 ]; then
   # 检查 JSON-LD 是否被错误渲染为 children 属性
   if echo "$INDEX_HTML" | grep -q 'children="'; then
@@ -264,8 +264,8 @@ fi
 echo ""
 echo "🖼️  图片 alt 属性"
 
-IMG_TOTAL=$(echo "$INDEX_HTML" | grep -c '<img' || echo 0)
-IMG_WITH_ALT=$(echo "$INDEX_HTML" | grep -c '<img[^>]*alt="[^"]*"' || echo 0)
+IMG_TOTAL=$(echo "$INDEX_HTML" | grep -c '<img' || true)
+IMG_WITH_ALT=$(echo "$INDEX_HTML" | grep -c '<img[^>]*alt="[^"]*"' || true)
 if [ "$IMG_TOTAL" -gt 0 ]; then
   ALT_PCT=$((IMG_WITH_ALT * 100 / IMG_TOTAL))
   if [ "$ALT_PCT" -ge 90 ]; then

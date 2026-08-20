@@ -180,7 +180,7 @@
         <div class="hidden lg:inline-flex items-center mr-4 gap-2.5">
           <a
             :href="`tel:${displayHotline}`"
-            class="group relative flex items-center justify-center w-6 h-6 rounded-full bg-[#29241F] shadow-header-phone-icon no-underline"
+            class="group relative flex items-center justify-center w-6 h-6 rounded-full bg-brand-neutral shadow-header-phone-icon no-underline"
             :aria-label="`客服电话 ${displayHotline}`"
           >
             <PhoneTelephone :size="16" class="text-white" aria-hidden="true" />

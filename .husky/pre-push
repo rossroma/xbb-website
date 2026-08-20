@@ -2,6 +2,8 @@
 # 1. CI/CD 配置变更 → 部署前自检（deploy-check.sh）
 # 2. 前端代码变更 → TypeScript 类型检查 + 完整 lint
 
+. "$(dirname "$0")/use-project-node"
+
 while read -r local_ref local_sha remote_ref remote_sha; do
   branch=$(echo "$remote_ref" | sed 's|refs/heads/||')
 

@@ -5,7 +5,7 @@
   包含前端防攻击措施：蜜罐字段、频率限制、提交冷却
 -->
 <template>
-  <div>
+  <div class="min-h-screen">
     <div
       class="relative min-h-175 bg-linear-to-b from-[#FBFCFF] to-[#EAEFFF] px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
     >
@@ -76,7 +76,9 @@
               aria-label="手机号码"
               size="md"
               :maxlength="11"
-              @update:model-value="(val: string | number) => (form.tel = String(val).replace(/\D/g, ''))"
+              @update:model-value="
+                (val: string | number) => (form.tel = String(val).replace(/\D/g, ''))
+              "
             />
 
             <!-- 短信验证码 -->

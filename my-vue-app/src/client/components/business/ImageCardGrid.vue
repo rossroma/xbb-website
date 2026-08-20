@@ -81,7 +81,7 @@
               <article
                 v-for="side in row.splitGroup.sideCards"
                 :key="side.card.key ?? `${side.card.title}-${side.index}`"
-                class="group flex h-[300px] flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:px-6"
+                class="group flex h-75 flex-col overflow-hidden rounded-card border px-8 py-7 text-left transition-all duration-normal hover:-translate-y-1 hover:shadow-subtle max-md:px-6"
                 :style="getImageCardStyle(side.index)"
               >
                 <h3
@@ -166,7 +166,7 @@
               </div>
               <div
                 v-if="card.image"
-                class="-my-7 -mr-8 flex w-[600px] shrink-0 items-center justify-end overflow-hidden max-md:-mx-6 max-md:mb-[-1.75rem] max-md:mt-0 max-md:w-[calc(100%+3rem)]"
+                class="-my-7 -mr-8 flex w-150 shrink-0 items-center justify-end overflow-hidden max-md:-mx-6 max-md:-mb-7 max-md:mt-0 max-md:w-[calc(100%+3rem)]"
               >
                 <img
                   :src="getOSSImageUrl(card.image, 600)"
@@ -218,7 +218,7 @@
             >
               <h3
                 :class="[
-                  'm-0 text-[30px]  font-extrabold leading-1.16 whitespace-pre-line [color:var(--image-card-grid-panel-text)] max-lg:text-h1 max-md:text-[26px]',
+                  'm-0 text-h1  font-extrabold leading-1.16 whitespace-pre-line [color:var(--image-card-grid-panel-text)] max-lg:text-h1 max-md:text-[26px]',
                   isWideFeaturePanelCard(row.startIndex + cardIndex)
                     ? 'max-w-170 max-md:max-w-full'
                     : '',
@@ -255,7 +255,12 @@
             </div>
             <img
               v-else-if="card.image"
-              :src="getOSSImageUrl(card.image, isWideFeaturePanelCard(row.startIndex + cardIndex) ? 760 : 460)"
+              :src="
+                getOSSImageUrl(
+                  card.image,
+                  isWideFeaturePanelCard(row.startIndex + cardIndex) ? 760 : 460,
+                )
+              "
               :alt="card.imageAlt ?? card.title"
               :class="[
                 'block h-auto w-full object-contain object-bottom mt-6',

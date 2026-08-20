@@ -1,8 +1,6 @@
-import type { PromoBannerSlide } from '@/client/components/business/PromoBannerCarousel.vue'
 import type { HeroBannerSlide } from '@/client/components/business/HeroBanner.vue'
 
 // ========== 行业案例页面 SEO 配置 ==========
-
 
 // ========== 行业案例根类目配置 ==========
 

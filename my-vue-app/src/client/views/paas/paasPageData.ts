@@ -12,17 +12,16 @@ import {
   Trend,
 } from '@/client/components/ui/remixIcons'
 import type { TabShowcaseItem } from '@/client/components/business/TabShowcase.vue'
+import type { BannerSlide } from '@/client/data/homeData'
 import { toPagePath } from '@/client/data/routePaths'
 
-const blankShowcaseImage = '/images/paas/blank-showcase.png'
 const trialPagePath = toPagePath('single_mfsy')
-
 
 // ========== Hero 区域 ==========
 export const heroSection = {
   title: 'PaaS',
   subtitle: '低代码平台灵活搭建',
-  desc:'支持自定义表单、流程引擎、权限管理与 BI 看板，拖拉拽搭建业务应用，字段联动灵活配置，开放 OPEN API 深度对接，满足企业个性化业务需求',
+  desc: '支持自定义表单、流程引擎、权限管理与 BI 看板，拖拉拽搭建业务应用，字段联动灵活配置，开放 OPEN API 深度对接，满足企业个性化业务需求',
   primaryCta: '免费试用',
   secondaryCta: '立即咨询',
   secondaryHref: trialPagePath,
@@ -51,12 +50,12 @@ export const heroBannerSlide = {
   showVisual: false,
   visualImage: '',
   visualImageAlt: heroSection.imageAlt,
-}
+} satisfies BannerSlide
 
 // ========== 业务搭建能力区域（TabShowcase，左文右图） ==========
 export const businessBuildSection = {
   title: 'Paas底层能力赋能您的整个商业流程',
-  subtitle:'销帮帮PaaS底层能力助力企业应对与日俱增的业务挑战，实现系统与企业个性化需求的快速适配',
+  subtitle: '销帮帮PaaS底层能力助力企业应对与日俱增的业务挑战，实现系统与企业个性化需求的快速适配',
   tabs: [
     {
       key: 'custom-form',

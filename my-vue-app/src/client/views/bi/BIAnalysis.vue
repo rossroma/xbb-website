@@ -37,7 +37,6 @@
       :primary-cta="reportSection.ctaText"
       image-full-bleed
     />
-
   </div>
 </template>
 
@@ -52,7 +51,6 @@ import {
   dashboardSection,
   dataInsightSection,
   reportSection,
-  footerCtaSection,
 } from './biAnalysisData'
 
 usePageSEO()
