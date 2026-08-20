@@ -760,6 +760,29 @@ function splitShowcaseLines(text: string): string[] {
   pointer-events: none;
 }
 
+.hero-banner-progress-dot {
+  position: relative;
+  display: block;
+  width: 44px;
+  height: 6px;
+  padding: 0;
+  overflow: hidden;
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(139, 166, 204, 0.24);
+}
+
+.hero-banner-progress-dot__fill {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 0;
+  border-radius: inherit;
+  background: #1687ff;
+}
+
 .hero-banner-progress-dot--active .hero-banner-progress-dot__fill {
   animation: hero-banner-progress-fill 5000ms linear forwards;
 }

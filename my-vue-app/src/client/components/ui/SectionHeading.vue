@@ -1,7 +1,10 @@
 <template>
   <div
     :class="[
-      'flex cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-6 transition-all duration-normal motion-reduce:transition-none motion-reduce:transform-none',
+      'flex transition-all duration-normal motion-reduce:transition-none motion-reduce:transform-none',
+      clickable
+        ? 'cursor-pointer focus-visible:outline-2 focus-visible:outline-brand-primary focus-visible:outline-offset-6'
+        : '',
       align === 'center' ? 'flex-col items-center text-center' : 'items-end justify-between gap-6',
     ]"
     :role="clickable ? 'button' : undefined"
