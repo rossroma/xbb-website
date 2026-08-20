@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { usePageSEO } from '@/client/composables/usePageSEO'
 import HeroBanner from '@/client/components/business/HeroBanner.vue'
 import CaseDetailHeader from '@/client/components/business/CaseDetailHeader.vue'
@@ -105,7 +105,6 @@ import {
   type ClientCategoryListResponse,
   type Category,
 } from '@/shared/api/category'
-import type { PromoBannerSlide } from '@/client/components/business/PromoBannerCarousel.vue'
 import { caseHeroSlide, CASE_ROOT_BID, industryCaseHeaderSlides } from './casesData'
 
 // ==================== SEO ====================
@@ -246,32 +245,6 @@ function handlePageChange(page: number) {
   loadCases()
   // 滚动到列表顶部
   window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
-/** 轮播图「了解详情」点击 — 触发对应行业分类 Tab 选中 */
-function handlePromoCtaClick(slide: PromoBannerSlide) {
-  // 找到与轮播图 eyebrow 匹配的分类 Tab
-  const matchedTab = categoryTabs.value.find(
-    (tab) => tab.key !== 'all' && tab.label === slide.eyebrow,
-  )
-  if (!matchedTab) return
-
-  // 如果已经是当前 Tab 则不做处理（避免重复请求）
-  if (activeTabKey.value === matchedTab.key) return
-
-  // 更新 Tab 选中状态，触发数据加载
-  activeTabKey.value = matchedTab.key
-  prevTabKey.value = matchedTab.key
-  currentPage.value = 1
-  loadCases()
-
-  // 等 DOM 更新后滚动到分类 Tab 区域（scroll-mt-20 自动留出 80px 顶部间距）
-  nextTick(() => {
-    const tabWrapper = document.querySelector('.cases-page .scroll-mt-20')
-    if (tabWrapper) {
-      tabWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  })
 }
 
 // ==================== 生命周期 ====================
