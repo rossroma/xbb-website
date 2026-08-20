@@ -23,7 +23,6 @@
       layout="tabs-left"
       theme="orange"
     />
-
   </div>
 </template>
 
@@ -36,7 +35,6 @@ import {
   businessBuildSection,
   openPlatformSection,
   detailCapabilitySection,
-  footerCtaSection,
 } from './paasPageData'
 
 usePageSEO()

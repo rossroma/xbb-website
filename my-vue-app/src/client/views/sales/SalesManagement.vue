@@ -39,7 +39,6 @@
       layout="tabs-right"
       theme="orange"
     />
-
   </div>
 </template>
 
@@ -55,7 +54,6 @@ import {
   visitPlanSection,
   checkinSection,
   workReportSection,
-  footerCtaSection,
 } from './salesManagementData'
 
 usePageSEO()
