@@ -29,11 +29,6 @@
       :show-search="false"
     />
 
-    <CTASection
-      variant="warm"
-      :title="finalCtaSection.title"
-      :subtitle="finalCtaSection.subtitle"
-    />
   </div>
 </template>
 
