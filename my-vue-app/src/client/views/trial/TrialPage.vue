@@ -1,15 +1,22 @@
 <!--
-  免费试用页面 — 单列表单布局
-  仅保留试用表单区域，复用 useStickyFormSubmit composable
+  免费试用页面 — 左右分栏布局
+  左侧：视觉区域，右侧：试用表单
+  表单逻辑与 StickyFormBar 一致，复用 useStickyFormSubmit composable
   包含前端防攻击措施：蜜罐字段、频率限制、提交冷却
 -->
 <template>
-  <div class="min-h-screen">
-    <div class="relative flex min-h-175 items-center justify-center bg-[url('/images/liuzi/background-image.jpg')] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:block lg:min-h-190 lg:px-0 lg:py-0">
+  <div>
+    <div
+      class="relative min-h-175 bg-[url('/images/liuzi/background-image.jpg')] bg-cover bg-left-top bg-no-repeat px-8 py-24 lg:min-h-190 lg:px-0 lg:py-0"
+    >
       <div
-        class="w-full max-w-[460px] rounded-[20px] bg-white/96 px-10 py-10 shadow-[0_20px_50px_rgba(33,52,96,0.16)] ring-1 ring-white/70 backdrop-blur-sm lg:absolute lg:right-40 lg:top-32 lg:h-[440px] lg:w-[460px] max-sm:px-6 max-sm:py-8"
+        class="mx-auto grid min-h-175 w-full max-w-300 grid-cols-1 items-center justify-items-center gap-10 lg:min-h-190 lg:grid-cols-[minmax(0,1fr)_460px] lg:px-10"
       >
-        <div class="w-full">
+        <div class="hidden h-110 w-full lg:block" aria-hidden="true"></div>
+
+        <div
+          class="w-full max-w-115 rounded-[20px] bg-white/96 px-10 py-10 shadow-[0_20px_50px_rgba(33,52,96,0.16)] ring-1 ring-white/70 backdrop-blur-sm lg:h-110 lg:w-115 max-sm:px-6 max-sm:py-8"
+        >
           <!-- 标题 -->
           <h1 class="text-h1 text-text-primary">{{ pageContent.title }}</h1>
           <!-- 副标题 -->
