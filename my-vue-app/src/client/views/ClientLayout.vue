@@ -95,7 +95,7 @@ watch(() => route.fullPath, syncRoutePosition, { flush: 'post' })
   --client-theme-primary-strong: #4338ca;
   --client-theme-secondary: #2563eb;
   --client-theme-accent: #ff6400;
-  --client-theme-text: #24324b;
+  --client-theme-text: #29241F;
   --client-theme-text-soft: #5b6478;
   --client-theme-panel: rgba(255, 255, 255, 0.94);
   --client-theme-panel-soft: #eef2ff;
