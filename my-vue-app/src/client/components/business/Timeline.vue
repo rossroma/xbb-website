@@ -100,7 +100,7 @@
             >
               {{ formatYearLabel(activeMilestone.year) }}
             </p>
-            <h3 class="mt-[22px] text-h2 font-bold leading-1.4 text-brand-neutral max-md:text-h3">
+            <h3 class="mt-[22px] text-h2 font-bold leading-1.4 text-text-primary max-md:text-h3">
               {{ activeMilestone.title }}
             </h3>
             <p class="mt-3.5 text-[18px] leading-1.8 text-[#4b5563] max-md:text-body">
@@ -147,7 +147,7 @@ const track = ref<HTMLElement | null>(null)
 const showControls = ref(false)
 
 const displayMilestones = computed(() =>
-  [...props.milestones].sort((a, b) => Number.parseInt(b.year, 10) - Number.parseInt(a.year, 10)),
+  [...props.milestones].sort((a, b) => Number.parseInt(a.year, 10) - Number.parseInt(b.year, 10)),
 )
 
 const activeMilestone = computed(() => displayMilestones.value[activeIndex.value])
